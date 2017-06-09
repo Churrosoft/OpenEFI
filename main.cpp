@@ -7,6 +7,9 @@ int ord_enc[] = {0, 2 ,3 ,1};//orden de encendido motor
 int iny[] = {2,3,4,5};       //Pines de arduino que esta conectados los inyectores
 int tMax     = 22;           //tiempo maximo de inyeccion
 
+int pinBobinas13 = 1;
+int pinBobinas24 = 2;
+
 int pul  = LOW;             //pulso de disparo de sensor de posicion de cigueñal
 bool varrpm = LOW;          //variable para no volver a contar mismo diente como pulso
 int pinrpm = 10;            //pin conectado al sensor de posicion de cigueñal
@@ -186,43 +189,43 @@ void controlDeEncendido(float temperatura){
     bool activado = false;
 
         if(diente == (33 - avanceDeChispa) ){//----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
-//            iniciarChispazo(pinBobinas13);//iniciar chispazo
+          iniciarChispazo(pinBobinas13);//iniciar chispazo
             activado = true;
             //esperar un tiempito
             if(activado == true){
                 tiempo = millis();
             }
             if ((millis() - millisant) >= periodo && activado == true) {
-//                pararChispazo(pinBobinas13);//una vez pasados 5ms terminar chispazo
+                pararChispazo(pinBobinas13);//una vez pasados 5ms terminar chispazo
                 milisant = millis();
                 activado = false;
             }
         }else if(diente == (66 - avanceDeChispa)){//----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
-//            iniciarChispazo(pinBobinas13);
+            iniciarChispazo(pinBobinas13);
             activado = true;
             //esperar un tiempito
             if(activado == true){
                 tiempo = millis();
             }
             if ((millis() - millisant) >= periodo && activado == true) {
-//                pararChispazo(pinBobinas13);
+                pararChispazo(pinBobinas13);
                 milisant = millis();
                 activado = false;
             }
         }else if(diente == (99 - avanceDeChispa)){//----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
-     //       iniciarChispazo(pinBobinas24);
+            iniciarChispazo(pinBobinas24);
             activado = true;
             //esperar un tiempito
             if(activado == true){
                 tiempo = millis();
             }
             if ((millis() - millisant) >= periodo && activado == true) {
-            //    pararChispazo(pinBobinas24);
+                pararChispazo(pinBobinas24);
                 milisant = millis();
                 activado = false;
             }
         }else if(diente == (132 - avanceDeChispa)){//----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
-            //iniciarChispazo(pinBobinas24);
+            iniciarChispazo(pinBobinas24);
             activado = true;
             //esperar un tiempito
             if(activado == true){
