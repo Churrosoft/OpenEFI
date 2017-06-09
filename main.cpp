@@ -151,10 +151,75 @@ void Control PWM{
 
 void controlDeEncendido(float temperatura){
 
-    if(rpm < 100){
-        ControlEncendidoArranque();
+    //----bloque que controla el avance antes de hacer la chispa----
+    if(arrancando == true){
+        ControlEncendidoArranque(temperatura);
+    }else if(arrancando == false){
+        if(temperatura < 60){
+            ControlEncendidoFrio();
+        }else{
+            ControlEncendidoNormal();
+        }
     }
+    //-------fin del bloque de control de avance-----------
+    //----
+    //--------inicio del bloque de control de cuando se larga la chispa------------
 
+    int periodo = 7; //periodo en mS
+    unsigned long tiempo  = 0;
+    unsigned long milisant = 0;
+    bool activado = false;
+
+        if(diente == (33 - avanceDeChispa) ){//----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
+            iniciarChispazo(pinBobinas13);//iniciar chispazo
+            activado = true;
+            //esperar un tiempito
+            if(activado == true){
+                tiempo = millis();
+            }
+            if ((millis() - millisant) >= periodo && activado == true) {
+                pararChispazo(pinBobinas13);//una vez pasados 5ms terminar chispazo
+                milisant = millis();
+                activado = false;
+            }
+        }else if(diente == (66 - avanceDeChispa){//----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
+            iniciarChispazo(pinBobinas13);
+            activado = true;
+            //esperar un tiempito
+            if(activado == true){
+                tiempo = millis();
+            }
+            if ((millis() - millisant) >= periodo && activado == true) {
+                pararChispazo(pinBobinas13);
+                milisant = millis();
+                activado = false;
+            }
+        }else if(diente == (99 - avanceDeChispa){//----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
+            iniciarChispazo(pinBobinas24);
+            activado = true;
+            //esperar un tiempito
+            if(activado == true){
+                tiempo = millis();
+            }
+            if ((millis() - millisant) >= periodo && activado == true) {
+                pararChispazo(pinBobinas24);
+                milisant = millis();
+                activado = false;
+            }
+        }else if(diente == (132 - avanceDeChispa){//----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
+            iniciarChispazo(pinBobinas24);
+            activado = true;
+            //esperar un tiempito
+            if(activado == true){
+                tiempo = millis();
+            }
+            if ((millis() - millisant) >= periodo && activado == true) {
+                pararChispazo(pinBobinas24);
+                milisant = millis();
+                activado = false;
+            }
+        }
+    //------fin del bloque que controla la mandada de chispa------------------
 }
 //---------------
 void ControlEncendidoFrio(){
@@ -183,9 +248,6 @@ void ControlEncendidoNormal(){
         avanceDeChispa = 15;//+-37,5°
     }
 }
-//se comprende que este método solo se va a ejecutar durante el funcionamiento del burro y solo
-//5 segundos despues del arranque. acto seguidop pasar al metodo de avance en frio o caliente
-//respectivamente
 void ControlEncendidoArranque(float temperatura){
     if(temperatura < 45){
         avanceDeChispa = 2;//+-5°
@@ -193,11 +255,11 @@ void ControlEncendidoArranque(float temperatura){
         avanceDeChispa = 3;//+-7,5°
     }
 }
-void iniciarChispazo(int pin){
+void iniciarChispazo(int pin){//inicia la chispa hasta que se llame al metodo pararChispazo()
     digitalWrite(pin, HIGH);
 }
-void pararChispazo(int pin){
-    digitalWrite(pin, HIGH);
+void pararChispazo(int pin){//para la chispa
+    digitalWrite(pin, LOW);//edit FDSoftawre, tenes que mandarle LOW vo' XDD
 }
 //------------
 
