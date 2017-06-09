@@ -14,16 +14,30 @@ int pinrpm = 10;            //pin conectado al sensor de posicion de cigueñal
 int diente = 0;             //numero de diente actual de la corona
 int intervalo1 = 500;       //intervalo para medir rpm
 float inyT = 1.5;              //tiempo de inyeccion ms
+float inyTARR = 22;        //tiempo inyeccion en modo arranque
 int esperaINY = 500;      //tiempo que espera inyeccion para ver si el motor acelera
 
 
-avanceDeChispa = 3;        //en dientes de volante (2,42 grados) , default en 3
+int avanceDeChispa = 3;        //en dientes de volante (2,42 grados) , default en 3
+int dnt = 20;                  //cantidad de dientes que detecta el sensor hall
+int perinyec = 5               //cantidad de dientes que tiene que detectar el sensor hall para inyectar
 
 int Mar   = AN0;            //pin de mariposa de acelerador
 int marv  = 0;              //valor de mariposa de acelerador
 int Lamb  = AN1;            //pin de sonda lambda
 int sensorT = AN3;           //pin de sensor Temperatura
+int ARRpin = 10;            //pin conectado que recibe señal de arranque de llave
+bool arr = false;           //si se intenta arrancar el motor esta en true
+
 float temp = 0;             //temperatura motor
+float tempfrio = 40;        //temperatura maxima para considerar el motor "frio"
+float tempvenMIN = 80;      //temperatura a la que se apaga el ventilador
+float tempvenMAX = 95;      //temperatura a la que se enciende el ventilador
+float tempmax = 115;        //temperatura maxima de funcionamiento antes de entrar en modo emergencia
+
+int pinVENT = 13;           //pin de control del ventilador
+int pinLuzMuerte = 12       //sip, pin de luz de "check Engine"
+bool emergencia = false;    //mientras que este en false todo bien ^~^
 
 int var = 0;                //variable usada para bucles
 int varX = 0;               //variable temporal, multiples usos
@@ -32,6 +46,7 @@ int varINY = 0              //varible temporal, guarda ultimo inyector activado
 int rpm    = 0;                //numero actual de rpm
 int rpmMIN = 800;             //numero minimo de rpm
 int rpmMAX = 7000;            //numero maximo de rpm
+int tolrpm = 50;              //tolerancia de rpm
 
 int vuelta;                    //numero de vuelta para rpm
 bool varr = false;             //variable para evitar calcular rpm varias veces
@@ -44,6 +59,12 @@ unsigned long curMillis; //tiempo actual del micro
 void setup(){
     //definir E/S
     pinMode(pinrpm, INPUT);
+    pinMode(sensorT, INPUT);
+    pinMode(Mar, INPUT);
+    pinMode(Lamb, INPUT);
+    pinMode(ARRpin, INPUT);
+    pinMode(pinLuzMuerte, OUTPUT);
+    pinMode(pinVENT, OUTPUT);
 
     for(var = 0, var >= 3, var++;){
         pinMode(iny[var], OUTPUT);
@@ -57,24 +78,24 @@ void setup(){
 }
 
 void loop(){
-    
-        Temperatura();
         ControlRPM();
-        ControlINY();
         temp = sensortemp();
+        Temperatura();
+        bool varINY = ControlARR(); //control de arranque del motor
+        ControlINY(varINY);
         controlDeEncendido(temp);
         ControlPWM();
 }
 
 void ControlRPM(){    
-   //calcula rpm cada 1 vuelta del cigueñal
+   //calcula rpm cada 1/4 vuelta del cigueñal
       if(varr == false && vuelta == 0){
 	  milisant = millis();
 	  varr = true;
      }
   
-     if(varr == true && vuelta == 2){
-	    rpm = (millis() - milisant) * 60000;
+     if(varr == true && vuelta == 50){
+	    rpm = ((millis() - milisant)* 4 )* 60000;
 	    varr = false;
 	    var2 = 0;
      }
@@ -82,19 +103,28 @@ void ControlRPM(){
 
 void ControlINY(){
     //Controla los tiempos de inyeccion dependiendo la mariposa,rpm y temperatura del motor
-    if(rpm <= rpmMIN && varm <= 10 && acelerar == false){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
-            inyT = intT + 0.5;
+
+    if(rpm <= rpmMIN && varm <= tolrpm && acelerar == false){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
+            if(temp >= tempfrio){
+                 inyT = intT + 700; //sumamos 700uS / 0.7mS si el motor esta frio
+            }else{
+                 inyT = intT + 500;
+            }
             acelerar = true;
             rpmant = rpm;
          }
 
-         if(rpm >= rpmMIN && varm <= 10 && acelerar == false){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
-            inyT = intT - 0.5;
+         if(rpm >= rpmMIN && varm <= tolrpm && acelerar == false){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
+            if(temp >= tempfrio){
+                 inyT = intT - 700; //restamos 700uS / 0.7mS si el motor esta frio
+            }else{
+                 inyT = intT - 500; //restamos 500 uS/ 0.5mS
+            } 
             acelerar = true;
             rpmant = rpm;
          }
  int varxx = rpm - rpmant;
-    if(vuelta3 >= 20 && varxx <= 5){
+    if(vuelta3 >= (dnt * 10) && varxx <= 5){
         // si no hubo un cambio mayor a 5 rpm luego de 10 vueltas de cigueñal volver a corregir
         acelerar = false;
         vuelta3 = 0;
@@ -102,18 +132,20 @@ void ControlINY(){
     
 }
 void Control PWM{
-    if (inyectando == false){
-	digitalWrite(iny[vuelta2++],HIGH);
-	inyectando = true
-}
-
-	if (millis() - millis >= inYT) {
-		digitalWrite(iny[vuelta2++],LOW);
-		if(vuelta2 == 3){
-			vuelta2 == 0;
-		}
-		inyectando == false
-	}
+    if(emergencia == false){
+        if (inyectando == false){
+	        digitalWrite(iny[vuelta2++],HIGH);
+            unsigned long tmpINY = micros();
+    	    inyectando = true
+        }
+	    if (micros() - tmpINY >= inYT) {
+	    	digitalWrite(iny[vuelta2++],LOW);
+		    if(vuelta2 == 3){
+			    vuelta2 == 0;
+		    }
+	    	inyectando == false
+	    }
+    }
 }
 
 
@@ -171,17 +203,60 @@ void pararChispazo(int pin){
 
 void Temperatura(){
     //Controla el ventilador y apagado de emergencia del motor
+    if(temp >= tempmax){
+        inyT = 0;
+        emergencia = true;
+        emerg();
+    }
+    if(temp <= tempventMIN){
+        digitalWrite(pinVENT, LOW)
+    }
+    if(temp >= tempventMAX){
+        digitalWrite(pinVENT, HIGH)
+    }
 }
 
+
+bool ControlARR{
+    //se fija si se esta arrancando el motor, fija la inyeccion,
+    //pone el avance en modo arranque y desactiva sonda lamba,acelerador y control de rpm ralenti
+    //hasta que las rpm sean mayores a 1000~
+    int señalarr = digitalRead(ARRpin);
+    if (señalarr == HIGH && vueltas <= 10){ //se esta intentando arrancar el motor y pasaron menos de 10 vueltas
+        //usar cantidad de vueltas o tiempo y rpm para saber si se acelero o no ?)
+        ControlEncendidoArranque(temp);
+        arr = true;
+        inyT = inyTARR;
+        return false;
+    }if (señalarr == LOW && rpm >= rpmMIN) {
+        return true; //habilitamos el control de inyeccion 
+    }
+}
+
+
 float  sensortemp(){
-    int value = analogRead(sensorPin);
+    int value = analogRead(sensorT);
     float millivolts = (value / 1023.0) * 5000;
     float celsius = millivolts / 10; 
     return celsius;
 } 
+
+
 void int0{
-    vuelta++;
-    vuelta2++;
-    vuelta3++;
-    varr = true;
+    if(emergencia == false){ //si entro en modo emergencia no hacemos caso a nada :V
+        vuelta3++;
+        varr = true;
+        vuelta++;
+          if(vuelta >= perinyec){
+              vuelta2++;
+        }
+    }
+}
+
+void emerg(){
+    digitalWrite(pinLuzMuerte, HIGH);
+    int varemerg = 1
+    while(varemerg == 1){
+        delay(1000);
+    }
 }
