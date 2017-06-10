@@ -15,7 +15,10 @@ int tMax     = 22;           //tiempo maximo de inyeccion
 int perinyec = 5;            //cantidad de dientes que tiene que detectar el sensor hall para inyectar
 
 float inyT   = 1500;         //tiempo de inyeccion uS (actual)
-float inyTR  = 1250			 //tiempo de inyeccion Ralenti (uS)
+float inyTR  = 1250;         //tiempo de inyeccion Ralenti (uS)
+float inyTARR= 22000;        //tiempo de inyeccion Arranque
+unsigned long tmpINY = 0;     //tiempo que paso desde activacion de inyector
+
 int varINY   = 0;            //varible temporal, guarda ultimo inyector activado
 
 int Lamb     = A0;           //pin de sonda lambda
@@ -24,10 +27,11 @@ bool arr     = false;        //si se intenta arrancar el motor esta en true
 
 int mar      = A1;           //pin de mariposa de acelerador
 int marv     = 0;            //valor actual de mariposa de acelerador
-bool inyec   = false;        //variable para saber si se esta inyectando todavia o no
+bool inyectando = false;        //variable para saber si se esta inyectando todavia o no
 
 bool acelerar;               //varible temporar, guarda si se intento acelerar el motor
 int vuelta2  = 0;            //numero de vuelta para inyeccion/encendido
+int vuelta3  = 0;            //numero de vuelta para inyeccion/encendido
 /*-----( Variables RPM )-----*/
 
 int intervalo1 = 500;        //intervalo para medir rpm
@@ -43,10 +47,11 @@ int rpmMIN     = 800;        //numero minimo de rpm
 int rpmMAX     = 7000;       //numero maximo de rpm
 
 int tolrpm     = 50;         //tolerancia de rpm
-int vuelta 	   = 0;          //numero de vuelta para rpm
+int vuelta     = 0;          //numero de vuelta para rpm
 bool varr      = false;      //variable para evitar calcular rpm varias veces
+int rpmant     = 0;          //rpm anteriores
 
-unsigned long prevMillis;    //tiempo previo ultimo periodo medicion rpm
+unsigned long milirpm;    //tiempo previo ultimo periodo medicion rpm
 unsigned long curMillis;     //tiempo actual del micro
 /*-----( Variables Temperatura )-----*/
 
@@ -62,15 +67,15 @@ float tempvenMAX = 95;      //temperatura a la que se enciende el ventilador
 
 /*-----( Variables Encendido )-----*/
 
-#if (motor == 1)//si el motor es nafta
-	int avanceDeChispa 		 = 3;      //en dientes de volante (2,42 grados) , default en 3
-	int periodo		  		 = 7; 	   //periodo en mS
-    unsigned long tiempo 	 = 0;
-    unsigned long milisant   = 0;
-	int pinBobinas13         = 8;
-	int pinBobinas24         = 9;
+
+  int avanceDeChispa     = 3;      //en dientes de volante (2,42 grados) , default en 3
+  int periodo          = 7;      //periodo en mS
+    unsigned long tiempo   = 0;
+    unsigned long millisant   = 0;
+  int pinBobinas13         = 8;
+  int pinBobinas24         = 9;
     bool activado = false;
-#endif
+    bool arrancando = false;
 
 /*-----( Variables Logica )-----*/
 int var = 0;                //variable usada para bucles
@@ -79,6 +84,7 @@ int varX = 0;               //variable temporal, multiples usos
 /*-----( Otras variables )-----*/
 int pinLuzMuerte = 12;       //sip, pin de luz de "check Engine"
 bool emergencia  = false;    //mientras que este en false todo bien ^~^
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // definimos el display I2C
 
 void int0(){
     //if(emergencia == false){ //si entro en modo emergencia no hacemos caso a nada :V
@@ -101,15 +107,15 @@ void setup(){
     pinMode(pinLuzMuerte, OUTPUT);
     pinMode(pinVENT, OUTPUT);
 
-	#if (motor == 1)
-		pinMode(pinBobinas13, OUTPUT);
-		pinMode(pinBobinas24, OUTPUT);
-		//definimos estado de las bobinas
-		digitalWrite(pinBobinas13, LOW);
-		digitalWrite(pinBobinas24, LOW);
-	#endif
+  #if (motor == 1)
+    pinMode(pinBobinas13, OUTPUT);
+    pinMode(pinBobinas24, OUTPUT);
+    //definimos estado de las bobinas
+    digitalWrite(pinBobinas13, LOW);
+    digitalWrite(pinBobinas24, LOW);
+  #endif
     for(var = 0; var >= 3; var++){
-		//definimos inyectores como salida
+    //definimos inyectores como salida
         pinMode(iny[var], OUTPUT);
     }
 
@@ -118,6 +124,16 @@ void setup(){
     }
     //definir interrupciones HW
      attachInterrupt(digitalPinToInterrupt(2), int0, RISING);
+     //mostramos mensaje en LCD :D
+    lcd.setCursor(0,0);
+    lcd.print("####################");
+    lcd.setCursor(0,1);
+    lcd.print("##### OPENEFI ######");
+    lcd.setCursor(0,2);
+    lcd.print("## ver 0.01 Alpha ##");
+    lcd.setCursor(0,3);
+    lcd.print("####################");
+    delay(500);
 }
 
 void loop(){
@@ -134,12 +150,12 @@ void loop(){
 void ControlRPM(){    
    //calcula rpm cada 1/4 vuelta del cigueñal
       if(varr == false && vuelta == 0){
-    milisant = millis();
+    milirpm = millis();
     varr = true;
      }
   
      if(varr == true && vuelta == 50){
-      rpm = ((millis() - milisant)* 4 )* 60000;
+      rpm = ((millis() - milirpm)* 4 )* 60000;
       varr = false;
      }
 }
@@ -217,7 +233,7 @@ void controlDeEncendido(float temperatura){
             }
             if ((millis() - millisant) >= periodo && activado == true) {
                 pararChispazo(pinBobinas13);//una vez pasados 5ms terminar chispazo
-                milisant = millis();
+                millisant = millis();
                 activado = false;
             }
         }else if(diente == (66 - avanceDeChispa)){//----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
@@ -229,7 +245,7 @@ void controlDeEncendido(float temperatura){
             }
             if ((millis() - millisant) >= periodo && activado == true) {
                 pararChispazo(pinBobinas13);
-                milisant = millis();
+                millisant = millis();
                 activado = false;
             }
         }else if(diente == (99 - avanceDeChispa)){//----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
@@ -241,7 +257,7 @@ void controlDeEncendido(float temperatura){
             }
             if ((millis() - millisant) >= periodo && activado == true) {
                 pararChispazo(pinBobinas24);
-                milisant = millis();
+                millisant = millis();
                 activado = false;
             }
         }else if(diente == (132 - avanceDeChispa)){//----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
@@ -253,7 +269,7 @@ void controlDeEncendido(float temperatura){
             }
             if ((millis() - millisant) >= periodo && activado == true) {
               //  pararChispazo(pinBobinas24);
-                milisant = millis();
+                millisant = millis();
                 activado = false;
             }
         }
@@ -325,24 +341,24 @@ bool ControlARR(){
     int senalarr = digitalRead(ARRpin);
     if (senalarr == HIGH && vuelta2 <= 10){ //se esta intentando arrancar el motor y pasaron menos de 10 vueltas
         //usar cantidad de vueltas o tiempo y rpm para saber si se acelero o no ?)
-		#if (motor == 1)
+    #if (motor == 1)
         ControlEncendidoArranque(temp);
-		#endif
+    #endif
         arrancando = true;
         arr = true;
         inyT = inyTARR;
         return false;
     }if (senalarr == LOW && rpm >= rpmMIN) {
-		#if (motor == 1)
+    #if (motor == 1)
         arrancando = false;
-		#endif
+    #endif
         return true; //habilitamos el control de inyeccion 
     }
 }
 
 
 float  sensortemp(){
-	//esta funcion mide la temperatura y devuelve float en celsius
+  //esta funcion mide la temperatura y devuelve float en celsius
     int value = analogRead(sensorT);
     float millivolts = (value / 1023.0) * 5000;
     float celsius = millivolts / 10; 
@@ -353,6 +369,14 @@ float  sensortemp(){
 void emerg(){
     digitalWrite(pinLuzMuerte, HIGH);
     int varemerg = 1;
+    lcd.setCursor(0,0);
+    lcd.print("####################");
+    lcd.setCursor(0,1);
+    lcd.print("#### EMERGENCIA ####");
+    lcd.setCursor(0,2);
+    lcd.print("## Motor detenido ##");
+    lcd.setCursor(0,3);
+    lcd.print("####################");
     while(varemerg == 1){
         delay(1000);
     }
