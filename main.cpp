@@ -128,7 +128,7 @@ void setup(){
     lcd.setCursor(0,0);
     lcd.print("####################");
     lcd.setCursor(0,1);
-    lcd.print("##### OPENEFI ######");
+    lcd.print("##### OpenEFI ######");
     lcd.setCursor(0,2);
     lcd.print("## ver 0.01 Alpha ##");
     lcd.setCursor(0,3);
@@ -168,7 +168,7 @@ void ControlINY(bool varY){
               if(temp >= tempfrio){
                   inyT = inyT + 700; //sumamos 700uS / 0.7mS si el motor esta frio
              }else{
-                  inyT = inyT + 500;
+                  inyT = inyT + 500; //restamos 500 uS/ 0.5mS si el motor esta en temperatura de funcionamiento
               }
               acelerar = true;
               rpmant = rpm;
@@ -178,14 +178,14 @@ void ControlINY(bool varY){
               if(temp >= tempfrio){
                    inyT = inyT - 700; //restamos 700uS / 0.7mS si el motor esta frio
              }else{
-                  inyT = inyT - 500; //restamos 500 uS/ 0.5mS
+                  inyT = inyT - 500; //restamos 500 uS/ 0.5mS si el motor esta en temperatura de funcionamiento
              } 
              acelerar = true;
              rpmant = rpm;
           }
        int varxx = rpm - rpmant;
-        if(vuelta3 >= (dnt * 10) && varxx <= 5){
-           // si no hubo un cambio mayor a 5 rpm luego de 10 vueltas de cigueñal volver a corregir
+        if(vuelta3 >= (dnt * 10) && varxx <= 15){
+           // si no hubo un cambio mayor a la 15rpm luego de 10 vueltas de cigueñal volver a corregir
            acelerar = false;
             vuelta3 = 0;
       }
@@ -224,63 +224,38 @@ void controlDeEncendido(float temperatura){
     //-------fin del bloque de control de avance-----------
     //----
     //--------inicio del bloque de control de cuando se larga la chispa------------
-        //FDSoftware: mandale un mayor o igual, por si se atrasa en algo el arduino y no llega a ejecutar esta parte :P
-        if(diente == (33 - avanceDeChispa) ){//----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
-          iniciarChispazo(pinBobinas13);//iniciar chispazo
-            activado = true;
-            //FDSoftware: el control para sacar la chispa va afuera del if de dientes wey XDD
-            //sino va a comprobar si paso el tiempo recieen la proxima vez que pase por el diente del if :P
 
-            //esperar un tiempito
-            if(activado == true){
-                tiempo = millis();
-            }
-            
-            if ((millis() - millisant) >= periodo && activado == true) {
-                pararChispazo(pinBobinas13);//una vez pasados 5ms terminar chispazo
-                millisant = millis();
-                activado = false;
-            }
-        }else if(diente == (66 - avanceDeChispa)){//----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
+        //FDSoftware: te falto un toque para sacar el bus, ya esta XDD
+        if(diente >= (33 - avanceDeChispa)||diente < 33){//----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
+            iniciarChispazo(pinBobinas13);//iniciar chispazo
+            activado = true;
+            millisant = millis();// FDSoftware: ponemos el tiempo anterior como el actual para empezar a medir :P
+        }else if(diente >= (66 - avanceDeChispa)||diente < 66){//----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
             iniciarChispazo(pinBobinas13);
             activado = true;
-            //esperar un tiempito
-            if(activado == true){
-                tiempo = millis();
-            }
-            if ((millis() - millisant) >= periodo && activado == true) {
-                pararChispazo(pinBobinas13);
-                millisant = millis();
-                activado = false;
-            }
-        }else if(diente == (99 - avanceDeChispa)){//----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
+            millisant = millis();
+        }else if(diente >= (99 - avanceDeChispa)||diente < 99){//----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
             iniciarChispazo(pinBobinas24);
             activado = true;
-            //esperar un tiempito
-            if(activado == true){
-                tiempo = millis();
-            }
-            if ((millis() - millisant) >= periodo && activado == true) {
-                pararChispazo(pinBobinas24);
-                millisant = millis();
-                activado = false;
-            }
-        }else if(diente == (132 - avanceDeChispa)){//----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
+            millisant = millis();
+        }else if(diente >= (132 - avanceDeChispa)||diente < 132){//----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
             iniciarChispazo(pinBobinas24);
+            millisant = millis();
             activado = true;
-            //esperar un tiempito
-            if(activado == true){
-                tiempo = millis();
-            }       
-            if ((millis() - millisant) >= periodo && activado == true) {
-                pararChispazo(pinBobinas24);
-                millisant = millis();
-                activado = false;
-            }
         }
+        //tenias razon, va fuera de la cadena que detecta cual tiene que mandar chispa xD
+        //pongo desactivar pin de bobinas 13 y 24 para asegurarme de que se desactiven los 2
+        //ya que no se cual fue el ultimo :P(de paso ahorramos memoria ;))
+        
+            if ((millis() - millisant) >= periodo && activado == true) { //esto tenias que mandar afuera del if XDDD
+                millisant = millis();
+                activado = false;
+                pararChispazo(pinBobinas13);
+                pararChispazo(pinBobinas24);
+            }
     //------fin del bloque que controla la mandada de chispa------------------
 }
-//---------------
+//---------------BLOQUE DE CONTROL DE AVANCE
 void ControlEncendidoFrio(){
     if(rpm < 2000){
         avanceDeChispa = 4;//+-10°
@@ -314,13 +289,15 @@ void ControlEncendidoArranque(float temperatura){
         avanceDeChispa = 3;//+-7,5°
     }
 }
+//--------------------FIN DEL BLOQUE DE CONTROL DE AVANCE
+//-------------------FUNCIONES DE CONTROL DE BOBINAS
 void iniciarChispazo(int pin){//inicia la chispa hasta que se llame al metodo pararChispazo()
     digitalWrite(pin, HIGH);
 }
 void pararChispazo(int pin){//para la chispa
-    digitalWrite(pin, LOW);//edit FDSoftawre, tenes que mandarle LOW vo' XDD
+    digitalWrite(pin, LOW);
 }
-//------------
+//---------------
 #endif
 
 void Temperatura(){
@@ -378,7 +355,7 @@ void LCD(int op, int texto){
     String lin3a = "###T.INY:";
     String lin3b = " mS####";
     String lin4a = "###Avance: ";
-    String lin4b = "°######";
+    String lin4b = " ######";
 
     if(op == 0){
         String LX = lin2 + texto + lin2a + temp + lin2b;
@@ -399,11 +376,10 @@ void LCD(int op, int texto){
         lcd.setCursor(0,0);
         lcd.print(" ###OpenEFI v0.010###");
         lcd.setCursor(0,1);
-		lcd.print("#RPM:  #T:°C#");
         lcd.setCursor(0,2);
 		lcd.print("###T.INY: mS####");
         lcd.setCursor(0,3);
-		lcd.print("###Avance: °######");
+		lcd.print("###Avance: ######");
     }
 }
 //funcion en caso de emergencia del motor
