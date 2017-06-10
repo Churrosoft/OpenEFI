@@ -134,6 +134,7 @@ void setup(){
     lcd.setCursor(0,3);
     lcd.print("####################");
     delay(500);
+    LCD(5,4);
 }
 
 void loop(){
@@ -223,14 +224,18 @@ void controlDeEncendido(float temperatura){
     //-------fin del bloque de control de avance-----------
     //----
     //--------inicio del bloque de control de cuando se larga la chispa------------
-
+        //FDSoftware: mandale un mayor o igual, por si se atrasa en algo el arduino y no llega a ejecutar esta parte :P
         if(diente == (33 - avanceDeChispa) ){//----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
           iniciarChispazo(pinBobinas13);//iniciar chispazo
             activado = true;
+            //FDSoftware: el control para sacar la chispa va afuera del if de dientes wey XDD
+            //sino va a comprobar si paso el tiempo recieen la proxima vez que pase por el diente del if :P
+
             //esperar un tiempito
             if(activado == true){
                 tiempo = millis();
             }
+            
             if ((millis() - millisant) >= periodo && activado == true) {
                 pararChispazo(pinBobinas13);//una vez pasados 5ms terminar chispazo
                 millisant = millis();
@@ -266,9 +271,9 @@ void controlDeEncendido(float temperatura){
             //esperar un tiempito
             if(activado == true){
                 tiempo = millis();
-            }
+            }       
             if ((millis() - millisant) >= periodo && activado == true) {
-              //  pararChispazo(pinBobinas24);
+                pararChispazo(pinBobinas24);
                 millisant = millis();
                 activado = false;
             }
@@ -364,7 +369,43 @@ float  sensortemp(){
     float celsius = millivolts / 10; 
     return celsius;
 } 
+//funcion para el control del lcd
+void LCD(int op, int texto){
+    String linea1 = "###OpenEFI v0.010###";
+    String lin2  = "#RPM: ";
+    String lin2a = " #T:";
+    String lin2b = "#";
+    String lin3a = "###T.INY:";
+    String lin3b = " mS####";
+    String lin4a = "###Avance: ";
+    String lin4b = "°######";
 
+    if(op == 0){
+        String LX = lin2 + texto + lin2a + temp + lin2b;
+        lcd.setCursor(0,1);
+        lcd.print(LX);
+    }
+    if(op == 1){
+        String LX = lin3a + texto + lin3b;
+        lcd.setCursor(0,1);
+        lcd.print(LX);
+    }
+    if(op == 2){
+        String LX = lin4a + texto + lin4b;
+        lcd.setCursor(0,1);
+        lcd.print(LX);
+    }
+    if(op == 5){ //esta opcion es para inciar el panel
+        lcd.setCursor(0,0);
+        lcd.print(" ###OpenEFI v0.010###");
+        lcd.setCursor(0,1);
+		lcd.print("#RPM:  #T:°C#");
+        lcd.setCursor(0,2);
+		lcd.print("###T.INY: mS####");
+        lcd.setCursor(0,3);
+		lcd.print("###Avance: °######");
+    }
+}
 //funcion en caso de emergencia del motor
 void emerg(){
     digitalWrite(pinLuzMuerte, HIGH);
