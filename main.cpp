@@ -7,7 +7,7 @@
 /*-----( Declarar variables :D )-----*/
 
 #define motor 1 //definir tipo de motor 0 = diesel ; 1 = nafta
-
+#const String ver =  "## ver 0.01 Alpha ##";
 /*-----( Variables INYECCION )-----*/
 
 int iny[] = {3,4,5,6};       //Pines de arduino que esta conectados los inyectores **CAMBIAR PINES**
@@ -85,7 +85,17 @@ int varX = 0;               //variable temporal, multiples usos
 int pinLuzMuerte = 12;       //sip, pin de luz de "check Engine"
 bool emergencia  = false;    //mientras que este en false todo bien ^~^
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // definimos el display I2C
-
+const uint8_t charBitmap[][8] = { //array con simbolo de grados en diferentes lugares :P
+   { 0xc, 0x12, 0x12, 0xc, 0, 0, 0, 0 },
+   { 0x6, 0x9, 0x9, 0x6, 0, 0, 0, 0 },
+   { 0x0, 0x6, 0x9, 0x9, 0x6, 0, 0, 0x0 },
+   { 0x0, 0xc, 0x12, 0x12, 0xc, 0, 0, 0x0 },
+   { 0x0, 0x0, 0xc, 0x12, 0x12, 0xc, 0, 0x0 },
+   { 0x0, 0x0, 0x6, 0x9, 0x9, 0x6, 0, 0x0 },
+   { 0x0, 0x0, 0x0, 0x6, 0x9, 0x9, 0x6, 0x0 },
+   { 0x0, 0x0, 0x0, 0xc, 0x12, 0x12, 0xc, 0x0 }
+   
+};
 void int0(){
     //if(emergencia == false){ //si entro en modo emergencia no hacemos caso a nada :V
         varr = true;
@@ -107,6 +117,7 @@ void setup(){
     pinMode(pinLuzMuerte, OUTPUT);
     pinMode(pinVENT, OUTPUT);
 
+    int charBitmapSize = (sizeof(charBitmap ) / sizeof (charBitmap[0]));
   #if (motor == 1)
     pinMode(pinBobinas13, OUTPUT);
     pinMode(pinBobinas24, OUTPUT);
@@ -130,11 +141,11 @@ void setup(){
     lcd.setCursor(0,1);
     lcd.print("##### OpenEFI ######");
     lcd.setCursor(0,2);
-    lcd.print("## ver 0.01 Alpha ##");
+    lcd.print(ver);
     lcd.setCursor(0,3);
     lcd.print("####################");
     delay(500);
-    LCD(5,4);
+    LCD(5,0,0);
 }
 
 void loop(){
@@ -163,8 +174,12 @@ void ControlRPM(){
 
 void ControlINY(bool varY){
     //Controla los tiempos de inyeccion dependiendo la mariposa,rpm y temperatura del motor
+    int tempX; //variable temporal
+    int tempX2;//variable temporal
     if(varY == true){
-     if(rpm <= rpmMIN && marv <= tolrpm && acelerar == false){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
+        tempX  = rpmMIN + tolrpm
+        tempX2 = rpmMIN - tolrpm
+     if(rpm <= tempX2 && acelerar == false){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
               if(temp >= tempfrio){
                   inyT = inyT + 700; //sumamos 700uS / 0.7mS si el motor esta frio
              }else{
@@ -174,7 +189,7 @@ void ControlINY(bool varY){
               rpmant = rpm;
            }
 
-           if(rpm >= rpmMIN && marv <= tolrpm && acelerar == false){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
+           if(rpm >= tempX && acelerar == false){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
               if(temp >= tempfrio){
                    inyT = inyT - 700; //restamos 700uS / 0.7mS si el motor esta frio
              }else{
@@ -225,20 +240,24 @@ void controlDeEncendido(float temperatura){
     //----
     //--------inicio del bloque de control de cuando se larga la chispa------------
 
-        //FDSoftware: te falto un toque para sacar el bus, ya esta XDD
-        if(diente >= (33 - avanceDeChispa)||diente < 33){//----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
+        //ULTIMO ARREGLO DE FRANCISJPK: ya arregle el tema de la chispa,
+        //ahora solo tiene 2 dientes posibles para mandarla, el problema
+        //era que mandaba chispa desde el diente que tenia que mandar hasta
+        //el pms, una locura xD, ahora solo manda chispa donde la tiene que mandar
+        //y un diente despues, por las dudas de que el arduino se salte un diente.
+        if(diente >= (33 - avanceDeChispa)&&diente <= (33-avanceDeChispa)+1){//----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
             iniciarChispazo(pinBobinas13);//iniciar chispazo
             activado = true;
             millisant = millis();// FDSoftware: ponemos el tiempo anterior como el actual para empezar a medir :P
-        }else if(diente >= (66 - avanceDeChispa)||diente < 66){//----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
+        }else if(diente >= (66 - avanceDeChispa)&&diente <= (66-avanceDeChispa)+1){//----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
             iniciarChispazo(pinBobinas13);
             activado = true;
             millisant = millis();
-        }else if(diente >= (99 - avanceDeChispa)||diente < 99){//----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
+        }else if(diente >= (99 - avanceDeChispa)&&diente <= (99-avanceDeChispa)+1){//----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
             iniciarChispazo(pinBobinas24);
             activado = true;
             millisant = millis();
-        }else if(diente >= (132 - avanceDeChispa)||diente < 132){//----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
+        }else if(diente >= (132 - avanceDeChispa)&&diente <= (132-avanceDeChispa)+1 ){//----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
             iniciarChispazo(pinBobinas24);
             millisant = millis();
             activado = true;
@@ -246,7 +265,7 @@ void controlDeEncendido(float temperatura){
         //tenias razon, va fuera de la cadena que detecta cual tiene que mandar chispa xD
         //pongo desactivar pin de bobinas 13 y 24 para asegurarme de que se desactiven los 2
         //ya que no se cual fue el ultimo :P(de paso ahorramos memoria ;))
-        
+
             if ((millis() - millisant) >= periodo && activado == true) { //esto tenias que mandar afuera del if XDDD
                 millisant = millis();
                 activado = false;
@@ -347,40 +366,62 @@ float  sensortemp(){
     return celsius;
 } 
 //funcion para el control del lcd
-void LCD(int op, int texto){
+void LCD(int op, float texto, int texto2){
     String linea1 = "###OpenEFI v0.010###";
     String lin2  = "#RPM: ";
-    String lin2a = " #T:";
+    String lin2a = "#T:";
     String lin2b = "#";
     String lin3a = "###T.INY:";
-    String lin3b = " mS####";
+    String lin3b = " mS###";
     String lin4a = "###Avance: ";
-    String lin4b = " ######";
-
+    String lin4b = "###";
+    String LX;
     if(op == 0){
-        String LX = lin2 + texto + lin2a + temp + lin2b;
+         LX = lin2 + texto2 + lin2a + temp;
         lcd.setCursor(0,1);
+        lcd.print(LX);
+        lcd.setCursor(17,1);
+        lcd.print (char(random(7)));
+        lcd.setCursor(18,1);
+        lcd.print("C#");
         lcd.print(LX);
     }
     if(op == 1){
-        String LX = lin3a + texto + lin3b;
-        lcd.setCursor(0,1);
+         LX = lin3a + texto + lin3b;
+        lcd.setCursor(0,2);
         lcd.print(LX);
     }
     if(op == 2){
-        String LX = lin4a + texto + lin4b;
-        lcd.setCursor(0,1);
+        LX = lin4a + texto;
+        lcd.setCursor(0,3);
         lcd.print(LX);
+        lcd.setCursor(16,3);
+        lcd.print (char(1));
+        lcd.setCursor(17,3);
+        lcd.print(lin4b);
     }
     if(op == 5){ //esta opcion es para inciar el panel
         lcd.setCursor(0,0);
-        lcd.print(" ###OpenEFI v0.010###");
+        lcd.print("###OpenEFI v0.010###");
         lcd.setCursor(0,1);
+        lcd.print("# RPM:0000 #T 000");
+        lcd.setCursor(17,1);
+        lcd.print (char(1));
+        lcd.setCursor(18,1);
+        lcd.print("C#");
         lcd.setCursor(0,2);
-		lcd.print("###T.INY: mS####");
+        lcd.print("### T.INY: 00  mS###");
         lcd.setCursor(0,3);
-		lcd.print("###Avance: ######");
+        lcd.print("#### Avance: 00");
+        lcd.setCursor(16,3);
+        lcd.print (char(random(7)));
+        lcd.setCursor(17,3);
+        lcd.print(lin4b);
     }
+}
+//convierte grados en dientes del sensor hall
+int dientes(float grados){
+
 }
 //funcion en caso de emergencia del motor
 void emerg(){
