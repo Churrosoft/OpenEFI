@@ -421,7 +421,12 @@ void LCD(int op, float texto, int texto2){
 }
 //convierte grados en dientes del sensor hall
 int dientes(float grados){
-
+    float grad = 360 / dnt; //dividimos 360 grados por la cantidad de dientes
+    //dividimos grados por grad, luego multiplicamos por 100 para transformar el float en int
+    int x2     = (grados / grad) * 100; 
+    //dividimos por 100, al hacer esto se eliminan los decimales, en prox ver redondear
+    dientes    = x2 / 100;
+    return dientes; 
 }
 //funcion en caso de emergencia del motor
 void emerg(){
