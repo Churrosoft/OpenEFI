@@ -150,7 +150,7 @@ void setup(){
 
 void loop(){
         ControlRPM();
-        marv = analogRead(mar);
+        marv = analogRead(mar) / 4;
         temp = sensortemp();
         Temperatura();
         bool varINY = ControlARR(); //control de arranque del motor
@@ -176,11 +176,16 @@ void ControlINY(bool varY){
     //Controla los tiempos de inyeccion dependiendo la mariposa,rpm y temperatura del motor
     int tempX; //variable temporal
     int tempX2;//variable temporal
+    int tempX3;//variable temporal, luego dejar una sola
     if(varY == true){
-        tempX  = rpmMIN + tolrpm
-        tempX2 = rpmMIN - tolrpm
-     if(rpm <= tempX2 && acelerar == false){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
+        //sumamos y restamos la tolerancia a las rpm minimas
+        tempX  = rpmMIN + tolrpm;
+        tempX2 = rpmMIN - tolrpm;
+        //sumamos la tolerancia a las rpm maximas
+        tempX3 = rpmMAX + tolrpm;
+     if(rpm <= tempX2 && acelerar == false && marv >= 15){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
               if(temp >= tempfrio){
+                  if inyT{
                   inyT = inyT + 700; //sumamos 700uS / 0.7mS si el motor esta frio
              }else{
                   inyT = inyT + 500; //restamos 500 uS/ 0.5mS si el motor esta en temperatura de funcionamiento
@@ -189,7 +194,7 @@ void ControlINY(bool varY){
               rpmant = rpm;
            }
 
-           if(rpm >= tempX && acelerar == false){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
+           if(rpm >= tempX && acelerar == false && marv >= 15){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
               if(temp >= tempfrio){
                    inyT = inyT - 700; //restamos 700uS / 0.7mS si el motor esta frio
              }else{
@@ -197,6 +202,14 @@ void ControlINY(bool varY){
              } 
              acelerar = true;
              rpmant = rpm;
+          }
+          if(marv >= 10 && rpm <= 3000){
+              //cortamos inyeccion si las rpm pasan las 3000 y no se solto el acelerador
+              inyT = 0;
+          }
+          if(marv >= 10 && rpm <= 1500){
+              //volvemos a habilitar la inyeccion a las 1500 vueltas
+              inyT = inyTR + 200;
           }
        int varxx = rpm - rpmant;
         if(vuelta3 >= (dnt * 10) && varxx <= 15){
