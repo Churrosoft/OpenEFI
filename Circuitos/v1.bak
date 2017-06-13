@@ -1,0 +1,283 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:IRFZ44N
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L IRFZ44N Q1
+U 1 1 593DF771
+P 4750 2350
+F 0 "Q1" H 4950 2450 50  0000 L BNN
+F 1 "IRFZ44N" H 4950 2350 50  0000 L BNN
+F 2 "TO-220" H 4750 2350 50  0001 L BNN
+F 3 "1.33 USD" H 4750 2350 50  0001 L BNN
+F 4 "TO-220 International Rectifier" H 4750 2350 50  0001 L BNN "Package"
+F 5 "International Rectifier" H 4750 2350 50  0001 L BNN "MF"
+F 6 "Transistor NPN Field Effect IRFZ44/IRFZ44N INTERNATIONAL RECTIFIER Ampere%3D46 V%3D250 TO220" H 4750 2350 50  0001 L BNN "Description"
+F 7 "Bad" H 4750 2350 50  0001 L BNN "Availability"
+F 8 "IRFZ44N" H 4750 2350 50  0001 L BNN "MP"
+	1    4750 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L PC817 U?
+U 1 1 593DF926
+P 4000 2450
+F 0 "U?" H 3800 2650 50  0000 L CNN
+F 1 "PC817" H 4000 2650 50  0000 L CNN
+F 2 "Housings_DIP:DIP-4_W7.62mm" H 3800 2250 50  0001 L CIN
+F 3 "" H 4000 2450 50  0001 L CNN
+	1    4000 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 593DF9EF
+P 4400 2200
+F 0 "R?" H 4430 2220 50  0000 L CNN
+F 1 "R_Small" H 4430 2160 50  0000 L CNN
+F 2 "" H 4400 2200 50  0001 C CNN
+F 3 "" H 4400 2200 50  0001 C CNN
+	1    4400 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 593DFA2C
+P 3500 2350
+F 0 "R?" H 3530 2370 50  0000 L CNN
+F 1 "R_Small" H 3530 2310 50  0000 L CNN
+F 2 "" H 3500 2350 50  0001 C CNN
+F 3 "" H 3500 2350 50  0001 C CNN
+	1    3500 2350
+	0    1    1    0   
+$EndComp
+$Comp
+L SIL10 J?
+U 1 1 593DFAEC
+P 2250 2800
+F 0 "J?" H 2250 3400 50  0000 C CNN
+F 1 "SIL10" V 2270 2800 50  0000 C CNN
+F 2 "" H 2250 2800 50  0001 C CNN
+F 3 "" H 2250 2800 50  0001 C CNN
+	1    2250 2800
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Screw_Terminal_1x04 J?
+U 1 1 593DFD41
+P 5050 1250
+F 0 "J?" H 5050 1700 50  0000 C TNN
+F 1 "Screw_Terminal_1x04" V 4900 1250 50  0000 C TNN
+F 2 "" H 5050 825 50  0001 C CNN
+F 3 "" H 5025 1450 50  0001 C CNN
+	1    5050 1250
+	0    1    1    0   
+$EndComp
+$Comp
+L Screw_Terminal_1x02 J?
+U 1 1 593DFE73
+P 3850 1150
+F 0 "J?" H 3850 1400 50  0000 C TNN
+F 1 "Screw_Terminal_1x02" V 3700 1150 50  0000 C TNN
+F 2 "" H 3850 925 50  0001 C CNN
+F 3 "" H 3825 1150 50  0001 C CNN
+	1    3850 1150
+	0    1    1    0   
+$EndComp
+$Comp
+L CP C?
+U 1 1 593E0699
+P 4100 1650
+F 0 "C?" H 4125 1750 50  0000 L CNN
+F 1 "CP" H 4125 1550 50  0000 L CNN
+F 2 "" H 4138 1500 50  0001 C CNN
+F 3 "" H 4100 1650 50  0001 C CNN
+	1    4100 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Earth #PWR?
+U 1 1 593E07C0
+P 4100 1950
+F 0 "#PWR?" H 4100 1700 50  0001 C CNN
+F 1 "Earth" H 4100 1800 50  0001 C CNN
+F 2 "" H 4100 1950 50  0001 C CNN
+F 3 "" H 4100 1950 50  0001 C CNN
+	1    4100 1950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Earth #PWR?
+U 1 1 593E0838
+P 3750 1500
+F 0 "#PWR?" H 3750 1250 50  0001 C CNN
+F 1 "Earth" H 3750 1350 50  0001 C CNN
+F 2 "" H 3750 1500 50  0001 C CNN
+F 3 "" H 3750 1500 50  0001 C CNN
+	1    3750 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Earth #PWR?
+U 1 1 593E0860
+P 4750 2750
+F 0 "#PWR?" H 4750 2500 50  0001 C CNN
+F 1 "Earth" H 4750 2600 50  0001 C CNN
+F 2 "" H 4750 2750 50  0001 C CNN
+F 3 "" H 4750 2750 50  0001 C CNN
+	1    4750 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Earth #PWR?
+U 1 1 593E0888
+P 4400 2650
+F 0 "#PWR?" H 4400 2400 50  0001 C CNN
+F 1 "Earth" H 4400 2500 50  0001 C CNN
+F 2 "" H 4400 2650 50  0001 C CNN
+F 3 "" H 4400 2650 50  0001 C CNN
+	1    4400 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L +12V #PWR?
+U 1 1 593E08B0
+P 4400 2000
+F 0 "#PWR?" H 4400 1850 50  0001 C CNN
+F 1 "+12V" H 4400 2140 50  0000 C CNN
+F 2 "" H 4400 2000 50  0001 C CNN
+F 3 "" H 4400 2000 50  0001 C CNN
+	1    4400 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 1950 4100 1800
+Wire Wire Line
+	3750 1350 3750 1500
+Wire Wire Line
+	4100 1500 3950 1500
+Wire Wire Line
+	3950 1500 3950 1350
+$Comp
+L +12V #PWR?
+U 1 1 593E0ED1
+P 4100 1450
+F 0 "#PWR?" H 4100 1300 50  0001 C CNN
+F 1 "+12V" H 4100 1590 50  0000 C CNN
+F 2 "" H 4100 1450 50  0001 C CNN
+F 3 "" H 4100 1450 50  0001 C CNN
+	1    4100 1450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 1450 4100 1500
+Wire Wire Line
+	4750 1450 4750 2150
+Wire Wire Line
+	4400 2100 4400 2000
+Wire Wire Line
+	4300 2350 4450 2350
+Wire Wire Line
+	4400 2350 4400 2300
+Wire Wire Line
+	4750 2550 4750 2750
+Wire Wire Line
+	4300 2550 4400 2550
+Wire Wire Line
+	4400 2550 4400 2650
+Wire Wire Line
+	3600 2350 3700 2350
+Wire Wire Line
+	3400 2350 2600 2350
+$Comp
+L LED D?
+U 1 1 593E1781
+P 2650 1350
+F 0 "D?" H 2650 1450 50  0000 C CNN
+F 1 "LED" H 2650 1250 50  0000 C CNN
+F 2 "" H 2650 1350 50  0001 C CNN
+F 3 "" H 2650 1350 50  0001 C CNN
+	1    2650 1350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 593E1869
+P 2650 1000
+F 0 "R?" H 2680 1020 50  0000 L CNN
+F 1 "R_Small" H 2680 960 50  0000 L CNN
+F 2 "" H 2650 1000 50  0001 C CNN
+F 3 "" H 2650 1000 50  0001 C CNN
+	1    2650 1000
+	1    0    0    -1  
+$EndComp
+$Comp
+L +12V #PWR?
+U 1 1 593E1910
+P 2650 800
+F 0 "#PWR?" H 2650 650 50  0001 C CNN
+F 1 "+12V" H 2650 940 50  0000 C CNN
+F 2 "" H 2650 800 50  0001 C CNN
+F 3 "" H 2650 800 50  0001 C CNN
+	1    2650 800 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2650 1200 2650 1100
+Wire Wire Line
+	2650 800  2650 900 
+$Comp
+L Earth #PWR?
+U 1 1 593E1AA7
+P 2650 1650
+F 0 "#PWR?" H 2650 1400 50  0001 C CNN
+F 1 "Earth" H 2650 1500 50  0001 C CNN
+F 2 "" H 2650 1650 50  0001 C CNN
+F 3 "" H 2650 1650 50  0001 C CNN
+	1    2650 1650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2650 1500 2650 1650
+$EndSCHEMATC

@@ -4,15 +4,17 @@
 /*-----( Importar Librerias )-----*/
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
+#include <TMAP.h>
 /*-----( Declarar variables :D )-----*/
 
 #define motor 1 //definir tipo de motor 0 = diesel ; 1 = nafta
-#const String ver =  "## ver 0.01 Alpha ##";
+const String ver =  "## ver 0.01 Alpha ##";
 /*-----( Variables INYECCION )-----*/
 
 int iny[] = {3,4,5,6};       //Pines de arduino que esta conectados los inyectores **CAMBIAR PINES**
 int tMax     = 22;           //tiempo maximo de inyeccion
 int perinyec = 5;            //cantidad de dientes que tiene que detectar el sensor hall para inyectar
+bool per = false;            //usada para no inyectar mas de una vez en el mismo cilindro
 
 float inyT   = 1500;         //tiempo de inyeccion uS (actual)
 float inyTR  = 1250;         //tiempo de inyeccion Ralenti (uS)
@@ -51,8 +53,13 @@ int vuelta     = 0;          //numero de vuelta para rpm
 bool varr      = false;      //variable para evitar calcular rpm varias veces
 int rpmant     = 0;          //rpm anteriores
 
-unsigned long milirpm;    //tiempo previo ultimo periodo medicion rpm
+int promedio   = 0;          //promedio tiempo entre dientes
+int Tdnt[11];                //aca se guardan los tiempos entre dientes, luego se promedia (son 12);
+
+unsigned long milirpm;       //tiempo previo ultimo periodo medicion rpm
 unsigned long curMillis;     //tiempo actual del micro
+
+bool sincronizado = false;   //en true si esta sincronizado la variable vuelta con el PMS
 /*-----( Variables Temperatura )-----*/
 
 int sensorT    = 3;          //pin de sensor Temperatura
@@ -70,18 +77,19 @@ float tempvenMAX = 95;      //temperatura a la que se enciende el ventilador
 
   int avanceDeChispa     = 3;      //en dientes de volante (2,42 grados) , default en 3
   int periodo          = 7;      //periodo en mS
-    unsigned long tiempo   = 0;
-    unsigned long millisant   = 0;
+  unsigned long tiempo   = 0;
+  unsigned long millisant   = 0;
   int pinBobinas13         = 8;
   int pinBobinas24         = 9;
-    bool activado = false;
-    bool arrancando = false;
+  bool activado = false;
+  bool arrancando = false;
 
 /*-----( Variables Logica )-----*/
 int var = 0;                //variable usada para bucles
 int varX = 0;               //variable temporal, multiples usos
 
 /*-----( Otras variables )-----*/
+TMAP myTMAP = TMAP(A2,A3,1.75,2.10); //iniciamos sensor TMAP
 int pinLuzMuerte = 12;       //sip, pin de luz de "check Engine"
 bool emergencia  = false;    //mientras que este en false todo bien ^~^
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // definimos el display I2C
@@ -97,14 +105,15 @@ const uint8_t charBitmap[][8] = { //array con simbolo de grados en diferentes lu
    
 };
 void int0(){
-    //if(emergencia == false){ //si entro en modo emergencia no hacemos caso a nada :V
-        varr = true;
+    if(emergencia == false){ //si entro en modo emergencia no hacemos caso a nada :V
+        varr = false;
         vuelta++;
         vuelta3++;
-          if(vuelta >= perinyec){
+        if(vuelta >= perinyec){
               vuelta2++;
+              per = true;
         }
-   // }
+    }
 }
 
 void setup(){
@@ -149,6 +158,7 @@ void setup(){
 }
 
 void loop(){
+    for(;;){
         ControlRPM();
         marv = analogRead(mar) / 4;
         temp = sensortemp();
@@ -157,19 +167,37 @@ void loop(){
         ControlINY(varINY);
         controlDeEncendido(temp);
         ControlPWM();
+    }
 }
 
-void ControlRPM(){    
-   //calcula rpm cada 1/4 vuelta del cigueñal
-      if(varr == false && vuelta == 0){
-    milirpm = millis();
-    varr = true;
+void ControlRPM(){  
+int dntA   = 0; //numero de diente anterior 
+int indice = 0; //indice para guardar en array de Tdnt
+int rpmtT  = 0; //variable temporal para calcular rpm
+
+  // codigo para sincronizar el cigueñal
+      if(varr == false){
+         milirpm = millis();
+         varr = true;
+		 dntA = vuelta;
      }
-  
-     if(varr == true && vuelta == 50){
-      rpm = ((millis() - milirpm)* 4 )* 60000;
+  if(indice >= 11){
+     if(varr == true && dntA != vuelta){ //si se detecto un diente nuevo y se guardo el tiempo anterior 
+      Tdnt[indice] = millis() - milirpm;
       varr = false;
+	  indice++;
      }
+  }else{
+	sincronizar();
+	indice = 0;
+  }
+  //calculamos las rpm promediando el tiempo de 4 dientes
+  if (indice <= 3){
+	rpmT = (Tdnt[0] + Tdnt[1] + Tdnt[2] + Tdnt[3]) / 4; //sacamos el tiempo promedio de los 4
+	rpmT = 1000 / rpmT; //divimos el tiempo por 1000 para tener la cantidad de dientes por segundo
+	rpmT = dnt /rpmT;   //ahora tenemos la cantidad de vueltas por segundo
+	rpm = rpmT * 60;    //finalmente tenemos las RPM
+  }
 }
 
 void ControlINY(bool varY){
@@ -185,7 +213,6 @@ void ControlINY(bool varY){
         tempX3 = rpmMAX + tolrpm;
      if(rpm <= tempX2 && acelerar == false && marv >= 15){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
               if(temp >= tempfrio){
-                  if inyT{
                   inyT = inyT + 700; //sumamos 700uS / 0.7mS si el motor esta frio
              }else{
                   inyT = inyT + 500; //restamos 500 uS/ 0.5mS si el motor esta en temperatura de funcionamiento
@@ -204,7 +231,7 @@ void ControlINY(bool varY){
              rpmant = rpm;
           }
           if(marv >= 10 && rpm <= 3000){
-              //cortamos inyeccion si las rpm pasan las 3000 y no se solto el acelerador
+              //cortamos inyeccion si las rpm pasan las 3000 y se solto el acelerador
               inyT = 0;
           }
           if(marv >= 10 && rpm <= 1500){
@@ -221,10 +248,11 @@ void ControlINY(bool varY){
 }
 void ControlPWM(){
     if(emergencia == false){
-        if (inyectando == false){
+        if (inyectando == false  && per == true){
           digitalWrite(iny[vuelta2++],HIGH);
             unsigned long tmpINY = micros();
-          inyectando = true;
+            inyectando = true;
+            per = false; //per es para controlar que se inyecte una sola vez :P
         }
       if (micros() - tmpINY >= inyT) {
         digitalWrite(iny[vuelta2++],LOW);
@@ -235,6 +263,7 @@ void ControlPWM(){
       }
     }
 }
+
 
 #if (motor == 1)
 void controlDeEncendido(float temperatura){
@@ -250,75 +279,109 @@ void controlDeEncendido(float temperatura){
         }
     }
     //-------fin del bloque de control de avance-----------
-    //----
     //--------inicio del bloque de control de cuando se larga la chispa------------
-
-        //ULTIMO ARREGLO DE FRANCISJPK: ya arregle el tema de la chispa,
-        //ahora solo tiene 2 dientes posibles para mandarla, el problema
-        //era que mandaba chispa desde el diente que tenia que mandar hasta
-        //el pms, una locura xD, ahora solo manda chispa donde la tiene que mandar
-        //y un diente despues, por las dudas de que el arduino se salte un diente.
-        if(diente >= (33 - avanceDeChispa)&&diente <= (33-avanceDeChispa)+1){//----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
-            iniciarChispazo(pinBobinas13);//iniciar chispazo
-            activado = true;
-            millisant = millis();// FDSoftware: ponemos el tiempo anterior como el actual para empezar a medir :P
-        }else if(diente >= (66 - avanceDeChispa)&&diente <= (66-avanceDeChispa)+1){//----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
+        if(diente >= ((dnt/4) - avanceDeChispa)&&diente <= ((dnt/4)-avanceDeChispa)+1){
             iniciarChispazo(pinBobinas13);
             activado = true;
             millisant = millis();
-        }else if(diente >= (99 - avanceDeChispa)&&diente <= (99-avanceDeChispa)+1){//----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
+            //----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
+        }else if(diente >= ((dnt/2) - avanceDeChispa)&&diente <= ((dnt/2)-avanceDeChispa)+1){
+            iniciarChispazo(pinBobinas13);
+            activado = true;
+            millisant = millis();
+            //----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
+        }else if(diente >= (((dnt/4)*3) - avanceDeChispa)&&diente <= (((dnt/4)*3)-avanceDeChispa)+1){
             iniciarChispazo(pinBobinas24);
             activado = true;
             millisant = millis();
-        }else if(diente >= (132 - avanceDeChispa)&&diente <= (132-avanceDeChispa)+1 ){//----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
+            //----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
+        }else if(diente >= (dnt - avanceDeChispa)&&diente <= (dnt - avanceDeChispa)+1 ){
             iniciarChispazo(pinBobinas24);
             millisant = millis();
             activado = true;
+            //----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
         }
-        //tenias razon, va fuera de la cadena que detecta cual tiene que mandar chispa xD
-        //pongo desactivar pin de bobinas 13 y 24 para asegurarme de que se desactiven los 2
-        //ya que no se cual fue el ultimo :P(de paso ahorramos memoria ;))
 
-            if ((millis() - millisant) >= periodo && activado == true) { //esto tenias que mandar afuera del if XDDD
-                millisant = millis();
-                activado = false;
-                pararChispazo(pinBobinas13);
-                pararChispazo(pinBobinas24);
-            }
+        if ((millis() - millisant) >= periodo && activado == true) {
+            millisant = millis();
+            activado = false;
+            pararChispazo(pinBobinas13);
+            pararChispazo(pinBobinas24);
+        }
     //------fin del bloque que controla la mandada de chispa------------------
 }
 //---------------BLOQUE DE CONTROL DE AVANCE
 void ControlEncendidoFrio(){
-    if(rpm < 2000){
-        avanceDeChispa = 4;//+-10°
-    }else if(rpm < 3000){
-        avanceDeChispa = 6;//+-15°
-    }else if(rpm < 4000){
-        avanceDeChispa = 8;//+-20°
-    }else if(rpm < 5000){
-        avanceDeChispa = 10;//+-25°
-    }else if(rpm < 6000){
-        avanceDeChispa = 12;//+-30°
+    if(rpm < 1500&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(5);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 2200&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(7);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 3000&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(9);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 3500&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(11);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 4000&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(17);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 5000&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(22);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 6000&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(26);
+        LCD(2,avanceDeChispa,0);
     }
 }
 void ControlEncendidoNormal(){
-    if(rpm < 2000){
-        avanceDeChispa = 4;//+-10°
-    }else if(rpm < 3000){
-        avanceDeChispa = 7;//+-17,5°
-    }else if(rpm < 4000){
-        avanceDeChispa = 10;//+-25°
-    }else if(rpm < 5000){
-        avanceDeChispa = 13;//+-32,5°
-    }else if(rpm < 6000){
-        avanceDeChispa = 15;//+-37,5°
+    if(rpm < 1500&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(7);
+        LCD(2,avanceDeChispa,0);// esto esta bien asi?
+    }else if(rpm < 2200&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(12);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 3000&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(15);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 3500&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(18);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 4000&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(23);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 5000&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(30);
+        LCD(2,avanceDeChispa,0);
+    }else if(rpm < 6000&&avanceDeChispa != avanceAnterior){
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(37);
+        LCD(2,avanceDeChispa,0);
     }
 }
 void ControlEncendidoArranque(float temperatura){
     if(temperatura < 45){
-        avanceDeChispa = 2;//+-5°
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(4);
+        LCD(2,avanceDeChispa,0);
     }else{
-        avanceDeChispa = 3;//+-7,5°
+        avanceAnterior = avanceDeChispa;
+        avanceDeChispa = dientes(6);
+        LCD(2,avanceDeChispa,0);
     }
 }
 //--------------------FIN DEL BLOQUE DE CONTROL DE AVANCE
@@ -456,4 +519,8 @@ void emerg(){
     while(varemerg == 1){
         delay(1000);
     }
+}
+
+void sincronizar(){
+    //Esta funcion sincroniza el valor de "vuelta" con el PMS del piston 1
 }
