@@ -8,7 +8,7 @@
 /*-----( Declarar variables :D )-----*/
 
 #define motor 1 //definir tipo de motor 0 = diesel ; 1 = nafta
-
+#define dev 1   //habilita mensajes por serial
 const String ver "## ver 0.01 Alpha ##";
 
 //***REASIGNAR LUEGO TODOS LOS PINES***
@@ -16,7 +16,7 @@ const String ver "## ver 0.01 Alpha ##";
 /*-----( Variables INYECCION )-----*/
 
 int iny[] = {3,4,5,6};       //Pines de arduino que esta conectados los inyectores **CAMBIAR PINES**
-int tMax     = 22;           //tiempo maximo de inyeccion
+int tMax     = 22000;           //tiempo maximo de inyeccion
 int perinyec = 5;            //cantidad de dientes que tiene que detectar el sensor hall para inyectar
 bool per = false;            //usada para no inyectar mas de una vez en el mismo cilindro
 
@@ -121,6 +121,9 @@ void int0(){ //interrupcion, se ejecuta cada vez que el sensor de posicion de ci
 }
 
 void setup(){
+   #if(dev == 1) 
+   Serial.begin(14400); //iniamos comunicacion serial
+   #endif
     //definir E/S
     pinMode(pinrpm, INPUT);
     pinMode(sensorT, INPUT);
@@ -129,7 +132,9 @@ void setup(){
     pinMode(ARRpin, INPUT);
     pinMode(pinLuzMuerte, OUTPUT);
     pinMode(pinVENT, OUTPUT);
-
+    #if(dev == 1) 
+        Serial.println("Se termino de definir E/S");
+   #endif
     int charBitmapSize = (sizeof(charBitmap ) / sizeof (charBitmap[0]));
   #if (motor == 1)
     pinMode(pinBobinas13, OUTPUT);
@@ -144,6 +149,9 @@ void setup(){
 
     for(var = 0; var >= 3; var++){
         digitalWrite(iny[var], LOW);}
+    #if(dev == 1) 
+        Serial.println("Iniciando Sistema...");
+   #endif
      //mostramos mensaje en LCD :D
     lcd.setCursor(0,0);
     lcd.print("####################");
@@ -161,6 +169,9 @@ void setup(){
 }
 
 void loop(){
+    #if(dev == 1) 
+        Serial.println("Listo");
+   #endif
     for(;;){ //Remplazo del loop para ganar rendimiento
         ControlRPM();
         marv = analogRead(mar) / 4;
@@ -418,6 +429,9 @@ bool ControlARR(){
     //se fija si se esta arrancando el motor, fija la inyeccion,
     //pone el avance en modo arranque y desactiva sonda lamba,acelerador y control de rpm ralenti
     //hasta que las rpm sean mayores a 1000~
+    #if(dev == 1) 
+        Serial.println("Se esta intentando arrancar el motor");
+   #endif
     int senalarr = digitalRead(ARRpin);
     if (senalarr == HIGH && vuelta2 <= 10){ //se esta intentando arrancar el motor y pasaron menos de 10 vueltas
         //usar cantidad de vueltas o tiempo y rpm para saber si se acelero o no ?)
@@ -511,6 +525,9 @@ int dientes(float grados){
 }
 //funcion en caso de emergencia del motor
 void emerg(){
+    #if(dev == 1) 
+        Serial.println("Motor en estado de emergencia");
+   #endif
     digitalWrite(pinLuzMuerte, HIGH);
     int varemerg = 1;
     lcd.setCursor(0,0);
@@ -527,6 +544,11 @@ void emerg(){
 }
 
 void sincronizar(){
+    #if(dev == 1) 
+        if (sincronizado == false){
+            Serial.println("Sincronizando PMS con inyeccion y encendido");
+        }
+   #endif
     //Esta funcion sincroniza el valor de "vuelta" con el PMS del piston 1
     int TMIN = 99999; //almacena el tiempo menor de cada diente
     int IMIN = 0; //almacena el indice del menor tiempo
