@@ -166,6 +166,7 @@ void setup(){
 
     //definir interrupciones HW
      attachInterrupt(digitalPinToInterrupt(2), int0, RISING);
+    interrupts();
 }
 
 void loop(){
@@ -225,8 +226,8 @@ void ControlINY(bool varY){
         tempX2 = rpmMIN - tolrpm;
         //sumamos la tolerancia a las rpm maximas
         tempX3 = rpmMAX + tolrpm;
-     if(rpm <= tempX2 && acelerar == false && marv >= 15){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
-              if(temp >= tempfrio){
+     if(rpm <= tempX2 && acelerar == false && marv <= 15){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
+              if(temp <= tempfrio){
                   inyT = inyT + 700; //sumamos 700uS / 0.7mS si el motor esta frio
              }else{
                   inyT = inyT + 500; //restamos 500 uS/ 0.5mS si el motor esta en temperatura de funcionamiento
@@ -235,8 +236,8 @@ void ControlINY(bool varY){
               rpmant = rpm;
            }
 
-           if(rpm >= tempX && acelerar == false && marv >= 15){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
-              if(temp >= tempfrio){
+           if(rpm <= tempX && acelerar == false && marv <= 15){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
+              if(temp <= tempfrio){
                    inyT = inyT - 700; //restamos 700uS / 0.7mS si el motor esta frio
              }else{
                   inyT = inyT - 500; //restamos 500 uS/ 0.5mS si el motor esta en temperatura de funcionamiento
@@ -244,16 +245,16 @@ void ControlINY(bool varY){
              acelerar = true;
              rpmant = rpm;
           }
-          if(marv >= 10 && rpm <= 3000){
+          if(marv <= 10 && rpm >= 3000){
               //cortamos inyeccion si las rpm pasan las 3000 y se solto el acelerador
               inyT = 0;
           }
-          if(marv >= 10 && rpm <= 1500){
+          if(marv <= 10 && rpm <= 1500){
               //volvemos a habilitar la inyeccion a las 1500 vueltas
               inyT = inyTR + 200;
           }
        int varxx = rpm - rpmant;
-        if(vuelta3 >= (dnt * 10) && varxx <= 15){
+        if(vuelta3 <= (dnt * 10) && varxx >= 15){
            // si no hubo un cambio mayor a la 15rpm luego de 10 vueltas de cigueñal volver a corregir
            acelerar = false;
             vuelta3 = 0;
@@ -528,6 +529,7 @@ void emerg(){
     #if(dev == 1) 
         Serial.println("Motor en estado de emergencia");
    #endif
+    noInterrupts(); //desactivamos interrupciones
     digitalWrite(pinLuzMuerte, HIGH);
     int varemerg = 1;
     lcd.setCursor(0,0);
@@ -558,9 +560,9 @@ void sincronizar(){
     int i2   = 0; //variable para recorer array de tiempos
     for(int i = 0; i > dnt; i++;){ //i menor a dnt porque empieza la cuenta en 0 el for y los dientes no
     // Siguiendo el principio "KISS" (Keep It Simple, Stupid!)
-        if (Tdnt[i2] > TMIN){
+        if (Tdnt[i2] < TMIN){
             TMIN = Tdnt[i2];}
-        if (Tdnt[i2] < TMAX){
+        if (Tdnt[i2] > TMAX){
             TMIN = Tdnt[i2];}
         i2++;
     }
