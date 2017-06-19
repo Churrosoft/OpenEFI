@@ -35,6 +35,7 @@ class TMAP{
 	float TempC;   // [ºC]      Temperatura salida en Celsius
 	float R;//constante de gases ideales
 	float mol; //moles del aire en(luego cambiar, varia por el tamaño del cuerpo de mariposa)
+	float MA; //variable para guardar la Masa del aire que entra al cilindro, en L
 }
 
 #endif

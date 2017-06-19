@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "F:\\Programas\\Arduino\\hardware\\arduino\\avr\\cores\\arduino"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "F:\\Programas\\Arduino\\hardware\\arduino\\avr\\cores\\arduino"
+                ]
+            }
+        }
+    ]
+}

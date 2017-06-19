@@ -39,6 +39,6 @@ float TMAP::MasaAire(){
   presion  = map(presion,0, 1023, 145,210, ); //145 = 1,45 psi presion minima, 210 = 2,10 psi presion maxima
   presionf = presion / 100;
   //calculamos la mase del aire
-  MasaAire = (mol* r *TempK) / (0.07 * presionf) ; //0.7 * presionf es para pasar de PSI a atm
-  return MasaAire; //Devolvemos la masa de aire que entra en la admision en litros
+  MA = (mol* r *TempK) / (0.07 * presionf) ; //0.7 * presionf es para pasar de PSI a atm
+  return MA; //Devolvemos la masa de aire que entra en la admision en litros
 }

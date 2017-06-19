@@ -8,7 +8,11 @@
 /*-----( Declarar variables :D )-----*/
 
 #define motor 1 //definir tipo de motor 0 = diesel ; 1 = nafta
-const String ver =  "## ver 0.01 Alpha ##";
+
+const String ver "## ver 0.01 Alpha ##";
+
+//***REASIGNAR LUEGO TODOS LOS PINES***
+
 /*-----( Variables INYECCION )-----*/
 
 int iny[] = {3,4,5,6};       //Pines de arduino que esta conectados los inyectores **CAMBIAR PINES**
@@ -19,7 +23,7 @@ bool per = false;            //usada para no inyectar mas de una vez en el mismo
 float inyT   = 1500;         //tiempo de inyeccion uS (actual)
 float inyTR  = 1250;         //tiempo de inyeccion Ralenti (uS)
 float inyTARR= 22000;        //tiempo de inyeccion Arranque
-unsigned long tmpINY = 0;     //tiempo que paso desde activacion de inyector
+unsigned long tmpINY = 0;    //tiempo que paso desde activacion de inyector
 
 int varINY   = 0;            //varible temporal, guarda ultimo inyector activado
 
@@ -29,11 +33,12 @@ bool arr     = false;        //si se intenta arrancar el motor esta en true
 
 int mar      = A1;           //pin de mariposa de acelerador
 int marv     = 0;            //valor actual de mariposa de acelerador
-bool inyectando = false;        //variable para saber si se esta inyectando todavia o no
+bool inyectando = false;     //variable para saber si se esta inyectando todavia o no
 
 bool acelerar;               //varible temporar, guarda si se intento acelerar el motor
 int vuelta2  = 0;            //numero de vuelta para inyeccion/encendido
 int vuelta3  = 0;            //numero de vuelta para inyeccion/encendido
+
 /*-----( Variables RPM )-----*/
 
 int intervalo1 = 500;        //intervalo para medir rpm
@@ -42,7 +47,7 @@ bool varrpm    = LOW;        //variable para no volver a contar mismo diente com
 
 int pinrpm     = 10;         //pin conectado al sensor de posicion de cigueñal
 int diente     = 0;          //numero de diente actual de la corona
-int dnt        = 20;         //cantidad de dientes que detecta el sensor hall
+int dnt        = 20;         //cantidad de dientes que tiene el sensor de posicion de cigueñal
 
 int rpm        = 0;          //numero actual de rpm
 int rpmMIN     = 800;        //numero minimo de rpm
@@ -54,7 +59,7 @@ bool varr      = false;      //variable para evitar calcular rpm varias veces
 int rpmant     = 0;          //rpm anteriores
 
 int promedio   = 0;          //promedio tiempo entre dientes
-int Tdnt[11];                //aca se guardan los tiempos entre dientes, luego se promedia (son 12);
+int Tdnt[dnt];               //aca se guardan los tiempos entre dientes, luego se promedia (son 12);
 
 unsigned long milirpm;       //tiempo previo ultimo periodo medicion rpm
 unsigned long curMillis;     //tiempo actual del micro
@@ -69,43 +74,42 @@ float temp     = 0;          //temperatura motor
 float tempfrio = 40;         //temperatura maxima para considerar el motor "frio"
 float tempmax  = 115;        //temperatura maxima de funcionamiento antes de entrar en modo emergencia
 
-float tempvenMIN = 80;      //temperatura a la que se apaga el ventilador
-float tempvenMAX = 95;      //temperatura a la que se enciende el ventilador
+float tempvenMIN = 80;       //temperatura a la que se apaga el ventilador
+float tempvenMAX = 95;       //temperatura a la que se enciende el ventilador
 
 /*-----( Variables Encendido )-----*/
 
 
-  int avanceDeChispa     = 3;      //en dientes de volante (2,42 grados) , default en 3
-  int periodo          = 7;      //periodo en mS
-  unsigned long tiempo   = 0;
+  int avanceDeChispa        = 3;//en dientes de volante (2,42 grados) , default en 3
+  int periodo               = 7;  //periodo en mS
+  unsigned long tiempo      = 0;
   unsigned long millisant   = 0;
-  int pinBobinas13         = 8;
-  int pinBobinas24         = 9;
+  int pinBobinas13          = 8;
+  int pinBobinas24          = 9;
   bool activado = false;
   bool arrancando = false;
 
 /*-----( Variables Logica )-----*/
-int var = 0;                //variable usada para bucles
+int var  = 0;               //variable usada para bucles
 int varX = 0;               //variable temporal, multiples usos
 
 /*-----( Otras variables )-----*/
-TMAP myTMAP = TMAP(A2,A3,1.75,2.10); //iniciamos sensor TMAP
+float presB = 1.75; //presion minima de sensor TMAP
+float presA = 2.10; //presion maxima de sensor TMAP
+
+TMAP myTMAP = TMAP(A2,A3,presB, presA); //iniciamos sensor TMAP
+
 int pinLuzMuerte = 12;       //sip, pin de luz de "check Engine"
 bool emergencia  = false;    //mientras que este en false todo bien ^~^
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // definimos el display I2C
-const uint8_t charBitmap[][8] = { //array con simbolo de grados en diferentes lugares :P
+const uint8_t charBitmap[][8] = { 
+    //array con simbolo de grados en diferentes lugares :P
    { 0xc, 0x12, 0x12, 0xc, 0, 0, 0, 0 },
    { 0x6, 0x9, 0x9, 0x6, 0, 0, 0, 0 },
-   { 0x0, 0x6, 0x9, 0x9, 0x6, 0, 0, 0x0 },
-   { 0x0, 0xc, 0x12, 0x12, 0xc, 0, 0, 0x0 },
-   { 0x0, 0x0, 0xc, 0x12, 0x12, 0xc, 0, 0x0 },
-   { 0x0, 0x0, 0x6, 0x9, 0x9, 0x6, 0, 0x0 },
-   { 0x0, 0x0, 0x0, 0x6, 0x9, 0x9, 0x6, 0x0 },
-   { 0x0, 0x0, 0x0, 0xc, 0x12, 0x12, 0xc, 0x0 }
-   
+   { 0x0, 0x6, 0x9, 0x9, 0x6, 0, 0, 0x0 } 
 };
-void int0(){
-    if(emergencia == false){ //si entro en modo emergencia no hacemos caso a nada :V
+void int0(){ //interrupcion, se ejecuta cada vez que el sensor de posicion de cigueñal cambia
+    if(emergencia == false){ //si entro en modo emergencia no hacemos caso a nada
         varr = false;
         vuelta++;
         vuelta3++;
@@ -136,14 +140,10 @@ void setup(){
   #endif
     for(var = 0; var >= 3; var++){
     //definimos inyectores como salida
-        pinMode(iny[var], OUTPUT);
-    }
+        pinMode(iny[var], OUTPUT);}
 
     for(var = 0; var >= 3; var++){
-        digitalWrite(iny[var], LOW);
-    }
-    //definir interrupciones HW
-     attachInterrupt(digitalPinToInterrupt(2), int0, RISING);
+        digitalWrite(iny[var], LOW);}
      //mostramos mensaje en LCD :D
     lcd.setCursor(0,0);
     lcd.print("####################");
@@ -155,10 +155,13 @@ void setup(){
     lcd.print("####################");
     delay(500);
     LCD(5,0,0);
+
+    //definir interrupciones HW
+     attachInterrupt(digitalPinToInterrupt(2), int0, RISING);
 }
 
 void loop(){
-    for(;;){
+    for(;;){ //Remplazo del loop para ganar rendimiento
         ControlRPM();
         marv = analogRead(mar) / 4;
         temp = sensortemp();
@@ -181,7 +184,7 @@ int rpmtT  = 0; //variable temporal para calcular rpm
          varr = true;
 		 dntA = vuelta;
      }
-  if(indice >= 11){
+  if(indice >= dnt){
      if(varr == true && dntA != vuelta){ //si se detecto un diente nuevo y se guardo el tiempo anterior 
       Tdnt[indice] = millis() - milirpm;
       varr = false;
@@ -436,12 +439,14 @@ bool ControlARR(){
 
 float  sensortemp(){
   //esta funcion mide la temperatura y devuelve float en celsius
+  //**solo para sensor LM35**
     int value = analogRead(sensorT);
     float millivolts = (value / 1023.0) * 5000;
     float celsius = millivolts / 10; 
     return celsius;
 } 
 //funcion para el control del lcd
+//modificar luego para actualizar solo valores que cambian no toda la linea
 void LCD(int op, float texto, int texto2){
     String linea1 = "###OpenEFI v0.010###";
     String lin2  = "#RPM: ";
@@ -523,4 +528,20 @@ void emerg(){
 
 void sincronizar(){
     //Esta funcion sincroniza el valor de "vuelta" con el PMS del piston 1
+    int TMIN = 99999; //almacena el tiempo menor de cada diente
+    int IMIN = 0; //almacena el indice del menor tiempo
+    int TMAX = 0; //almacena el tiempo mayor (Este seria teoricamente el PMS del piston 1)
+    int IMAX = 0; //almacena el indice del diente con PMS del piston 1, luego se restablece la variable diente...
+    //a 0 y se pone la variable sincronizado en true para habilitar el resto del programa.
+    int i2   = 0; //variable para recorer array de tiempos
+    for(int i = 0; i > dnt; i++;){ //i menor a dnt porque empieza la cuenta en 0 el for y los dientes no
+    // Siguiendo el principio "KISS" (Keep It Simple, Stupid!)
+        if (Tdnt[i2] > TMIN){
+            TMIN = Tdnt[i2];}
+        if (Tdnt[i2] < TMAX){
+            TMIN = Tdnt[i2];}
+        i2++;
+    }
+    vuelta = 0;
+    sincronizado = true;
 }
