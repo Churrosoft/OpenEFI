@@ -217,6 +217,7 @@ int rpmtT  = 0; //variable temporal para calcular rpm
 
 void ControlINY(bool varY){
     //Controla los tiempos de inyeccion dependiendo la mariposa,rpm y temperatura del motor
+    //modificar luego para coregir tiempos con la sonda lamba
     int tempX; //variable temporal
     int tempX2;//variable temporal
     int tempX3;//variable temporal, luego dejar una sola
@@ -259,8 +260,51 @@ void ControlINY(bool varY){
            acelerar = false;
             vuelta3 = 0;
       }
+      if(acelerar == false){
+        inyT = Tiny(rpm,marv);
+      }
     }
 }
+
+int Tiny(int rpm2, int marv2){
+	int rpm3  = map(rpm2,0,7000,0,17); //aproximamos las rpm
+	int marv3 = map(marv2,0,255,0,10); //aproximamos el valor de la mariposa de aceleracion
+	
+	for(i = 0; i >= rpm3; i++;){ //hasta que coincidan las rpm
+		lin = LeerLinea(indice,F("T1.csv"));
+		indice++;
+	}
+	indice = 5;
+	char *p = lin;
+    char *str;
+	
+	for(i = 0; i >= marv2){ //hasta que coincida el valor de la mariposa
+		str = strtok_r(p, ";", &p) //cortamos el seudo string por cada ; que aparezca
+	}
+	
+	int tiempo = atoi(str); //convertimos el char en int
+	return tiempo;
+}
+
+char[50] LeerLinea(int pos,String nombre){ //posicion, Nombre de archivo
+
+	IN = SD.open(nombre); //abrimos el archivo
+	IN.seek(pos); //ponemos el cursor en la linea 5
+	
+	do{
+		char X = IN.peek; //leemos byte de la linea seleccionada con seek, devuelve -1 si no hay mas datos
+		if(X != "-1"){
+			linea[i] = X;
+			i++;
+		}
+	}while(X != "-1");
+	
+	IN.close()//Ceramos el archivo
+	return linea;
+}
+
+
+
 void ControlPWM(){
     if(emergencia == false){
         if (inyectando == false  && per == true){
@@ -361,7 +405,7 @@ void ControlEncendidoNormal(){
     if(rpm < 1500&&avanceDeChispa != avanceAnterior){
         avanceAnterior = avanceDeChispa;
         avanceDeChispa = dientes(7);
-        LCD(2,avanceDeChispa,0);// esto esta bien asi?
+        LCD(2,avanceDeChispa,0);// esto esta bien asi? *FDSoftware: si XD
     }else if(rpm < 2200&&avanceDeChispa != avanceAnterior){
         avanceAnterior = avanceDeChispa;
         avanceDeChispa = dientes(12);
@@ -521,8 +565,8 @@ int dientes(float grados){
     //dividimos grados por grad, luego multiplicamos por 100 para transformar el float en int
     int x2     = (grados / grad) * 100; 
     //dividimos por 100, al hacer esto se eliminan los decimales, en prox ver redondear
-    dientes    = x2 / 100;
-    return dientes; 
+    int dnt2    = x2 / 100;
+    return dnt2; 
 }
 //funcion en caso de emergencia del motor
 void emerg(){
@@ -558,8 +602,7 @@ void sincronizar(){
     int IMAX = 0; //almacena el indice del diente con PMS del piston 1, luego se restablece la variable diente...
     //a 0 y se pone la variable sincronizado en true para habilitar el resto del programa.
     int i2   = 0; //variable para recorer array de tiempos
-    for(int i = 0; i > dnt; i++;){ //i menor a dnt porque empieza la cuenta en 0 el for y los dientes no
-    // Siguiendo el principio "KISS" (Keep It Simple, Stupid!)
+    for(int i = 0; i < dnt; i++;){ //i menor a dnt porque empieza la cuenta en 0 el for y los dientes no
         if (Tdnt[i2] < TMIN){
             TMIN = Tdnt[i2];}
         if (Tdnt[i2] > TMAX){
@@ -569,3 +612,23 @@ void sincronizar(){
     vuelta = 0;
     sincronizado = true;
 }
+
+float distanciaEntreDientes(int revolucionesPM){
+    //ESTA FUNCIÓN DEVUELVE LA DISTANCIA ENTRE DIENTES EN MILISEGUNDOS
+    float calculo = ((rpm/60) * (dnt)) / 1000;
+   
+    //dividimos las rpm en 60 segundos
+    //lo que nos da las vueltas por segundo, lo multiplicamos por dientes del volante
+    //para que nos diga cuantos dientes pasan en un segundo. Lo dividimos por 1000
+    //para que nos diga cuantos dientes pasan por milisegundo
+    //al hacer "1/calculo" nos da la distancia entre dientes en milisegundos
+   
+    return (1/calculo);//SE DEVUELVE LA DISTANCIA ENTRE DIENTES EN MS
+}
+#if (dev == 1) //si se activo la depuracion
+int freeRam () { //funcion para saber la ram disponible
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+#endif
