@@ -10,34 +10,38 @@
 #define motor 1 //definir tipo de motor 0 = diesel ; 1 = nafta
 #define dev 1   //habilita mensajes por serial
 const String ver "## ver 0.01 Alpha ##";
-
+int cil = 4;   //cantidad de cilindros del motor
 //***REASIGNAR LUEGO TODOS LOS PINES***
 
 /*-----( Variables INYECCION )-----*/
 
 int iny[] = {3,4,5,6};       //Pines de arduino que esta conectados los inyectores **CAMBIAR PINES**
-int tMax     = 22000;           //tiempo maximo de inyeccion
-int perinyec = 5;            //cantidad de dientes que tiene que detectar el sensor hall para inyectar
-bool per = false;            //usada para no inyectar mas de una vez en el mismo cilindro
 
-float inyT   = 1500;         //tiempo de inyeccion uS (actual)
-float inyTR  = 1250;         //tiempo de inyeccion Ralenti (uS)
-float inyTARR= 22000;        //tiempo de inyeccion Arranque
-unsigned long tmpINY = 0;    //tiempo que paso desde activacion de inyector
-
-int varINY   = 0;            //varible temporal, guarda ultimo inyector activado
-
-int Lamb     = A0;           //pin de sonda lambda
-int ARRpin   = 10;           //pin conectado que recibe señal de arranque de llave
 bool arr     = false;        //si se intenta arrancar el motor esta en true
 
 int mar      = A1;           //pin de mariposa de acelerador
 int marv     = 0;            //valor actual de mariposa de acelerador
-bool inyectando = false;     //variable para saber si se esta inyectando todavia o no
+bool iny     = false;       //variable para saber si se esta inyectando todavia o no
 
-bool acelerar;               //varible temporar, guarda si se intento acelerar el motor
-int vuelta2  = 0;            //numero de vuelta para inyeccion/encendido
-int vuelta3  = 0;            //numero de vuelta para inyeccion/encendido
+bool acl;                   //varible temporar, guarda si se intento acelerar el motor
+
+int vuelta2  = 0;           //numero de vuelta para inyeccion
+int dntact   = 0;			//diente actual del cigueñal
+int dntPER   = 89;		    //cantidad de dientes entre inyeccion
+
+int ACL_PER  = 15;			//cantidad de vueltas que ACL espera para cambiar el tiempo de inyeccion
+int ACL_TMP  = 1500;		//cantidad de tiempo de inyeccion que ACL sube o baja
+
+int ARR_TINY1= 25000; 		//tiempo de inyeccion en arranque frio
+int ARR_PER  = 5; 			//primer periodo de vueltas, en este se espera que pase este valor con el tiempo base de arranque
+int ARR_RPM  = 0;			//rpm para arranque
+
+int ARR_FLAG2 = 800;		//cantidad de vueltas maximas para considerar que se intenta arrancar el motor
+int ARR_FLAG1= 0;			//FLAG para control de arranque, sube de valor cada vez que pasaron 15 vueltas sin problemas de inyeccion
+float ARR_t  = 0;			//temperatura para control de arranque
+
+int CINY_RPM = 0;
+int CINY_X;					//la uso para redondear rpm para rpm objetivo de acl
 
 /*-----( Variables RPM )-----*/
 
@@ -80,15 +84,36 @@ float tempvenMAX = 95;       //temperatura a la que se enciende el ventilador
 /*-----( Variables Encendido )-----*/
 
 
-  int avanceDeChispa        = 3;//en dientes de volante (2,42 grados) , default en 3
-  int periodo               = 7;  //periodo en mS
+  /*-----( Variables Encendido )-----*/
+
+  int avanceDeChispa        = 3; //en dientes de volante (2,42 grados) , default en 3
+  int periodo               = 7; //periodo en mS
   unsigned long tiempo      = 0;
   unsigned long millisant   = 0;
-  int pinBobinas13          = 8;
-  int pinBobinas24          = 9;
-  bool activado = false;
-  bool arrancando = false;
-
+  int pinBobinas14          = 8; //pines utilizados para mandar señales a las bobinas
+  int pinBobinas23          = 9;
+  bool activado             = false; //?
+  bool arrancando           = false; //Esta arrancando?
+  int tablaAvance[18][11]     ={/*RPM|TEMP   0 ;18;27;36;45;55;64;73;82;91;100 */
+								/*800*/		{3 ,3 ,3 ,3 ,4 ,6 ,6 ,7 ,8 ,8 ,8 },
+								/*1000*/	{3 ,3 ,3 ,4 ,5 ,8 ,8 ,8 ,10,10,10},
+								/*1200*/	{5 ,5 ,5 ,5 ,6 ,9 ,9 ,10,11,12,12},
+								/*1500*/	{8 ,8 ,8 ,8 ,8 ,10,10,11,13,14,14},
+								/*1700*/	{10,10,10,10,10,11,11,12,14,15,15},
+								/*2000*/	{12,12,12,12,12,13,13,14,15,16,16},
+								/*2200*/	{13,14,14,14,14,15,15,16,17,18,18},
+								/*2500*/	{15,16,16,16,16,17,17,17,18,19,19},
+								/*2700*/	{17,18,18,18,18,19,19,19,20,21,21},
+								/*3000*/	{19,20,20,20,20,21,21,21,22,23,23},
+								/*3200*/	{21,22,22,22,22,23,23,23,24,25,25},
+								/*3500*/	{23,24,24,24,24,25,25,25,26,27,27},
+								/*3700*/	{25,26,26,26,26,27,27,27,28,29,29},
+								/*4000*/	{26,28,28,28,28,29,29,29,30,31,31},
+								/*4500*/	{28,30,30,30,30,31,31,31,32,33,33},
+								/*5000*/	{30,32,33,33,33,34,34,34,35,36,36},
+								/*5500*/	{32,34,34,34,34,34,34,35,37,38,38},
+								/*6000*/	{34,35,35,35,35,35,35,36,38,39,39}
+								}				 //matriz tabla de avance
 /*-----( Variables Logica )-----*/
 int var  = 0;               //variable usada para bucles
 int varX = 0;               //variable temporal, multiples usos
@@ -150,7 +175,7 @@ void setup(){
     for(var = 0; var >= 3; var++){
         digitalWrite(iny[var], LOW);}
     #if(dev == 1) 
-        Serial.println("Iniciando Sistema...");
+        Serial.println("DBG Iniciando Sistema...");
    #endif
      //mostramos mensaje en LCD :D
     lcd.setCursor(0,0);
@@ -164,6 +189,12 @@ void setup(){
     delay(500);
     LCD(5,0,0);
 
+	if(!SD.begin(12)){
+		lcd.setCursor(0,3);
+		lcd.print("No se encuentra  SD");
+        delay(500);
+        emerg = true;
+}
     //definir interrupciones HW
      attachInterrupt(digitalPinToInterrupt(2), int0, RISING);
     interrupts();
@@ -171,17 +202,19 @@ void setup(){
 
 void loop(){
     #if(dev == 1) 
-        Serial.println("Listo");
+        Serial.println("DBG Listo");
    #endif
     for(;;){ //Remplazo del loop para ganar rendimiento
         ControlRPM();
         marv = analogRead(mar) / 4;
         temp = sensortemp();
         Temperatura();
-        bool varINY = ControlARR(); //control de arranque del motor
         ControlINY(varINY);
         controlDeEncendido(temp);
         ControlPWM();
+        int rpmC = RPM();
+        Serial.write("RPM ");
+        Serial.writeLine(rpmc)
     }
 }
 
@@ -207,6 +240,8 @@ int rpmtT  = 0; //variable temporal para calcular rpm
 	indice = 0;
   }
   //calculamos las rpm promediando el tiempo de 4 dientes
+  //#####CAMBIAAAAAR LUEGOOOOO######
+  //sacar promedio de 1/2 del cigueñal
   if (indice <= 3){
 	rpmT = (Tdnt[0] + Tdnt[1] + Tdnt[2] + Tdnt[3]) / 4; //sacamos el tiempo promedio de los 4
 	rpmT = 1000 / rpmT; //divimos el tiempo por 1000 para tener la cantidad de dientes por segundo
@@ -214,57 +249,57 @@ int rpmtT  = 0; //variable temporal para calcular rpm
 	rpm = rpmT * 60;    //finalmente tenemos las RPM
   }
 }
-
-void ControlINY(bool varY){
-    //Controla los tiempos de inyeccion dependiendo la mariposa,rpm y temperatura del motor
-    //modificar luego para coregir tiempos con la sonda lamba
-    int tempX; //variable temporal
-    int tempX2;//variable temporal
-    int tempX3;//variable temporal, luego dejar una sola
-    if(varY == true){
-        //sumamos y restamos la tolerancia a las rpm minimas
-        tempX  = rpmMIN + tolrpm;
-        tempX2 = rpmMIN - tolrpm;
-        //sumamos la tolerancia a las rpm maximas
-        tempX3 = rpmMAX + tolrpm;
-     if(rpm <= tempX2 && acelerar == false && marv <= 15){ //si las rpm caen debajo las rpm minimas y no esta presionado acelerador
-              if(temp <= tempfrio){
-                  inyT = inyT + 700; //sumamos 700uS / 0.7mS si el motor esta frio
-             }else{
-                  inyT = inyT + 500; //restamos 500 uS/ 0.5mS si el motor esta en temperatura de funcionamiento
-              }
-              acelerar = true;
-              rpmant = rpm;
-           }
-
-           if(rpm <= tempX && acelerar == false && marv <= 15){ //si las rpm pasan las rpm minimas y no esta presionado acelerador
-              if(temp <= tempfrio){
-                   inyT = inyT - 700; //restamos 700uS / 0.7mS si el motor esta frio
-             }else{
-                  inyT = inyT - 500; //restamos 500 uS/ 0.5mS si el motor esta en temperatura de funcionamiento
-             } 
-             acelerar = true;
-             rpmant = rpm;
-          }
-          if(marv <= 10 && rpm >= 3000){
-              //cortamos inyeccion si las rpm pasan las 3000 y se solto el acelerador
-              inyT = 0;
-          }
-          if(marv <= 10 && rpm <= 1500){
-              //volvemos a habilitar la inyeccion a las 1500 vueltas
-              inyT = inyTR + 200;
-          }
-       int varxx = rpm - rpmant;
-        if(vuelta3 <= (dnt * 10) && varxx >= 15){
-           // si no hubo un cambio mayor a la 15rpm luego de 10 vueltas de cigueñal volver a corregir
-           acelerar = false;
-            vuelta3 = 0;
-      }
-      if(acelerar == false){
-        inyT = Tiny(rpm,marv);
-      }
-    }
+int RPM(){ //Proximamente esta funcion manda las rpm promedio de 4-5 vueltas
+    return rpm;
 }
+
+void ControlINY(){
+	CINY_RPM = RPM();
+	if(acl = false){
+		if(CINY_RPM <= ARR_FLAG2 && CINY_RPM != 0){
+			ARR_FRIO();
+		}else if(CINY_RPM >= ARR_FLAG2 && CINY_RPM != 0){
+			inyT = Tiny(CINY_RPM, marv); 
+			 CINY_X = map(map(rpm2,0,7000,0,70)),
+			CINY_X = CINY_X * 100;
+			acl = ACL(CINY_X, inyT);
+		}
+	}else{acl = ACL(CINY_X, inyT);}
+}
+
+void ARR_FRIO(){//Sub-programa,controla tiempo de inyeccion hasta alcanzar 1500 rpm x 1500 vueltas
+	inyT = ARR_TINY1;
+	for(vuelta2 > ARR_PER){
+		ControlPWM();
+		float ARR_t = sensortemp();
+		controlDeEncendido(t);
+	}
+	do{
+		ARR_RPM = RPM();
+		if(!ACL(1500,ARR_RPM,ARR_TINY1)){
+			ARR_FLAG1++;
+		}
+		ControlPWM();
+		controlDeEncendido(t);
+	}while(ARR_FLAG1 >= 10);
+}
+
+
+bool ACL(int rpmOBJ, int TBASE){
+	int ACL_RPM = RPM() - rpmOBJ;
+	if(ACL_RPM >= 400 &&  vuelta2 > ACL_PER){ //diferencia mayor a 400 vueltas
+		TBASE = TBASE - ACL_TMP; // sacamos 1.5mS de tiempo de inyeccion
+		vuelta2 = 0;
+		return true;
+	} else if(ACL_RPM <= 400 && vuelta2 > ACL_PER){
+		TBASE = TBASE + ACL_TMP;
+		vuelta2 = 0;
+		return true;
+	}else if(){// ya no hace falta cambiar el tiempo desde esta funcion, esto habilita correccion por sonda lambda y TMAP
+		acl = false;
+		vuelta2 = 0;
+		return false;} 
+	}
 
 int Tiny(int rpm2, int marv2){
 	int rpm3  = map(rpm2,0,7000,0,17); //aproximamos las rpm
@@ -306,152 +341,115 @@ char[50] LeerLinea(int pos,String nombre){ //posicion, Nombre de archivo
 
 
 void ControlPWM(){
-    if(emergencia == false){
+    //cambiar esto para hacerlo cada X° del cigueñal o dientes
+    if(emergencia == false){ //mientras que no estemos en modo de emergencia V:
+
         if (inyectando == false  && per == true){
           digitalWrite(iny[vuelta2++],HIGH);
             unsigned long tmpINY = micros();
             inyectando = true;
             per = false; //per es para controlar que se inyecte una sola vez :P
         }
-      if (micros() - tmpINY >= inyT) {
-        digitalWrite(iny[vuelta2++],LOW);
-        if(vuelta2 == 3){
+      if (micros() - tmpINY >= inyT) { //Cuando pase el tiempo de inyeccion
+                digitalWrite(iny[vuelta2++],LOW); //apagamos el inyector :P
+        if(vuelta2 == (cilindros - 1){ //cuando la cantidad de vueltas sea igual al n° de cilindros
           vuelta2 == 0;
         }
         inyectando == false;
       }
+
     }
 }
 
 
 #if (motor == 1)
-void controlDeEncendido(float temperatura){
-
-    //----bloque que controla el avance antes de hacer la chispa----
-    if(arrancando == true){
-        ControlEncendidoArranque(temperatura);
-    }else if(arrancando == false){
-        if(temperatura < 60){
-            ControlEncendidoFrio();
-        }else{
-            ControlEncendidoNormal();
-        }
-    }
-    //-------fin del bloque de control de avance-----------
-    //--------inicio del bloque de control de cuando se larga la chispa------------
-        if(diente >= ((dnt/4) - avanceDeChispa)&&diente <= ((dnt/4)-avanceDeChispa)+1){
-            iniciarChispazo(pinBobinas13);
-            activado = true;
-            millisant = millis();
-            //----chispazo para el piston 1 y 3(siendo el 3 chispa perdida)
-        }else if(diente >= ((dnt/2) - avanceDeChispa)&&diente <= ((dnt/2)-avanceDeChispa)+1){
-            iniciarChispazo(pinBobinas13);
-            activado = true;
-            millisant = millis();
-            //----chispazo para el piston 1 y 3(siendo el 1 chispa perdida)
-        }else if(diente >= (((dnt/4)*3) - avanceDeChispa)&&diente <= (((dnt/4)*3)-avanceDeChispa)+1){
-            iniciarChispazo(pinBobinas24);
-            activado = true;
-            millisant = millis();
-            //----chispazo para el piston 2 y 4(siendo el 2 chispa perdida)
-        }else if(diente >= (dnt - avanceDeChispa)&&diente <= (dnt - avanceDeChispa)+1 ){
-            iniciarChispazo(pinBobinas24);
-            millisant = millis();
-            activado = true;
-            //----chispazo para el piston 2 y 4(siendo el 4 chispa perdida)
-        }
-
-        if ((millis() - millisant) >= periodo && activado == true) {
-            millisant = millis();
-            activado = false;
-            pararChispazo(pinBobinas13);
-            pararChispazo(pinBobinas24);
-        }
-    //------fin del bloque que controla la mandada de chispa------------------
-}
-//---------------BLOQUE DE CONTROL DE AVANCE
-void ControlEncendidoFrio(){
-    if(rpm < 1500&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(5);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 2200&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(7);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 3000&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(9);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 3500&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(11);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 4000&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(17);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 5000&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(22);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 6000&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(26);
-        LCD(2,avanceDeChispa,0);
-    }
-}
-void ControlEncendidoNormal(){
-    if(rpm < 1500&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(7);
-        LCD(2,avanceDeChispa,0);// esto esta bien asi? *FDSoftware: si XD
-    }else if(rpm < 2200&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(12);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 3000&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(15);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 3500&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(18);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 4000&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(23);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 5000&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(30);
-        LCD(2,avanceDeChispa,0);
-    }else if(rpm < 6000&&avanceDeChispa != avanceAnterior){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(37);
-        LCD(2,avanceDeChispa,0);
-    }
-}
-void ControlEncendidoArranque(float temperatura){
-    if(temperatura < 45){
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(4);
-        LCD(2,avanceDeChispa,0);
-    }else{
-        avanceAnterior = avanceDeChispa;
-        avanceDeChispa = dientes(6);
-        LCD(2,avanceDeChispa,0);
-    }
-}
-//--------------------FIN DEL BLOQUE DE CONTROL DE AVANCE
-//-------------------FUNCIONES DE CONTROL DE BOBINAS
-void iniciarChispazo(int pin){//inicia la chispa hasta que se llame al metodo pararChispazo()
-    digitalWrite(pin, HIGH);
-}
-void pararChispazo(int pin){//para la chispa
-    digitalWrite(pin, LOW);
-}
-//---------------
++//------------------------(FrancisJPK inicio)-----------------------------------------
++void controlDeEncendido(float temperatura){
++
++    //----CONTROL DE AVANCE ANTES DE MANDAR CHISPA----
++    if(arrancando == true){
++		//controlador de avance en frio
++        avanceArranque();
++    }else if(arrancando == false){
++		avanceNormal(temperatura);
++    }
++    //---------------FIN DE CONTROL DE AVANCE PARA PROCEDER A MANDAR CHISPA-----------
++	//--------------------------------------------------------------------------------
++    //----------------------------------CONTROL DE MANDADA DE CHISPA-----------------
++        if(diente >= ((dnt/4) - avanceDeChispa) && diente <= ((dnt/4)-avanceDeChispa)+1){
++            iniciarChispazo(pinBobinas14);
++            activado = true;
++            millisant = millis();
++            //----chispazo para el piston 1 y 4(siendo el 4 chispa perdida)
++        }else if(diente >= ((dnt/2) - avanceDeChispa) && diente <= ((dnt/2)-avanceDeChispa)+1){
++            iniciarChispazo(pinBobinas23);
++            activado = true;
++            millisant = millis();
++            //----chispazo para el piston 2 y 3(siendo el 2 chispa perdida)
++        }else if(diente >= (((dnt/4)*3) - avanceDeChispa) && diente <= (((dnt/4)*3)-avanceDeChispa)+1){
++            iniciarChispazo(pinBobinas14);
++            activado = true;
++            millisant = millis();
++            //----chispazo para el piston 1 y 4(siendo el 1 chispa perdida)
++        }else if(diente >= (dnt - avanceDeChispa) && diente <= (dnt - avanceDeChispa)+1 ){
++            iniciarChispazo(pinBobinas23);
++            millisant = millis();
++            activado = true;
++            //----chispazo para el piston 2 y 3(siendo el 3 chispa perdida)
++        }
++
++        if ((millis() - millisant) >= periodo && activado == true) {
++            millisant = millis();
++            activado = false;
++            pararChispazo(pinBobinas14);
++            pararChispazo(pinBobinas23);
++        }
++}//------------------FIN DE CONTROL DE MANDADA DE CHISPA-------------------------
++//------------------------------------------------------------------------------
++//--------------------BLOQUE DE CONTROLADORES DE AVANCE--------------------------
++
++void avanceArranque(){
++	avanceAnterior = avanceDeChispa;
++	avanceDeChispa = dientes(3);
++	if(avanceAnterior != avanceDeChispa){
++		LCD(2,avanceDeChispa,0);
++	}
++}
++void avanceNormal(float temperatura){
++
++	int indiceTemp = 0;//indice que indica a que columna de la matriz acceder(temperatura)
++	int indiceRPM = 0;//indice que indica a que fila de la matriz acceder(RPM)
++
++	//------------BLOQUE DE ASIGNACION DE INDICES A LEER EN TABLAS------------
++	if{temperatura < 98}{
++		indiceTemp = ((temperatura < 18)? 0:((temperatura < 27)? 1:((temperatura < 36)? 2:((temperatura < 45)? 3:((temperatura < 55)? 4:((temperatura < 64)? 5:((temperatura < 73)? 6:((temperatura < 82)? 7:((temperatura < 91)? 8:9)))))))));
++		//este bodoque gigante de operaciones ternarias es para asignar el indice a leer en tabla segun la temperatura
++		//este indice corresponde a las columnas (eje X)
++	}else{
++		indiceTemp = 10;
++	}
++	indiceRPM = ((RPM<1000)?0:((RPM<1200)?1:((RPM<1500)?2:((RPM<1700)?3:((RPM<2000)?4:((RPM<2200)?5:((RPM<2500)?6:((RPM<2700)?7:((RPM<3000)?8:((RPM<3200)?9:((RPM<3500)?10:((RPM<3700)?11:((RPM<4000)?12:((RPM<4500)?13:((RPM<5000)?14:((RPM<5500)?15:((RPM<6000)?16:17))))))))))))))))); 
++	//este otro bodoque gigante de operaciones ternarias es para asignar el indice a leer en tabla segun las RPM
++	//este indice corresponde a las filas (eje Y)
++	//---------
++	avanceAnterior = avanceDeChispa;
++	avanceDeChispa = dientes(tablaAvance[indiceRPM][indiceTemp]);
++	//finalmente accedemos al valor en tabla correspondiente al estado actual del motor
++	if(avanceAnterior != avanceDeChispa){
++		LCD(2,avanceDeChispa,0);
++	}
++	//-----------FIN DEL BLOQUE DE ASIGNACION DE INDICES A LEER EN TABLAS-----
++}
++//--------------------FIN DE BLOQUE DE CONTROLADORES DE AVANCE----------------
++//-----------------------------------------------------------------------------
++//---------------------FUNCIONES DE CONTROL DE BOBINAS------------------------
++void iniciarChispazo(int pin){//inicia la chispa hasta que se llame al metodo pararChispazo()
++    digitalWrite(pin, HIGH);
++}
++void pararChispazo(int pin){//para la chispa
++    digitalWrite(pin, LOW);
++}
++//---------------------(FrancisJPK final)---------------------------------------------------
 #endif
 
 void Temperatura(){
@@ -469,31 +467,6 @@ void Temperatura(){
     }
 }
 
-
-bool ControlARR(){
-    //se fija si se esta arrancando el motor, fija la inyeccion,
-    //pone el avance en modo arranque y desactiva sonda lamba,acelerador y control de rpm ralenti
-    //hasta que las rpm sean mayores a 1000~
-    #if(dev == 1) 
-        Serial.println("Se esta intentando arrancar el motor");
-   #endif
-    int senalarr = digitalRead(ARRpin);
-    if (senalarr == HIGH && vuelta2 <= 10){ //se esta intentando arrancar el motor y pasaron menos de 10 vueltas
-        //usar cantidad de vueltas o tiempo y rpm para saber si se acelero o no ?)
-    #if (motor == 1)
-        ControlEncendidoArranque(temp);
-    #endif
-        arrancando = true;
-        arr = true;
-        inyT = inyTARR;
-        return false;
-    }if (senalarr == LOW && rpm >= rpmMIN) {
-    #if (motor == 1)
-        arrancando = false;
-    #endif
-        return true; //habilitamos el control de inyeccion 
-    }
-}
 
 
 float  sensortemp(){
@@ -571,7 +544,7 @@ int dientes(float grados){
 //funcion en caso de emergencia del motor
 void emerg(){
     #if(dev == 1) 
-        Serial.println("Motor en estado de emergencia");
+        Serial.println("DBG Motor en estado de emergencia");
    #endif
     noInterrupts(); //desactivamos interrupciones
     digitalWrite(pinLuzMuerte, HIGH);
@@ -592,7 +565,7 @@ void emerg(){
 void sincronizar(){
     #if(dev == 1) 
         if (sincronizado == false){
-            Serial.println("Sincronizando PMS con inyeccion y encendido");
+            Serial.println("DBG Sincronizando PMS con inyeccion y encendido");
         }
    #endif
     //Esta funcion sincroniza el valor de "vuelta" con el PMS del piston 1
