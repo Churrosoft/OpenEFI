@@ -5,11 +5,11 @@
 #include <TMAP.h>
 
 //constructor de funcion
-TMAP::TMAP_in(int pin, int pin2, float map, float map2){
-	pinMode(pin, INPUT);
+TMAP::TMAP(int pin3, int pin2){
+	pinMode(pin3, INPUT);
 	pinMode(pin2,INPUT);
-	TMAP_Pm = map   *100; //psi presion minima
-	TMAP_PM = map2 * 100; //psi presion maxima
+	pinTMAP[0] = pin3;
+	pinTMAP[1] = pin2;
 }
 
 float TMAP::MasaAire(){
@@ -36,7 +36,7 @@ float TMAP::MasaAire(){
   TempK = Beta/(log(Rntc/R25)+(Beta/T0));
   //Medimos la presion (no creo que funcione muy bien que digamos XD)
   presion = analogRead(pinTMAP[0]);
-  presion  = map(presion,0, 1023, 145,210, ); //145 = 1,45 psi presion minima, 210 = 2,10 psi presion maxima
+  presion  = map(presion,0, 1023, 145,210); //145 = 1,45 psi presion minima, 210 = 2,10 psi presion maxima
   presionf = presion / 100;
   //calculamos la mase del aire
   MA = (mol* R *TempK) / (0.07 * presionf) ; //0.7 * presionf es para pasar de PSI a atm

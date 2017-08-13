@@ -3,7 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "F:\\Programas\\Arduino\\hardware\\arduino\\avr\\cores\\arduino"
+                "F:\\Programas\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
+                "C:\\Users\\FDS2000\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\sam\\1.6.11\\cores\\arduino"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": false,

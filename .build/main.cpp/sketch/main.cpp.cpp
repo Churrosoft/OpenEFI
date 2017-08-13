@@ -1,13 +1,5 @@
-/***
- *     _____                       _____ ______  _____         _   _    __      _____ __   __
- *    |  _  |                     |  ___||  ___||_   _|       | | | |  /  |    |  ___|\ \ / /
- *    | | | | _ __    ___  _ __   | |__  | |_     | |         | | | |  `| |    |___ \  \ V / 
- *    | | | || '_ \  / _ \| '_ \  |  __| |  _|    | |         | | | |   | |        \ \ /   \ 
- *    \ \_/ /| |_) ||  __/| | | | | |___ | |     _| |_        \ \_/ /  _| |_ _ /\__/ // /^\ \
- *     \___/ | .__/  \___||_| |_| \____/ \_|     \___/         \___/   \___/(_)\____/ \/   \/
- *           | |                                                                             
- *           |_|                                                                             
- */
+#line 1 "c:\\Users\\FDS2000\\OpenEFI\\main.cpp"
+#line 1 "c:\\Users\\FDS2000\\OpenEFI\\main.cpp"
 /*
 ╔════════════════════════════════════════════════════════════════════════╗
 ║                    Open EFI V 1.5X Team:                               ║
@@ -21,7 +13,10 @@
 ║    ∆ Single point and multipoint injection                             ║
 ║    ∆ Independent ignition                                              ║
 ║    ∆ Error report                                                      ║
-║    ∆ Fixed injection / ignition mode                                   ║ 
+║    ∆ Fixed injection / ignition mode                                   ║
+║                                                                        ║
+║                                                                        ║
+║                                                                        ║  
 ╚════════════════════════════════════════════════════════════════════════╝
 */
 /*-----( Importar Librerias )-----*/
@@ -29,6 +24,7 @@
 #include <Scheduler.h>
 #include <LiquidCrystal_I2C.h>
 #include <TMAP.h>
+#include <variables.h>
 #include <SPI.h>
 #include <SD.h>
 /*-----( Declarar variables :D )-----*/
@@ -58,7 +54,6 @@ void loop(){
 
 void HILO_1(){
 	//RPM / Temp / Sensores
-	sinc(1,sensortemp());
 }
 
 void HILO_2(){
@@ -68,15 +63,6 @@ void HILO_2(){
 void HILO_3(){
 	//control encendido
 }
-
-int  sensortemp(){
-  //esta funcion mide la temperatura y devuelve int en celsius
-  //**solo para sensor LM35**
-    int value = analogRead(sensorT);
-    int millivolts = (value / 1023.0) * 5000;
-    int celsius = millivolts / 10; 
-    return celsius;
-} 
 
 int sinc(int op, int dato){ //esta funcion sincroniza todaaas las variables globales
 	switch(op){

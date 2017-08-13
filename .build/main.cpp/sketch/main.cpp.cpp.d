@@ -1,0 +1,27 @@
+c:\Users\FDS2000\OpenEFI\.build\main.cpp\sketch\main.cpp.cpp.o: \
+ c:\Users\FDS2000\OpenEFI\.build\main.cpp\sketch\main.cpp.cpp \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/WString.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/Stream.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/Print.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/Printable.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
+ F:\Programas\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
+ C:\Users\FDS2000\Documents\Arduino\libraries\Scheduler\src/Scheduler.h \
+ C:\Users\FDS2000\Documents\Arduino\libraries\LiquidCrystal_I2C/LiquidCrystal_I2C.h \
+ F:\Programas\Arduino\hardware\arduino\avr\cores\arduino/Print.h \
+ C:\Users\FDS2000\Documents\Arduino\libraries\LiquidCrystal_I2C/I2CIO.h \
+ C:\Users\FDS2000\Documents\Arduino\libraries\LiquidCrystal_I2C/LCD.h \
+ C:\Users\FDS2000\Documents\Arduino\libraries\TMAP2/TMAP.h \
+ F:\Programas\Arduino\hardware\arduino\avr\libraries\SPI\src/SPI.h \
+ F:\Programas\Arduino\libraries\SD\src/SD.h \
+ F:\Programas\Arduino\libraries\SD\src/utility/SdFat.h \
+ F:\Programas\Arduino\libraries\SD\src/utility/Sd2Card.h \
+ F:\Programas\Arduino\libraries\SD\src/utility/Sd2PinMap.h \
+ F:\Programas\Arduino\libraries\SD\src/utility/SdInfo.h \
+ F:\Programas\Arduino\libraries\SD\src/utility/FatStructs.h \
+ F:\Programas\Arduino\libraries\SD\src/utility/SdFatUtil.h

@@ -16,10 +16,15 @@
 
 class TMAP{
 	public:
-		TMAP_in(int pin, int pin2, int map, int map2);//constructor de funcion
+		TMAP(int pin, int pin2);//constructor de funcion
+		float MasaAire();
 	private:
+	int _pin;
+	int _pin2;
 	int TMAP_Pm;
 	int TMAP_PM;
+	//pines sensor
+	int pinTMAP[2];
 	//medicion de presion
 	int presion;
 	float presionf;//presion
@@ -36,6 +41,6 @@ class TMAP{
 	float R;//constante de gases ideales
 	float mol; //moles del aire en(luego cambiar, varia por el tamaño del cuerpo de mariposa)
 	float MA; //variable para guardar la Masa del aire que entra al cilindro, en L
-}
+};
 
 #endif
