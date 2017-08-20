@@ -1,5 +1,7 @@
+class VAR(){
+private:
 /*-----( Variables INYECCION )-----*/
-
+public:
 int iny[]    = {3,4,5,6};    //Pines de arduino que esta conectados los inyectores **CAMBIAR PINES**
 int inyT     = 0;            //tiempo de inyeccion   
 bool arr     = false;        //si se intenta arrancar el motor esta en true
@@ -121,4 +123,6 @@ const uint8_t charBitmap[][8] = {
    { 0xc, 0x12, 0x12, 0xc, 0, 0, 0, 0 },
    { 0x6, 0x9, 0x9, 0x6, 0, 0, 0, 0 },
    { 0x0, 0x6, 0x9, 0x9, 0x6, 0, 0, 0x0 } 
+};
+
 };

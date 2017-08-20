@@ -1,5 +1,3 @@
-#line 1 "c:\\Users\\FDS2000\\OpenEFI\\main.cpp"
-#line 1 "c:\\Users\\FDS2000\\OpenEFI\\main.cpp"
 /***
  *     _____                       _____ ______  _____         _   _    __      _____ __   __
  *    |  _  |                     |  ___||  ___||_   _|       | | | |  /  |    |  ___|\ \ / /
@@ -51,6 +49,10 @@ int  RPM_per   = 500;//periodo en ms en el que se actualizan las rpm
 long T_RPM_A   = 0;	 //tiempo del periodo anterior de rpm
 long T_RPM_AC  = 0;  //tiempo actual para rpm
 int  _PR       = 0;  //numero de diente / pulso
+long Tdnt[200];      // array con tiempo de pines de toda la vuelta del cigueñal
+long Tant      = 0;  //variable con valor de micros() del diente anterior
+int i2         = 0;  //variable para recorrer array Tdnt
+bool sincronizado = false; //medio obvio true si esta sincronizado el motor
 /*-----( Variables Temperatura )-----*/
 int  sensorT   = A0; //pin de sensor de temperatura
 int  temp      = 20; //temperatura para LCD
@@ -95,7 +97,14 @@ void HILO_1(){
 	}
 }
 void I_RPM(){ //interrupcion para rpm
-	_PR++;
+    _PR++;
+    Tdnt[i2] = micros() - Tant;
+    Tant = micros();
+    i2++;
+    if (i2 < dnt){ 
+        detachInterrupt(0);
+        sincronizar();
+        i2 = 0;} //reseamos la variable por cada vuelta que pasa
 }
 
 void HILO_2(){
@@ -144,6 +153,31 @@ int sinc(int op, int dato){ //esta funcion sincroniza todaaas las variables glob
 	}
 	return(0);
 }
+
+void sincronizar(){
+    #if(dev == 1) 
+        if (sincronizado == false){
+            Serial.println("DBG Sincronizando PMS con inyeccion y encendido");
+        }
+   #endif
+    //Esta funcion sincroniza el valor de "vuelta" con el PMS del piston 1
+    int TMIN = 99999; //almacena el tiempo menor de cada diente
+    int IMIN = 0; //almacena el indice del menor tiempo
+    int TMAX = 0; //almacena el tiempo mayor (Este seria teoricamente el PMS del piston 1)
+    int IMAX = 0; //almacena el indice del diente con PMS del piston 1, luego se restablece la variable diente...
+    //a 0 y se pone la variable sincronizado en true para habilitar el resto del programa.
+    int i2   = 0; //variable para recorer array de tiempos
+    for(int i = 0; i < dnt; i++){ //i menor a dnt porque empieza la cuenta en 0 el for y los dientes no
+        if (Tdnt[i2] < TMIN){
+            TMIN = Tdnt[i2];}
+        if (Tdnt[i2] > TMAX){
+            TMIN = Tdnt[i2];}
+        i2++;
+    }
+    attachInterrupt(0, I_RPM, FALLING);
+    sincronizado = true;
+}
+
 
 //funcion para el control del lcd
 //modificar luego para actualizar solo valores que cambian no toda la linea
