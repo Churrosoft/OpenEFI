@@ -8,13 +8,13 @@ somos estudiantes de un colegio de automovilistica y surgió la idea de hacer ar
 Solicitamos al instituto brindarnos una ecu programable y no hubo respuesta. Por este motivo decidimos hacerla nosotros mismos con ayuda de algunos profesores y decidimos hacerla libre para que cualquiera pueda usarla o incluso unirse al proyecto si consideramos valiosa su entrada
 
 <h3>Los integrantes:</h3>
-<a href="https://github.com/FDSoftware">FDSoftware</a>
+<p><a href="https://github.com/FDSoftware">FDSoftware</a>
 Es el creador y coordinador del proyecto además de ser la mente principal detras de las ideas del mismo. Amplia gama de proyectos de programación
-Programador de c++, c#, y lenjuages de web(html,php,javaScript,etc)
-<a href="https://github.com/SFADalmiro">SFADalmiro</a>
-Programador de c++ y java. Con conocimientos de programación web. Armador y reparador de computadoras. Le gusta la programación de programas criptográficos;
-<a href="https://github.com/FrancisJPK">FrancisJPK</a>
-Programador de c++ y java y pequeños conocimientos de programación web. Le gusta la programación de videojuegos;
+Programador de c++, c#, y lenjuages de web(html,php,javaScript,etc)</p>
+<p><a href="https://github.com/SFADalmiro">SFADalmiro</a>
+Programador de c++ y java. Con conocimientos de programación web. Armador y reparador de computadoras. Le gusta la programación de programas criptográficos;</p>
+<p><a href="https://github.com/FrancisJPK">FrancisJPK</a>
+Programador de c++ y java y pequeños conocimientos de programación web. Le gusta la programación de videojuegos;</p>
 
 <h4>Sobre el proyecto:</h4>
 El proyecto esta ahora en un 60% de completado, aunque probablemente una vez terminado siga creciendo y siendo optimizado y mejorado segun la aceptación que tenga en la comunidad.
