@@ -12,7 +12,7 @@ Solicitamos al instituto brindarnos una ecu programable y no hubo respuesta. Por
 Es el creador y coordinador del proyecto además de ser la mente principal detras de las ideas del mismo. Amplia gama de proyectos de programación
 Programador de c++, c#, y lenjuages de web(html,php,javaScript,etc)</p>
 <p><a href="https://github.com/SFADalmiro">SFADalmiro</a>
-Programador de c++ y java. Con conocimientos de programación web. Armador y reparador de computadoras. Le gusta la programación de programas criptográficos;</p>
+Programador de c++ y c#. Con conocimientos de programación web. Armador y reparador de computadoras. Le gusta la programación de programas criptográficos;</p>
 <p><a href="https://github.com/FrancisJPK">FrancisJPK</a>
 Programador de c++ y java y pequeños conocimientos de programación web. Le gusta la programación de videojuegos;</p>
 
