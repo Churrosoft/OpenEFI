@@ -31,7 +31,7 @@ Hasta ahora tiene soporte para:
 <p>-Control de chispa y avance de la misma en función de la temperatura y la velocidad de giro del motor</p>
 <p>-Parada de emergencia;</p>
 <p>-Todos los datos importantes como los de la posición del volante de inercia, las rpm, la temperatura, las lecturas del TMAP, etc, están guardadas en variables al principio del código</p>
-<p>-Funciona con prácticamente cualquier arduino con mas de 4056kb de memoria</p>
+<p>-Funciona (por ahora) solo con arduino DUE</p>
 <p>-Todo el código con sus respectivos comentarios están en español</p>
 
 <h4>Extras:</h4>
