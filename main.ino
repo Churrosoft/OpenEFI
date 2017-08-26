@@ -29,6 +29,7 @@
 #include <Scheduler.h>
 #include <Adafruit_LiquidCrystal.h>
 #include <Wire.h>
+#include <TMAP.h>
 
 /*-----( Declarar variables :D )-----*/
 
@@ -167,6 +168,7 @@ String msg = "";            //Mensaje que llego por serie
 long MPER  = 500;           //cantidad de ms que esperamos antes de enviar un mensaje con la info del motor
 long _PANT = 0;             //valor de millis() del mensaje anterior
 
+TMAP s1(1,2);
 void setup(){
 
      lcd.begin(20, 4);
@@ -288,6 +290,14 @@ int Tiny(int rpm2, int marv2){
 
 int Tiny_C(int _op , int _V){ //_op = opcion , _V valor base inyeccion
      //tiempo de inyeccion compensado por TMAP / sonda lambda
+     switch(_op){
+         case 0: //Control de 
+                break;
+         case 1:
+                break;
+         case 2:
+                break;
+     }
     return _V;
 }
 

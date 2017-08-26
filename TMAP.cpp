@@ -3,12 +3,11 @@
 //###########por FDSoftware###################
 //############################################
 #include <TMAP.h>
-
 //constructor de funcion
-TMAP::TMAP(int pin3, int pin2){
-	pinMode(pin3, INPUT);
+TMAP::TMAP(int pin, int pin2){
+	pinMode(pin, INPUT);
 	pinMode(pin2,INPUT);
-	pinTMAP[0] = pin3;
+	pinTMAP[0] = pin;
 	pinTMAP[1] = pin2;
 }
 

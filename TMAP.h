@@ -12,7 +12,6 @@
 #include <Arduino.h>
 #endif
 #include <math.h>
-#include <TMAP.h>
 
 class TMAP{
 	public:
@@ -36,8 +35,7 @@ class TMAP{
 	float T0;   // [K]       Temperatura de referencia en Kelvin
 	float Vout;    // [V]       Variable para almacenar Vout
 	float Rntc;    // [ohm]     Variable para NTC en ohmnios
-	float TempK;   // [K]       Temperatura salida en Kelvin	
-	float TempC;   // [ºC]      Temperatura salida en Celsius
+	float TempK;   // [K]       Temperatura salida en Kelvin
 	float R;//constante de gases ideales
 	float mol; //moles del aire en(luego cambiar, varia por el tamaño del cuerpo de mariposa)
 	float MA; //variable para guardar la Masa del aire que entra al cilindro, en L
