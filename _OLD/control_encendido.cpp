@@ -1,57 +1,37 @@
 #if (motor == 1)
 //------------------------(FrancisJPK inicio)-----------------------------------------
-void controlDeEncendido(float temperatura){
+
+/*-----( Variable Globales )-----*/
+//estas variables las puede usar cualquieeer funcion
+int _RPM       = 0; //las rpm :V
+int _TEMP      = 0; //temperatura
+int _POS       = 0; //posicion del cigueñal (en dientes)
+int _AE        = 0; //avance de encendido
+
+int AVC_E(float temperatura){
 
     //----CONTROL DE AVANCE ANTES DE MANDAR CHISPA----
-    if(arrancando == true){
+    if(_RPM < 600){
 		//controlador de avance en frio
-        avanceArranque();
-    }else if(arrancando == false){
-		avanceNormal(temperatura);
+        return avanceArranque();
+    }else if(_RPM >=600){
+		return avanceNormal(temperatura);
     }
     //---------------FIN DE CONTROL DE AVANCE PARA PROCEDER A MANDAR CHISPA-----------
 	//--------------------------------------------------------------------------------
-    //----------------------------------CONTROL DE MANDADA DE CHISPA-----------------
-        if(diente >= ((dnt/4) - avanceDeChispa) && diente <= ((dnt/4)-avanceDeChispa)+1){
-            iniciarChispazo(pinBobinas14);
-            activado = true;
-            millisant = millis();
-            //----chispazo para el piston 1 y 4(siendo el 4 chispa perdida)
-        }else if(diente >= ((dnt/2) - avanceDeChispa) && diente <= ((dnt/2)-avanceDeChispa)+1){
-            iniciarChispazo(pinBobinas23);
-            activado = true;
-            millisant = millis();
-            //----chispazo para el piston 2 y 3(siendo el 2 chispa perdida)
-        }else if(diente >= (((dnt/4)*3) - avanceDeChispa) && diente <= (((dnt/4)*3)-avanceDeChispa)+1){
-            iniciarChispazo(pinBobinas14);
-            activado = true;
-            millisant = millis();
-            //----chispazo para el piston 1 y 4(siendo el 1 chispa perdida)
-        }else if(diente >= (dnt - avanceDeChispa) && diente <= (dnt - avanceDeChispa)+1 ){
-            iniciarChispazo(pinBobinas23);
-            millisant = millis();
-            activado = true;
-            //----chispazo para el piston 2 y 3(siendo el 3 chispa perdida)
-        }
-
-        if ((millis() - millisant) >= periodo && activado == true) {
-            millisant = millis();
-            activado = false;
-            pararChispazo(pinBobinas14);
-            pararChispazo(pinBobinas23);
-        }
-}//------------------FIN DE CONTROL DE MANDADA DE CHISPA-------------------------
+    //borrado control de mandada de chispa
 //------------------------------------------------------------------------------
 //--------------------BLOQUE DE CONTROLADORES DE AVANCE--------------------------
 
 void avanceArranque(){
 	//avanceAnterior = avanceDeChispa; FDSoftware: da error despue fijate XD
-	avanceDeChispa = dientes(3);
+	int avc2 = dientes(3);
+	return avc2;
 	//if(avanceAnterior != avanceDeChispa){
 	//	LCD(2,avanceDeChispa,0);
 	//}
 }
-void avanceNormal(float temperatura){
+int avanceNormal(float temperatura){
 
 	int indiceTemp = 0;//indice que indica a que columna de la matriz acceder(temperatura)
 	int indiceRPM = 0;//indice que indica a que fila de la matriz acceder(RPM)
@@ -70,11 +50,9 @@ void avanceNormal(float temperatura){
 	//este indice corresponde a las filas (eje Y)
 	//---------
 	//avanceAnterior = avanceDeChispa; FDSoftware: RT :V, marca error de que no la declaraste :V
-	avanceDeChispa = dientes(tablaAvance[indiceRPM][indiceTemp]);
+	int avc2 = dientes(tablaAvance[indiceRPM][indiceTemp]);
+	return avc2;
 	//finalmente accedemos al valor en tabla correspondiente al estado actual del motor
-	//if(avanceAnterior != avanceDeChispa){ RT :,v
-	//	LCD(2,avanceDeChispa,0);
-	//}
 	//-----------FIN DEL BLOQUE DE ASIGNACION DE INDICES A LEER EN TABLAS-----
 }
 //--------------------FIN DE BLOQUE DE CONTROLADORES DE AVANCE----------------
@@ -82,10 +60,4 @@ void avanceNormal(float temperatura){
 //---------------------FUNCIONES DE CONTROL DE BOBINAS------------------------
 
 #endif
-void iniciarChispazo(int pin){//inicia la chispa hasta que se llame al metodo pararChispazo()
-    digitalWrite(pin, HIGH);
-}
-void pararChispazo(int pin){//para la chispa
-    digitalWrite(pin, LOW);
-}
 //---------------------(FrancisJPK final)---------------------------------------------------
