@@ -41,3 +41,11 @@ float TMAP::MasaAire(){
   MA = (mol* R *TempK) / (0.07 * presionf) ; //0.7 * presionf es para pasar de PSI a atm
   return MA; //Devolvemos la masa de aire que entra en la admision en litros
 }
+
+int TMAP::PMA(){ //Presion multiple admision
+	 //Medimos la presion (no creo que funcione muy bien que digamos XD)
+	 presion = analogRead(pinTMAP[0]);
+	 presion  = map(presion,0, 1023, 145,210); //145 = 1,45 psi presion minima, 210 = 2,10 psi presion maxima
+	 presionf = presion / 100;
+	 return presionf;
+}

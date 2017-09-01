@@ -17,6 +17,7 @@ class TMAP{
 	public:
 		TMAP(int pin, int pin2);//constructor de funcion
 		float MasaAire();
+		int PMA();
 	private:
 	int _pin;
 	int _pin2;
