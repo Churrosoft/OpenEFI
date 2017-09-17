@@ -48,11 +48,13 @@ int _RPM       = 0, 			//las rpm :V
 
 int AVC        = 12,			//Avance de encendido
     PMSI       = 45,			//Cantidad de dientes entre PMS
-    AVCI       = 2,				//Avabce de inyeccion
+    AVCI       = 2,				//Avance de inyeccion
     PWM_FLAG_1 = 0,
     PWM_FLAG_1A= 0,
     PWM_FLAG_2 = 0,
-    PWM_FLAG_3 = 0;
+    PWM_FLAG_3 = 0,
+    INYT1      = 0,       //tiempo de inyeccion combustible
+    INYT2      = 0;       //tiempo de encendido bobina
   
 /*-----( Variables RPM )-----*/
 
@@ -92,7 +94,7 @@ void loop(){
     }
     HILO_1();
     I_RPM();
-    C_PWM(23000,56);
+    C_PWM();
 }
 
 //funcion para manejo de enventos por serie
@@ -128,7 +130,7 @@ void I_RPM(){ //interrupcion para rpm
     delayMicroseconds(125);
 }
 
-void C_PWM(int T,int T2){
+void C_PWM(){
   bool C1 = (PWM_FLAG_1 >= (PMSI - AVCI)); //Condicional para inyeccion
  #if mtr == 1
  bool C2 = (PWM_FLAG_1A >= (PMSI - AVC));  //Condicional para encendido
@@ -137,7 +139,7 @@ void C_PWM(int T,int T2){
   if(C1){
     V[FLAG_2] = digitalRead(INY[FLAG_2]);
 		digitalWrite(INY[FLAG_2],!V[FLAG_2]);
-		delayMicroseconds(T);
+		delayMicroseconds(INYT1);
 		digitalWrite(INY[FLAG_2],V[FLAG_2]);
 		 PWM_FLAG_2++;
 		 PWM_FLAG_1 = 0;
@@ -150,7 +152,7 @@ void C_PWM(int T,int T2){
   if(C2){
     V[FLAG_3] = digitalRead(ECN[FLAG_3]);
 		digitalWrite(ECN[FLAG_3],!V[FLAG_3]);
-		delay(T2);
+		delay(INYT2);
 		digitalWrite(ECN[FLAG_3],V[FLAG_3]);
     PWM_FLAG_3++;
     PWM_FLAG_1A = 0;
