@@ -1,6 +1,11 @@
 <h1>Introducción:</h1>
+
 <p >Open efi es un proyecto de EFI (electronic fuel inyection) que funciona con arduino y además es open source para que el que lo quiera utilizar lo pueda modificar a su gusto con conocimientos de programacion en arduino (c++)</p>
 <img src="http://i.imgur.com/ucgET5K.jpg">
+
+<p>Logo de Open-EFI :</p>
+<img src="https://i.imgur.com/ISsDfFZ.png">
+
 
 <h2>El proyecto:</h2>
 El proyecto nació principalmente por 2 motivos: 
