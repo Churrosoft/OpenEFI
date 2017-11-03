@@ -88,12 +88,24 @@ char *ramstart=(char *)0x20070000;
 char *ramend=(char *)0x20088000;
 
 void setup(){
-     Serial.begin(9600);
-   //Iniciamos "hilos"
-    Serial.println("DBG : ARANCAMO WASHOOOO");
-	bool _CPIN = (i == );//Condicional para definir pines salida
-	 for(i = 0, i){
-	 }
+     Serial.begin(115200);
+     //Iniciamos "hilos"
+     Serial.println("DBG ARANCAMO WASHOOOO");
+     Serial.print("DBG Tarde: ");
+     Serial.print(millis());
+     Serial.println("mS en arrancar esta mierda :V");
+     for(i = 0; i < 4; i++){
+       pinMode(INY[i], OUTPUT);
+       pinMode(ECN[i], OUTPUT);
+    }
+    pinMode(A4, INPUT);
+    pinMode(A8, INPUT);
+    pinMode(6, OUTPUT);
+    Serial.println("LMB 1.2");
+    Serial.println("00V 12.45");
+    Serial.println("INY 3.82");
+    Serial.println("AVC 12.3");
+    attachInterrupt(digitalPinToInterrupt(2), I_RPM, CHANGE);
 }
 
 void loop(){
