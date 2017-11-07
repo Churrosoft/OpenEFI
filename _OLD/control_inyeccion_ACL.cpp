@@ -27,22 +27,10 @@ bool ACL(int rpmOBJ, int TBASE){
 		return false;} 
 	}
 
-int Tiny(int rpm2, int marv2){
+int Tiny(int rpm2, int marv2, int op){
 	int rpm3  = map(rpm2,0,7000,0,17); //aproximamos las rpm
 	int marv3 = map(marv2,0,255,0,10); //aproximamos el valor de la mariposa de aceleracion
-	
-	for(i = 0; i >= rpm3; i++){ //hasta que coincidan las rpm
-		lin = LeerLinea(indice,F("T1.csv"));
-		indice++;
+	if(OP == 0){ //Tiempo de inyeccion base
+		return TINY[marv3,rpm3];
 	}
-	indice = 5;
-	char *p = lin;
-    char *str;
-	
-	for(i = 0; i >= marv2;){ //hasta que coincida el valor de la mariposa
-		str = strtok_r(p, ";", &p); //cortamos el seudo string por cada ; que aparezca
-	}
-	
-	int tiempo = atoi(str); //convertimos el char en int
-	return tiempo;
 }
