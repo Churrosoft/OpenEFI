@@ -386,8 +386,8 @@ void C_PWM(){
 }
 
 #if (mtr == 1)
-//es nesesario tener la tabla aca, sino tira error
- int tablaAvance[18][11]={//0 ;18;27;36;45;55;64;73;82;91;100 */
+
+int tablaAvance[18][11]={//0 ;18;27;36;45;55;64;73;82;91;100 */
                 /*800*/    {2 ,3 ,3 ,3 ,4 ,6 ,6 ,7 ,8 ,8 ,8 },
                 /*1000*/   {2 ,3 ,3 ,4 ,5 ,8 ,8 ,8 ,10,10,10},
                 /*1200*/   {2 ,5 ,5 ,5 ,6 ,9 ,9 ,10,11,12,12},
@@ -408,7 +408,7 @@ void C_PWM(){
                 /*6000*/   {33,34,34,34,34,34,34,35,37,38,38}
                 };         //matriz tabla de avance
 
-int AVC_E(){ //*****CAMBIAR*******
+int AVC_E(){
     //----CONTROL DE AVANCE ANTES DE MANDAR CHISPA----
     if(_RPM < 600){
     //controlador de avance en frio
@@ -429,22 +429,15 @@ int avanceNormal(){
   int temperatura = temp();
   int indiceTemp = 0;//indice que indica a que columna de la matriz acceder(temperatura)
   int indiceRPM = 0;//indice que indica a que fila de la matriz acceder(RPM)
-
-    if(temperatura < 98){
-    indiceTemp = ((temperatura < 18)? 0:((temperatura < 27)? 1:((temperatura < 36)? 2:((temperatura < 45)? 3:((temperatura < 55)? 4:((temperatura < 64)? 5:((temperatura < 73)? 6:((temperatura < 82)? 7:((temperatura < 91)? 8:9)))))))));
-    //si temperatura < 18 leer columna 0 en tabla, si temperatura < 27 leer columna 1, 
-    //si temperatura < 36 leer columna 2 etc etc.
-  }else{
-    indiceTemp = 10;
-    //si la temperatura es mayor a 98 leemos la ultima columna en tabla(la mayor)
-  }
-  indiceRPM = ((_RPM<1000)?0:((_RPM<1200)?1:((_RPM<1500)?2:((_RPM<1700)?3:((_RPM<2000)?4:((_RPM<2200)?5:((_RPM<2500)?6:((_RPM<2700)?7:((_RPM<3000)?8:((_RPM<3200)?9:((_RPM<3500)?10:((_RPM<3700)?11:((_RPM<4000)?12:((_RPM<4500)?13:((_RPM<5000)?14:((_RPM<5500)?15:((_RPM<6000)?16:17))))))))))))))))); 
-  //si rpm < 1000, leer columna 0 en tabla... si rpm < 1200 leer fila 1, si rpm < 1500 leer fila 2, etc etc.
-  
-  int avc2 = dientes(tablaAvance[indiceRPM][indiceTemp]);
+	
+  //obtener el avance por tabla segun temperatura y rpm
+  indiceTemp = map(temperatura,0,100,0,10);//obtener la columna correspondiente en tabla
+  indiceRPM = map(_RPM,0,8000,0,17);//obtener la fila correspondiente en tabla
+	
   //finalmente accedemos al valor en tabla correspondiente al estado actual del motor
-
-  return avc2;
+  int avc2 = dientes(tablaAvance[indiceRPM][indiceTemp]);
+  
+  return dientes(avc2);//retornamos el avance en cantidad de dientes
   
 }
 //--------------------FIN DE BLOQUE DE CONTROLADORES DE AVANCE----------------
