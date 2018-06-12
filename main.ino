@@ -435,7 +435,7 @@ int avanceNormal(){
   indiceRPM = map(_RPM,0,8000,0,17);//obtener la fila correspondiente en tabla
 	
   //finalmente accedemos al valor en tabla correspondiente al estado actual del motor
-  int avc2 = dientes(tablaAvance[indiceRPM][indiceTemp]);
+  int avc2 = tablaAvance[indiceRPM][indiceTemp];
   
   return dientes(avc2);//retornamos el avance en cantidad de dientes
   
