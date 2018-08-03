@@ -444,8 +444,32 @@ void C_PWM(){
 }
 
 #if (mtr == 1)
+<<<<<<< HEAD
+=======
 
-int AVC_E(){ //*****CAMBIAR*******
+int tablaAvance[18][11]={//0 ;18;27;36;45;55;64;73;82;91;100 */
+                /*800*/    {2 ,3 ,3 ,3 ,4 ,6 ,6 ,7 ,8 ,8 ,8 },
+                /*1000*/   {2 ,3 ,3 ,4 ,5 ,8 ,8 ,8 ,10,10,10},
+                /*1200*/   {2 ,5 ,5 ,5 ,6 ,9 ,9 ,10,11,12,12},
+                /*1500*/   {7 ,8 ,8 ,8 ,8 ,10,10,11,13,14,14},
+                /*1700*/   {9 ,10,10,10,10,11,11,12,14,15,15},
+                /*2000*/   {11,12,12,12,12,13,13,14,15,16,16},
+                /*2200*/   {12,14,14,14,14,15,15,16,17,18,18},
+                /*2500*/   {14,16,16,16,16,17,17,17,18,19,19},
+                /*2700*/   {16,18,18,18,18,19,19,19,20,21,21},
+                /*3000*/   {18,20,20,20,20,21,21,21,22,23,23},
+                /*3200*/   {20,22,22,22,22,23,23,23,24,25,25},
+                /*3500*/   {22,24,24,24,24,25,25,25,26,27,27},
+                /*3700*/   {24,26,26,26,26,27,27,27,28,29,29},
+                /*4000*/   {25,27,27,27,27,28,28,28,29,30,30},
+                /*4500*/   {27,28,28,29,29,30,30,30,31,32,32},
+                /*5000*/   {29,31,32,32,32,33,33,33,34,35,35},
+                /*5500*/   {31,33,33,33,33,33,33,34,36,37,37},
+                /*6000*/   {33,34,34,34,34,34,34,35,37,38,38}
+                };         //matriz tabla de avance
+>>>>>>> 1ef807935603a8041eb41d7ac244d63c8fc0162e
+
+int AVC_E(){
     //----CONTROL DE AVANCE ANTES DE MANDAR CHISPA----
     if(_RPM < 600){
     //controlador de avance en frio
@@ -466,22 +490,15 @@ int avanceNormal(){
   int temperatura = temp();
   int indiceTemp = 0;//indice que indica a que columna de la matriz acceder(temperatura)
   int indiceRPM = 0;//indice que indica a que fila de la matriz acceder(RPM)
-
-    if(temperatura < 98){
-    indiceTemp = ((temperatura < 18)? 0:((temperatura < 27)? 1:((temperatura < 36)? 2:((temperatura < 45)? 3:((temperatura < 55)? 4:((temperatura < 64)? 5:((temperatura < 73)? 6:((temperatura < 82)? 7:((temperatura < 91)? 8:9)))))))));
-    //si temperatura < 18 leer columna 0 en tabla, si temperatura < 27 leer columna 1, 
-    //si temperatura < 36 leer columna 2 etc etc.
-  }else{
-    indiceTemp = 10;
-    //si la temperatura es mayor a 98 leemos la ultima columna en tabla(la mayor)
-  }
-  indiceRPM = ((_RPM<1000)?0:((_RPM<1200)?1:((_RPM<1500)?2:((_RPM<1700)?3:((_RPM<2000)?4:((_RPM<2200)?5:((_RPM<2500)?6:((_RPM<2700)?7:((_RPM<3000)?8:((_RPM<3200)?9:((_RPM<3500)?10:((_RPM<3700)?11:((_RPM<4000)?12:((_RPM<4500)?13:((_RPM<5000)?14:((_RPM<5500)?15:((_RPM<6000)?16:17))))))))))))))))); 
-  //si rpm < 1000, leer columna 0 en tabla... si rpm < 1200 leer fila 1, si rpm < 1500 leer fila 2, etc etc.
-  
-  int avc2 = dientes(tablaAvance[indiceRPM][indiceTemp]);
+	
+  //obtener el avance por tabla segun temperatura y rpm
+  indiceTemp = map(temperatura,0,100,0,10);//obtener la columna correspondiente en tabla
+  indiceRPM = map(_RPM,0,8000,0,17);//obtener la fila correspondiente en tabla
+	
   //finalmente accedemos al valor en tabla correspondiente al estado actual del motor
-
-  return avc2;
+  int avc2 = tablaAvance[indiceRPM][indiceTemp];
+  
+  return dientes(avc2);//retornamos el avance en cantidad de dientes
   
 }
 //--------------------FIN DE BLOQUE DE CONTROLADORES DE AVANCE----------------
@@ -529,6 +546,7 @@ void FXM(){
         }while(_FM);
     }
 }
+<<<<<<< HEAD
 
 void sincronizar(){
     
@@ -573,3 +591,5 @@ void sincronizar(){
         SINC = true;
     }
     
+=======
+>>>>>>> 1ef807935603a8041eb41d7ac244d63c8fc0162e
