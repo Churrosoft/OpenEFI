@@ -13,7 +13,7 @@ void sincronizar(){
 	//a 0 y se pone la variable sincronizado en true para habilitar el resto del programa.
 
 	int DientesEntreHUECOyPMS = 25;//esta variable la cambiamos cuando sepamos cuantos dientes son
-	int TamanoDelArray = (sizeof(Tdnt)/sizeof(Tdnt[0]));//Tamaño del array (cantidad de dientes)
+	int TamanoDelArray = (sizeof(Tdnt)/sizeof(Tdnt[0]));//Tamaï¿½o del array (cantidad de dientes)
 
 	for(int i = 0; i < TamanoDelArray; i++){
 			if(Tdnt[i] < TMIN){
@@ -36,7 +36,7 @@ void sincronizar(){
 		aux+=Tdnt[i];
 	}
 	promedio = aux/TamanoDelArray;//fianlmente cambiamos el promedio
-	//una vez ejecutada esta función se puede usar con seguridad la variable dientes y el promedio :P
+	//una vez ejecutada esta funcion se puede usar con seguridad la variable dientes y el promedio :P
     vuelta = 0;
     sincronizado = true;
 }

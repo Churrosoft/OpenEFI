@@ -1,3 +1,4 @@
+#include "Timer.h";
 int PWM_FLAG_1 = 0;
 
 //VARIABLES C_PWM
@@ -13,6 +14,7 @@ void int0(){
 	PWM_FLAG_1++;
 }
 
+T Timer();
 
 void C_PWM(int T){
 	bool C1 = (FLAG_1 >= (PMSI - AVCI)); //Condicional para inyeccion

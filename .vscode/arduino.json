@@ -1,5 +1,0 @@
-{
-    "board": "arduino:sam:arduino_due_x",
-    "sketch": "main.ino",
-    "port": "COM3"
-}
