@@ -1,5 +1,6 @@
+/*
 ╔════════════════════════════════════════════════════════════════════════╗
-║                    µEFI V 1.5X Team:                                   ║
+║                    uEFI V 1.5X Team:                                   ║
 ║  Main Programer   FDSoftware | dfrenoux@gmail.com | fdsoftware.xyz     ║
 ║ Program features:                                                      ║
 ║    ∆ Control of diesel / petrol engines up to 4 cylinders              ║ 
@@ -7,6 +8,7 @@
 ║    ∆ Independent ignition                                              ║
 ║    ∆ Error report                                                      ║ 
 ╚════════════════════════════════════════════════════════════════════════╝
+*/
 /*-----( Importar Librerias )-----*/
 #include <Arduino.h>
 
@@ -46,7 +48,7 @@ int  RPM_per   = 350;     //periodo en ms en el que se actualizan las rpm
 long T_RPM_AC  = 0;       //para saber tiempo actual
 long T_RPM_A   = 0;       //para saber tiempo anterior
 int  _PR       = 0;       //numero de diente / pulso
-unsigned long Tdnt[dnt]; //array con tiempo entre dientes
+unsigned long Tdnt[62]; //array con tiempo entre dientes
 byte tdnt; //indice de Tdnt
 /*-----( Variables INYECCION )-----*/
 int INY[]     = {23,27,29,25};    //Pines de arduino que esta conectados los inyectores **CAMBIAR PINES**
@@ -113,7 +115,7 @@ void setup(){
        pinMode(ECN[i], OUTPUT);
     }
     pinMode(A4, INPUT);
-    pinMode(A8, INPUT);
+    pinMode(A3, INPUT);
     pinMode(6, OUTPUT);
     attachInterrupt(digitalPinToInterrupt(2), I_RPM, CHANGE);
 }
@@ -157,7 +159,7 @@ int temp(){
 int _vmar(){
   //funcion para obtener la posicion de la mariposa de aceleracion
   #if alpha == 1
-    int val = analogRead(A8);
+    int val = analogRead(A3);
     return map(val, 0, 1023, 0 , 99);
   #endif
 }
@@ -194,7 +196,8 @@ int Tiny(int rpm2, int marv2, int OP){
     //recalcular dependiendo de la necesidad
 	int rpm3  = map(rpm2,0,7000,0,17); //aproximamos las rpm
 	int marv3 = map(marv2,0,255,0,10); //aproximamos el valor de la mariposa de aceleracion
-    return TINY[marv3,rpm3];
+    int t = TINY[marv3,rpm3];
+    return t;
 }
 
 
@@ -220,7 +223,7 @@ void C_PWM(){
     digitalWrite(ECN[PWM_FLAG_3],!digitalRead(ECN[PWM_FLAG_3]));
     delayMicroseconds(INYT2);
     digitalWrite(ECN[PWM_FLAG_3],!digitalRead(ECN[PWM_FLAG_3]));
-    PWM_FL AG_3++;
+    PWM_FLAG_3++;
     PWM_FLAG_1A = 0;
   }
   if(PWM_FLAG_3 > (cil - 1)){
@@ -262,37 +265,31 @@ int dientes(float grados){
 
 void sincronizar(){
         //Esta funcion sincroniza el valor de "vuelta" con el PMS del piston 1
-        int TMIN = 99999; //almacena el tiempo menor de cada diente
-        int IMIN = 0; //almacena el indice del menor tiempo(al final no la tuve que usar :P)
-        int TMAX = 0; //almacena el tiempo mayor (Este seria teoricamente el PMS del piston 1)
-        int IMAX = 0; //almacena el indice del diente con PMS del piston 1, luego se restablece la variable diente...
+        unsigned long TMIN = 99999; //almacena el tiempo menor de cada diente
+        byte IMIN = 0; //almacena el indice del menor tiempo(al final no la tuve que usar :P)
+        unsigned long TMAX = 0; //almacena el tiempo mayor (Este seria teoricamente el PMS del piston 1)
+        byte IMAX = 0; //almacena el indice del diente con PMS del piston 1, luego se restablece la variable diente...
         //a 0 y se pone la variable sincronizado en true para habilitar el resto del programa.
     
-        int DientesEntreHUECOyPMS = dnt;//esta variable la cambiamos cuando sepamos cuantos dientes son
         int TamanoDelArray = (sizeof(Tdnt)/sizeof(Tdnt[0]));//Tama�o del array (cantidad de dientes)
-    
+        byte diente;
         for(int i = 0; i < TamanoDelArray; i++){
                 if(Tdnt[i] < TMIN){
                     TMIN = Tdnt[i];
                 }else if(TMAX < Tdnt[i]){
                     TMAX = Tdnt[i];
-    
-                    IMAX = i + DientesEntreHuecoYPMS;//PMS del piston uno seria...
+                    IMAX = i + dnt;//PMS del piston uno seria...
                     //el indice del hueco(tiempo mayor) mas la distancia entre el hueco...
                     //y el pms del piston uno
                 }
             }
         diente = TamanoDelArray-IMAX;//el diente actual es la distancia que tenemos..
         //desde el diente 0 que es el diente del pms del piston 1(IMAX)
-    
-    
         //for para obtener el promedio de tiempo entre dientes y modificarlo en la clase variables.h
         int aux = 0;
-        for(int i = ; i < TamanoDelArray; i++){
+        for(int i = 0; i < TamanoDelArray; i++){
             aux+=Tdnt[i];
         }
-        promedio = aux/TamanoDelArray;//fianlmente cambiamos el promedio
-        //una vez ejecutada esta funcion se puede usar con seguridad la variable dientes y el promedio :P
-        vuelta = 0;
+        //promedio = aux/TamanoDelArray;//fianlmente cambiamos el promedio
         SINC = true;
 }

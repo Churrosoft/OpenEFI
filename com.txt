@@ -1,0 +1,13 @@
+Preparing boards...
+Verifying...
+f:\programacion\C++\OpenEFI\main.ino: In function 'int Tiny(int, int, int)':
+
+f:\programacion\C++\OpenEFI\main.ino:199:28: warning: invalid conversion from 'int*' to 'int' [-fpermissive]
+
+     int t = TINY[marv3,rpm3];
+
+                            ^
+
+Sketch uses 2324 bytes (7%) of program storage space. Maximum is 32256 bytes.
+Global variables use 699 bytes (34%) of dynamic memory, leaving 1349 bytes for local variables. Maximum is 2048 bytes.
+[Done] Finished verify sketch - main.ino
