@@ -141,6 +141,28 @@ int VE[18][11]={
     /*5000*/   {29,31,32,32,32,33,33,33,34,35,35},
     /*5500*/   {31,33,33,33,33,33,33,34,36,37,37},
     /*6000*/   {33,34,34,34,34,34,34,35,37,38,38}
+    };         //matriz tabla de 
+    
+int tinyTEMP[18][11]={
+               //0 ;18;27;36;45;55;64;73;82;91;100 */ Correcion de tiempo de inyeccion por temperatura
+    /*800*/    {2 ,3 ,3 ,3 ,4 ,6 ,6 ,7 ,8 ,8 ,8 },
+    /*1000*/   {2 ,3 ,3 ,4 ,5 ,8 ,8 ,8 ,10,10,10},
+    /*1200*/   {2 ,5 ,5 ,5 ,6 ,9 ,9 ,10,11,12,12},
+    /*1500*/   {7 ,8 ,8 ,8 ,8 ,10,10,11,13,14,14},
+    /*1700*/   {9 ,10,10,10,10,11,11,12,14,15,15},
+    /*2000*/   {11,12,12,12,12,13,13,14,15,16,16},
+    /*2200*/   {12,14,14,14,14,15,15,16,17,18,18},
+    /*2500*/   {14,16,16,16,16,17,17,17,18,19,19},
+    /*2700*/   {16,18,18,18,18,19,19,19,20,21,21},
+    /*3000*/   {18,20,20,20,20,21,21,21,22,23,23},
+    /*3200*/   {20,22,22,22,22,23,23,23,24,25,25},
+    /*3500*/   {22,24,24,24,24,25,25,25,26,27,27},
+    /*3700*/   {24,26,26,26,26,27,27,27,28,29,29},
+    /*4000*/   {25,27,27,27,27,28,28,28,29,30,30},
+    /*4500*/   {27,28,28,29,29,30,30,30,31,32,32},
+    /*5000*/   {29,31,32,32,32,33,33,33,34,35,35},
+    /*5500*/   {31,33,33,33,33,33,33,34,36,37,37},
+    /*6000*/   {33,34,34,34,34,34,34,35,37,38,38}
     };         //matriz tabla de avance
 
 /*-----( Variables C_INY )-----*/
@@ -148,6 +170,7 @@ int INY_L = 150,   //tiempo de apertura del inyector en microsegundos
     INY_P = 500,   //tiempo en uS adicional para acelerar el motor
     INY_C = 25000; //Es el valor constante , que determina el tiempo de apertura para que se crea la mezcla estequiométrica (lambda=1 ) , para cilindrada del motor , presión a 100kPa , temperatura del aire a 21ºC y VE 100% .
 byte AF   = 147;   //mexcla Aire Combustible objetivo numero entero sin coma, para sacar la coma se multiplica por 10, asi que para tener una mexcla de 14,7/1 se escribe 147
+byte TBM  = 100;     //TBM - Turbo Boost Multiplier (valor multiplicado por 100) boost de 1,2 = 120
 /*-----( Variables _LMB )-----*/
 bool LMBM = false; //en true si se utilizan las dos sondas lambda
 int
@@ -363,6 +386,7 @@ int Tiny(int rpm2, int marv2, int OP){
             return INY_L + (INY_P *2);
          break;
          case 4: //GM : BPW
+            return _BPW();
          break;
          case 5: //Honda: ReqFuel
          break;
@@ -371,7 +395,7 @@ int Tiny(int rpm2, int marv2, int OP){
 
 int _Ctemp(int tin){
     //esta funcion corrige tiempo de inyeccion dependiendo de la temperatura y rpm
-
+    return tin + (tinyTEMP[_TEMP,_RPM]);
 }
 int _BPW(){
     //algoritmo para obtener tiempo base (luego pasar por lambda y correcion de temperatura) usado por General Motors
@@ -389,7 +413,7 @@ int _BPW(){
     DE - Decel Enleanment
     CLT - Closed Loop
     TBM - Turbo Boost Multiplier */
-    return INY_C * _MAP * _TEMP *(AF / 10) * (VE[map(_MAP,0,150,0,10), _rpm] /100 );
+    return INY_C * _MAP * _TEMP *(AF / 10) * (VE[map(_MAP,0,150,0,10), _rpm] /100 ) * ( TBM  / 100 );
     
 }
 
