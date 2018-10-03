@@ -6,9 +6,10 @@
 class Sensores{
 	public:
 		Sensores(byte num);
-		void  Setup(void);
-		float Temp(float);
-		int vmar(int);
+		int Temp();
+		int tps();
+		int lamb(byte n); //sensor lambda, numero indica cual necesito medir
+		int pres();
 	private:
 };
 

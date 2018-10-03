@@ -1,9 +1,0 @@
-{
-    "arduino.path": "C:/Program Files (x86)/Arduino",
-    "arduino.commandPath": "",
-    "arduino.additionalUrls": "",
-    "arduino.logLevel": "info",
-    "arduino.enableUSBDetection": true,
-    "arduino.disableTestingOpen": false,
-    "arduino.skipHeaderProvider": false
-}

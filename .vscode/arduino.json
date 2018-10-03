@@ -1,4 +1,0 @@
-{
-    "board": "arduino:sam:arduino_due_x_dbg",
-    "sketch": "main.ino"
-}

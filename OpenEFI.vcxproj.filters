@@ -36,7 +36,25 @@
     <ClInclude Include="Tablas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PWM.h">
+    <ClInclude Include="InyecTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interfazSerial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TMAP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pines2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AVC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SPWM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CD4051.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,7 +62,22 @@
     <ClCompile Include="Sensores.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PWM.cpp">
+    <ClCompile Include="InyecTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interfazSerial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TMAP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AVC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SPWM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CD4051.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
