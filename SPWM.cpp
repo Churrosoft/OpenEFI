@@ -9,7 +9,7 @@
 SPWM::SPWM(byte avance, byte dientesPMS, byte PinesI[] , byte PinesE[]){
 	AVCI = avance;
 	PMSI = dientesPMS;
-	for (i = 0; i < sizeof(PinesI);) {
+	for (i = 0; i < sizeof(PinesI);i++) {
 		pinMode(PinesI[i], OUTPUT);
 		pinMode(PinesE[i], OUTPUT);
 	}
@@ -21,14 +21,22 @@ void SPWM::Ecn(byte Time, byte Avc){
 #ifdef uEFI == 0 && OpenEFImode == 0
 
 	if (PWM_FLAG_1A >= (PMSI - AVC)) {
-		//digitalWrite(ECN[PWM_FLAG_3], !digitalRead(INY[PWM_FLAG_3]));
+#if defined(ESP8266)
+		digitalWrite(ECN[PWM_FLAG_3], !digitalRead(INY[PWM_FLAG_3]));
+#endif
+#if defined(__AVR_ATmega328P__)
 		PORTD |= (0 << ECN[PWM_FLAG_3]); //thanks isa :3
+#endif
 		t2 = true;
 	}
 
 	if (micros() - T2X >= Time && t2 == true) {
-		//digitalWrite(ECN[PWM_FLAG_3], !digitalRead(ECN[PWM_FLAG_3]));
+#if defined(ESP8266)
+		digitalWrite(ECN[PWM_FLAG_3], !digitalRead(INY[PWM_FLAG_3]));
+#endif
+#if defined(__AVR_ATmega328P__)
 		PORTD |= (1 << ECN[PWM_FLAG_3]);
+#endif
 		PWM_FLAG_3++;
 		PWM_FLAG_1A = 0;
 		if (PWM_FLAG_3 > (cil - 1)) PWM_FLAG_3 = 0; //remplazar luego con el define "cil"
@@ -42,16 +50,23 @@ void SPWM::Ecn(byte Time, byte Avc){
 void SPWM::Iny(byte Time){
 #if mtr == 1 || mtr == 0
 #if uEFI == 0 && OpenEFImode == 0
-//el ifdef es para que incluya los define del archivo OpenEFI.ino asi reemplaza "cil"
-	if ( PWM_FLAG_1 >= (PMSI - AVCI) ) {
-		//digitalWrite(INY[PWM_FLAG_2], !digitalRead(INY[PWM_FLAG_2]));
+	if (PWM_FLAG_1 >= (PMSI - AVCI)) {
+#if defined(ESP8266)
+		digitalWrite(INY[PWM_FLAG_2], !digitalRead(INY[PWM_FLAG_2]));
+#endif
+#if defined(__AVR_ATmega328P__)
 		PORTD |= (1 << INY[PWM_FLAG_2]);
+#endif
 		t1 = true;
 	}
 
 	if (micros() - T1X >= Time && t1 == true ) {
-		//digitalWrite(INY[PWM_FLAG_2], !digitalRead(INY[PWM_FLAG_2]));
+#if defined(ESP8266)
+		digitalWrite(INY[PWM_FLAG_2], !digitalRead(INY[PWM_FLAG_2]));
+#endif
+#if defined(__AVR_ATmega328P__)
 		PORTD |= (0 << INY[PWM_FLAG_2]);
+#endif
 		PWM_FLAG_2++;
 		PWM_FLAG_1 = 0; //reseteo para proximo tiempo
 		if (PWM_FLAG_2 > (cil - 1)) PWM_FLAG_2 = 0;

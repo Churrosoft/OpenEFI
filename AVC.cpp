@@ -10,7 +10,6 @@ AVC::AVC(byte dientes){
 byte AVC::GetAVC(int rpm, byte temp) {
 	if (rpm < 600) {
 		return AVC::dientes(3);
-
 	}
 	return 0;
 }

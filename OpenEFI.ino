@@ -61,16 +61,44 @@ void loop() {
 void I_RPM() { //interrupcion para rpm
 	_PR++;
 	_POS++;
-	if (tdnt == 0) { Tdnt[tdnt] = micros(); tdnt++; }// para guardar primer temporizado del sincronizado
-	Tdnt[tdnt] = micros() - Tdnt[(tdnt - 1)];
-	if (_POS >= dnt) {
-		//if (!SINC) { sincronizar(); }
+	if (!SINC) { 
+		sincINT();
+		//reseteo estas dos porque no esta sincronizado el motor
+		_PR = 0;
 		_POS = 0;
 	}
 	pwm.Intrr();
 }
 
-
+void sincINT() {
+	//interruppcion para "sincronizar()"
+	if (!initsinc) {
+		Ta = micros();
+		initsinc = true;
+	}
+	else {
+		if (sincB) {
+			Tb = micros();
+			T1 = Tb - Ta;
+			Ta = Tb;
+			sincB = false;
+		}
+		else {
+			Tb = micros();
+			T2 = Tb - Ta;
+			Ta = Tb;
+			sincB = true;
+			sincronizar();
+		}
+	}
+}
+void sincronizar() {
+	//este void caza el ultimo tiempo entre diente y si es mayor por 1.5 veces al anterior,
+	//marca que es el PMS
+	 if (T2 > (T1 + (T1 / 2.3))) {
+		SINC = true;
+	}
+}
 /*###############################################
 ########### Fixed Mode Loop & Control############
 #################################################*/
