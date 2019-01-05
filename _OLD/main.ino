@@ -24,7 +24,7 @@
 ╚════════════════════════════════════════════════════════════════════════╝
 */
 /*-----( Importar Librerias )-----*/
-//#include <Arduino.h>
+#include <Arduino.h>
 #include <malloc.h>
 #include <Wire.h>
 

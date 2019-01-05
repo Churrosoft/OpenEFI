@@ -15,61 +15,101 @@
 */
 
 /*-----( Define's )-----*/
+#define test 1  //modo pruebas con placa debug
 #define mtr 1   //definir tipo de motor 0 = diesel ; 1 = nafta
 #define dev 1   //habilita modo desarollo
 #define alpha 1 //Habilita el modo de prubas alpha
 #define GNC_MOD 0 //activa el modo de GNC/GLP en la inyeccion
 #define uEFI 0 //en 1 si se compila para una placa uEFI
 #define OpenEFImode 0 // en 0 si es OpenEFI con Arduino nano, en 1 si utiliza un Node MCU
+
 /*-----( Importar Librerias )-----*/
-
 #include <Arduino.h>
-//#include <Wire.h>
-#include <interfazSerial.h>
-#include <InyecTime.h>
-#include <variables.h>
-#include <Sensores.h>
-#include <CD4051.h>
-#include <pines2.h>
-#include <SPWM.h>
-#include <AVC.h>
-
+#include <Wire.h>
+#include "interfazSerial.h"
+#include "InyecTime.h"
+#include "variables.h"
+#include "Sensores.h"
+#include "Debug.h"
+#include "CD4051.h"
+#include "pines2.h"
+#include "SPWM.h"
+#include "AVC.h"
+#include "Memory.h"
+#include "DTC.h"
 
 /*-----( Inicio de librerias )-----*/
-AVC avc(dnt);
+Memory m(0);
+Sensores main(0);
+DTC dtcmain(m,main);
+AVC avc(dnt, main, m);
+InyecTime time(main,m);
 interfazSerial Ser(1);
+Debug dbg(Ser,m);
 SPWM pwm(byte(12), byte(45), pines, pinesE);
 
+
+//por ahora las unicas tablas que sincronizan con la memoria son las de avance e inyeccion
+//BUG: abrir todas las tablas a la vez satura la RAM
+//NO SIRVE, MUCHA RAM AL SOPE, PASAR OBJETO DE MEMORIA POR REFERENCIA Y LISTO
+//int **Avance  = calloc(11, 18); //tabla de avance
+//int **InyTime = calloc(11, 18); //tabla de tiempo de inyeccion
+//int **VE      = calloc(11, 18);
+bool _fxm = false;
+
 void setup() {
-	//Wire.begin();
 	Serial.println(F("DBG Iniciando"));
+	time.TLamb(1500, 45);
+	time.Tarr();
+
+	Wire.begin();
 	attachInterrupt(digitalPinToInterrupt(2), I_RPM, CHANGE);
 	Serial.print(F("DBG Tarde: "));
 	Serial.print(millis());
 	Serial.println(F("mS"));
-	//analogWriteResolution(12);
 }
 
 void loop() {
+#if test == false
+	dtcmain.DTC_Loop();
 	if (SINC) {
-		pwm.Ecn(byte(12), byte(34)); //loop encendido
-		pwm.Iny( avc.GetAVC(_RPM, _TEMP) ); //loop Inyeccion
-		Ser.loop();
+#if alpha == 1
+		pwm.Iny(time.Aphplus(_RPM));
+#endif
+#if alpha == 0
+		pwm.Iny(byte(12)); //loop Inyeccion
+#endif
+		pwm.Ecn(avc.GetTime(), avc.GetAVC(_RPM)); //loop encendido
+		vent(); //control de electro ventilador
+		FXM(); //FixedMode
+		dbg.loop(_RPM); //Debug
 	}
+#endif
+#if test == true
+	pwm.Iny(map(analogRead(A1),0,2500,0,1024));
+#endif // test == true
+
+}
+
+void Iny() {
+	//UNDONE: void Iny()
+	//este void elige que algoritomo usar par calcular el tiempo de inyeccion
 }
 
 void I_RPM() { //interrupcion para rpm
-	_PR++;
-	_POS++;
+	if (SINC) {
+		_POS++;
+		_POS2++;
+		pwm.Intrr();
+	}
 	if (!SINC) { 
 		sincINT();
-		//reseteo estas dos porque no esta sincronizado el motor
-		_PR = 0;
-		_POS = 0;
 	}
-	pwm.Intrr();
 }
 
+void vent() {
+	//Controla electroventilador y corte de inyeccion por sobretemperatura
+}
 void sincINT() {
 	//interruppcion para "sincronizar()"
 	if (!initsinc) {
@@ -102,32 +142,14 @@ void sincronizar() {
 /*###############################################
 ########### Fixed Mode Loop & Control############
 #################################################*/
-//ARREGLAR PARA SOPORTAR NUEVO PROTOCOLO POR SERIE
-//void FXM() {
-//	//este seria seudo loop que tendria el modo fijo,
-//
-//	bool _FM = true;
-//	String _t = "";
-//	if (_msg && msg.startsWith("FXD.E")) {
-//		do {
-//			C_PWM();
-//			HILO_1();
-//			vent();
-//
-//			if (_msg) {
-//				if (msg.startsWith("FXD.D")) { // "FX.D" Termina el modo fijo de inyeccion
-//					_FM = false;
-//				}
-//				else if (msg.startsWith("INY")) { // "INY" cambia el tiempo de inyeccion
-//					_t = msg.erase(0, 3);
-//					INYT1 = _t.toInt();
-//				}
-//				else if (msg.startsWith("AVC")) { // "AVC" cambia el tiempo de avance
-//					_t = msg.erase(0, 3);
-//					AVC = _t.toInt();
-//				}
-//				//falta la parte de arranqued
-//			}
-//		} while (_FM);
-//	}
-//}
+void FXM() {
+//este seria seudo loop que tendria el modo fijo,
+	if (Ser.FXMD(_fxm)) {
+		_fxm = true;
+		do {
+			vent();
+			pwm.Iny(Ser.FXMD(false)); //loop Inyeccion
+			pwm.Ecn(avc.GetTime(), Ser.FXMD(true)); //loop encendido
+		} while (Ser.FXMD(_fxm));
+	}
+}

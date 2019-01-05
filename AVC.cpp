@@ -3,14 +3,20 @@
 //
 #include "AVC.h"
 
-AVC::AVC(byte dientes){
+AVC::AVC(byte dientes, Sensores& s2, Memory& ms){
 	dnt = dientes;
 }
 
-byte AVC::GetAVC(int rpm, byte temp) {
-	if (rpm < 600) {
-		return AVC::dientes(3);
-	}
+byte AVC::GetTime(){
+	//UNDONE: tiempo de encendido hace falta hacer que varie ?)
+	return byte(200);
+}
+
+byte AVC::GetAVC(int rpm) {
+	if (rpm < 600) 
+		return AVC::dientes(-2);
+	if (rpm > 800)
+		return ms.GetVal(0,map(rpm,800,7500,0,11),map(s2.Temp(), 800, 7500, 0, 11));
 	return 0;
 }
 
