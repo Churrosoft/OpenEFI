@@ -1,4 +1,4 @@
-﻿/*
+/*
 ╔════════════════════════════════════════════════════════════════════════╗
 ║                    Open EFI V 1.5X Team:                               ║
 ║  Main Programer   FDSoftware | dfrenoux@gmail.com | fdsoftware.xyz     ║
@@ -42,10 +42,10 @@
 
 /*-----( Inicio de librerias )-----*/
 Memory m(0);
-Sensores main(0);
-DTC dtcmain(m,main);
-AVC avc(dnt, main, m);
-InyecTime time(main,m);
+Sensores s_main(0);
+DTC dtcmain(m,s_main);
+AVC avc(dnt, s_main, m);
+InyecTime time(s_main,m);
 interfazSerial Ser(1);
 Debug dbg(Ser,m);
 SPWM pwm(byte(12), byte(45), pines, pinesE);

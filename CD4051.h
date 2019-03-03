@@ -2,7 +2,7 @@
 
 #ifndef _CD4051_h
 #define _CD4051_h
-#include "arduino.h"
+#include "Arduino.h"
 class CD4051{
 public:
 	CD4051(byte op);

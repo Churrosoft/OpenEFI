@@ -2,7 +2,7 @@
 
 #ifndef _PWM_h
 #define _PWM_h
-#include "arduino.h"
+#include "Arduino.h"
 class SPWM{
 
 public:
