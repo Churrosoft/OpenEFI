@@ -47,7 +47,11 @@ void SPWM::Ecn(byte Time, byte Avc){
 #endif // mtr == 1
 }
 
-void SPWM::Iny(byte Time){
+void SPWM::Set(unsigned long _Time) {
+	Time = _Time; //nada mas ?)
+}
+
+void SPWM::Iny(){ //esto va en el loop principal
 #if mtr == 1 || mtr == 0
 #if uEFI == 0 && OpenEFImode == 0
 	if (PWM_FLAG_1 >= (PMSI - AVCI)) {

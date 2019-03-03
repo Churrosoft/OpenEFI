@@ -9,7 +9,8 @@ public:
 	//avance encendido  | dientes entre pms | pines inyeccion | pines encendido
 	SPWM(byte avance,      byte dientesPMS,   byte PinesI[],    byte PinesE[]);
 	void Ecn(byte Time, byte Avc);
-	void Iny(byte Time);
+	void Set(unsigned long _Time);
+	void Iny();
 	void Intrr();    //void de interrupcion
 private:
 	/*-----( Variables C_PWM )-----*/
@@ -24,7 +25,7 @@ private:
 		i = 0;       //para for viteh.
 	byte INY[16];
 	unsigned long    //temporizados:
-
+		Time = 0,
 		T1 = 250,    //tiempo de inyeccion combustible
 		T2 = 1800,   //tiempo de encendido bobina
 		T1X = 0,	 //lo uso para controlar temporizado con micros()

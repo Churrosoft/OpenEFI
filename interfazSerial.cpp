@@ -88,7 +88,7 @@ void interfazSerial::MSG(bool op){
 	_msg = op;
 }
 
-bool interfazSerial::FXMD(bool val){
+bool interfazSerial::FXMD(){
 	if (msg) {
 		if (interfazSerial::Getcode() == 004) {
 			if (interfazSerial::GetSubCode().startsWith("FXM_E")) {
@@ -99,7 +99,7 @@ bool interfazSerial::FXMD(bool val){
 			}
 		}
 	}
-	return val;
+	return true;
 }
 
 int interfazSerial::FXMD(bool mode, int val) {

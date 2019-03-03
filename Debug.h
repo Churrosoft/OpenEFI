@@ -9,7 +9,7 @@ public:
 	interfazSerial& ser;
 	Memory & mem3;
 	Debug(interfazSerial& ser, Memory & mem3);
-	void loop(int _RPM);
+	void loop(int _RPM, int time, int _TEMP);
 	//virtual ~Debug();
 private:
 	unsigned long prev = 0;

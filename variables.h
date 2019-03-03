@@ -33,6 +33,7 @@ long T_RPM_A = 0;       //para saber tiempo anterior
 
 
 /*-----( Variables INYECCION )-----*/
+unsigned long INYtime = 0; //tiempo promedio
 byte INY[] = { 23,27,29,25 };    //Pines de arduino que esta conectados los inyectores **CAMBIAR PINES**
 byte ECN[] = { 22,28,26,24 };    //Pines del arduino que estan conectados a las bobinas(Encendido secuencial con 1 bobina por cilindro) **CAMBIAR PINES**
 //byte marv = 0;                //valor actual de mariposa de acelerador

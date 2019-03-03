@@ -71,7 +71,7 @@ public:
 	void loop();
 	bool MSG();// Devuevle true si hay un mensaje nuevo
 	void MSG(bool op); //sobrecarga funcion ,la uso para informar que ya use el ultimo mensaje
-	bool FXMD(bool val); //void que activa el FixedMode
+	bool FXMD();
 	int FXMD(bool mode, int val); //obtiene el tiempo y avance nuevo para el FixedMode
 private:
 	String msg;

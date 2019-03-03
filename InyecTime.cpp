@@ -21,7 +21,7 @@
 #define CTA   250 //Correcion de tiempo A, mezcla rica, se le sacan X uS
 #define CTB   300 //Correcion de tiempo B, mezcla pobre, se le agregan X uS
 #define P_LMB 250 //periodo en mS en el que se corrije por sonda lamba
-#define T_LMB 45; //temperatura a partir de la cual se intenta correjir el tiempo de inyeccion
+#define T_LMB 45 //temperatura a partir de la cual se intenta correjir el tiempo de inyeccion
 #define FLMBA 1.5 //factor maximo de lambda
 #define FLMBB 0.85 //factor minimo de lambda
 
@@ -34,8 +34,9 @@
 //anteriores, seudo IA para mejorar el tiempo de inyeccion
 #define DFCO 1 //ni puta idea
 #define DE 1 // ni puta idea x2
-#define  TBM 1 //turbo boost multiplier
+#define TBM 1 //turbo boost multiplier
 
+//Libreria para generar tiempos de inyeccion
 InyecTime::InyecTime(Sensores& s1, Memory& mI){
 	//por ahora no hace falta iniciar mas cosas aca
 	CLT = 1.3; //correccion de lambda, pero en vez de sumar o restar multiplico por X valor para obtener el tiempo)
@@ -72,18 +73,22 @@ unsigned long InyecTime::TLamb(unsigned long Tbase, byte temp){
 	return Tbase;
 }
 
+unsigned long InyecTime::TTable(int rpm){
+	return mI.GetVal(1, rpm, s1.tps());
+}
+
 float InyecTime::VtoLamb(float v) {
 	//convierte volts en factor lambda
 }
-unsigned long InyecTime::Temp(byte rpm){
+unsigned long InyecTime::Temp(int rpm){
 	//UNDONE: correccion por temperatura
 	//Correccion de tiempo por temperatura (tendria que fijarme en la tabla)
 	return 0;
 }
 
-unsigned long InyecTime::Aphplus( byte rpm2){
+unsigned long InyecTime::Aphplus(int rpm2){
 	/*
-	PW = [INJ_CONST * VE(tps,rpm) * MAP * AirDensity] + AccEnrich +InjOpeningTime
+	PW = [INJ_CONST * VE(tps,rpm) * MAP * AirDensity] + AccEnrich + InjOpeningTime
 
 	PW (pulse width) ---el tiempo final de apertura del inyector .
 
@@ -101,7 +106,7 @@ unsigned long InyecTime::Aphplus( byte rpm2){
 
 	InjOpeningTime ---- Tiempo de apertura de inyector hasta el momento de inicio de inyección de combustible ( valor de retardo tomado de la mapa de calibración , INJECTORS CAL. )
 	*/
-	int ve = mI.GetVal(2,map(s1.tps(), 0, 150, 0, 10),map(rpm2, 800, 6000, 0, 18));
+	int ve = mI.GetVal( 2, map( s1.tps(), 0, 150, 0, 10 ), map (rpm2, 800, 6000, 0, 18 ) );
 
 	return ( (INY_C * (ve / 100) ) * s1.pres() * 10.1 ) + INY_P + INY_L;
 }

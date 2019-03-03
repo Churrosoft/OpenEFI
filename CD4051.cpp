@@ -4,15 +4,18 @@
 
 #include "CD4051.h"
 
-#if defined(ESP8266)
-	#define PinA FUNC_GPIO15
-	#define PinB FUNC_GPIO13
-	#define PinC FUNC_GPIO12
-#endif
 #if defined(__AVR_ATmega328P__)
 	#define PinA PORTC3
 	#define PinB PORTC2
 	#define PinC PORTC1
+#endif
+#if defined(BLUEPILL_F103C6) //para ecu con stm32f103
+//se supone que al manejar todo el puerto de una patada va a ser mas rapido que
+// el arduino uno
+	//Set A2, A12, A13 (HIGH)
+	GPIOA->regs->ODR |= 0b0011000000000100;
+	//Clear A2, A12, A13 (LOW)
+	GPIOA->regs->ODR &= ~(0b0011000000000100);
 #endif
 CD4051::CD4051(byte op){
 	//PORTC pines: 3 = A, 2 = B, 1 = C
@@ -20,13 +23,6 @@ CD4051::CD4051(byte op){
 	DDRC |= (1 << PinA);
 	DDRC |= (1 << PinB);
 	DDRC |= (1 << PinC);
-#endif
-
-#if defined(ESP8266)
-	pinMode(A0, INPUT);
-	pinMode(15, OUTPUT);
-	pinMode(13, OUTPUT);
-	pinMode(12, OUTPUT);
 #endif
 }
 
@@ -85,51 +81,53 @@ switch (in){
 		break;
 	}
 #endif
-
-#if defined(ESP8266)
-switch (in){
+#if defined(BLUEPILL_F103C6)
+switch (in) {
 	case 0:
-		GPOC = 1 << PinA;
-		GPOC = 1 << PinB;
-		GPOC = 1 << PinC;
+		GPIOA->regs->ODR &= ~(0b0011000000000100);
+		return analogRead(A0);
 		break;
 	case 1:
-		GPOS = 1 << PinA;
-		GPOC = 1 << PinB;
-		GPOC = 1 << PinC;
+		PORTC |= (1 << PinA);
+		PORTC |= (0 << PinB);
+		PORTC |= (0 << PinC);
+		return analogRead(A0);
 		break;
 	case 2:
-		GPOC = 1 << PinA;
-		GPOS = 1 << PinB;
-		GPOC = 1 << PinC;
+		return analogRead(A0);
 		break;
 	case 3:
-		GPOS = 1 << PinA;
-		GPOS = 1 << PinB;
-		GPOC = 1 << PinC;
-		break;
+		PORTC |= (1 << PinA);
+		PORTC |= (1 << PinB);
+		PORTC |= (0 << PinC);
+		return analogRead(A0);
 	case 4:
-		GPOC = 1 << PinA;
-		GPOC = 1 << PinB;
-		GPOS = 1 << PinC;
+		PORTC |= (0 << PinA);
+		PORTC |= (0 << PinB);
+		PORTC |= (1 << PinC);
+		return analogRead(A0);
 		break;
 	case 5:
-		GPOS = 1 << PinA;
-		GPOC = 1 << PinB;
-		GPOS = 1 << PinC;
+		PORTC |= (1 << PinA);
+		PORTC |= (0 << PinB);
+		PORTC |= (1 << PinC);
+		return analogRead(A0);
 		break;
 	case 6:
-		GPOC = 1 << PinA;
-		GPOS = 1 << PinB;
-		GPOS = 1 << PinC;
+		PORTC |= (0 << PinA);
+		PORTC |= (1 << PinB);
+		PORTC |= (1 << PinC);
+		return analogRead(A0);
 		break;
 	case 7:
-		GPOS = 1 << PinA;
-		GPOS = 1 << PinB;
-		GPOS = 1 << PinC;
+		PORTC |= (1 << PinA);
+		PORTC |= (1 << PinB);
+		PORTC |= (1 << PinC);
+		return analogRead(A0);
 		break;
-	}
-	GPOS = 1 << FUNC_GPIO15;//Registro GPOS enciende salida GPIO
-	GPOC = 1 << FUNC_GPIO11;//Registro GPOC apaga salida GPIO
+default:
+	return 0;
+	break;
+}
 #endif
 }
