@@ -1,7 +1,7 @@
 #pragma once
 #ifndef _MEMORY_h
 #define _MEMORY_h
-#include "arduino.h"
+#include "Arduino.h"
 class Memory{
 public:
 	Memory(int p);

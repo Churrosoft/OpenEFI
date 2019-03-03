@@ -3,7 +3,6 @@
 #ifndef _DTC_h
 #define _DTC_h
 
-#include "arduino.h"
 #include "Sensores.h"
 #include "Memory.h"
 
