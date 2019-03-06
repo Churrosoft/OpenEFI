@@ -5,7 +5,7 @@
 #include "InyecTime.h"
 
 //cuando tenga la libreria de memoria paso todo a variable, por ahora con define
-//int INY_L = 150,   //tiempo de apertura del inyector en microsegundos
+#define INY_LAG = 1000  //tiempo de apertura del inyector en microsegundos(uS)
 //INY_P = 500,   //tiempo en uS adicional para acelerar el motor
 //INY_C = 25000; //Es el valor constante , que determina el tiempo de apertura para que se crea la mezcla estequiom�trica (lambda=1 ) , para cilindrada del motor , presi�n a 100kPa , temperatura del aire a 21�C y VE 100% .
 
@@ -26,15 +26,17 @@
 #define FLMBB 0.85 //factor minimo de lambda
 
 /*-----( Variables BPW )-----*/
+#define REQ_Fuel 1.7 //calcular en http://www.megamanual.com/v22manual/mfuel.htm
+#define VE_ralenti 0.30 //eficiencia volumetrica en ralenti, recomendado entre 20-40%
 
-#define BPC 1500  //Base Pulse Constant
-#define AF 123 // relacion aire combustible, se divide por 10 para no usar float
-#define BVC 1 //correcion por bateria, luego intentar usar tabla
-#define BLM 168 // "Block Learn" varia entre 168 y 170 dependiendo de como resultaron los tiempos
-//anteriores, seudo IA para mejorar el tiempo de inyeccion
-#define DFCO 1 //ni puta idea
-#define DE 1 // ni puta idea x2
-#define TBM 1 //turbo boost multiplier
+//#define BPC 1500  //Base Pulse Constant
+//#define AF 123 // relacion aire combustible, se divide por 10 para no usar float
+//#define BVC 1 //correcion por bateria, luego intentar usar tabla
+//#define BLM 168 // "Block Learn" varia entre 168 y 170 dependiendo de como resultaron los tiempos
+////anteriores, seudo IA para mejorar el tiempo de inyeccion
+//#define DFCO 1 //ni puta idea
+//#define DE 1 // ni puta idea x2
+//#define TBM 1 //turbo boost multiplier
 
 //Libreria para generar tiempos de inyeccion
 InyecTime::InyecTime(Sensores& s1, Memory& mI){
@@ -78,7 +80,7 @@ unsigned long InyecTime::TTable(int rpm){
 }
 
 float InyecTime::VtoLamb(float v) {
-	//convierte volts en factor lambda
+	////convierte volts en factor lambda
 }
 unsigned long InyecTime::Temp(int rpm){
 	//UNDONE: correccion por temperatura
@@ -111,9 +113,8 @@ unsigned long InyecTime::Aphplus(int rpm2){
 	return ( (INY_C * (ve / 100) ) * s1.pres() * 10.1 ) + INY_P + INY_L;
 }
 
-unsigned long InyecTime::BPW(){
-	/*
-	BPW = BPC * MAP * T * A/F * VE * BVC * BLM * DFCO * DE * CLT * TBM
+//unsigned long InyecTime::BPW(){ ~~OLD~~
+	/*BPW = BPC * MAP * T * A/F * VE * BVC * BLM * DFCO * DE * CLT * TBM
 	BPW - Base Pulse Width
 	BPC - Base Pulse Constant
 	MAP - Manifold Absolute Pressure
@@ -127,5 +128,12 @@ unsigned long InyecTime::BPW(){
 	CLT - Closed Loop (correccion de lambda, 
 	pero en vez de sumar o restar multiplico por X valor para obtener el tiempo )
 	TBM - Turbo Boost Multiplier */
-	return BPC * s1.tps() * s1.Temp() * AF * BVC * BLM * DFCO * DE * CLT * TBM;
+	//return BPC * s1.tps() * s1.Temp() * AF * BVC * BLM * DFCO * DE * CLT * TBM;
+//}
+
+unsigned long InyecTime::BPW(){ 
+	//formula del MegaSquirt reformulada (?) , se anula tiempo extra de acceleracion y de correccion porque lo hago externamente
+	
+	//                              presion en Kpa   divido por 100kpa
+	return REQ_FUEL * VE_ralenti * (s1.pres(false) / 100 ) + INY_LAG ;
 }

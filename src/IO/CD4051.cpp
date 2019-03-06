@@ -10,8 +10,7 @@
 	#define PinC PORTC1
 #endif
 #if defined(BLUEPILL_F103C6) //para ecu con stm32f103
-//se supone que al manejar todo el puerto de una patada va a ser mas rapido que
-// el arduino uno
+//se supone que al manejar todo el puerto de una patada va a ser mas rapido que el arduino uno
 	//Set A2, A12, A13 (HIGH)
 	GPIOA->regs->ODR |= 0b0011000000000100;
 	//Clear A2, A12, A13 (LOW)
