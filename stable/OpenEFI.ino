@@ -105,14 +105,14 @@ void Iny() {
 		en caliente se usa Aphplus en aceleracion (agregar un plus por las dudas luego)
 		en ralenti se usa BPW con lambda*/
 
-	if ( main.Temp() < 45 )
+	if ( s_main.Temp() < 45 )
 		//la wea esta fria:
 		pwm.Set( time.TTable(_RPM) + 120 ); //120 uS de "plus" , luego modificar con #define
-	if ( main.Temp() > 45 )
+	if ( s_main.Temp() > 45 )
 		pwm.Set( time.Aphplus(_RPM) );
-	if ( main.Temp() > 45 && _RPM < 1200 )
+	if ( s_main.Temp() > 45 && _RPM < 1200 )
 		pwm.Set( time.BPW() );
-	if (main.Temp() >= 105 && _RPM < 1200) //sobre temperatura
+	if ( s_main.Temp() >= 105 && _RPM < 1200) //sobre temperatura
 		pwm.Set(0);
 }
 
