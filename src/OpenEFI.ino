@@ -15,12 +15,14 @@
 */
 
 /*-----( Define's )-----*/
+#include "Relay.h"
 #define test 1  //modo pruebas con placa debug
 #define mtr 1   //definir tipo de motor 0 = diesel ; 1 = nafta
 #define dev 1   //habilita modo desarollo
 #define alpha 1 //Habilita el modo de prubas alpha
 #define GNC_MOD 0 //activa el modo de GNC/GLP en la inyeccion
 #define uEFI 0 //en 1 si se compila para una placa uEFI
+#define OpenEFImode 0 // en 0 si es OpenEFI con Arduino nano, en 1 si utiliza un Node MCU
 
 /*-----( Importar Librerias )-----*/
 #include <Arduino.h>
@@ -47,7 +49,7 @@ InyecTime time(s_main,m);
 interfazSerial Ser(1);
 Debug dbg(Ser,m);
 SPWM pwm(byte(12), byte(45), pines, pinesE);
-Relay rele(15,4,8);
+
 
 //por ahora las unicas tablas que sincronizan con la memoria son las de avance e inyeccion
 //BUG: abrir todas las tablas a la vez satura la RAM
@@ -71,13 +73,26 @@ void setup() {
 }
 
 void loop() {
-if (SINC) {
+#if test == false
+	dtcmain.DTC_Loop();
+	if (SINC) {
+#if alpha == 1
+		pwm.Iny(time.Aphplus(_RPM));
+#endif
+#if alpha == 0
+		pwm.Iny(byte(12)); //loop Inyeccion
+#endif
+		pwm.Ecn(avc.GetTime(), avc.GetAVC(_RPM)); //loop encendido
+		vent(); //control de electro ventilador
+		FXM(); //FixedMode
+		dbg.loop(_RPM); //Debug
+	}
+#endif
 #if test == true
 	//el tiempo de inyeccion depende del potenciometro de la mariposa, solo para test de placas
 	pwm.Set( map( analogRead(A1) , 0, 2500, 0, 1024) );
 	pwm.Iny();
 #endif // test == true
-}
 
 }
 
@@ -90,14 +105,14 @@ void Iny() {
 		en caliente se usa Aphplus en aceleracion (agregar un plus por las dudas luego)
 		en ralenti se usa BPW con lambda*/
 
-	if ( main.Temp() < 45 )
+	if ( s_main.Temp() < 45 )
 		//la wea esta fria:
 		pwm.Set( time.TTable(_RPM) + 120 ); //120 uS de "plus" , luego modificar con #define
-	if ( main.Temp() > 45 )
+	if ( s_main.Temp() > 45 )
 		pwm.Set( time.Aphplus(_RPM) );
-	if ( main.Temp() > 45 && _RPM < 1200 )
+	if ( s_main.Temp() > 45 && _RPM < 1200 )
 		pwm.Set( time.BPW() );
-	if (main.Temp() >= 105) //sobre temperatura
+	if ( s_main.Temp() >= 105 && _RPM < 1200) //sobre temperatura
 		pwm.Set(0);
 }
 
@@ -113,8 +128,8 @@ void I_RPM() { //interrupcion para rpm
 
 void vent() {
 	//Controla electroventilador y corte de inyeccion por sobretemperatura
-	if (main.Temp() > 75)
-		rele.Set(0,1);
+	//if (main.Temp() > 75)
+		
 }
 void sincINT() {
 	//interruppcion para "sincronizar()"
@@ -141,8 +156,9 @@ void sincINT() {
 void sincronizar() {
 	//este void caza el ultimo tiempo entre diente y si es mayor por 1.5 veces al anterior,
 	//marca que es el PMS
-	 if ( T2 > ( T1 + (T1 / 2.3 ) )  )
+	 if ( T2 > ( T1 + (T1 / 2.3 ) )  ) {
 		SINC = true;
+	}
 }
 /*###############################################
 ########### Fixed Mode Loop & Control############
