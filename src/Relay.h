@@ -3,6 +3,11 @@
 #ifndef _RELAY_h
 #define _RELAY_h
 
+#if defined(ARDUINO) && ARDUINO >= 100
+	#include "arduino.h"
+#else
+	#include "WProgram.h"
+#endif
 //clase para manejar los relay por el demux (ademas del paso a paso)
 class Relay {
 public:
