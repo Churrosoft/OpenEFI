@@ -14,7 +14,7 @@ env:
 before_install:
   - source <(curl -SLs https://raw.githubusercontent.com/adafruit/travis-ci-arduino/master/install.sh)
 script:
-   - src
+  - cd src
   - build_main_platforms
 notifications:
   email:
