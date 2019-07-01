@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/FDSoftware/OpenEFI.svg?branch=master)](https://travis-ci.org/FDSoftware/OpenEFI)
+
 <h1>Introducción:</h1>
 
 <p>Open efi es un proyecto de EFI (electronic fuel inyection) que funciona con arduino y además es open source para que el que lo quiera utilizar lo pueda modificar a su gusto con conocimientos de programacion en C++)</p>
