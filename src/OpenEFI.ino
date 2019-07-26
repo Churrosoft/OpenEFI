@@ -9,12 +9,16 @@
 
 
 // Inicio de librerias
-interfazSerial Ser();
+interfazSerial Ser;
 
 void setup(){
+    Ser = interfazSerial();
+    Ser.send(F("MSG"), F("Starting up"));
+    Ser.send(F("VER"), 200);
     // TODO
 }
 
 void loop(){
     // TODO
+    Ser.query();
 }
