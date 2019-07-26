@@ -9,7 +9,7 @@
       - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
     install:
     script:
-      - arduino --verify --board arduino:avr:uno $PWD/OpenEFI/OpenEFI.ino
+      - arduino --verify --board arduino:avr:uno $PWD/src/OpenEFI.ino
     notifications:
       email:
         on_success: change
