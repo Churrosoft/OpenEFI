@@ -11,13 +11,28 @@
 // Inicio de librerias
 interfazSerial Ser;
 C_PWM MyPWM(5);
+
+#if defined(__AVR_ATmega328P__)
 void setup(){
+	pinMode(2,INPUT_PULLUP);
+	attachInterrupt(digitalPinToInterrupt(2), I_RPM, CHANGE);
     Ser = interfazSerial();
     Ser.send(F("MSG"), F("Starting up"));
     Ser.send(F("VER"), 200);
     // TODO
 }
+#endif
 
+#if defined(ARDUINO_ARCH_STM32)
+void setup(){
+	pinMode(PA4,INPUT_PULLUP);
+	attachInterrupt(digitalPinToInterrupt(PA4), I_RPM, CHANGE);
+    Ser = interfazSerial();
+    Ser.send(F("MSG"), F("Starting up"));
+    Ser.send(F("VER"), 200);
+    // TODO
+}
+#endif
 void loop(){
     // TODO
     Ser.query();
