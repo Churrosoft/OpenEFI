@@ -8,6 +8,8 @@ C_PWM::C_PWM(uint8_t pinesE[], uint8_t pinesI[]){
     for (i = 0; i < CIL;i++) {
 		pinMode(pinesI[i], OUTPUT);
 		pinMode(pinesE[i], OUTPUT);
+		digitalWrite(pinesI[i], LOW);
+		digitalWrite(pinesE[i], LOW);
 		INY[i] = pinesI[i];
 	}
 }
