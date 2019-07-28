@@ -6,11 +6,11 @@ interfazSerial::interfazSerial(){
 }
 
 void interfazSerial::send(String command, String message){
-	Serial.println(command + " " + message);
+	Serial.print(command + " " + message + "\n");
 }
 
 void interfazSerial::send(String command, int message){
-	Serial.println(command + " " + message);
+	Serial.print(command + " " + message + "\n");
 }
 
 void interfazSerial::query(){
