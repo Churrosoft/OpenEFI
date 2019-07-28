@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/FDSoftware/OpenEFI.svg?branch=master)](https://travis-ci.org/FDSoftware/OpenEFI)
+[![Build Status](https://travis-ci.org/openefi/OpenEFI.svg?branch=master)](https://travis-ci.org/FDSoftware/OpenEFI)
 
 <h1>Introducción:</h1>
 
