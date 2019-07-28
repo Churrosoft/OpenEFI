@@ -10,7 +10,11 @@
 
 // Inicio de librerias
 interfazSerial Ser;
-C_PWM MyPWM(5);
+//pines pa probar:
+uint8_t pinesE[] = {3,4,5,6};
+uint8_t pinesI[] = {6,7,9,8};
+
+C_PWM MyPWM(pinesE , pinesI);
 
 void setup(){
     #if defined(__AVR_ATmega328P__)
@@ -36,7 +40,7 @@ void RPM(){ //void boludo para calcular las rpm, recuperado de las profundidades
   T_RPM_AC = millis();
   if (T_RPM_AC - T_RPM_A >= RPM_per) {
         T_RPM_A = T_RPM_AC;
-        _RPM = (_POS / DNT)*90; //calculo para obtener las rpm
+        _RPM = (_POS / DNT)*120; //calculo para obtener las rpm
         _POS = 0;
         Ser.rpm();
     }
