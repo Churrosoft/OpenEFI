@@ -15,7 +15,6 @@ Formato de mensajes:
    - TMP X: Temperatura de refrigerante
    - BAT X: Voltaje batería
    - VER X: Version de OpenEFI
-   - ACK <mensaje>: Confirma recepcion de mensaje
    - NAK <mensaje>: Indica que el mensaje no ha sido procesado
 ///Comandos (entrada)///
    - <RPM/TMP/BAT> [ON/OFF]: Activa/desactiva la transmisión de información. 
@@ -27,10 +26,12 @@ class interfazSerial{
     interfazSerial();
     void send(String command, String message);
     void send(String command, int message);
-
+    
+    void rpm();
     void query();
     private:
     char inputBuffer[32];
+    byte config = 0;
     void processInput(char* input);
 };
 

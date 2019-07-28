@@ -1,6 +1,8 @@
 #include "interfazSerial.h"
 #include <Arduino.h>
 
+extern int _RPM;
+
 interfazSerial::interfazSerial(){
 	Serial.begin(115200);
 }
@@ -35,12 +37,27 @@ void interfazSerial::query(){
     }
 }
 
+void interfazSerial::rpm(){
+    if(config & 0b00000001){
+        interfazSerial::send(F("RPM"), _RPM);
+    }
+}
+
 void interfazSerial::processInput(char* input){
 	char *command = strtok(input, " ");
 	char *params = strtok(NULL, " ");
 	if(strcmp(command, "NOP") == 0){
-		interfazSerial::send("ACK", command);
-	}else{
-		interfazSerial::send("NAK", input);
+		interfazSerial::send(F("NOP"), "");
+    }else if(strcmp(command, "RPM") == 0){
+        if(params[0] == '\0'){
+            interfazSerial::send(F("RPM"), _RPM);
+        }else if(strcmp(params, "ON") == 0){
+            config |= 0b00000001;
+        }else if(strcmp(params, "OFF") == 0){
+            config &= 0b11111110;
+        }
+    }else{
+		interfazSerial::send(F("NAK"), input);
+        return;
 	}
 }
