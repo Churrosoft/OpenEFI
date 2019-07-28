@@ -5,9 +5,10 @@
 #include "C_PWM.h"
 
 C_PWM::C_PWM(uint8_t pinesE[], uint8_t pinesI[]){
-    for (i = 0; i < sizeof(pinesE);i++) {
+    for (i = 0; i < CIL;i++) {
 		pinMode(pinesI[i], OUTPUT);
 		pinMode(pinesE[i], OUTPUT);
+		INY[i] = pinesI[i];
 	}
 }
 
@@ -17,7 +18,7 @@ void C_PWM::Intr(){
 #if mtr == 1
 	PWM_FLAG_1A++;
 #endif // mtr == 1
-
+	this->Iny();
 
 }
 
