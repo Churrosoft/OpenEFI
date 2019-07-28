@@ -34,6 +34,7 @@ void loop(){
     // TODO
     Ser.query();
     RPM();
+    MyPWM.Iny();
 }
 
 void RPM(){ //void boludo para calcular las rpm, recuperado de las profundidades del git

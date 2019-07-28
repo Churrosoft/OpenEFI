@@ -20,7 +20,7 @@ void C_PWM::Intr(){
 #if mtr == 1
 	PWM_FLAG_1A++;
 #endif // mtr == 1
-	this->Iny();
+	//this->Iny();
 
 }
 
