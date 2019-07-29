@@ -40,3 +40,23 @@ void C_PWM::Iny(){
 		t1 = false;
 	}
 }
+
+void C_PWM::Ecn(){
+
+	if (PWM_FLAG_1A >= (PMSI - AVC) && t2 == false) {
+		digitalWrite(ECN[PWM_FLAG_3], HIGH);
+		t2 = true;
+		T2X = micros();
+	}
+	Time = micros();
+
+	if ((Time - T2X) >= ECNT && T2X != 0 && t2 == true) {
+		digitalWrite(ECN[PWM_FLAG_3], LOW);
+		PWM_FLAG_3++;
+		PWM_FLAG_1A = 0; //reseteo para proximo tiempo
+		if (PWM_FLAG_3 > (CIL - (CIL / 2) - 1) ) PWM_FLAG_3 = 0; 
+		//paso a explicar antes que me linches, con esto termino teniendo un 1 en un motor de 4 cilindros, porque solo hay dos bobinas, (una cada dos cilindros)
+		t2 = false;
+	}
+
+}

@@ -8,6 +8,7 @@ public:
 	C_PWM(uint8_t pinesE[], uint8_t pinesI[]); //bob el construcctor de funciones
 	void Intr();
 	void Iny();
+	void Ecn();
 	uint8_t AVC = 15; //avance encendido
 	unsigned long 	pT1 = 120,    //tiempo de inyeccion combustible
 					pT2 = 1800;   //tiempo de encendido bobina

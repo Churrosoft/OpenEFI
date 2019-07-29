@@ -52,6 +52,7 @@ void I_RPM() {
     _POS++;
     MyPWM.Intr();
     MyPWM.Iny();
+    MyPWM.Ecn();
 }
 #else
 void I_RPM() { //interrupcion para rpm
