@@ -12,7 +12,7 @@
 interfazSerial Ser;
 //pines pa probar:
 uint8_t pinesE[] = {3,4,5,6};
-uint8_t pinesI[] = {6,7,9,8};
+uint8_t pinesI[] = {6,7,8,9};
 
 C_PWM MyPWM(pinesE , pinesI);
 
@@ -34,7 +34,6 @@ void loop(){
     // TODO
     Ser.query();
     RPM();
-    MyPWM.Iny();
 }
 
 void RPM(){ //void boludo para calcular las rpm, recuperado de las profundidades del git
@@ -52,6 +51,7 @@ void RPM(){ //void boludo para calcular las rpm, recuperado de las profundidades
 void I_RPM() { 
     _POS++;
     MyPWM.Intr();
+    MyPWM.Iny();
 }
 #else
 void I_RPM() { //interrupcion para rpm

@@ -9,8 +9,8 @@ public:
 	void Intr();
 	void Iny();
 	uint8_t AVC = 15; //avance encendido
-	unsigned long 	T1 = 250,    //tiempo de inyeccion combustible
-					T2 = 1800;   //tiempo de encendido bobina
+	unsigned long 	pT1 = 120,    //tiempo de inyeccion combustible
+					pT2 = 1800;   //tiempo de encendido bobina
 private:
 	
 	unsigned int PWM_FLAG_1  = 0;

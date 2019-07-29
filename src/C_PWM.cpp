@@ -25,17 +25,18 @@ void C_PWM::Intr(){
 }
 
 void C_PWM::Iny(){
-	if (PWM_FLAG_1 >= (PMSI - AVCI)) {
-		digitalWrite(INY[PWM_FLAG_2], !digitalRead(INY[PWM_FLAG_2]));
+	if (PWM_FLAG_1 >= (PMSI - AVCI) && t1 == false) {
+		digitalWrite(INY[PWM_FLAG_2], HIGH);
 		t1 = true;
+		T1X = micros();
 	}
+	Time = micros();
 
-	if (micros() - T1X >= T1 && t1 == true ) {
-		digitalWrite(INY[PWM_FLAG_2], !digitalRead(INY[PWM_FLAG_2]));
+	if ((Time - T1X) >= pT1 && T1X != 0 && t1 == true) {
+		digitalWrite(INY[PWM_FLAG_2], LOW);
 		PWM_FLAG_2++;
 		PWM_FLAG_1 = 0; //reseteo para proximo tiempo
 		if (PWM_FLAG_2 > (CIL - 1)) PWM_FLAG_2 = 0;
-		t1 == false;
-		T1X = micros();
+		t1 = false;
 	}
 }
