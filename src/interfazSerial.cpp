@@ -3,16 +3,32 @@
 
 extern int _RPM;
 
+#if defined(ARDUINO_ARCH_STM32)
+    #include <USBComposite.h>
+    USBCompositeSerial CompositeSerial;
+    #define DBG_OUT CompositeSerial
+#elif defined(__AVR_ATmega328P__)
+    #define DBG_OUT Serial
+#endif
+
 interfazSerial::interfazSerial(){
-	Serial.begin(115200);
+
+    #if defined(__AVR_ATmega328P__)
+      Serial.begin(115200);
+    #elif defined(ARDUINO_ARCH_STM32)
+      CompositeSerial.registerComponent();
+      USBComposite.begin();
+    #endif
+	
 }
 
 void interfazSerial::send(String command, String message){
-	Serial.print(command + " " + message + "\n");
+  
+	DBG_OUT.print(command + " " + message + "\n");
 }
 
 void interfazSerial::send(String command, int message){
-	Serial.print(command + " " + message + "\n");
+	DBG_OUT.print(command + " " + message + "\n");
 }
 
 void interfazSerial::query(){
@@ -20,8 +36,8 @@ void interfazSerial::query(){
     static byte ndx = 0;
     char rc;
     
-    while (Serial.available() > 0){
-        rc = Serial.read();
+	while (DBG_OUT.available() > 0){
+        rc = DBG_OUT.read();
         if(rc != '\n'){
             inputBuffer[ndx] = rc;
             ndx++;
