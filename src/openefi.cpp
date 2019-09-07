@@ -7,9 +7,10 @@
 #include <libopencm3/cm3/systick.h>
 #include <stdio.h>
 #include <errno.h>
+#include "helpers/micros-millis.cpp"
+
 #include "program.cpp"
 #include "defines.h"
-#include "helpers/micros-millis.cpp"
 
 /* Aca pongo todas las declaraciones de funciones con parametros porque sino el compilador se pone como una perra*/
 int _write(int file, char *ptr, int len);
@@ -110,7 +111,7 @@ int main(void){
 	millisA =  0;
 	/* 9000000/9000 = 1000 overflows per second - every 1ms one interrupt */
 	/* SysTick interrupt every N clock pulses: set reload to N-1 */
-	systick_set_reload(8999);
+	systick_set_reload(899);
 
 	systick_interrupt_enable();
 

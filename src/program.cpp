@@ -3,6 +3,10 @@
 #include "defines.h"
 #include "variables.h"
 
+//pines pa probar:
+int pinesE[] = {3,4,5,6};
+int pinesI[] = {GPIO13,GPIO12,GPIO11,GPIO10};
+
 
 void program_setup (void){
 
