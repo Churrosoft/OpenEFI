@@ -1,5 +1,7 @@
 // Acá todos los defines
 
+/*-----( backend turbina: )-----*/
+#define USART1_BAUD 230400 //Baud de USART1 , 8 bits de data y uno de stop, no me vengan con cosas mas raras que eso
 /*-----(Globales )-----*/
 
 #define CIL 4       //cantidad de cilindros o pistones, o camaras de combustion, etc ?)
