@@ -1,21 +1,16 @@
-/* Includes de libopencm3 */
-#include <libopencm3/cm3/nvic.h>
-#include <libopencm3/cm3/systick.h>
-
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/exti.h>
 #include <libopencm3/stm32/usart.h>
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/exti.h>
 #include <libopencm3/stm32/flash.h>
-/* Includes C++ */
+#include <libopencm3/cm3/systick.h>
 #include <stdio.h>
 #include <errno.h>
-/* Defines OpenEFI*/
-#include "openefi/defines.h"
-#include "openefi/helpers/micros-millis.c"
-#include "openefi/helpers/IO.c"
-#include "program.cpp"
+#include "helpers/micros-millis.cpp"
 
+#include "program.cpp"
+#include "defines.h"
 
 /* Aca pongo todas las declaraciones de funciones con parametros porque sino el compilador se pone como una perra*/
 int _write(int file, char *ptr, int len);
@@ -122,6 +117,7 @@ int main(void){
 
 	/* Start counting. */
 	systick_counter_enable();
+	
 	while (1) {
         program_loop();
 		gpio_toggle(GPIOC, GPIO13);

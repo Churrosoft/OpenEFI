@@ -5,7 +5,7 @@ class C_PWM{
 
 public:
 
-	C_PWM(int pinesE[], int E_PORT, int pinesI[], int I_PORT); //bob el construcctor de funciones
+	C_PWM(uint8_t pinesE[], uint8_t pinesI[]); //bob el construcctor de funciones
 	void Intr();
 	void Iny();
 	void Ecn();
@@ -20,8 +20,8 @@ private:
 		PWM_FLAG_2  = 0,
 		PWM_FLAG_3  = 0,
 		i = 0;       //para for viteh.
-	int INY[CIL];
-	int ECN[CIL];
+	uint8_t INY[CIL];
+	uint8_t ECN[CIL];
 	unsigned long    //temporizados:
 		Time = 0,
 		T1X = 0,	 //lo uso para controlar temporizado con micros()

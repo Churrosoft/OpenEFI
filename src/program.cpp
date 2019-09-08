@@ -1,13 +1,12 @@
 /* Para no hacer desastre, el programa principal de OpenEFI va a aca */
 
-#include "openefi/defines.h"
-#include "openefi/variables.h"
-#include "openefi/C_PWM.h"
+#include "defines.h"
+#include "variables.h"
+
 //pines pa probar:
-int pinesE[] = {GPIO13,GPIO12,GPIO11,GPIO10};
+int pinesE[] = {3,4,5,6};
 int pinesI[] = {GPIO13,GPIO12,GPIO11,GPIO10};
 
-C_PWM MyPWM(pinesE , GPIOC, pinesI, GPIOC);
 
 void program_setup (void){
 
@@ -31,9 +30,6 @@ void RPM(){ //void boludo para calcular las rpm, recuperado de las profundidades
 //interrupcion para rpm (SIN SINCRONIZAR PMS NO USAR EN UN MOTOR O ROMPE' TODO)
 void I_RPM() { 
     _POS++;
-    MyPWM.Intr();
-    MyPWM.Iny();
-    MyPWM.Ecn();
 }
 #else
 void I_RPM() { //interrupcion para rpm
