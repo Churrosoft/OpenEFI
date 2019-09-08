@@ -33,6 +33,7 @@ ARCH_FLAGS	= -mthumb -mcpu=cortex-m3 $(FP_FLAGS) -mfix-cortex-m3-ldrd
 OOCD		?= openocd
 OOCD_INTERFACE	?= stlink-v2
 OOCD_TARGET	?= stm32f1x
+OOCD_BOARD ?= target/stm32f1x.cfg
 
 ## /
 
@@ -74,10 +75,9 @@ ifeq ($(strip $(OPENCM3_DIR)),)
 # user has not specified the library path, so we try to detect it
 
 # where we search for the library
-LIBPATHS := ./libopencm3 ../../../../libopencm3 ../../../../../libopencm3
-
-OPENCM3_DIR := $(wildcard $(LIBPATHS:=/locm3.sublime-project))
-OPENCM3_DIR := $(firstword $(dir $(OPENCM3_DIR)))
+OPENCM3_DIR = ./libopencm3
+INCLUDE_DIR = $(OPENCM3_DIR)/include
+LIB_DIR     = $(OPENCM3_DIR)/lib
 
 ifeq ($(strip $(OPENCM3_DIR)),)
 $(warning "$(LIBPATHS)" "$(OPENCM3_DIR)")
@@ -136,12 +136,14 @@ TGT_CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
 TGT_CPPFLAGS	+= -MD
 TGT_CPPFLAGS	+= -Wall -Wundef
-TGT_CPPFLAGS	+= $(DEFS)
+TGT_CPPFLAGS    += -I$(INCLUDE_DIR) $(DEFS)
+
 
 ###############################################################################
 # Linker flags
 
 TGT_LDFLAGS		+= --static -nostartfiles
+TGT_LDFLAGS     += -L$(LIB_DIR)
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=src/$(*).map
@@ -184,6 +186,13 @@ else
 include $(OPENCM3_DIR)/mk/genlink-rules.mk
 endif
 
+$(OPENCM3_DIR)/Makefile:
+	$(Q)git submodule update --init $(OPENCM3_DIR)
+
+$(LIB_DIR)/lib$(LIBNAME).a: $(OPENCM3_DIR)/Makefile
+	$(Q)$(MAKE) -C $(OPENCM3_DIR)
+
+
 # Define a helper macro for debugging make errors online
 # you can type "make print-OPENCM3_DIR" and it will show you
 # how that ended up being resolved by all of the included
@@ -214,20 +223,20 @@ print-%:
 	@printf "  OBJDUMP bin/$(*).list\n"
 	$(Q)$(OBJDUMP) -S bin/$(*).elf > bin/$(*).list
 
-%.elf %.map: $(OBJS) $(LDSCRIPT)
+%.elf %.map: $(OBJS) $(LDSCRIPT) $(LIB_DIR)/lib$(LIBNAME).a
 	@mkdir -p bin
 	@printf "  LD      bin/$(*).elf\n"
 	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o bin/$(*).elf
 
-%.o: %.c
+%.o: %.c $(LIB_DIR)/lib$(LIBNAME).a
 	@printf "  CC      $(*).c\n"
 	$(Q)$(CC) $(TGT_CFLAGS) $(CFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).c
 
-%.o: %.cxx
+%.o: %.cxx $(LIB_DIR)/lib$(LIBNAME).a
 	@printf "  CXX     $(*).cxx\n"
 	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).cxx
 
-%.o: %.cpp
+%.o: %.cpp $(LIB_DIR)/lib$(LIBNAME).a
 	@printf "  CXX     $(*).cpp\n"
 	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).cpp
 
