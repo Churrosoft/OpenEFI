@@ -21,6 +21,22 @@
 ## Copied from:
 ## https://github.com/libopencm3/libopencm3-examples/blob/master/examples/rules.mk
 
+BINARY = openefi
+
+## TARGET SPECIFIC
+LIBNAME		= opencm3_stm32f1
+DEFS		+= -DSTM32F1
+
+FP_FLAGS	?= -msoft-float
+ARCH_FLAGS	= -mthumb -mcpu=cortex-m3 $(FP_FLAGS) -mfix-cortex-m3-ldrd
+
+OOCD		?= openocd
+OOCD_INTERFACE	?= stlink-v2
+OOCD_TARGET	?= stm32f1x
+
+## /
+
+
 # Be silent per default, but 'make V=1' will show all compiler calls.
 ifneq ($(V),1)
 Q		:= @
@@ -51,15 +67,14 @@ CSTD		?= -std=c99
 ###############################################################################
 # Source files
 
-OBJS		+= $(BINARY).o
+OBJS		+= src/$(BINARY).o
 
 
 ifeq ($(strip $(OPENCM3_DIR)),)
 # user has not specified the library path, so we try to detect it
 
 # where we search for the library
-#LIBPATHS := ./libopencm3 ../../../../libopencm3 ../../../../../libopencm3
-LIBPATHS := $(HOME)/repos/libopencm3
+LIBPATHS := ./libopencm3 ../../../../libopencm3 ../../../../../libopencm3
 
 OPENCM3_DIR := $(wildcard $(LIBPATHS:=/locm3.sublime-project))
 OPENCM3_DIR := $(firstword $(dir $(OPENCM3_DIR)))
@@ -129,7 +144,7 @@ TGT_CPPFLAGS	+= $(DEFS)
 TGT_LDFLAGS		+= --static -nostartfiles
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
-TGT_LDFLAGS		+= -Wl,-Map=$(*).map
+TGT_LDFLAGS		+= -Wl,-Map=src/$(*).map
 TGT_LDFLAGS		+= -Wl,--gc-sections
 ifeq ($(V),99)
 TGT_LDFLAGS		+= -Wl,--print-gc-sections
@@ -180,24 +195,29 @@ print-%:
 	@printf "*** $* images generated ***\n"
 
 %.bin: %.elf
-	@printf "  OBJCOPY $(*).bin\n"
-	$(Q)$(OBJCOPY) -Obinary $(*).elf $(*).bin
+	@mkdir -p bin
+	@printf "  OBJCOPY bin/$(*).bin\n"
+	$(Q)$(OBJCOPY) -Obinary bin/$(*).elf bin/$(*).bin
 
 %.hex: %.elf
-	@printf "  OBJCOPY $(*).hex\n"
-	$(Q)$(OBJCOPY) -Oihex $(*).elf $(*).hex
+	@mkdir -p bin
+	@printf "  OBJCOPY bin/$(*).hex\n"
+	$(Q)$(OBJCOPY) -Oihex bin/$(*).elf bin/$(*).hex
 
 %.srec: %.elf
-	@printf "  OBJCOPY $(*).srec\n"
-	$(Q)$(OBJCOPY) -Osrec $(*).elf $(*).srec
+	@mkdir -p bin
+	@printf "  OBJCOPY bin/$(*).srec\n"
+	$(Q)$(OBJCOPY) -Osrec bin/$(*).elf bin/$(*).srec
 
 %.list: %.elf
-	@printf "  OBJDUMP $(*).list\n"
-	$(Q)$(OBJDUMP) -S $(*).elf > $(*).list
+	@mkdir -p bin
+	@printf "  OBJDUMP bin/$(*).list\n"
+	$(Q)$(OBJDUMP) -S bin/$(*).elf > bin/$(*).list
 
 %.elf %.map: $(OBJS) $(LDSCRIPT)
-	@printf "  LD      $(*).elf\n"
-	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(*).elf
+	@mkdir -p bin
+	@printf "  LD      bin/$(*).elf\n"
+	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o bin/$(*).elf
 
 %.o: %.c
 	@printf "  CC      $(*).c\n"
@@ -213,7 +233,7 @@ print-%:
 
 clean:
 	@printf "  CLEAN\n"
-	$(Q)$(RM) *.o *.d *.elf *.bin *.hex *.srec *.list *.map generated.* ${OBJS} ${OBJS:%.o:%.d}
+	$(Q)$(RM) bin/* src/*.o src/*.d src/*.map generated.* ${OBJS} ${OBJS:%.o:%.d}
 
 stylecheck: $(STYLECHECKFILES:=.stylecheck)
 styleclean: $(STYLECHECKFILES:=.styleclean)
@@ -240,34 +260,34 @@ ifeq ($(BMP_PORT),)
 ifeq ($(OOCD_FILE),)
 %.flash: %.elf
 	@printf "  FLASH   $<\n"
-	(echo "halt; program $(realpath $(*).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
+	(echo "halt; program $(realpath bin/$(*).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
 		$(OOCD) -f interface/$(OOCD_INTERFACE).cfg \
 		-f target/$(OOCD_TARGET).cfg \
-		-c "program $(*).elf verify reset exit" \
+		-c "program bin/$(*).elf verify reset exit" \
 		$(NULL)
 else
 %.flash: %.elf
 	@printf "  FLASH   $<\n"
-	(echo "halt; program $(realpath $(*).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
+	(echo "halt; program $(realpath bin/$(*).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
 		$(OOCD) -f $(OOCD_FILE) \
-		-c "program $(*).elf verify reset exit" \
+		-c "program bin/$(*).elf verify reset exit" \
 		$(NULL)
 endif
 else
 %.flash: %.elf
-	@printf "  GDB   $(*).elf (flash)\n"
+	@printf "  GDB   bin/$(*).elf (flash)\n"
 	$(GDB) --batch \
 		   -ex 'target extended-remote $(BMP_PORT)' \
 		   -x $(SCRIPT_DIR)/black_magic_probe_flash.scr \
-		   $(*).elf
+		   bin/$(*).elf
 endif
 else
 %.flash: %.elf
-	@printf "  GDB   $(*).elf (flash)\n"
+	@printf "  GDB   bin/$(*).elf (flash)\n"
 	$(GDB) --batch \
 		   -ex 'target extended-remote $(STLINK_PORT)' \
 		   -x $(SCRIPT_DIR)/stlink_flash.scr \
-		   $(*).elf
+		   bin/$(*).elf
 endif
 
 .PHONY: images clean stylecheck styleclean elf bin hex srec list
