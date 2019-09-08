@@ -7,14 +7,17 @@
 #include <libopencm3/cm3/systick.h>
 #include <stdio.h>
 #include <errno.h>
-#include "helpers/micros-millis.cpp"
-
-#include "program.cpp"
 #include "defines.h"
+#include "helpers/IO.cpp"
+#include "helpers/micros-millis.cpp"
+#include "C_PWM.cpp"
+#include "program.cpp"
+
 
 /* Aca pongo todas las declaraciones de funciones con parametros porque sino el compilador se pone como una perra*/
 int _write(int file, char *ptr, int len);
 uint16_t exti_line_state;
+
 static void clock_setup(void){
     /* 8MHz de cristal, 72Mhz de frecuencia de trabajo */
 	rcc_clock_setup_in_hse_8mhz_out_72mhz();

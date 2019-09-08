@@ -4,11 +4,12 @@
 #include "variables.h"
 
 //pines pa probar:
-int pinesE[] = {3,4,5,6};
+int pinesE[] = {GPIO13,GPIO12,GPIO11,GPIO10};
 int pinesI[] = {GPIO13,GPIO12,GPIO11,GPIO10};
 
-
+C_PWM MyPWM = C_PWM(pinesE, GPIOC, pinesI,GPIOC);
 void program_setup (void){
+
 
     // TODO
 }
@@ -36,6 +37,8 @@ void I_RPM() { //interrupcion para rpm
     if(SINC){
         _POS++;
         MyPWM.Intr();
+        MyPWM.Ecn();
+        MyPWM.Iny();
     }else sincINT();
 }
 
