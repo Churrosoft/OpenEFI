@@ -1,131 +1,166 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/usart.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/exti.h>
-#include <libopencm3/stm32/flash.h>
-#include <libopencm3/cm3/systick.h>
-#include <stdio.h>
-#include <errno.h>
-#include "defines.h"
-#include "helpers/IO.cpp"
-#include "helpers/micros-millis.cpp"
-#include "C_PWM.cpp"
-#include "program.cpp"
+#include <libopencm3/stm32/timer.h>
+
+uint16_t ct = 0;
+uint16_t ct2 = 0;
+uint16_t pines[5] = {GPIO12, GPIO14, GPIO15, GPIO13};
+//TIMER VAR:
+uint32_t compare_time = 0;
+uint32_t new_time = 0;
+
+#define LED1_PORT GPIOC
+#define LED1_PIN GPIO13
 
 
-/* Aca pongo todas las declaraciones de funciones con parametros porque sino el compilador se pone como una perra*/
-int _write(int file, char *ptr, int len);
-uint16_t exti_line_state;
+//TIMER
+static void tim_setup(void){
+	/* Enable TIM2 clock. */
+	rcc_periph_clock_enable(RCC_TIM2);
 
-static void clock_setup(void){
-    /* 8MHz de cristal, 72Mhz de frecuencia de trabajo */
+	/* Enable TIM2 interrupt. */
+	nvic_enable_irq(NVIC_TIM2_IRQ);
+
+	/* Reset TIM2 peripheral to defaults. */
+	rcc_periph_reset_pulse(RST_TIM2);
+
+	timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT,
+		TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
+
+	/*
+	 * Please take note that the clock source for STM32 timers
+	 * might not be the raw APB1/APB2 clocks.  In various conditions they
+	 * are doubled.  See the Reference Manual for full details!
+	 * In our case, TIM2 on APB1 is running at double frequency, so this
+	 * sets the prescaler to have the timer run at 5kHz
+	 */
+	timer_set_prescaler(TIM2, ((rcc_apb1_frequency * 2) / 5000));
+
+	/* Disable preload. */
+	timer_disable_preload(TIM2);
+	timer_continuous_mode(TIM2);
+
+	/* count full range, as we'll update compare value continuously */
+	timer_set_period(TIM2, 65535);
+
+	/* Set the initual output compare value for OC1. */
+	//timer_set_oc_value(TIM2, TIM_OC1, 500);
+
+	/* Counter enable. */
+	//timer_enable_counter(TIM2);
+
+	/* Enable Channel 1 compare interrupt to recalculate compare values */
+	//timer_enable_irq(TIM2, TIM_DIER_CC1IE);
+}
+
+void tim2_isr(void)
+{
+	if (timer_get_flag(TIM2, TIM_SR_CC1IF)) {
+
+		/* Clear compare interrupt flag. */
+		timer_clear_flag(TIM2, TIM_SR_CC1IF);
+
+	gpio_toggle(LED1_PORT, LED1_PIN);
+	gpio_clear(GPIOB, GPIO12 | GPIO14 | GPIO15 | GPIO13);
+
+	timer_disable_counter(TIM2);
+	timer_disable_irq(TIM2, TIM_DIER_CC1IE);
+
+	
+	}
+}
+
+
+
+
+
+//INTERRUPT
+/* Set STM32 to 72 MHz. */
+static void clock_setup(void)
+{
 	rcc_clock_setup_in_hse_8mhz_out_72mhz();
+}
 
-	/* GPIOC clock pa el led */
+static void gpio_setup(void)
+{
+	/* Enable GPIOC clock. */
+	rcc_periph_clock_enable(RCC_GPIOB);
 	rcc_periph_clock_enable(RCC_GPIOC);
 
-	/* GPIOC clock pa el USART1 * */
-	rcc_periph_clock_enable(RCC_GPIOA);
+	/* Set GPIO12 (in GPIO port C) to 'output push-pull'. */
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO12);
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
+	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO14);
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO15);
+}
+
+static void exti_setup(void)
+{
+	/* Enable GPIOA clock. */
+	rcc_periph_clock_enable(RCC_GPIOB);
+
+	/* Enable AFIO clock. */
 	rcc_periph_clock_enable(RCC_AFIO);
-    /* Activamos la USART1*/
-	rcc_periph_clock_enable(RCC_USART1);
-}
 
-static void usart_setup(void){
-	/* Setup GPIO pin GPIO_USART1_RE_TX on GPIO port B for transmit. */
-	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,
-		      GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_USART1_TX);
-
-	/* Setup UART parameters. */
-	usart_set_baudrate(USART1, USART1_BAUD);
-	usart_set_databits(USART1, 8);
-	usart_set_stopbits(USART1, USART_STOPBITS_1);
-	usart_set_parity(USART1, USART_PARITY_NONE);
-	usart_set_flow_control(USART1, USART_FLOWCONTROL_NONE);
-	usart_set_mode(USART1, USART_MODE_TX);
-
-	/* Finally enable the USART. */
-	usart_enable(USART1);
-}
-
-static void gpio_setup(void){
-    /*Solo seteo los pines para el led en PC13 por ahora */
-	gpio_set(GPIOC, GPIO13);
-	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_50_MHZ,
-		      GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
-}
-
-static void exti_setup(void){
-	
-	rcc_periph_clock_enable(RCC_GPIOA); /* TODO: habilito clock del GPIA, luego poner todos juntos para no repetir y hacer desastre */
-	rcc_periph_clock_enable(RCC_AFIO);/* Enable AFIO clock.*/
+	/* Enable EXTI0 interrupt. */
 	nvic_enable_irq(NVIC_EXTI0_IRQ);
 
 	/* Set GPIO0 (in GPIO port A) to 'input float'. */
 	gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO0);
 
 	/* Configure the EXTI subsystem. */
-	exti_select_source(EXTI0, GPIOA);
+	exti_select_source(EXTI0, GPIOB);
 	exti_set_trigger(EXTI0, EXTI_TRIGGER_BOTH);
 	exti_enable_request(EXTI0);
 }
 
-void exti0_isr(void){
-	exti_line_state = GPIOA_IDR;
-    I_RPM();
+void exti0_isr(void)
+{
+	ct++;
+	if(ct >= 5){
+		
+		gpio_set(GPIOB, pines[ct2]);
+		ct = 0;
+		ct2++;
+		
+		//CHIMER
+			/*
+		 * Get current timer value to calculate next
+		 * compare register value.
+		 */
+		compare_time = timer_get_counter(TIM2);
+
+		/* Calculate and set the next compare value. */
+		new_time = compare_time + 500;
+
+		timer_set_oc_value(TIM2, TIM_OC1, new_time);
+
+		timer_enable_counter(TIM2);
+		timer_enable_irq(TIM2, TIM_DIER_CC1IE);
+		//FIN
+		if(ct2 == 4){
+			ct2 = 0;
+		}
+	}
+	
+	
+
 	exti_reset_request(EXTI0);
 }
 
 
-int _write(int file, char *ptr, int len){ /* Para usar printf como manera de imprimir en el serial*/
-	int i;
-	if (file == 1) {
-		for (i = 0; i < len; i++)
-			usart_send_blocking(USART1, ptr[i]);
-		return i;
-	}
-	errno = EIO;
-	return -1;
-}
-
-static void my_delay_1( void ){
-   int i = 72e6/2/4;
-
-   while( i > 0 ){
-        i--;
-        __asm__( "nop" );
-     }
-}
-
-
-int main(void){
-    /* Setup */
+int main(void)
+{
 	clock_setup();
 	gpio_setup();
-    exti_setup();
-	usart_setup();
-    program_setup();
+	tim_setup();
+	exti_setup();
 
+	while (1)
+		__asm("nop");
 
-	/* 72MHz / 8 => 9000000 counts per second */
-	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
-	microsA = 0;
-	millisA =  0;
-	/* 9000000/9000 = 1000 overflows per second - every 1ms one interrupt */
-	/* SysTick interrupt every N clock pulses: set reload to N-1 */
-	systick_set_reload(899);
-
-	systick_interrupt_enable();
-
-	/* Start counting. */
-	systick_counter_enable();
-	
-	while (1) {
-        program_loop();
-		gpio_toggle(GPIOC, GPIO13);
-        my_delay_1();
-		printf("Still alive!\r\n");
-	}
+	return 0;
 }
-	

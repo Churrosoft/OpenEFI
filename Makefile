@@ -21,6 +21,7 @@
 ## Copied from:
 ## https://github.com/libopencm3/libopencm3-examples/blob/master/examples/rules.mk
 
+## FDSoftware, pa no olvidarme como flashear el stm32 stm32flash -v -w archivo.bin /dev/ttyUSB0 
 BINARY = openefi
 
 ## TARGET SPECIFIC

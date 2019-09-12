@@ -8,6 +8,7 @@ int pinesE[] = {GPIO13,GPIO12,GPIO11,GPIO10};
 int pinesI[] = {GPIO13,GPIO12,GPIO11,GPIO10};
 
 C_PWM MyPWM = C_PWM(pinesE, GPIOC, pinesI,GPIOC);
+
 void program_setup (void){
 
 
@@ -15,7 +16,9 @@ void program_setup (void){
 }
 
 void program_loop (void){
-
+    RPM();
+    MyPWM.Ecn();
+    MyPWM.Iny();
 }
 
 void RPM(){ //void boludo para calcular las rpm, recuperado de las profundidades del git
@@ -31,6 +34,7 @@ void RPM(){ //void boludo para calcular las rpm, recuperado de las profundidades
 //interrupcion para rpm (SIN SINCRONIZAR PMS NO USAR EN UN MOTOR O ROMPE' TODO)
 void I_RPM() { 
     _POS++;
+    MyPWM.Intr();
 }
 #else
 void I_RPM() { //interrupcion para rpm
