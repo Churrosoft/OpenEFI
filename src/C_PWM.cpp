@@ -1,63 +1,100 @@
-// 
-// Esta wea se encarga del PWM para inyectores y bobinas, nada mas ?)
-// Proximamente una libreria aparte para cuando el motor es diesel
-// 
-#include "C_PWM.h"
+/*
+	** Esta wea se encarga del PWM para inyectores y bobinas, ademas de la sincronizacion del cigueñal
+*/
+uint16_t ct = 0;
+uint16_t ct2 = 0;
+uint16_t pines[5] = {GPIO12, GPIO14, GPIO15, GPIO13};
+//TIMER VAR:
+uint32_t compare_time = 0;
+uint32_t new_time = 0;
 
-C_PWM::C_PWM(int pinesE[], int E_PORT, int pinesI[], int I_PORT){
-	_EPORT = E_PORT; _IPORT = I_PORT;
-    for (i = 0; i < CIL;i++) {
-		pinMode(I_PORT, pinesI[i], true);
-		pinMode(E_PORT, pinesE[i], true);
-		INY[i] = pinesI[i];
+#define LED1_PORT GPIOC
+#define LED1_PIN GPIO13
+
+
+//TIMER
+static void tim_setup(void){
+	rcc_periph_clock_enable(RCC_TIM2);
+	nvic_enable_irq(NVIC_TIM2_IRQ);
+	rcc_periph_reset_pulse(RST_TIM2);
+	timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT,
+		TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
+
+	/*
+	 * 17580 = 1,139mS period 65599
+	 * 17599 = 1.138mS period 65599
+	 * 8800  = 0.8mS period 65599
+	 */
+	timer_set_prescaler(TIM2, ((rcc_apb1_frequency * 2) / 8800));
+	timer_disable_preload(TIM2);
+	timer_continuous_mode(TIM2);
+	timer_set_period(TIM2, 65599);
+
+}
+
+void tim2_isr(void){
+	if (timer_get_flag(TIM2, TIM_SR_CC1IF)) {
+
+		/* Clear compare interrupt flag. */
+		timer_clear_flag(TIM2, TIM_SR_CC1IF);
+
+	gpio_toggle(LED1_PORT, LED1_PIN);
+	gpio_clear(GPIOB, GPIO12 | GPIO14 | GPIO15 | GPIO13);
+
+	timer_disable_counter(TIM2);
+	timer_disable_irq(TIM2, TIM_DIER_CC1IE);
+
+	
 	}
 }
 
-void C_PWM::Intr(){
-	//este void controla la interrupcion
-	PWM_FLAG_1++; //con esto me fijo donde corno esta el cigueñal
-#if mtr == 1
-	PWM_FLAG_1A++;
-#endif // mtr == 1
-	//Luego revisar si hacer esto no rompe el universo
-	//this->Iny();
-	//this->Ecn();
+//INTERRUPT
+static void exti_setup(void){
+	/* Enable GPIOA clock. */
+	rcc_periph_clock_enable(RCC_GPIOB);
 
+	/* Enable AFIO clock. */
+	rcc_periph_clock_enable(RCC_AFIO);
+
+	/* Enable EXTI0 interrupt. */
+	nvic_enable_irq(NVIC_EXTI0_IRQ);
+
+	/* Set GPIO0 (in GPIO port A) to 'input float'. */
+	gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO0);
+
+	/* Configure the EXTI subsystem. */
+	exti_select_source(EXTI0, GPIOB);
+	exti_set_trigger(EXTI0, EXTI_TRIGGER_BOTH);
+	exti_enable_request(EXTI0);
 }
 
-void C_PWM::Iny(){
-	if (PWM_FLAG_1 >= (PMSI - AVCI) && t1 == false) {
-		gpio_set(_IPORT, INY[PWM_FLAG_2]);
-		t1 = true;
-		T1X = micros();
-	}
-	Time = micros();
+void exti0_isr(void){
+	ct++;
+	if(ct >= 120){
+		
+		gpio_set(GPIOB, pines[ct2]);
+		ct = 0;
+		ct2++;
+		
+		//CHIMER
+			/*
+		 * Get current timer value to calculate next
+		 * compare register value.
+		 */
+		compare_time = timer_get_counter(TIM2);
 
-	if ((Time - T1X) >= pT1 && T1X != 0 && t1 == true) {
-		gpio_clear(_IPORT, INY[PWM_FLAG_2]);
-		PWM_FLAG_2++;
-		PWM_FLAG_1 = 0; //reseteo para proximo tiempo
-		if (PWM_FLAG_2 > (CIL - 1)) PWM_FLAG_2 = 0;
-		t1 = false;
-	}
-}
+		/* Calculate and set the next compare value. */
+		new_time = compare_time + 7;
 
-void C_PWM::Ecn(){
+		timer_set_oc_value(TIM2, TIM_OC1, new_time);
 
-	if (PWM_FLAG_1A >= (PMSI - AVC) && t2 == false) {
-		gpio_set(_EPORT, ECN[PWM_FLAG_3]);
-		t2 = true;
-		T2X = micros();
-	}
-	Time = micros();
-
-	if ((Time - T2X) >= ECNT && T2X != 0 && t2 == true) {
-		gpio_clear(_EPORT, ECN[PWM_FLAG_3]);
-		PWM_FLAG_3++;
-		PWM_FLAG_1A = 0; //reseteo para proximo tiempo
-		if (PWM_FLAG_3 > (CIL - (CIL / 2) - 1) ) PWM_FLAG_3 = 0; 
-		//paso a explicar antes que me linches, con esto termino teniendo un 1 en un motor de 4 cilindros, porque solo hay dos bobinas, (una cada dos cilindros)
-		t2 = false;
+		timer_enable_counter(TIM2);
+		timer_enable_irq(TIM2, TIM_DIER_CC1IE);
+		//FIN
+		if(ct2 == 4){
+			ct2 = 0;
+		}
 	}
 
+	exti_reset_request(EXTI0);
 }
