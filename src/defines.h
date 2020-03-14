@@ -1,6 +1,6 @@
 // Acá todos los defines
 
-/*-----( backend turbina: )-----*/
+/*-----( backend turbina: )-----*/ ///dev/ttyACM0
 #define USART1_BAUD 230400 //Baud de USART1 , 8 bits de data y uno de stop, no me vengan con cosas mas raras que eso
 /*-----(Globales )-----*/
 

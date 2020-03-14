@@ -1,0 +1,96 @@
+<html>
+
+<body>
+  <button id="portSelect" type="button">Select a port</button>
+  <div id="connectionInfoDisplay">Connection Information</div>
+  <button id="disconnectButton" type="button">Disconnect</button>
+</body>
+
+</html>
+<script>
+let serialSettings = {
+  bitrate: 115200,
+  dataBits: "eight",
+  parityBit: "no",
+  stopBits: "one",
+  ctsFlowControl: false
+};
+
+function start() {
+  var portSelect = document.getElementById("portSelect");
+  portSelect.addEventListener("click", async e => {
+    e.preventDefault();
+    console.log("Selecting port");
+    // Request a port/device from user
+    const port = await navigator.serial.requestPort();
+
+    // Open and begin reading.
+    await port.open({
+      baudrate: 115200
+    });
+    while (port.readable) {
+    try {
+      reader = port.readable.getReader();
+      while (true) {
+        const { value, done } = await reader.read();
+        var test = String.fromCharCode(value);
+        console.log(value);
+        console.log(String.fromCharCode.apply(null,value));
+        if (done) {
+          break;
+        }
+      }
+      reader = undefined;
+    } catch (e) {
+      console.log(`<ERROR: ${e.message}>`);
+    }
+   }
+  //   const reader = port.readable.getReader();
+  //   while (true) {
+  //     const { done, data } = await reader.read();
+  //     if (done) break;
+  //     console.log(data);
+  //   }
+  });
+
+  document.getElementById("disconnectButton").addEventListener("click", e => {
+    e.preventDefault();
+    console.log("Clicked disconnect");
+  });
+
+  navigator.serial.getPorts(function(devices) {
+    buildPortSelect(devices);
+    openSelectedPort();
+  });
+}
+
+//Leaving out buildPortSelect for brevity
+
+function openSelectedPort() {
+  let portSelect = document.getElementById("portSelect");
+  let selectedPort = portSelect.options[portSelect.selectedIndex].value;
+  let connectionInfoDisplay = document.getElementById("connectionInfoDisplay");
+  for (let i = 0; i < state.eligiblePorts.length; i++) {
+    if (selectedPort == state.eligiblePorts[i].path) {
+      connectionInfoDisplay.innerText = "Connected to: " + selectedPort;
+      navigator.serial.connect(selectedPort, serialSettings, onConnect);
+      break;
+    }
+  }
+}
+
+const onConnect = function(connectionInfo) {
+  // The serial port has been opened. Save its id to use later.
+  connectionId = connectionInfo.connectionId;
+};
+
+function bin2String(array) {
+  var result = "";
+  for (var i = 0; i < array.length; i++) {
+    result += String.fromCharCode(array[i], 2);
+  }
+  return result;
+}
+
+start();
+</script>

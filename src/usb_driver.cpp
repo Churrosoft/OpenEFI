@@ -1,9 +1,6 @@
-#include <stdlib.h>
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/usb/usbd.h>
-#include <libopencm3/usb/cdc.h>
-
+#include "variables.h"
+#include "serialAPI.cpp"
+#include <cstdio>
 static const struct usb_device_descriptor dev = {
 	.bLength = USB_DT_DEVICE_SIZE,
 	.bDescriptorType = USB_DT_DEVICE,
@@ -12,8 +9,8 @@ static const struct usb_device_descriptor dev = {
 	.bDeviceSubClass = 0,
 	.bDeviceProtocol = 0,
 	.bMaxPacketSize0 = 64,
-	.idVendor = 0x0483,
-	.idProduct = 0x5740,
+	.idVendor = 0x1209,
+	.idProduct = 0xEEF1,
 	.bcdDevice = 0x0200,
 	.iManufacturer = 1,
 	.iProduct = 2,
@@ -173,7 +170,7 @@ static enum usbd_request_return_codes cdcacm_control_request(usbd_device *usbd_d
 		// local_buf[8] = req->wValue & 3;
 		// local_buf[9] = 0;
 		// // usbd_ep_write_packet(0x83, buf, 10);
-		// return USBD_REQ_HANDLED;
+		 return USBD_REQ_HANDLED;
 		}
 	case USB_CDC_REQ_SET_LINE_CODING:
 		if (*len < sizeof(struct usb_cdc_line_coding))
@@ -183,18 +180,28 @@ static enum usbd_request_return_codes cdcacm_control_request(usbd_device *usbd_d
 	return USBD_REQ_NOTSUPP;
 }
 
-static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
-{
+static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 	(void)ep;
 	(void)usbd_dev;
 
 	char buf[64];
+	//primero sacamos la data del buffer
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
+	int data = process(buf);
+	
+	if (data != -1){
+		//pasamos la data a char para poder enviar:
+		char str[64]; //si son mas de 64 bytes de una patada el usb no se banca la joda
+  		sprintf(str, "%d", data);
 
-	if (len) {
+		usbd_ep_write_packet(usbd_dev, 0x82, str , strlen(str) );
+	}else{
+		usbd_ep_write_packet(usbd_dev, 0x82, "-1", 1);
+	}
+	/* if (len) {
 		usbd_ep_write_packet(usbd_dev, 0x82, buf, len);
 		buf[len] = 0;
-	}
+	} */
 }
 
 static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
@@ -213,27 +220,8 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 				cdcacm_control_request);
 }
 
-int main(void)
-{
-	int i;
+static void usb_send(usbd_device *usbd_dev, char* data){
+    (void)usbd_dev;
 
-	usbd_device *usbd_dev;
-
-	rcc_clock_setup_in_hse_8mhz_out_72mhz();
-
-	rcc_periph_clock_enable(RCC_GPIOC);
-
-	gpio_set(GPIOC, GPIO13);
-	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ,
-		      GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
-
-	usbd_dev = usbd_init(&st_usbfs_v1_usb_driver, &dev, &config, usb_strings, 3, usbd_control_buffer, sizeof(usbd_control_buffer));
-	usbd_register_set_config_callback(usbd_dev, cdcacm_set_config);
-
-	for (i = 0; i < 0x800000; i++)
-		__asm__("nop");
-	gpio_clear(GPIOC, GPIO13);
-
-	while (1)
-		usbd_poll(usbd_dev);
+    usbd_ep_write_packet(usbd_dev, 0x82, data, strlen(data));
 }
