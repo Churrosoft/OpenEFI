@@ -1,6 +1,6 @@
 #include "variables.h"
 #include "serialAPI.c"
-#include <cstdio>
+#include <stdio.h>
 static const struct usb_device_descriptor dev = {
 	.bLength = USB_DT_DEVICE_SIZE,
 	.bDescriptorType = USB_DT_DEVICE,
@@ -187,7 +187,8 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 	char buf[64];
 	//primero sacamos la data del buffer
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
-	int data = process(buf);
+	if(len){
+		int data = process(buf);
 	
 	if (data != -1){
 		//pasamos la data a char para poder enviar:
@@ -202,6 +203,7 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 		usbd_ep_write_packet(usbd_dev, 0x82, buf, len);
 		buf[len] = 0;
 	} */
+	}
 }
 
 static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)

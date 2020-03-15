@@ -1,9 +1,10 @@
 #include "variables.h"
-#include <algorithm>
+#include <string.h>
 
 #define RPM_CODE "000;RPM"
 #define TMP_CODE "000;TMP"
 
+int process(char* data);
 
 int process(char* data){
     //a base del string de entrada me fijo que corno responder ?)
