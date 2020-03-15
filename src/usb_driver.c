@@ -1,5 +1,5 @@
 #include "variables.h"
-#include "serialAPI.cpp"
+#include "serialAPI.c"
 #include <cstdio>
 static const struct usb_device_descriptor dev = {
 	.bLength = USB_DT_DEVICE_SIZE,

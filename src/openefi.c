@@ -5,7 +5,7 @@
 #include <libopencm3/usb/cdc.h>
 #include <cstring>
 
-#include "usb_driver.cpp"
+#include "usb_driver.c"
 
 int main(void)
 {
