@@ -5,3 +5,4 @@ bin
 *.hex
 *.o
 *.map
+libopencm3
