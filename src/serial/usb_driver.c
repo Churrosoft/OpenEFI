@@ -188,13 +188,16 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, tempbuf2, 64);
 	if (len > 0){
-		if (get_data(tempbuf2,len)){
+		int leng2 = get_data(tempbuf2, len) ;
+		if (leng2 > 0){
 			char mybuf2[256];
 			char * temp = getMSG();
 			strcat(mybuf2, temp);
-			if(strlen(mybuf2) < 63){
+			if (leng2 < 63){
 				usbd_ep_write_packet(usbd_dev, 0x82, mybuf2, strlen(mybuf2));
-			}else{
+			}
+			else
+			{
 				char err[] = "te pasaste\n";
 				usbd_ep_write_packet(usbd_dev, 0x82, err, strlen(err));
 			}

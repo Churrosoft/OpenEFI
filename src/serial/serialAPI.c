@@ -9,7 +9,7 @@ char buf3[256] = "";
 int dataSize = 0;
 // Declaracion de funciones:
 int process(char *data);
-bool get_data(char *tempbuf, int len);
+int get_data(char *tempbuf, int len);
 char *getMSG(void);
 void clearMSG(void);
 //--------------------------
@@ -31,18 +31,18 @@ int process(char *data){
     }
 }
 
-bool get_data(char * tempbuf , int len){
+int get_data(char * tempbuf , int len){
 
     if ((dataSize + len) < 256) {
         dataSize = strlen(buf3) + len;
         strcat(buf3, tempbuf);
        // memset(tempbuf, 0, sizeof tempbuf);
     }
-    if (buf3[dataSize - 1] != '\n' || dataSize < 250){
-        return true;
+    if (buf3[dataSize - 1] == '\n' || dataSize > 250){
+        return dataSize;
     }
 
-    return false;
+    return 0;
 }
 
 char * getMSG(){
@@ -50,6 +50,6 @@ char * getMSG(){
 }
 
 void clearMSG(){
-    memset(buf3, 0, sizeof dataSize);
+    memset(buf3, 0, dataSize);
     dataSize = 0;
 }
