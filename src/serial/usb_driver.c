@@ -192,7 +192,12 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 			char mybuf2[256];
 			char * temp = getMSG();
 			strcat(mybuf2, temp);
-			usbd_ep_write_packet(usbd_dev, 0x82, mybuf2, strlen(mybuf2));
+			if(strlen(mybuf2) < 63){
+				usbd_ep_write_packet(usbd_dev, 0x82, mybuf2, strlen(mybuf2));
+			}else{
+				char err[] = "te pasaste\n";
+				usbd_ep_write_packet(usbd_dev, 0x82, err, strlen(err));
+			}
 			clearMSG();
 		}
 		memset(tempbuf2, 0, len);
