@@ -1,4 +1,4 @@
-#include "variables.h"
+#include "../variables.h"
 #include "serialAPI.c"
 #include <stdio.h>
 static const struct usb_device_descriptor dev = {
@@ -184,25 +184,19 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 	(void)ep;
 	(void)usbd_dev;
 
-	char buf[64];
-	//primero sacamos la data del buffer
-	int len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
-	if(len){
-		int data = process(buf);
-	
-	if (data != -1){
-		//pasamos la data a char para poder enviar:
-		char str[64]; //si son mas de 64 bytes de una patada el usb no se banca la joda
-  		sprintf(str, "%d", data);
+	char tempbuf2[64] = "";
 
-		usbd_ep_write_packet(usbd_dev, 0x82, str , strlen(str) );
-	}else{
-		usbd_ep_write_packet(usbd_dev, 0x82, "-1", 1);
-	}
-	/* if (len) {
-		usbd_ep_write_packet(usbd_dev, 0x82, buf, len);
-		buf[len] = 0;
-	} */
+	int len = usbd_ep_read_packet(usbd_dev, 0x01, tempbuf2, 64);
+	if (len > 0){
+		if (get_data(tempbuf2,len)){
+			char mybuf2[256];
+			char * temp = getMSG();
+			strcat(mybuf2, temp);
+			usbd_ep_write_packet(usbd_dev, 0x82, mybuf2, strlen(mybuf2));
+			clearMSG();
+		}
+		memset(tempbuf2, 0, len);
+		len = 0;
 	}
 }
 

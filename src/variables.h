@@ -4,8 +4,8 @@
 #ifndef VARIABLES
 #define VARIABLES
 
-int _RPM       = 0, 			//las rpm :V
-	_TEMP      = 0, 			//temperatura
+int _RPM       = 4646, 			//las rpm :V
+	_TEMP      = 85, 			//temperatura
 	_POS       = 0, 			//posicion del cigueñal (en dientes) (el contador de rpm la resetea a cada rato)
 	_AE        = 0; 			//avance de encendido
 bool
