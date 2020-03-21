@@ -6,3 +6,4 @@ bin
 *.o
 *.map
 libopencm3
+test2.c

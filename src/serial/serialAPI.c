@@ -5,15 +5,22 @@
 #include "./codes.h"
 
 //Variables de todo el socotroco:
-char buf3[256] = "";
-int dataSize = 0;
+struct serialAPI{
+    char buffer[256];
+    int dataSize;
+}mySerial = {
+    "" ,0
+};
+
+
 // Declaracion de funciones:
 int process(char *data);
-int get_data(char *tempbuf, int len);
+bool get_data(char *tempbuf, int len);
 char *getMSG(void);
 void clearMSG(void);
-//--------------------------
+int getDataSize(void);
 
+//--------------------------
 int process(char *data){
     switch (CRC(data, 8)) {
         case RPM_CODE:
@@ -31,25 +38,28 @@ int process(char *data){
     }
 }
 
-int get_data(char * tempbuf , int len){
+bool get_data(char *tempbuf, int len){
 
-    if ((dataSize + len) < 256) {
-        dataSize = strlen(buf3) + len;
-        strcat(buf3, tempbuf);
-       // memset(tempbuf, 0, sizeof tempbuf);
-    }
-    if (buf3[dataSize - 1] == '\n' || dataSize > 250){
-        return dataSize;
-    }
+    if ((mySerial.dataSize + len) < 256){
 
-    return 0;
+        memcpy(mySerial.buffer + mySerial.dataSize, tempbuf, len - 1);
+        mySerial.dataSize += len - 1;
+    }
+    if (tempbuf[strlen(tempbuf) - 1] == '\n'){
+        return true;
+    }
+    return false;
 }
 
-char * getMSG(){
-    return buf3;
+char *getMSG(){
+    return mySerial.buffer;
 }
 
 void clearMSG(){
-    memset(buf3, 0, dataSize);
-    dataSize = 0;
+    memset(mySerial.buffer, 0, mySerial.dataSize);
+    mySerial.dataSize = 0;
+}
+
+int getDataSize(){
+    return mySerial.dataSize;
 }

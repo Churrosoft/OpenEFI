@@ -32,7 +32,7 @@ int main(void)
 	usbd_poll(usbd_dev);
 	}
 		usbd_poll(usbd_dev);
-		usb_send(usbd_dev, "con bujias hescher nunca arranca\n");
+	//	usb_send(usbd_dev, "con bujias hescher nunca arranca\n");
 	
 		usbd_poll(usbd_dev);
 	}
