@@ -188,25 +188,34 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, tempbuf2, 64);
 	if (len > 0){ // llego data del puto usb?
-		if (get_data(tempbuf2, len)){ //hay una linea o me mande moco?
+		if (set_data(tempbuf2, len)){ //hay una linea o me mande moco?
 
-			char *temp = getMSG(); //traigo el mensaje
+			char *temp = get_msg(); //traigo el mensaje
+			int dataSize = get_data_size() ;
 
-			if (getDataSize() < 63){ //hay un mensaje y no se pasa de los 64 bytes
-				char err[] = "Enviando data\n";
+			if (dataSize < 63){ //hay un mensaje y no se pasa de los 64 bytes
 				usbd_ep_write_packet(usbd_dev, 0x82, err, strlen(err));
-
 				// 0.4mS de delay en teoria con esto andando a 72Mhz
 				for (int i = 0; i < 0x8000; i++)
 					__asm__("nop");
 				//envio la data:
-				usbd_ep_write_packet(usbd_dev, 0x82, temp, getDataSize() );
-			}else{
-				// fallback en caso que sean mas de 63 bytes, luego meto un for para mandar el mensaje por tramas
-				char err[] = "te pasaste\n";
-				usbd_ep_write_packet(usbd_dev, 0x82, err, strlen(err));
+				usbd_ep_write_packet(usbd_dev, 0x82, temp, dataSize);
 			}
-			clearMSG();
+			else{
+				// fallback en caso que sean mas de 63 bytes,
+				if (dataSize < 128){
+					//ahora empezamos a rebanar el array:
+					usbd_ep_write_packet(usbd_dev, 0x82, temp, 64);
+					// 0.04mS de delay
+					for (int i = 0; i < 0x8000; i++)
+						__asm__("nop");
+					usbd_ep_write_packet(usbd_dev, 0x82, (temp + 64), (dataSize - 64));
+				}else{
+					char err[] = "no se contar luego de 128\n";
+					usbd_ep_write_packet(usbd_dev, 0x82, err, sizeof(err));
+				}
+			}
+			clear_msg();
 		}
 		memset(tempbuf2, 0, len);
 		len = 0;

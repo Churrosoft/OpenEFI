@@ -9,16 +9,16 @@ struct serialAPI{
     char buffer[256];
     int dataSize;
 }mySerial = {
-    "" ,0
+    "" ,1
 };
 
 
 // Declaracion de funciones:
 int process(char *data);
-bool get_data(char *tempbuf, int len);
-char *getMSG(void);
-void clearMSG(void);
-int getDataSize(void);
+bool set_data(char *tempbuf, int len);
+char *get_msg(void);
+void clear_msg(void);
+int get_data_size(void);
 
 //--------------------------
 int process(char *data){
@@ -38,12 +38,11 @@ int process(char *data){
     }
 }
 
-bool get_data(char *tempbuf, int len){
+bool set_data(char *tempbuf, int len){
 
     if ((mySerial.dataSize + len) < 256){
-
-        memcpy(mySerial.buffer + mySerial.dataSize, tempbuf, len - 1);
-        mySerial.dataSize += len - 1;
+        memcpy(mySerial.buffer + mySerial.dataSize, tempbuf, len);
+        mySerial.dataSize += len;
     }
     if (tempbuf[strlen(tempbuf) - 1] == '\n'){
         return true;
@@ -51,15 +50,15 @@ bool get_data(char *tempbuf, int len){
     return false;
 }
 
-char *getMSG(){
+char *get_msg(){
     return mySerial.buffer;
 }
 
-void clearMSG(){
+void clear_msg(){
     memset(mySerial.buffer, 0, mySerial.dataSize);
     mySerial.dataSize = 0;
 }
 
-int getDataSize(){
+int get_data_size(){
     return mySerial.dataSize;
 }
