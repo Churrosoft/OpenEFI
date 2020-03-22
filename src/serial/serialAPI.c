@@ -1,7 +1,7 @@
 #include "../variables.h"
 #include <string.h>
 
-#include "./hash.c"
+#include "commands.h"
 
 //Variables de todo el socotroco:
 struct serialAPI{
@@ -10,23 +10,6 @@ struct serialAPI{
 } mySerial = {
     {}, 0
 };
-
-#define PROTOCOL_VERSION_1 1
-
-#define COMMAND_PING 1
-#define COMMAND_TMP 2
-#define COMMAND_RPM 3
-#define COMMAND_00V 4
-#define COMMAND_AVC 5
-#define COMMAND_INY 6
-#define COMMAND_LMB 7
-#define COMMAND_DBG 8
-// Enviado cuando ocurre un error. El error se especifica en el subcomando
-#define COMMAND_ERR 8
-#define ERROR_INVALID_PROTOCOL 1
-#define ERROR_INVALID_COMMAND 2
-
-#define SUBCOMMAND_NONE 0
 
 // Definición de mensajes
 typedef struct {
@@ -47,9 +30,11 @@ char *get_msg(void);
 void clear_msg(void);
 int get_data_size(void);
 void send_message(usbd_device*, SerialMessage*);
+uint16_t crc16(const unsigned char*, uint8_t);
 
 
 void send_message(usbd_device *usbd_dev, SerialMessage* message){
+    message->checksum = crc16((unsigned char *)message, 112);
     char* msg = (char*) message;
     usbd_ep_write_packet(usbd_dev, 0x82, msg, 64);
     for (int i = 0; i < 0x8000; i++) __asm__("nop");
@@ -78,4 +63,16 @@ void clear_msg(){
 
 int get_data_size(){
     return mySerial.dataSize;
+}
+
+uint16_t crc16(const unsigned char* data_p, uint8_t length){
+    uint8_t x;
+    uint16_t crc = 0xFFFF;
+
+    while (length--){
+        x = crc >> 8 ^ *data_p++;
+        x ^= x>>4;
+        crc = (crc << 8) ^ ((uint16_t)(x << 12)) ^ ((uint16_t)(x <<5)) ^ ((uint16_t)x);
+    }
+    return crc;
 }
