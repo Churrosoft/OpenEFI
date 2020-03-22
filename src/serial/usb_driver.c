@@ -200,6 +200,10 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 			switch(message->protocolVersion){
 				case PROTOCOL_VERSION_1:
 					switch(message->command){
+						case COMMAND_PING:
+							response.command = COMMAND_PING;
+							memcpy(response.payload, message->payload, sizeof(response.payload));
+							break;
 						default:
 							response.command = COMMAND_ERR;
 							response.subcommand = ERROR_INVALID_COMMAND;

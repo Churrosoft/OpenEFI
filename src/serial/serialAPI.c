@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "./hash.c"
-#include "./codes.h"
 
 //Variables de todo el socotroco:
 struct serialAPI{
@@ -43,30 +42,12 @@ typedef struct {
 
 
 // Declaracion de funciones:
-int process(char *data);
 bool get_frame(char *tempbuf, int len);
 char *get_msg(void);
 void clear_msg(void);
 int get_data_size(void);
 void send_message(usbd_device*, SerialMessage*);
 
-//--------------------------
-int process(char *data){
-    switch (CRC(data, 8)) {
-        case RPM_CODE:
-            return _RPM;
-            break;
-        case TMP_CODE:
-            return _TEMP;
-            break;
-        case 4:
-            return 34;
-            break;
-    default:
-        return -4;
-        break;
-    }
-}
 
 void send_message(usbd_device *usbd_dev, SerialMessage* message){
     char* msg = (char*) message;
