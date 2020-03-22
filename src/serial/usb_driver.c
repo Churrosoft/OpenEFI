@@ -188,29 +188,44 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, tempbuf2, 64);
 	if (len > 0){ // llego data del puto usb?
-		if (set_data(tempbuf2, len)){ //hay una linea o me mande moco?
+		if (get_frame(tempbuf2, len)){ //hay una linea o me mande moco?
 
 			char *temp = get_msg(); //traigo el mensaje
-			int dataSize = get_data_size() ;
+			//int dataSize = get_data_size();
 
-			if (dataSize < 63){ //hay un mensaje y no se pasa de los 64 bytes
-				//envio la data:
-				usbd_ep_write_packet(usbd_dev, 0x82, temp, dataSize);
+			SerialMessage *message = (SerialMessage *) temp;
+			SerialMessage response = {PROTOCOL_VERSION_1, 0, 0, {},0};
+			response.protocolVersion = PROTOCOL_VERSION_1;
+
+			switch(message->protocolVersion){
+				case PROTOCOL_VERSION_1:
+					switch(message->command){
+						default:
+							response.command = COMMAND_ERR;
+							response.subcommand = ERROR_INVALID_COMMAND;
+					}
+					break;
+				default:
+					// Protocolo invalido.
+					response.command = COMMAND_ERR;
+					response.subcommand = ERROR_INVALID_PROTOCOL;
 			}
-			else{
-				// fallback en caso que sean mas de 63 bytes,
-				if (dataSize < 128){
-					//ahora empezamos a rebanar el array:
-					usbd_ep_write_packet(usbd_dev, 0x82, temp, 64);
-					// 0.04mS de delay
-					for (int i = 0; i < 0x8000; i++)
-						__asm__("nop");
-					usbd_ep_write_packet(usbd_dev, 0x82, (temp + 64), (dataSize - 64));
-				}else{
-					char err[] = "no se contar luego de 128\n";
-					usbd_ep_write_packet(usbd_dev, 0x82, err, sizeof(err));
-				}
-			}
+
+			send_message(usbd_dev, &response);
+			
+			//ahora empezamos a rebanar el array:
+			//usbd_ep_write_packet(usbd_dev, 0x82, temp, 64);
+			
+			//char msg2[] = "------------\nFrame recibido\nProtocolo: \0";
+			//usbd_ep_write_packet(usbd_dev, 0x82, msg2, sizeof(msg2));
+			//char msg[64];
+			// 0.04mS de delay
+			//for (int i = 0; i < 0x8000; i++)
+			//	__asm__("nop");
+			//sprintf(msg, "%x\nComando: %x\nSubcomando: %x\nChecksum: %x\n\0", message->protocolVersion, message->command, message->subcommand, message->checksum);
+			//usbd_ep_write_packet(usbd_dev, 0x82, msg, strlen(msg));
+
+			//usbd_ep_write_packet(usbd_dev, 0x82, (temp + 64), (dataSize - 64));
 			clear_msg();
 		}
 		memset(tempbuf2, 0, len);
@@ -232,10 +247,4 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 				USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
 				USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT,
 				cdcacm_control_request);
-}
-
-static void usb_send(usbd_device *usbd_dev, char* data){
-    (void)usbd_dev;
-
-    usbd_ep_write_packet(usbd_dev, 0x82, data, strlen(data));
 }
