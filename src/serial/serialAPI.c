@@ -69,9 +69,10 @@ int process(char *data){
 }
 
 void send_message(usbd_device *usbd_dev, SerialMessage* message){
-    usbd_ep_write_packet(usbd_dev, 0x82, message, 64);
+    char* msg = (char*) message;
+    usbd_ep_write_packet(usbd_dev, 0x82, msg, 64);
     for (int i = 0; i < 0x8000; i++) __asm__("nop");
-    usbd_ep_write_packet(usbd_dev, 0x82, (message + 64), 64);
+    usbd_ep_write_packet(usbd_dev, 0x82, (msg + 64), 64);
 }
 
 bool get_frame(char *tempbuf, int len){
