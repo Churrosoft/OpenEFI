@@ -43,6 +43,14 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
     SerialMessage response = {PROTOCOL_VERSION_1, 0, 0, {},0};
     response.protocolVersion = PROTOCOL_VERSION_1;
     response.command = message->command;
+    uint16_t localCRC = crc16((unsigned char *) message, 126);
+    if(localCRC != message->checksum){
+        response.command = COMMAND_ERR;
+        response.subcommand = ERROR_CHECKSUM_INVALID;
+        send_message(usbd_dev, &response);
+        return;
+    }
+
     switch(message->protocolVersion){
         case PROTOCOL_VERSION_1:
             switch(message->command){
@@ -69,7 +77,7 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
 }
 
 void send_message(usbd_device *usbd_dev, SerialMessage* message){
-    message->checksum = crc16((unsigned char *)message, 112);
+    message->checksum = crc16((unsigned char *)message, 126);
     char* msg = (char*) message;
     usbd_ep_write_packet(usbd_dev, 0x82, msg, 64);
     for (int i = 0; i < 0x8000; i++) __asm__("nop");
