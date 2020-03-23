@@ -187,49 +187,10 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 	char tempbuf2[64] = "";
 
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, tempbuf2, 64);
-	if (len > 0){ // llego data del puto usb?
-		if (get_frame(tempbuf2, len)){ //hay una linea o me mande moco?
-
-			char *temp = get_msg(); //traigo el mensaje
-			//int dataSize = get_data_size();
-
-			SerialMessage *message = (SerialMessage *) temp;
-			SerialMessage response = {PROTOCOL_VERSION_1, 0, 0, {},0};
-			response.protocolVersion = PROTOCOL_VERSION_1;
-
-			switch(message->protocolVersion){
-				case PROTOCOL_VERSION_1:
-					switch(message->command){
-						case COMMAND_PING:
-							response.command = COMMAND_PING;
-							memcpy(response.payload, message->payload, sizeof(response.payload));
-							break;
-						default:
-							response.command = COMMAND_ERR;
-							response.subcommand = ERROR_INVALID_COMMAND;
-					}
-					break;
-				default:
-					// Protocolo invalido.
-					response.command = COMMAND_ERR;
-					response.subcommand = ERROR_INVALID_PROTOCOL;
-			}
-
-			send_message(usbd_dev, &response);
-			
-			//ahora empezamos a rebanar el array:
-			//usbd_ep_write_packet(usbd_dev, 0x82, temp, 64);
-			
-			//char msg2[] = "------------\nFrame recibido\nProtocolo: \0";
-			//usbd_ep_write_packet(usbd_dev, 0x82, msg2, sizeof(msg2));
-			//char msg[64];
-			// 0.04mS de delay
-			//for (int i = 0; i < 0x8000; i++)
-			//	__asm__("nop");
-			//sprintf(msg, "%x\nComando: %x\nSubcomando: %x\nChecksum: %x\n\0", message->protocolVersion, message->command, message->subcommand, message->checksum);
-			//usbd_ep_write_packet(usbd_dev, 0x82, msg, strlen(msg));
-
-			//usbd_ep_write_packet(usbd_dev, 0x82, (temp + 64), (dataSize - 64));
+	if (len > 0){
+		if (get_frame(tempbuf2, len)){
+			// Cuando ya tenemos un frame completo, lo procesamos.
+			process_frame(usbd_dev, (SerialMessage *) get_msg());
 			clear_msg();
 		}
 		memset(tempbuf2, 0, len);

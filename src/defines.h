@@ -1,9 +1,11 @@
 // Acá todos los defines
+#ifndef DEFINES_H
+#define DEFINES_H
 
 // Version de firmware
 #define OPENEFI_VER_MAJOR 2
 #define OPENEFI_VER_MINOR 0
-#define OPENEDI_VER_REV 2
+#define OPENEFI_VER_REV 2
 
 /*-----( backend turbina: )-----*/ ///dev/ttyACM0
 #define USART1_BAUD 230400 //Baud de USART1 , 8 bits de data y uno de stop, no me vengan con cosas mas raras que eso
@@ -56,3 +58,5 @@
 #define DFCO 1 //ni puta idea
 #define DE 1 // ni puta idea x2
 #define TBM 1 //turbo boost multiplier DEJAR EN 1 CARAJO, que sino rompes todo
+
+#endif
