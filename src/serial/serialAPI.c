@@ -67,10 +67,10 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
                 case COMMAND_STATUS:
                     switch (message->subcommand){
                     case STATUS_TMP:
-                        memcpy(response.payload,(void *) _TEMP, sizeof(int) );
+                        memcpy(response.payload, &_TEMP, sizeof(int) );
                         break;
                     case STATUS_RPM:
-                        memcpy(response.payload,(void *) _RPM, sizeof(int));
+                        memcpy(response.payload, &_RPM, sizeof(int));
                         break;
                     default:
                         response.command = COMMAND_ERR;
