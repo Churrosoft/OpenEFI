@@ -2,14 +2,10 @@
 #define COMMANDS_H
 
 #define PROTOCOL_VERSION_1 1
-
+// comandos del protocolo
 #define COMMAND_PING 1
-#define COMMAND_TMP 2
-#define COMMAND_RPM 3
-#define COMMAND_00V 4
-#define COMMAND_AVC 5
-#define COMMAND_INY 6
-#define COMMAND_LMB 7
+// Comando de estado:
+#define COMMAND_STATUS 2
 #define COMMAND_DBG 8
 // Enviado cuando ocurre un error. El error se especifica en el subcomando
 #define COMMAND_ERR 9
@@ -19,5 +15,14 @@
 #define COMMAND_HELLO 10
 
 #define SUBCOMMAND_NONE 0
+/*
+  * subcomandos para comandos de estado y spam
+*/
+#define STATUS_TMP 1
+#define STATUS_RPM 2
+#define STATUS_00V 3
+#define STATUS_AVC 4
+#define STATUS_INY 5
+#define STATUS_LMB 6
 
 #endif

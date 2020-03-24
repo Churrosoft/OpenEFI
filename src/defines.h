@@ -7,14 +7,13 @@
 #define OPENEFI_VER_MINOR 0
 #define OPENEFI_VER_REV 2
 
-/*-----( backend turbina: )-----*/ ///dev/ttyACM0
-#define USART1_BAUD 230400 //Baud de USART1 , 8 bits de data y uno de stop, no me vengan con cosas mas raras que eso
 /*-----(Globales )-----*/
 
-#define mtr 1       //habilita encendido
-#define CIL 4       //cantidad de cilindros o pistones, o camaras de combustion, etc ?)
-#define DNT 60      //cantidad de dientes del sensor CKP
-#define Alpha 1     //modo para pobrar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
+#define mtr 1           //habilita encendido
+#define CIL 4           //cantidad de cilindros o pistones, o camaras de combustion, etc ?)
+#define L_CIL (CIL - 1) //cilindros logicos, para manejar arrays y demases
+#define DNT 60          //cantidad de dientes del sensor CKP
+#define Alpha 1         //modo para pobrar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 
 /*-----( RPM )-----*/
 
@@ -22,6 +21,19 @@
 
 /*-----( C_PWM )-----*/
 
+/*
+    pines del STM32 para la inyeccion
+*/
+#define C_PWM_INY { GPIO12, GPIO14, GPIO15, GPIO13 }
+
+/*
+    pines del STM32 para el encendido
+*/
+#define C_PWM_ECN { GPIO12, GPIO14, GPIO15, GPIO13 }
+
+// Inyeción:
+
+// Encendido:
 #define ECNT 250 //tiempo en ms que se prende la bobina (cambie a su riesgo)
 #define PMSI 30  //Cantidad de dientes entre PMS
 #define AVCI 10  //avance de inyeccion (si queres quemar las valvulas dejalo en 0)

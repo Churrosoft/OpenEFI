@@ -3,6 +3,7 @@
 
 #include "commands.h"
 #include "../defines.h"
+#include "../variables.h"
 
 //Variables de todo el socotroco:
 struct serialAPI{
@@ -26,7 +27,8 @@ typedef struct {
 
 
 // Declaracion de funciones:
-bool get_frame(char *tempbuf, int len);
+
+bool get_frame(char*, int);
 char *get_msg(void);
 void clear_msg(void);
 int get_data_size(void);
@@ -46,7 +48,7 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
     uint16_t localCRC = crc16((unsigned char *) message, 126);
     if(localCRC != message->checksum){
         response.command = COMMAND_ERR;
-        response.subcommand = ERROR_CHECKSUM_INVALID;
+        response.subcommand = ERROR_INVALID_CHECKSUM;
         send_message(usbd_dev, &response);
         return;
     }
@@ -62,6 +64,20 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
                     response.payload[1] = OPENEFI_VER_MINOR;
                     response.payload[2] = OPENEFI_VER_REV;
                     break;
+                case COMMAND_STATUS:
+                    switch (message->subcommand){
+                    case STATUS_TMP:
+                        memcpy(response.payload,(void *) _TEMP, sizeof(int) );
+                        break;
+                    case STATUS_RPM:
+                        memcpy(response.payload,(void *) _RPM, sizeof(int));
+                        break;
+                    default:
+                        response.command = COMMAND_ERR;
+                        response.subcommand = ERROR_INVALID_COMMAND;
+                        break;
+                    }
+                    break;
                 default:
                     response.command = COMMAND_ERR;
                     response.subcommand = ERROR_INVALID_COMMAND;
@@ -75,7 +91,10 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
 
     send_message(usbd_dev, &response);
 }
-
+/** envia mensajes
+ * @param usbd_dev puntero a constructor del USB
+ * @param message Mensaje a enviar.
+ */
 void send_message(usbd_device *usbd_dev, SerialMessage* message){
     message->checksum = crc16((unsigned char *)message, 126);
     char* msg = (char*) message;
