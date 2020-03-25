@@ -4,7 +4,8 @@
 #include "commands.h"
 #include "../defines.h"
 #include "../variables.h"
-
+//Structs para formatear data:
+#include "./dataStruct/status.h"
 //Variables de todo el socotroco:
 struct serialAPI{
     char buffer[128];
@@ -46,47 +47,53 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
     response.protocolVersion = PROTOCOL_VERSION_1;
     response.command = message->command;
     uint16_t localCRC = crc16((unsigned char *) message, 126);
-    if(localCRC != message->checksum){
+    if (localCRC != message->checksum)
+    {
         response.command = COMMAND_ERR;
         response.subcommand = ERROR_INVALID_CHECKSUM;
         send_message(usbd_dev, &response);
         return;
     }
+    //Labels de los Structs para que no rompan los switch:
+    Status _status = {{}, 0, 0, 0};
 
-    switch(message->protocolVersion){
-        case PROTOCOL_VERSION_1:
-            switch(message->command){
-                case COMMAND_PING:
-                    memcpy(response.payload, message->payload, sizeof(response.payload));
-                    break;
-                case COMMAND_HELLO:
-                    response.payload[0] = OPENEFI_VER_MAJOR;
-                    response.payload[1] = OPENEFI_VER_MINOR;
-                    response.payload[2] = OPENEFI_VER_REV;
-                    break;
-                case COMMAND_STATUS:
-                    switch (message->subcommand){
-                    case STATUS_TMP:
-                        memcpy(response.payload, &_TEMP, sizeof(int) );
-                        break;
-                    case STATUS_RPM:
-                        memcpy(response.payload, &_RPM, sizeof(int));
-                        break;
-                    default:
-                        response.command = COMMAND_ERR;
-                        response.subcommand = ERROR_INVALID_COMMAND;
-                        break;
-                    }
-                    break;
-                default:
-                    response.command = COMMAND_ERR;
-                    response.subcommand = ERROR_INVALID_COMMAND;
+    switch (message->protocolVersion){
+    case PROTOCOL_VERSION_1:
+        switch (message->command)
+        {
+        case COMMAND_PING:
+            memcpy(response.payload, message->payload, sizeof(response.payload));
+            break;
+        case COMMAND_HELLO:
+            response.payload[0] = OPENEFI_VER_MAJOR;
+            response.payload[1] = OPENEFI_VER_MINOR;
+            response.payload[2] = OPENEFI_VER_REV;
+            break;
+        case COMMAND_STATUS:
+            switch (message->subcommand)
+            {
+            case STATUS_TMP:
+                _status.RPM = _RPM; _status.TEMP = _TEMP; _status.V00 = _V00;
+                memcpy(response.payload, &_status, 124);
+                break;
+            case STATUS_RPM:
+                memcpy(response.payload, &_RPM, sizeof(int));
+                break;
+            default:
+                response.command = COMMAND_ERR;
+                response.subcommand = ERROR_INVALID_COMMAND;
+                break;
             }
             break;
         default:
-            // Protocolo invalido.
             response.command = COMMAND_ERR;
-            response.subcommand = ERROR_INVALID_PROTOCOL;
+            response.subcommand = ERROR_INVALID_COMMAND;
+        }
+        break;
+    default:
+        // Protocolo invalido.
+        response.command = COMMAND_ERR;
+        response.subcommand = ERROR_INVALID_PROTOCOL;
     }
 
     send_message(usbd_dev, &response);
