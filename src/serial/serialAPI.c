@@ -1,11 +1,13 @@
 #include "../variables.h"
 #include <string.h>
+#include <libopencm3/cm3/scb.h>
 
 #include "commands.h"
 #include "../defines.h"
 #include "../variables.h"
 //Structs para formatear data:
 #include "./dataStruct/status.h"
+#include "../helpers/bootloader.c"
 //Variables de todo el socotroco:
 struct serialAPI{
     char buffer[128];
@@ -85,11 +87,16 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
                 break;
             }
             break;
+        case COMMAND_BOOTL_SW:
+            rtc_backup_write(0, 0x544F4F42UL);
+            scb_reset_system();
+            return;
         default:
             response.command = COMMAND_ERR;
             response.subcommand = ERROR_INVALID_COMMAND;
         }
         break;
+
     default:
         // Protocolo invalido.
         response.command = COMMAND_ERR;

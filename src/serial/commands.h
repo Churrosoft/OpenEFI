@@ -13,6 +13,8 @@
 #define ERROR_INVALID_COMMAND 2
 #define ERROR_INVALID_CHECKSUM 3
 #define COMMAND_HELLO 10
+// Intenta reiniciar a dapboot.
+#define COMMAND_BOOTL_SW 11
 
 #define SUBCOMMAND_NONE 0
 /*
