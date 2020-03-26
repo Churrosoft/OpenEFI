@@ -5,7 +5,7 @@
 // Version de firmware
 #define OPENEFI_VER_MAJOR 2
 #define OPENEFI_VER_MINOR 0
-#define OPENEFI_VER_REV 2
+#define OPENEFI_VER_REV 3
 
 /*-----(Globales )-----*/
 
