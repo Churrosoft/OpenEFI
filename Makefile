@@ -176,6 +176,7 @@ list: $(BINARY).list
 
 images: $(BINARY).images
 flash: $(BINARY).flash
+usb-flash: $(BINARY).usb-flash
 
 # Either verify the user provided LDSCRIPT exists, or generate it.
 ifeq ($(strip $(DEVICE)),)
@@ -206,17 +207,17 @@ print-%:
 
 %.bin: %.elf
 	@mkdir -p bin
-	@printf "  OBJCOPY bin/$(*).bin\n"
+	@printf "  OBJCOPY   bin/$(*).bin\n"
 	$(Q)$(OBJCOPY) -Obinary bin/$(*).elf bin/$(*).bin
 
 %.hex: %.elf
 	@mkdir -p bin
-	@printf "  OBJCOPY bin/$(*).hex\n"
+	@printf "  OBJCOPY   bin/$(*).hex\n"
 	$(Q)$(OBJCOPY) -Oihex bin/$(*).elf bin/$(*).hex
 
 %.srec: %.elf
 	@mkdir -p bin
-	@printf "  OBJCOPY bin/$(*).srec\n"
+	@printf "  OBJCOPY   bin/$(*).srec\n"
 	$(Q)$(OBJCOPY) -Osrec bin/$(*).elf bin/$(*).srec
 
 %.list: %.elf
@@ -226,19 +227,19 @@ print-%:
 
 %.elf %.map: $(OBJS) $(LDSCRIPT) $(LIB_DIR)/lib$(LIBNAME).a
 	@mkdir -p bin
-	@printf "  LD      bin/$(*).elf\n"
+	@printf "  LD        bin/$(*).elf\n"
 	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o bin/$(*).elf
 
 %.o: %.c $(LIB_DIR)/lib$(LIBNAME).a
-	@printf "  CC      $(*).c\n"
+	@printf "  CC        $(*).c\n"
 	$(Q)$(CC) $(TGT_CFLAGS) $(CFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).c
 
 %.o: %.cxx $(LIB_DIR)/lib$(LIBNAME).a
-	@printf "  CXX     $(*).cxx\n"
+	@printf "  CXX       $(*).cxx\n"
 	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).cxx
 
 %.o: %.cpp $(LIB_DIR)/lib$(LIBNAME).a
-	@printf "  CXX     $(*).cpp\n"
+	@printf "  CXX       $(*).cpp\n"
 	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).cpp
 
 clean:
@@ -262,9 +263,12 @@ styleclean: $(STYLECHECKFILES:=.styleclean)
 
 
 %.stlink-flash: %.bin
-	@printf "  FLASH  $<\n"
+	@printf "  FLASH    $<\n"
 	$(STFLASH) write $(*).bin 0x8000000
 
+%.usb-flash: %.bin
+	@printf "  USB-FLASH $<\n"
+	$(Q)./src/usb-flash
 ifeq ($(STLINK_PORT),)
 ifeq ($(BMP_PORT),)
 ifeq ($(OOCD_FILE),)
