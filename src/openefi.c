@@ -21,18 +21,16 @@ int main(void){
 
 	rcc_periph_clock_enable(RCC_GPIOC);
 	gpio_set(GPIOC, GPIO13);
-	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ,
-		      GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
+	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
 
 	usbd_device* usbd_dev = usb_setup();
-
 	usbd_dev = usb_setup();
+
 	webusb_setup(usbd_dev);
 	// setup de C_PWM:
-#ifdef CPWM_ENABLE
+	#ifdef CPWM_ENABLE
 	c_pwm_setup();
-#endif
-	//BUG hace falta esto en caso de un inicio sin el usb?, retrasa el inicio, minizar al minimo el tiempo o comprobar con un pin si es que esta enchufado el usb o no
+	#endif
 	gpio_clear(GPIOC, GPIO13);
 
 	while (1){
