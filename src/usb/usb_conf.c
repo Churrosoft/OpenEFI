@@ -21,8 +21,12 @@
 #include <string.h>
 
 #include <libopencm3/usb/dfu.h>
+#include <libopencm3/usb/usbd.h>
+#include <libopencm3/stm32/desig.h>
 #include "webusb.h"
 
+#include "usb21.c"
+#include "webusb.h"
 #include "usb_conf.h"
 
 // Endpoints disponibles
@@ -42,6 +46,7 @@ static const struct usb_endpoint_descriptor data_endp[] = {{
 	.bInterval = 1,
 }};
 
+// Interfaz principal
 static const struct usb_interface_descriptor data_iface = {
 	.bLength = USB_DT_INTERFACE_SIZE,
 	.bDescriptorType = USB_DT_INTERFACE,
@@ -56,10 +61,19 @@ static const struct usb_interface_descriptor data_iface = {
 	.endpoint = data_endp,
 };
 
+// Listado de todas las interfaces
+static const struct usb_interface interfaces[] = {
+    {
+        .num_altsetting = 1,
+        .altsetting = &data_iface,
+    }
+};
 
+// Dispositivo
 static const struct usb_device_descriptor dev = {
     .bLength = USB_DT_DEVICE_SIZE,
     .bDescriptorType = USB_DT_DEVICE,
+    // USB 1.1
     .bcdUSB = 0x0210,
     .bDeviceClass = 0,
     .bDeviceSubClass = 0,
@@ -67,35 +81,12 @@ static const struct usb_device_descriptor dev = {
     .bMaxPacketSize0 = 64,
     .idVendor = USB_VID,
     .idProduct = USB_PID,
-    .bcdDevice = 0x0110,
+    // Versión del dispositivo (2.0.0)
+    .bcdDevice = 0x0200,
     .iManufacturer = 1,
     .iProduct = 2,
     .iSerialNumber = 3,
     .bNumConfigurations = 1,
-};
-
-static const struct usb_interface_descriptor dfu_iface = {
-    .bLength = USB_DT_INTERFACE_SIZE,
-    .bDescriptorType = USB_DT_INTERFACE,
-    .bInterfaceNumber = INTF_DFU,
-    .bAlternateSetting = 0,
-    .bNumEndpoints = 0,
-    .bInterfaceClass = 0xFE,
-    .bInterfaceSubClass = 1,
-    .bInterfaceProtocol = 2,
-    .iInterface = 4,
-
-    .endpoint = NULL,
-
-    //.extra = &dfu_function,
-    //.extralen = sizeof(dfu_function),
-};
-
-static const struct usb_interface interfaces[] = {
-    {
-        .num_altsetting = 1,
-        .altsetting = &data_iface,
-    }
 };
 
 static const struct usb_config_descriptor config = {
@@ -104,35 +95,35 @@ static const struct usb_config_descriptor config = {
     .wTotalLength = 0,
     .bNumInterfaces = sizeof(interfaces)/sizeof(struct usb_interface),
     .bConfigurationValue = 1,
-    .iConfiguration = 0,
+    .iConfiguration = 0x04,
     .bmAttributes = 0xC0,
     .bMaxPower = 0x32,
 
     .interface = interfaces,
 };
 
-//static const struct usb_device_capability_descriptor* capabilities[] = {
-//    (const struct usb_device_capability_descriptor*)&webusb_platform,
-//};
+static const struct usb_device_capability_descriptor* capabilities[] = {
+    (const struct usb_device_capability_descriptor*)&webusb_platform,
+    // TODO: WinUSB?
+};
 
-static char serial_number[USB_SERIAL_NUM_LENGTH+1];
+static const struct usb_bos_descriptor bos_descriptor = {
+    .bLength = USB_DT_BOS_SIZE,
+    .bDescriptorType = USB_DT_BOS,
+    .bNumDeviceCaps = sizeof(capabilities)/sizeof(capabilities[0]),
+    .capabilities = capabilities
+};
 
+static char serial_number[USB_SERIAL_NUM_LENGTH+1]; 
 static const char *usb_strings[] = {
-    "OpenEFI",
-    "OpenEFI v2",
-    serial_number
+    "OpenEFI",                      // iManufacturer
+    "OpenEFI v2",                   // iProduct
+    serial_number,                  // iSerialNumber
+    "OpenEFI Control Interface"     // iConfiguration(1)
 };
 
 /* Buffer to be used for control requests. */
 static uint8_t usbd_control_buffer[USB_CONTROL_BUF_SIZE] __attribute__ ((aligned (2)));
-
-void usb_set_serial_number(const char* serial) {
-    serial_number[0] = '\0';
-    if (serial) {
-        strncpy(serial_number, serial, USB_SERIAL_NUM_LENGTH);
-        serial_number[USB_SERIAL_NUM_LENGTH] = '\0';
-    }
-}
 
 const usbd_driver* usb_init(void) {
     return &st_usbfs_v1_usb_driver;
@@ -140,11 +131,12 @@ const usbd_driver* usb_init(void) {
 
 usbd_device* usb_setup(void) {
     int num_strings = sizeof(usb_strings)/sizeof(const char*);
+    desig_get_unique_id_as_string(serial_number, USB_SERIAL_NUM_LENGTH+1);
+    serial_number[USB_SERIAL_NUM_LENGTH] = '\0';
 
-    const usbd_driver* driver = usb_init();
-    usbd_device* usbd_dev = usbd_init(driver, &dev, &config,
+    usbd_device* usbd_dev = usbd_init(&st_usbfs_v1_usb_driver, &dev, &config,
                                       usb_strings, num_strings,
                                       usbd_control_buffer, sizeof(usbd_control_buffer));
-
+    usb21_setup(usbd_dev, &bos_descriptor);
     return usbd_dev;
 }

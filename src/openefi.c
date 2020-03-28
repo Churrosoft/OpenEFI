@@ -26,7 +26,7 @@ int main(void){
 
 	usbd_device* usbd_dev = usb_setup();
 
-	usbd_dev = usbd_init(&st_usbfs_v1_usb_driver, &dev, &config, usb_strings, 3, usbd_control_buffer, sizeof(usbd_control_buffer));
+	usbd_dev = usb_setup();
 	webusb_setup(usbd_dev);
 	// setup de C_PWM:
 #ifdef CPWM_ENABLE
