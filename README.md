@@ -1,48 +1,50 @@
-[![Build Status](https://travis-ci.org/FDSoftware/OpenEFI.svg?branch=master)](https://travis-ci.org/FDSoftware/OpenEFI)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Build Status](https://travis-ci.org/openefi/OpenEFI.svg?branch=master)](https://travis-ci.org/openefi/OpenEFI)
+# OpenEFI: 
 
-<h1>Introducción:</h1>
+OpenEFI es un sistema de inyección OpenSource configurable y adaptable a casi cualquier vehiculo con motores a Nafta/Gasohol/GNC/GLP
 
-<p>Open efi es un proyecto de EFI (electronic fuel inyection) que funciona con arduino y además es open source para que el que lo quiera utilizar lo pueda modificar a su gusto con conocimientos de programacion en C++)</p>
-<img src="http://i.imgur.com/ucgET5K.jpg" width = 250;>
+Está planeado el soporte a corto y largo plazo para:
+-   Motores a nafta con inyección y encendido electrónico
+-  calculo de tiempo de inyección a partir de tablas pre-definidas | Alpha Plus | Speed Density
+-  Soporte de inyectores de alta impedancia (los de baja más adelante por requerir PWM además del tiempo de inyeccion)
+-   Soporte para GNC/GLP con tablas independientes
+-   Motores diesel con inyección directa
+-   Motores de 1 a 8 cilindros
 
-<p>Logo de Open-EFI :</p>
-<img src="https://i.imgur.com/ISsDfFZ.png" width = 150;>
-<h2>El proyecto:</h2>
-El proyecto nació principalmente por 2 motivos: 
-somos estudiantes de un colegio de automovilistica y surgió la idea de hacer arrancar un motor cuya ecu estaba faltante.
-Solicitamos al instituto brindarnos una ecu programable y no hubo respuesta. Por este motivo decidimos hacerla nosotros mismos con ayuda de algunos profesores y decidimos hacerla libre para que cualquiera pueda usarla o incluso unirse al proyecto si consideramos valiosa su entrada
+## Sobre el Software
+la plataforma se ejecuta desde un STM32F103, conocido como "bluepill", para facilitar la programación del mismo, se utiliza el bootloader: [dapboot](https://github.com/devanlai/dapboot)
 
-<h3>integrantes activos :</h3>
-<p><a href="https://github.com/FDSoftware">FDSoftware</a></p>
-<h3>ex integrantes:</h3>
-<p><a href="https://github.com/SFADalmiro">SFADalmiro</a></p>
-<p><a href="https://github.com/FrancisJPK">FrancisJPK</a></p>
 
-<h4>Sobre el proyecto:</h4>
-Hasta ahora tiene soporte para:
-<ul>
-	<li>Motores a nafta con inyeccion y encendido electrónico</li>
-	<li>Soporte para GNC/GLP con tablas independientes</li>
-	<li>Motores diesel con inyeccion directa</li>
-	<li>Motores desde monocilindricos hasta de 8 cilindros</li>
-</ul>
+### Como generar los binarios:
+se necesitan las siguientes herramientas:
 
-<h4>Funcionamiento:</h4>
-<p>-Pseudo multithread para mayor eficiencia del programa</p>
-<p>-Control de inyección en funcion de la carga, temperatura, velocidad de giro y presión de aire</p>
-<p>-Control de chispa y avance con compensación por temperatura</p>
-<p>-Parada de emergencia;</p>
-<p>-Todos los datos importantes como los de la posición del volante de inercia, las rpm, la temperatura, las lecturas del TMAP, etc, están guardadas en variables al principio del código</p>
-<p>-Todo el código con sus respectivos comentarios están en español</p>
-<h4>Placas soportadas:</h4>
-<ul>
-	<li>Arduino DUE (sin PCB de referencia)</li>
-	<li>Arduino MEGA(sin PCB de referencia)</li>
-	<li>Arduino UNO (sin PCB de referencia)</li>
-	<li>Arduino NANO (con PCB de referencia)</li>
-	<li>ESP8266 (con PCB de referencia)</li>
-</ul>
+    make
+    arm-none-eabi-gcc 
+    arm-none-eabi-newlib
 
-<h4>Extras:</h4>
-<p> Programa de edicion, para reprogramar tablas de inyeccion, avance, ver codigos DTC y visualizacion de parametros:  <a href="https://github.com/FDSoftware/OpenEFI-Tuner">OpenEFI-Tuner</a>
-</p>
+pasos para grabar el firmware:
+
+ 1. Compile y grabe el bootloader => [dapboot](https://github.com/devanlai/dapboot)
+ 2. clone el repositorio con git o descarguelo
+ 3. dentro del repo ejecutar: `make flash-usb`
+
+## Sobre el Hardware
+
+### Preguntas frecuentes:
+### ¿hay algún video sobre el funcionamiento de la ECU / EFI ?
+No, por el momento solo tenemos avances en el diseño de los pcb's, pero todavía el hardware ni el software se encuentra preparado para una prueba real en un motor, estimamos nuestro primer test a finales del 2020 si es que no nos morimos antes
+### ¿cómo hacen para adaptar el hardware a una configuración tan amplia?
+Porque el tratamiento de las señales analógicas para la mayoría de los sensores son iguales, consta de un filtro paso bajo y un diodo para evitar el sobre voltaje, se intentan mantener simples para que sea fácil de mantener, luego se aplican otros filtros en software para mejorar aún más esto
+
+### ¿se pueden revisar los esquemas en algún lado, y obtener más información en general de la placa?
+Claro!, todo lo referido al hardware se encuentra en [OpenEFI-PCB](https://github.com/openefi/OpenEFI-PCB)
+
+## Sobre la configuracion
+
+### Preguntas frecuentes:
+### ¿como se va a configurar todo esto?
+para la configuracion inicial, y para la visualizacion de parametros en tiempo real, se utiliza [OpenEFI-Tuner](https://github.com/openefi/OpenEFI-Tuner) , la idea es que tengas unicamente que conectar la EFI a tu computadora, entrar a [tuner.openefi.xyz](http://tuner.openefi.xyz/) y empezar a jugar, sin tener que pasar por la tortura de instalar drivers, programas,etc , aunque tambien puedes montar tu propio OpenEFI-Tuner en tu servidor local si quieres !, aunque la aplicación web funcionara sin conexión a internet
+
+### ¿tiene soporte para un scanner común?¿cómo se leen los DTC's?
+No, por el momento no tenemos planeado agregar soporte a CAN hasta llegar al MVP, así que no se pueden usar scanners automotrices normales acá
+para leer los DTC se utiliza OpenEFI-Tuner
