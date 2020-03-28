@@ -1,3 +1,4 @@
+/* USB Control Interface command processing. */
 #include "../variables.h"
 #include <string.h>
 #include <libopencm3/cm3/scb.h>
@@ -8,36 +9,15 @@
 //Structs para formatear data:
 #include "./dataStruct/status.h"
 #include "../helpers/bootloader.c"
+#include "control_interface.h"
+
 //Variables de todo el socotroco:
-struct serialAPI{
+struct dataBuffer{
     char buffer[128];
     int dataSize;
-} mySerial = {
+} buffer = {
     {}, 0
 };
-
-// Definición de mensajes
-typedef struct {
-    // Versión del protocolo. Por ahora PROTOCOL_VERSION_1.
-    uint8_t protocolVersion;
-    // Comando a ejecutar.
-    uint8_t command;
-    uint8_t subcommand;
-    char payload[123];
-    // CRC16 del mensaje
-    uint16_t checksum;
-} SerialMessage;
-
-
-// Declaracion de funciones:
-
-bool get_frame(char*, int);
-char *get_msg(void);
-void clear_msg(void);
-int get_data_size(void);
-void send_message(usbd_device*, SerialMessage*);
-void process_frame(usbd_device*, SerialMessage*);
-uint16_t crc16(const unsigned char*, uint8_t);
 
 
 /** Procesa comandos.
@@ -56,38 +36,36 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
         send_message(usbd_dev, &response);
         return;
     }
-    //Labels de los Structs para que no rompan los switch:
     Status _status = {{}, 0, 0, 0};
-
     switch (message->protocolVersion){
     case PROTOCOL_VERSION_1:
-        switch (message->command)
-        {
+        switch (message->command){
         case COMMAND_PING:
             memcpy(response.payload, message->payload, sizeof(response.payload));
             break;
         case COMMAND_HELLO:
+            // XXX: los datos deberian ir al final del payload y no al comienzo...
             response.payload[0] = OPENEFI_VER_MAJOR;
             response.payload[1] = OPENEFI_VER_MINOR;
             response.payload[2] = OPENEFI_VER_REV;
             break;
         case COMMAND_STATUS:
-            switch (message->subcommand)
-            {
-            case STATUS_TMP:
-                _status.RPM = _RPM; _status.TEMP = _TEMP; _status.V00 = _V00;
-                memcpy(response.payload, &_status, 124);
-                break;
-            case STATUS_RPM:
-                memcpy(response.payload, &_RPM, sizeof(int));
-                break;
-            default:
-                response.command = COMMAND_ERR;
-                response.subcommand = ERROR_INVALID_COMMAND;
-                break;
-            }
+            //switch (message->subcommand){
+            //case STATUS_TMP:
+            _status.RPM = _RPM;
+            _status.TEMP = _TEMP;
+            _status.V00 = _V00;
+            memcpy(response.payload, &_status, 123);
+            //    break;
+            //default:
+            //    response.command = COMMAND_ERR;
+            //    response.subcommand = ERROR_INVALID_COMMAND;
+            //    break;
+            //}
             break;
         case COMMAND_BOOTL_SW:
+            // Escribimos los bytes mágicos en los registros backup rtc
+            // para forzar el arranque del bootloader
             rtc_backup_write(0, 0x544F4F42UL);
             scb_reset_system();
             return;
@@ -118,10 +96,10 @@ void send_message(usbd_device *usbd_dev, SerialMessage* message){
 }
 
 bool get_frame(char *tempbuf, int len){
-    if ((mySerial.dataSize + len) <= 128){
-        memcpy(mySerial.buffer + mySerial.dataSize, tempbuf, len);
-        mySerial.dataSize += len;
-        if(mySerial.dataSize >= 128){
+    if ((buffer.dataSize + len) <= 128){
+        memcpy(buffer.buffer + buffer.dataSize, tempbuf, len);
+        buffer.dataSize += len;
+        if(buffer.dataSize >= 128){
             return true;
         }
     }
@@ -129,16 +107,12 @@ bool get_frame(char *tempbuf, int len){
 }
 
 char *get_msg(){
-    return mySerial.buffer;
+    return buffer.buffer;
 }
 
 void clear_msg(){
-    memset(mySerial.buffer, 0, mySerial.dataSize);
-    mySerial.dataSize = 0;
-}
-
-int get_data_size(){
-    return mySerial.dataSize;
+    memset(buffer.buffer, 0, buffer.dataSize);
+    buffer.dataSize = 0;
 }
 
 uint16_t crc16(const unsigned char* data_p, uint8_t length){

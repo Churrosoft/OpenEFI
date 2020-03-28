@@ -20,7 +20,7 @@
 #include "webusb.h"
 
 #include "usb_conf.h"
-#include "../serial/serialAPI.c"
+#include "control_interface.c"
 
 #ifndef LANDING_PAGE_URL
 #define LANDING_PAGE_URL "tuner.openefi.xyz/"
@@ -83,6 +83,7 @@ static enum usbd_request_return_codes webusb_control_vendor_request(usbd_device 
     return status;
 }
 
+// Recepción de datos
 static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 	(void)ep;
 	(void)usbd_dev;

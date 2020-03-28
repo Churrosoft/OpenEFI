@@ -20,11 +20,12 @@
 /*
   * subcomandos para comandos de estado y spam
 */
-#define STATUS_TMP 1
-#define STATUS_RPM 2
-#define STATUS_00V 3
-#define STATUS_AVC 4
-#define STATUS_INY 5
-#define STATUS_LMB 6
+// XXX: Definir si vamos a usar subcomandos o un comando que envie todos los datos
+// #define STATUS_TMP 1
+// #define STATUS_RPM 2
+// #define STATUS_00V 3
+// #define STATUS_AVC 4
+// #define STATUS_INY 5
+// #define STATUS_LMB 6
 
 #endif
