@@ -12,7 +12,7 @@
 #define mtr 1           //habilita encendido
 #define CIL 4           //cantidad de cilindros o pistones, o camaras de combustion, etc ?)
 #define L_CIL (CIL - 1) //cilindros logicos, para manejar arrays y demases
-#define DNT 60          //cantidad de dientes del sensor CKP
+#define DNT 300          //cantidad de dientes del sensor CKP
 #define Alpha 1         //modo para pobrar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 
 /*-----( RPM )-----*/
@@ -21,22 +21,18 @@
 
 /*-----( C_PWM )-----*/
 
-/*
-    pines del STM32 para la inyeccion
-*/
-#define C_PWM_INY { GPIO2, GPIO3, GPIO4, GPIO5 }
+#define PMSI 80  //Cantidad de dientes entre PMS
 
-/*
-    pines del STM32 para el encendido
-*/
-#define C_PWM_ECN { GPIO12, GPIO14, GPIO15, GPIO13 }
+#define C_PWM_INY { GPIO2, GPIO3, GPIO4, GPIO5 } //  pines del STM32 para la inyeccion
+#define C_PWM_ECN { GPIO15, GPIO14 } // pines del STM32 para el encendido
 
 // Inyeción:
+#define AVCI 10  //avance de inyeccion (si queres quemar las valvulas dejalo en 0)
 
 // Encendido:
-#define ECNT 250 //tiempo en ms que se prende la bobina (cambie a su riesgo)
-#define PMSI 30  //Cantidad de dientes entre PMS
-#define AVCI 10  //avance de inyeccion (si queres quemar las valvulas dejalo en 0)
+#define ECNT 7 //tiempo en ms que se prende la bobina (cambie a su riesgo)
+
+
 
 /*-----( I_IALG )-----*/
 //cuando tenga la libreria de memoria paso todo a variable, por ahora con define

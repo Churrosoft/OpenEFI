@@ -10,6 +10,7 @@
 //#include "./serial/usb_driver.c"
 #include "./usb/usb_conf.c"
 #include "./usb/webusb.c"
+#define CPWM_ENABLE
 
 #ifdef CPWM_ENABLE
 #include "./C_PWM.c"
