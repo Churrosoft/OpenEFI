@@ -24,7 +24,7 @@
 /*
     pines del STM32 para la inyeccion
 */
-#define C_PWM_INY { GPIO12, GPIO14, GPIO15, GPIO13 }
+#define C_PWM_INY { GPIO2, GPIO3, GPIO4, GPIO5 }
 
 /*
     pines del STM32 para el encendido
