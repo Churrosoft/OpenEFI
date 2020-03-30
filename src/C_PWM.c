@@ -34,10 +34,6 @@ struct C_PWM{
 	#endif
 };
 
-// Este led se prende/apaga con cada interrupcion externa
-#define LED1_PORT GPIOC
-#define LED1_PIN GPIO13
-
 //declaracion de funciones:
 static void tim_setup(void);	// Inicia el timer2 && timer3
 static void exti_setup(void);	// Inicia la interrupcion externa en el pin PB0
@@ -51,13 +47,14 @@ static void c_pwm_setup(void){
 	exti_setup();
 	/* Configure INY outputs*/
 	rcc_periph_clock_enable(RCC_GPIOA);
-
-	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO2);
-	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO3);
-	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO4);
-	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO5);
-	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO14);
-	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO15);
+	for(uint8_t i = 0; i < CIL; i++){
+		gpio_set_mode(C_PWM_INY_PORT, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, myPWM.inyPins[i]);
+#if mtr == 1
+		if(i < (CIL / 2)){
+			gpio_set_mode(C_PWM_ECN_PORT, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, myPWM.ecnPins[i]);
+		}
+#endif
+	}
 }
 
 //TIMER's
@@ -102,9 +99,8 @@ void tim2_isr(){
 
 		/* Clear compare interrupt flag. */
 		timer_clear_flag(TIM2, TIM_SR_CC1IF);
-		gpio_toggle(LED1_PORT, LED1_PIN);
 		//BUG con el cruce del motor *puede* pasar que se apaguen los inyectores antes de tiempo
-		gpio_clear(GPIOA, myPWM.inyPins[myPWM.inySubFlagB]);
+		gpio_clear(C_PWM_INY_PORT, myPWM.inyPins[myPWM.inySubFlagB]);
 		myPWM.inySubFlagB++;
 		if(myPWM.inySubFlagB > CIL) myPWM.inySubFlagB = 0;
 		timer_disable_counter(TIM2);
@@ -116,9 +112,9 @@ void tim3_isr(){
 	if (timer_get_flag(TIM3, TIM_SR_CC3IF)) {
 		/* Clear compare interrupt flag. */
 		timer_clear_flag(TIM3, TIM_SR_CC2IF);
-		gpio_set(GPIOC, myPWM.ecnPins[myPWM.ecnSubFlagB]);
+		gpio_set(C_PWM_ECN_PORT, myPWM.ecnPins[myPWM.ecnSubFlagB]);
 		myPWM.ecnSubFlagB++;
-		if(myPWM.ecnSubFlagB > (L_CIL) ) myPWM.ecnSubFlagB = 0;
+		if(myPWM.ecnSubFlagB >= (CIL / 2) ) myPWM.ecnSubFlagB = 0;
 		timer_disable_counter(TIM3);
 		timer_disable_irq(TIM3, TIM_DIER_CC2IE);
 	}
@@ -159,8 +155,7 @@ void new_ecn_time(unsigned long nTime){
 void exti0_isr(){
 	myPWM.inyFlag++;
 	if(myPWM.inyFlag >= (PMSI - AVCI)){
-		gpio_set(GPIOC, GPIO14 | GPIO15);
-		gpio_set(GPIOA, myPWM.inyPins[myPWM.inySubFlagA]);
+		gpio_set(C_PWM_INY_PORT, myPWM.inyPins[myPWM.inySubFlagA]);
 		//CHIMER
 		new_iny_time(myPWM.time);
 		myPWM.inySubFlagA++;
@@ -170,7 +165,7 @@ void exti0_isr(){
 #if mtr == 1
 	myPWM.ecnFlag++;
 	if(myPWM.ecnFlag >= (PMSI - myPWM.avc)){
-		gpio_clear(GPIOC, myPWM.ecnPins[myPWM.ecnSubFlagA]);
+		gpio_clear(C_PWM_ECN_PORT, myPWM.ecnPins[myPWM.ecnSubFlagA]);
 		//CHIMER
 		new_ecn_time(ECNT);
 		myPWM.ecnSubFlagA++;

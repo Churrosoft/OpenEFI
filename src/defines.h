@@ -23,7 +23,9 @@
 
 #define PMSI 80  //Cantidad de dientes entre PMS
 
+#define C_PWM_INY_PORT GPIOA // puerto de los pines de inyeccion
 #define C_PWM_INY { GPIO2, GPIO3, GPIO4, GPIO5 } //  pines del STM32 para la inyeccion
+#define C_PWM_ECN_PORT GPIOC // puerto de los pines de encendido
 #define C_PWM_ECN { GPIO15, GPIO14 } // pines del STM32 para el encendido
 
 // Inyeción:
@@ -31,8 +33,6 @@
 
 // Encendido:
 #define ECNT 7 //tiempo en ms que se prende la bobina (cambie a su riesgo)
-
-
 
 /*-----( I_IALG )-----*/
 //cuando tenga la libreria de memoria paso todo a variable, por ahora con define
