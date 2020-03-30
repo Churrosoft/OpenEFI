@@ -12,12 +12,8 @@
 #include "control_interface.h"
 
 //Variables de todo el socotroco:
-struct dataBuffer{
-    char buffer[128];
-    int dataSize;
-} buffer = {
-    {}, 0
-};
+char frameBuffer[128] = {};
+int  buffLength = 0;
 
 
 /** Procesa comandos.
@@ -96,23 +92,14 @@ void send_message(usbd_device *usbd_dev, SerialMessage* message){
 }
 
 bool get_frame(char *tempbuf, int len){
-    if ((buffer.dataSize + len) <= 128){
-        memcpy(buffer.buffer + buffer.dataSize, tempbuf, len);
-        buffer.dataSize += len;
-        if(buffer.dataSize >= 128){
+    if ((buffLength + len) <= 128){
+        memcpy(frameBuffer + buffLength, tempbuf, len);
+        buffLength += len;
+        if(buffLength >= 128){
             return true;
         }
     }
     return false;
-}
-
-char *get_msg(){
-    return buffer.buffer;
-}
-
-void clear_msg(){
-    memset(buffer.buffer, 0, buffer.dataSize);
-    buffer.dataSize = 0;
 }
 
 uint16_t crc16(const unsigned char* data_p, uint8_t length){

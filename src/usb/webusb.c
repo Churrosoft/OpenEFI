@@ -94,8 +94,10 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
 	if (len > 0){
 		if (get_frame(tempbuf2, len)){
 			// Cuando ya tenemos un frame completo, lo procesamos.
-			process_frame(usbd_dev, (SerialMessage *) get_msg());
-			clear_msg();
+			process_frame(usbd_dev, (SerialMessage *) &frameBuffer);
+			
+            memset(frameBuffer, 0, buffLength);
+            buffLength = 0;
 		}
 		memset(tempbuf2, 0, len);
 		len = 0;
