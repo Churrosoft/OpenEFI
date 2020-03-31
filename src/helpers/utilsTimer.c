@@ -1,5 +1,13 @@
+#ifndef UTILSTIMER
+#define UTILSTIMER
+
+#include <libopencm3/cm3/nvic.h>
 #include <libopencm3/cm3/systick.h>
-#include "variables.h"
+#include "../variables.h"
+/* 
+ *Inicia el systick para contar los uS | mS desde que inicio todo
+*/
+void utils_timer_setup(void);
 
 void sys_tick_handler(void){
 	Time.temp++;
@@ -10,7 +18,7 @@ void sys_tick_handler(void){
 	}
 }
 
-void utils_timer_setup(){
+void utils_timer_setup(void){
 
     //FIXME: revisar luego si coinciden los tiempos por el cambio a 48Mhz que hace el USB
     /* 72MHz / 8 => 9000000 counts per second */
@@ -21,3 +29,5 @@ void utils_timer_setup(){
 	/* Start counting. */
 	systick_counter_enable();
 }
+
+#endif
