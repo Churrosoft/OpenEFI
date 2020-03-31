@@ -30,6 +30,6 @@ struct UtilsTimer{
 	uint64_t micros;
 	uint32_t millis;
 	uint32_t temp; // NO USAR, se reinicia cada 1mS para millis
-}Time = {0,0};
+}Time = {0,0,0};
 
 #endif
