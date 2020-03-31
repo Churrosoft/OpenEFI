@@ -7,7 +7,7 @@
 #include <libopencm3/usb/cdc.h>
 // Librerias locales
 #include "defines.h"
-//#include "./serial/usb_driver.c"
+#include "./helpers/utilsTimer.c"
 #include "./usb/usb_conf.c"
 #include "./usb/webusb.c"
 #define CPWM_ENABLE
@@ -24,7 +24,9 @@ int main(void){
 	rcc_periph_clock_enable(RCC_GPIOC);
 	gpio_set(GPIOC, GPIO13);
 	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
-
+	// iniciamos el systimer asi podemos contar tambien el bootime:
+	utils_timer_setup();
+	
 	usbd_device* usbd_dev = usb_setup();
 	usbd_dev = usb_setup();
 
@@ -34,7 +36,6 @@ int main(void){
 	c_pwm_setup();
 	#endif
 	gpio_clear(GPIOC, GPIO13);
-
 	while (1){
 		for (i = 0; i < 0x800000; i++){
 			usbd_poll(usbd_dev);
