@@ -10,6 +10,9 @@
 #include "./helpers/utilsTimer.c"
 #include "./usb/usb_conf.c"
 #include "./usb/webusb.c"
+//WIP: Sensores/ADC
+#include "./sensores/utils/input_handler.c"
+
 #define CPWM_ENABLE
 
 #ifdef CPWM_ENABLE
@@ -26,7 +29,7 @@ int main(void){
 	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
 	// iniciamos el systimer asi podemos contar tambien el bootime:
 	utils_timer_setup();
-	
+	adc_setup(); //WIP: Sensores/ADC
 	usbd_device* usbd_dev = usb_setup();
 	usbd_dev = usb_setup();
 
@@ -40,6 +43,7 @@ int main(void){
 		for (i = 0; i < 0x800000; i++){
 			usbd_poll(usbd_dev);
 		}
+		get_input(0); //WIP: Sensores/ADC
 		// TODO: resto del ciclo (obtener data de sensores, calculo de tiempos, etc)
 	}
 }

@@ -10,6 +10,8 @@ struct EMALowPass{
     uint16_t actualValue;
 };
 
+struct EMALowPass EMALowPassFilter(struct EMALowPass);
+
 struct EMALowPass EMALowPassFilter(struct EMALowPass in){
    in.lastValue = EMA_ALPHA * in.actualValue + (1 - EMA_ALPHA) * in.lastValue;
    return in;
