@@ -10,6 +10,8 @@
 #include "./dataStruct/status.h"
 #include "../helpers/bootloader.c"
 #include "control_interface.h"
+// pa los sensores:
+#include "../sensores/utils/input_handler.c"
 
 //Variables de todo el socotroco:
 char frameBuffer[128] = {};
@@ -33,6 +35,7 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
         return;
     }
     Status _status = {{}, 0, 0, 0};
+    int mydata = 0;
     switch (message->protocolVersion){
     case PROTOCOL_VERSION_1:
         switch (message->command){
@@ -48,9 +51,15 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
         case COMMAND_STATUS:
             //switch (message->subcommand){
             //case STATUS_TMP:
+            mydata = get_adc_data(7);
             _status.RPM = _RPM;
-            _status.TEMP = _TEMP;
-            _status.V00 = _V00;
+            _status.TEMP = mydata;
+            
+            if(  get_adc_data(7) > 1500 ){
+		        gpio_toggle(GPIOC, GPIO13);
+                 _status.V00 = 8888;
+	        }
+            _status.V00 = mydata;
             memcpy(response.payload, &_status, 123);
             //    break;
             //default:
