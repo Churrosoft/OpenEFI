@@ -50,6 +50,7 @@ endif
 
 PREFIX		?= arm-none-eabi
 
+AS		:= $(PREFIX)-as
 CC		:= $(PREFIX)-gcc
 CXX		:= $(PREFIX)-g++
 LD		:= $(PREFIX)-gcc
@@ -70,7 +71,8 @@ CSTD		?= -std=c99
 # Source files
 
 OBJS		+= src/$(BINARY).o
-
+SOURCES_AS := $(wildcard ./qfplib/*.s)
+OBJS_AS := $(SOURCES_AS:.s=.o)
 
 ifeq ($(strip $(OPENCM3_DIR)),)
 # user has not specified the library path, so we try to detect it
@@ -225,10 +227,14 @@ print-%:
 	@printf "  OBJDUMP bin/$(*).list\n"
 	$(Q)$(OBJDUMP) -S bin/$(*).elf > bin/$(*).list
 
-%.elf %.map: $(OBJS) $(LDSCRIPT) $(LIB_DIR)/lib$(LIBNAME).a
+%.elf %.map: $(OBJS_AS) $(OBJS) $(LDSCRIPT) $(LIB_DIR)/lib$(LIBNAME).a
 	@mkdir -p bin
 	@printf "  LD        bin/$(*).elf\n"
-	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o bin/$(*).elf
+	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS_AS) $(OBJS) $(LDLIBS) -o bin/$(*).elf
+
+%.o: %.s %.h
+	@printf "  AS        $(*).s\n"
+	$(Q)$(AS) -o $(*).o $(*).s
 
 %.o: %.c $(LIB_DIR)/lib$(LIBNAME).a
 	@printf "  CC        $(*).c\n"
@@ -244,7 +250,7 @@ print-%:
 
 clean:
 	@printf "  CLEAN\n"
-	$(Q)$(RM) bin/* src/*.o src/*.d src/*.map generated.* ${OBJS} ${OBJS:%.o:%.d}
+	$(Q)$(RM) bin/* src/*.o src/*.d src/*.map generated.* ${OBJS} ${OBJS_AS} ${OBJS:%.o:%.d}
 
 stylecheck: $(STYLECHECKFILES:=.stylecheck)
 styleclean: $(STYLECHECKFILES:=.styleclean)
