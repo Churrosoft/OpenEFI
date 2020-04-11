@@ -4,3 +4,4 @@
 [submodule "qfplib"]
 	path = qfplib
 	url = https://github.com/openefi/qfplib
+	ignore = dirty
