@@ -23,13 +23,13 @@
 
 #define PMSI 80  //Cantidad de dientes entre PMS
 
-#define C_PWM_INY_PORT GPIOA // puerto de los pines de inyeccion
-#define C_PWM_INY { GPIO2, GPIO3, GPIO4, GPIO5 } //  pines del STM32 para la inyeccion
+#define C_PWM_INY_PORT GPIOA // puerto de los pines de inyeccion 2 3 4 5  2 4 5 3
+#define C_PWM_INY { GPIO2, GPIO4, GPIO5, GPIO3 } //  pines del STM32 para la inyeccion
 #define C_PWM_ECN_PORT GPIOC // puerto de los pines de encendido
 #define C_PWM_ECN { GPIO15, GPIO14 } // pines del STM32 para el encendido
 
 // Inyeción:
-#define AVCI 10  //avance de inyeccion (si queres quemar las valvulas dejalo en 0)
+#define AVCI 30  //avance de inyeccion (si queres quemar las valvulas dejalo en 0)
 
 // Encendido:
 #define ECNT 7 //tiempo en ms que se prende la bobina (cambie a su riesgo)
@@ -66,5 +66,11 @@
 #define DFCO 1 //ni puta idea
 #define DE 1 // ni puta idea x2
 #define TBM 1 //turbo boost multiplier DEJAR EN 1 CARAJO, que sino rompes todo
+
+/*-----( input_handler )-----*/
+// R2 = R1 * (1 / ((Vref / Vin) - 1)
+#define R1 10000 // para testear ahora todos los sensores tienen una resitencia de 10k en el divisor resistivo
+#define Vref 3300 //Volts del Vref del ADC, luego se puede reemplazar por el registro para que sea mas exacto
+#define ADC_MAX_VALUE 4095 //valor maximo del ADC, a 12 bit es 4095
 
 #endif

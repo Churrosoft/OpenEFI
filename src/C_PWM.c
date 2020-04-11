@@ -28,7 +28,7 @@ struct C_PWM{
 	#endif
 
 }myPWM = {
-	0,0,0,C_PWM_INY,150
+	0,0,0,C_PWM_INY,1500
 	#if mtr == 1
 	,0,0,0,C_PWM_ECN,15
 	#endif
@@ -67,14 +67,18 @@ static void tim_setup(){
 		TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
 	//FIXME con el reloj a 48Mhz por el usb estos tiempos cambian, calcular tick a 0.5ms de ser posible
 	/*
-	 * 17580 = 1,139mS period 65599
+	 * 17580 = 1,139mS period 65599 8000000
 	 * 17599 = 1.138mS period 65599
 	 * 8800  = 0.8mS period 65599
+	 * var on 500 uS (test time):  	| 1500 uS
+	 * 32000: period
+	 * 450000: prescaler
+	 * 564.6 uS: realtime			| 1690 uS: realtime
 	 */
-	timer_set_prescaler(TIM2, ((rcc_apb1_frequency ) / 17580));
+	timer_set_prescaler(TIM2, ((rcc_apb1_frequency ) / 502400));
 	timer_disable_preload(TIM2);
 	timer_continuous_mode(TIM2);
-	timer_set_period(TIM2, 65599);
+	timer_set_period(TIM2, 32000);
 	// TIMER 3
 	rcc_periph_clock_enable(RCC_TIM3);
 	nvic_enable_irq(NVIC_TIM3_IRQ);
@@ -155,11 +159,11 @@ void new_ecn_time(unsigned long nTime){
 void exti0_isr(){
 	myPWM.inyFlag++;
 	if(myPWM.inyFlag >= (PMSI - AVCI)){
+		if(myPWM.inySubFlagA > CIL) myPWM.inySubFlagA = 0;
 		gpio_set(C_PWM_INY_PORT, myPWM.inyPins[myPWM.inySubFlagA]);
 		//CHIMER
 		new_iny_time(myPWM.time);
 		myPWM.inySubFlagA++;
-		if(myPWM.inySubFlagA > CIL) myPWM.inySubFlagA = 0;
 		myPWM.inyFlag = 0;
 	}
 #if mtr == 1
@@ -167,7 +171,7 @@ void exti0_isr(){
 	if(myPWM.ecnFlag >= (PMSI - myPWM.avc)){
 		gpio_clear(C_PWM_ECN_PORT, myPWM.ecnPins[myPWM.ecnSubFlagA]);
 		//CHIMER
-		new_ecn_time(ECNT);
+		new_ecn_time(15);
 		myPWM.ecnSubFlagA++;
 		if(myPWM.ecnSubFlagA > (CIL/2) ) myPWM.ecnSubFlagA = 0;
 		myPWM.ecnFlag = 0;

@@ -12,7 +12,7 @@
 #include "control_interface.h"
 // pa los sensores:
 #include "../sensores/utils/input_handler.c"
-
+#include "../helpers/qfplib/qfplib-m3.h"
 //Variables de todo el socotroco:
 char frameBuffer[128] = {};
 int  buffLength = 0;
@@ -35,7 +35,6 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
         return;
     }
     Status _status = {{}, 0, 0, 0};
-    int mydata = 0;
     switch (message->protocolVersion){
     case PROTOCOL_VERSION_1:
         switch (message->command){
@@ -51,15 +50,17 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
         case COMMAND_STATUS:
             //switch (message->subcommand){
             //case STATUS_TMP:
-            mydata = get_adc_data(7);
-            _status.RPM = _RPM;
-            _status.TEMP = mydata;
+            _status.RPM = thermistor_get_temperature( get_input(7));
+            _status.TEMP =  15;
             
             if(  get_adc_data(7) > 1500 ){
 		        gpio_toggle(GPIOC, GPIO13);
-                 _status.V00 = 8888;
+               //  _status.V00 = 88;
 	        }
-            _status.V00 = mydata;
+            _status.V00 = 
+                convert_to_resistance(
+                    get_input(7)
+               );
             memcpy(response.payload, &_status, 123);
             //    break;
             //default:
