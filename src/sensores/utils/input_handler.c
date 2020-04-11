@@ -10,7 +10,7 @@
 // custom:
 #include "./ema_low_pass.c"
 #include "../../defines.h"
-#include "../../helpers/qfplib/qfplib-m3.h"
+#include "../../../qfplib/qfplib-m3.h"
 struct input_handler{
 	/* data */
 	struct EMALowPass values[16]; // valores pasados por EMA Low Pass
@@ -30,7 +30,8 @@ void input_setup(void);
  *  @param in : valor del adc a convertir
  */
 uint16_t convert_to_volt(uint16_t);
-
+uint16_t convert_to_resistance(uint16_t);
+uint16_t thermistor_get_temperature(int32_t);
 
 uint16_t get_input(uint8_t pin){
 	/*

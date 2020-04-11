@@ -12,7 +12,7 @@
 #include "control_interface.h"
 // pa los sensores:
 #include "../sensores/utils/input_handler.c"
-#include "../helpers/qfplib/qfplib-m3.h"
+#include "../../qfplib/qfplib-m3.h"
 //Variables de todo el socotroco:
 char frameBuffer[128] = {};
 int  buffLength = 0;
@@ -61,7 +61,7 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
                 convert_to_resistance(
                     get_input(7)
                );
-            memcpy(response.payload, &_status, 123);
+            memcpy(response.payload, &_status, 122);
             //    break;
             //default:
             //    response.command = COMMAND_ERR;

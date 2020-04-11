@@ -1,3 +1,6 @@
 [submodule "libopencm3"]
 	path = libopencm3
 	url = https://github.com/libopencm3/libopencm3
+[submodule "qfplib"]
+	path = qfplib
+	url = https://github.com/openefi/qfplib
