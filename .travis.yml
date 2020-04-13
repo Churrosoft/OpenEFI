@@ -10,7 +10,7 @@ env:
   global:
     - GH_REPO_NAME: <OpenEFI>
     - DOXYFILE: $TRAVIS_BUILD_DIR/Doxyfile
-    - GH_REPO_REF: https://github.com/openefi/OpenEFI.git
+    - GH_REPO_REF: github.com/openefi/OpenEFI.git
 
 addons:
   apt:
