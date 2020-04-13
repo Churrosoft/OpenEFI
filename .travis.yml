@@ -1,11 +1,34 @@
 language: c
-script:
-  - make
+
+# Blacklist
+branches:
+  except:
+    - gh-pages
+
+# Environment variables
+env:
+  global:
+    - GH_REPO_NAME: <OpenEFI>
+    - DOXYFILE: $TRAVIS_BUILD_DIR/Doxyfile
+    - GH_REPO_REF: github.com/OpenEFI/OpenEFI.git
 
 addons:
   apt:
     sources:
     - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
     packages:
-    - gcc-arm-embedded
+      - gcc-arm-embedded
+      - doxygen
+      - doxygen-doc
+      - doxygen-latex
+      - doxygen-gui
+      - graphviz
 
+script:
+  - make
+
+# Generate and deploy documentation
+after_success:
+  - cd $TRAVIS_BUILD_DIR
+  - chmod +x generateDocumentationAndDeploy.sh
+  - ./generateDocumentationAndDeploy.sh

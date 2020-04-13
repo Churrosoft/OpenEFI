@@ -1,3 +1,4 @@
+/** @file */
 // Acá todos los defines
 #ifndef DEFINES_H
 #define DEFINES_H
@@ -9,11 +10,11 @@
 
 /*-----(Globales )-----*/
 
-#define mtr 1           //habilita encendido
-#define CIL 4           //cantidad de cilindros o pistones, o camaras de combustion, etc ?)
-#define L_CIL (CIL - 1) //cilindros logicos, para manejar arrays y demases
-#define DNT 300          //cantidad de dientes del sensor CKP
-#define Alpha 1         //modo para pobrar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
+#define mtr 1            //!< habilita encendido
+#define CIL 4            //!< cantidad de cilindros o pistones, o camaras de combustion, etc ?)
+#define L_CIL (CIL - 1)  //!< cilindros logicos, para manejar arrays y demases
+#define DNT 300          //!< cantidad de dientes del sensor CKP
+#define Alpha 1          //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 
 /*-----( RPM )-----*/
 

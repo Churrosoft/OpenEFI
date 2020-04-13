@@ -26,7 +26,7 @@ uint16_t get_adc_data(uint8_t);
 /** inicia el ADC y los trigers por tiempo
 */
 void input_setup(void);
-/** Convierte valor del ADC a volt:
+/** @brief Convierte valor del ADC a volt:
  *  @param in : valor del adc a convertir
  */
 uint16_t convert_to_volt(uint16_t);
