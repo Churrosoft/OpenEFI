@@ -8,7 +8,7 @@ branches:
 # Environment variables
 env:
   global:
-    - GH_REPO_NAME: <OpenEFI>
+    - GH_REPO_NAME: OpenEFI
     - DOXYFILE: $TRAVIS_BUILD_DIR/Doxyfile
     - GH_REPO_REF: github.com/openefi/OpenEFI.git
 
