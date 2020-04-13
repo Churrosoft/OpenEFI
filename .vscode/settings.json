@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "qfplib-m3.h": "c",
+        "rcc.h": "c"
+    }
+}
