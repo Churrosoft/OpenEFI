@@ -50,7 +50,7 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
         case COMMAND_STATUS:
             //switch (message->subcommand){
             //case STATUS_TMP:
-            _status.RPM = thermistor_get_temperature( get_input(7));
+            _status.RPM = thermistor_get_temperature( convert_to_resistance (get_input(7)));
             _status.TEMP =  15;
             
             if(  get_adc_data(7) > 1500 ){

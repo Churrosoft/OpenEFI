@@ -73,5 +73,5 @@
 #define R1 10000 // para testear ahora todos los sensores tienen una resitencia de 10k en el divisor resistivo
 #define Vref 3300 //Volts del Vref del ADC, luego se puede reemplazar por el registro para que sea mas exacto
 #define ADC_MAX_VALUE 4095 //valor maximo del ADC, a 12 bit es 4095
-
+float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
 #endif

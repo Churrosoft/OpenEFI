@@ -20,17 +20,26 @@ struct input_handler{
   * @param pin entrada analogica a leer
 */
 uint16_t get_input(uint8_t);
-/** devuelve data RAW del adc
+/** @return ADC register data
 */
 uint16_t get_adc_data(uint8_t);
-/** inicia el ADC y los trigers por tiempo
+
+/** @brief inicia el ADC y los trigers por tiempo
 */
 void input_setup(void);
+
 /** @brief Convierte valor del ADC a volt:
  *  @param in : valor del adc a convertir
+ *  @return mV convertidos
  */
 uint16_t convert_to_volt(uint16_t);
+
+/** @brief Convierte valor del ADC a resistencia:
+ *  @param in : valor del adc a convertir
+ *  @return resistencia en Ohm
+ */
 uint16_t convert_to_resistance(uint16_t);
+
 uint16_t thermistor_get_temperature(int32_t);
 
 uint16_t get_input(uint8_t pin){
@@ -45,10 +54,10 @@ uint16_t get_input(uint8_t pin){
         break;
     } */
 
-	if(pin < 16){
-		for(uint8_t i = 0; i < 5; i++){
+	if (pin < 16){
+		for (uint8_t i = 0; i < 5; i++){
 			inputs.values[pin].actualValue = get_adc_data(7);
-        	inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
+			inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
 		}
 		return inputs.values[pin].lastValue;
 	}
@@ -82,14 +91,6 @@ static void adc_setup(void){
 	while (adc_is_calibrating(ADC1));
 }
 
-uint16_t convert_to_resistance(uint16_t adcval){
-  return (uint16_t) ( (R1 * ADC_MAX_VALUE) / adcval) - R1; //para resistencia pullUp dividir R1
-}
-
-uint16_t convert_to_volt(uint16_t in){
-	return (uint16_t)(in * Vref / ADC_MAX_VALUE);
-}
-
 uint16_t get_adc_data(uint8_t channel){
 	adc_set_sample_time(ADC1, channel, ADC_SMPR_SMP_239DOT5CYC);
 	adc_set_regular_sequence(ADC1, 1, &channel);
@@ -98,11 +99,5 @@ uint16_t get_adc_data(uint8_t channel){
 	return (uint16_t)adc_read_regular(ADC1);
 }
 
-uint16_t thermistor_get_temperature(int32_t resistance){
-  double temp = qfp_fln(resistance);//
-  // http://en.wikipedia.org/wiki/Steinhart–Hart_equation
-  temp = 1 / (0.001129148 + (0.000234125 + (0.0000000876741 * temp * temp ) )* temp );
-  return (uint16_t)(temp - 273.15) * 100;
-}
 
 #endif
