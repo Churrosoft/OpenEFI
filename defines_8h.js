@@ -38,5 +38,11 @@ var defines_8h =
     [ "TARR", "defines_8h.html#a698407f02f93ff281de909fce7c8eddd", null ],
     [ "TARR2", "defines_8h.html#a1f5d37e3ac0b2274dde5dc11dd123224", null ],
     [ "TBM", "defines_8h.html#a8da074f500518e5192b018532a679406", null ],
-    [ "Vref", "defines_8h.html#a7c4a8191a821caeaf796e5dbef63750d", null ]
+    [ "Vref", "defines_8h.html#a7c4a8191a821caeaf796e5dbef63750d", null ],
+    [ "A", "defines_8h.html#ad0fae016647bf6b083c331ca152b50e1", null ],
+    [ "B", "defines_8h.html#a8188fea1f6709096fe21a3ee084d00d0", null ],
+    [ "C", "defines_8h.html#ad12b105c602c51bd04d7763f600688cc", null ],
+    [ "K", "defines_8h.html#a58122f7e1c43eecec768d649fef79876", null ],
+    [ "Rc", "defines_8h.html#ae0420c679b1c06dc712b04e5608e742a", null ],
+    [ "Vcc", "defines_8h.html#a1355badf6ff38ca8d4a1dfd59f8971bd", null ]
 ];
