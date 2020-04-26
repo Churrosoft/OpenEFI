@@ -12,6 +12,7 @@
 #include "control_interface.h"
 // pa los sensores:
 #include "../sensores/utils/input_handler.c"
+#include "../sensores/utils/basic_electronics.c"
 #include "../../qfplib/qfplib-m3.h"
 //Variables de todo el socotroco:
 char frameBuffer[128] = {};
@@ -48,26 +49,15 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
             response.payload[2] = OPENEFI_VER_REV;
             break;
         case COMMAND_STATUS:
-            //switch (message->subcommand){
-            //case STATUS_TMP:
-            _status.RPM = thermistor_get_temperature( convert_to_resistance (get_input(7)));
+            _status.RPM = thermistor_get_temperature ( get_input(7));
             _status.TEMP =  15;
             
-            if(  get_adc_data(7) > 1500 ){
-		        gpio_toggle(GPIOC, GPIO13);
-               //  _status.V00 = 88;
-	        }
+
             _status.V00 = 
                 convert_to_resistance(
                     get_input(7)
                );
             memcpy(response.payload, &_status, 122);
-            //    break;
-            //default:
-            //    response.command = COMMAND_ERR;
-            //    response.subcommand = ERROR_INVALID_COMMAND;
-            //    break;
-            //}
             break;
         case COMMAND_BOOTL_SW:
             // Escribimos los bytes mágicos en los registros backup rtc

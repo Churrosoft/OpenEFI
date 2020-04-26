@@ -28,19 +28,6 @@ uint16_t get_adc_data(uint8_t);
 */
 void input_setup(void);
 
-/** @brief Convierte valor del ADC a volt:
- *  @param in : valor del adc a convertir
- *  @return mV convertidos
- */
-uint16_t convert_to_volt(uint16_t);
-
-/** @brief Convierte valor del ADC a resistencia:
- *  @param in : valor del adc a convertir
- *  @return resistencia en Ohm
- */
-uint16_t convert_to_resistance(uint16_t);
-
-uint16_t thermistor_get_temperature(int32_t);
 
 uint16_t get_input(uint8_t pin){
 	/*
