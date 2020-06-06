@@ -8,7 +8,7 @@
  * @param grad grados a convertir
  * @return dientes equivalentes al angulo
 */ 
-uint_fast16_t grad_to_dnt( uint16_t );
+uint_fast16_t grad_to_dnt( float );
 
 //convierte grados en dientes del sensor hall
 int dientes(float grados){
@@ -20,7 +20,7 @@ int dientes(float grados){
     return dnt2;
 }
 
-uint_fast16_t grad_to_dnt( uint16_t grad){
+uint_fast16_t grad_to_dnt( float grad){
     return (uint_fast16_t) grad / (360 / DNT);
 }
 // OLD code:

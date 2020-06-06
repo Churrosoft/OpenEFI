@@ -22,6 +22,8 @@
 
 /*-----( C_PWM )-----*/
 
+#define CPWM_ENABLE     //!<Habilita el control de PWM
+
 #define PMSI 80  //Cantidad de dientes entre PMS
 
 #define C_PWM_INY_PORT GPIOA // puerto de los pines de inyeccion 2 3 4 5  2 4 5 3

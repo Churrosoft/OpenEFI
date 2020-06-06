@@ -8,9 +8,9 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/adc.h>
 // custom:
-#include "./ema_low_pass.c"
-#include "../../defines.h"
-#include "../../../qfplib/qfplib-m3.h"
+#include "./utils/ema_low_pass.c"
+#include "../defines.h"
+
 struct input_handler{
 	/* data */
 	struct EMALowPass values[16]; // valores pasados por EMA Low Pass
@@ -30,17 +30,6 @@ void input_setup(void);
 
 
 uint16_t get_input(uint8_t pin){
-	/*
-   el sw para cambiar I/O del 74HC4067 para elegir el canal
-   switch (pin){
-    case 0:
-		
-        break;
-    
-    default:
-        break;
-    } */
-
 	if (pin < 16){
 		for (uint8_t i = 0; i < 5; i++){
 			inputs.values[pin].actualValue = get_adc_data(7);

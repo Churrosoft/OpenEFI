@@ -171,7 +171,7 @@ void exti0_isr(){
 	if(myPWM.ecnFlag >= (PMSI - myPWM.avc)){
 		gpio_clear(C_PWM_ECN_PORT, myPWM.ecnPins[myPWM.ecnSubFlagA]);
 		//CHIMER
-		new_ecn_time(15);
+		new_ecn_time(15);// => go define
 		myPWM.ecnSubFlagA++;
 		if(myPWM.ecnSubFlagA > (CIL/2) ) myPWM.ecnSubFlagA = 0;
 		myPWM.ecnFlag = 0;
