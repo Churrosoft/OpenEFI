@@ -107,6 +107,7 @@ endef
 ifeq ($(strip $(DEVICE)),)
 # Old style, assume LDSCRIPT exists
 DEFS		+= -I$(OPENCM3_DIR)/include
+DEFS		+= -I$(INCLUDE_DIR2)
 LDFLAGS		+= -L$(OPENCM3_DIR)/lib
 LDFLAGS		+= -L$(LIB_DIR2)
 LDFLAGS		+= -L$(OPENCM3_DIR)/lib/stm32/f1
@@ -146,6 +147,7 @@ TGT_CPPFLAGS	+= -MD
 TGT_CPPFLAGS	+= -Wall -Wundef
 TGT_CPPFLAGS    += -I$(INCLUDE_DIR) $(DEFS)
 TGT_CPPFLAGS    += -I$(INCLUDE_DIR2)
+TGT_CPPFLAGS	+= -l$(LIB_DIR2)
 
 ###############################################################################
 # Linker flags

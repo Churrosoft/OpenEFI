@@ -1,15 +1,15 @@
 #ifndef SENSORS_H
 #define SENSORS_H
-
+//#include "sensors.cpp"
 namespace sensors
 {
     /** @brief Setup inicial de todos los sensores
     */
-    static void setup(void);
+     void setup(void);
 
     /** @brief Loop principal de los sensores, corre cada 250mS
       */
-    static void loop(void);
+     void loop(void);
 
 } // namespace sensors
 

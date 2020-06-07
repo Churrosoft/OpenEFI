@@ -10,6 +10,7 @@
 // custom:
 #include "./utils/ema_low_pass.c"
 #include "defines.h"
+#include "sensors.hpp"
 
 struct input_handler{
 	/* data */
@@ -30,6 +31,7 @@ void input_setup(void);
 
 
 uint16_t get_input(uint8_t pin){
+	sensors::setup();
 	if (pin < 16){
 		for (uint8_t i = 0; i < 5; i++){
 			inputs.values[pin].actualValue = get_adc_data(7);
