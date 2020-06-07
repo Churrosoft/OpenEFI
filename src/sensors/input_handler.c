@@ -9,7 +9,7 @@
 #include <libopencm3/stm32/adc.h>
 // custom:
 #include "./utils/ema_low_pass.c"
-#include "../defines.h"
+#include "defines.h"
 
 struct input_handler{
 	/* data */

@@ -4,7 +4,7 @@
 #include <stdint.h>
 // custom:
 #include "./ema_low_pass.c"
-#include "../../defines.h"
+#include "defines.h"
 #include "../../../qfplib/qfplib-m3.h"
 
 /** @brief Convierte valor del ADC a volt:

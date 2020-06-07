@@ -16,6 +16,8 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -30,7 +32,7 @@
 #include "usb_conf.h"
 
 // Endpoints disponibles
-static const struct usb_endpoint_descriptor data_endp[] = {{
+static const struct usb_endpoint_descriptor data_endp[2] = {{
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
 	.bEndpointAddress = 0x01,

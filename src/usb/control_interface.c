@@ -4,15 +4,15 @@
 #include <libopencm3/cm3/scb.h>
 
 #include "commands.h"
-#include "../defines.h"
+#include "defines.h"
 #include "../variables.h"
 //Structs para formatear data:
 #include "./dataStruct/status.h"
 #include "../helpers/bootloader.c"
 #include "control_interface.h"
 // pa los sensores:
-#include "../sensores/input_handler.c"
-#include "../sensores/utils/basic_electronics.c"
+#include "../sensors/input_handler.c"
+#include "../sensors/utils/basic_electronics.c"
 #include "../../qfplib/qfplib-m3.h"
 //Variables de todo el socotroco:
 char frameBuffer[128] = {};

@@ -10,16 +10,16 @@
 #include "./usb/usb_conf.c"
 #include "./usb/webusb.c"
 //WIP: Sensores/ADC
-#include "./sensores/input_handler.c"
-#include "./helpers/utils.c"
+#include "./sensors/input_handler.c"
+#include "sensors.hpp"
+//#include "./helpers/utils.c"
 #ifdef CPWM_ENABLE
 #include "./C_PWM.c"
 #endif
 
 int main(void){
 	// Test Utils dentro de struct & union:
-	utilstimer
-
+	//utilstimer
 	//int i;
 	// setup inicial de clock, IO y USB
 	rcc_clock_setup_in_hse_8mhz_out_72mhz();
@@ -31,7 +31,7 @@ int main(void){
 	adc_setup(); //WIP: Sensores/ADC
 	usbd_device* usbd_dev = usb_setup();
 	usbd_dev = usb_setup();
-
+	sensors::loop();
 	webusb_setup(usbd_dev);
 	// setup de C_PWM:
 	#ifdef CPWM_ENABLE
