@@ -10,7 +10,7 @@
 // custom:
 #include "./utils/ema_low_pass.c"
 #include "defines.h"
-#include "sensors.hpp"
+#include "sensors.cpp"
 
 struct input_handler{
 	/* data */

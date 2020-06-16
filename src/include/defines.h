@@ -24,12 +24,12 @@
 
 #define CPWM_ENABLE     //!<Habilita el control de PWM
 
-#define PMSI 80  //Cantidad de dientes entre PMS
+#define PMSI 240  //Cantidad de dientes entre PMS
 
-#define C_PWM_INY_PORT GPIOA // puerto de los pines de inyeccion 2 3 4 5  2 4 5 3
-#define C_PWM_INY { GPIO2, GPIO4, GPIO5, GPIO3 } //  pines del STM32 para la inyeccion
-#define C_PWM_ECN_PORT GPIOC // puerto de los pines de encendido
-#define C_PWM_ECN { GPIO15, GPIO14 } // pines del STM32 para el encendido
+#define C_PWM_INY_PORT GPIOB // puerto de los pines de inyeccion 2 3 4 5  2 4 5 3
+#define C_PWM_INY { GPIO6, GPIO4, GPIO5, GPIO3 } //  pines del STM32 para la inyeccion
+#define C_PWM_ECN_PORT GPIOB // puerto de los pines de encendido
+#define C_PWM_ECN { GPIO8, GPIO7 } // pines del STM32 para el encendido
 
 // Inyeción:
 #define AVCI 30  //avance de inyeccion (si queres quemar las valvulas dejalo en 0)

@@ -1,24 +1,25 @@
-#ifndef SENSORS_H
-#define SENSORS_H
-//#include "sensors.cpp"
+#ifndef SENSORS_CPP
+#define SENSORS_CPP
+
 namespace sensors
 {
     /** @brief Setup inicial de todos los sensores
     */
-     void setup(void);
+    static void setup(void);
 
     /** @brief Loop principal de los sensores, corre cada 250mS
       */
-     void loop(void);
+    static void loop(void);
 
 } // namespace sensors
 
-/* static void sensors::loop(){};
+static void sensors::loop(){
+
+};
 
 static void sensors::setup(){
-    input_setup();
-    adc_setup();
+    //input_setup();
+    //adc_setup();
 }
- */
-//void sensors::loop(){};
+
 #endif
