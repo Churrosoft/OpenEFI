@@ -16,7 +16,7 @@ addons:
   apt:
     sources:
     - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
-    - ppa:jonathonf/gcc-9.0
+    - sourceline: 'ppa:jonathonf/gcc-9.0'
     packages:
       - gcc-9
       - gcc-arm-embedded
