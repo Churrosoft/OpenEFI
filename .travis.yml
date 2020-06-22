@@ -1,5 +1,5 @@
 language: c
-
+dist: bionic
 # Blacklist
 branches:
   except:
@@ -16,7 +16,9 @@ addons:
   apt:
     sources:
     - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
+    - ppa:jonathonf/gcc-9.0
     packages:
+      - gcc-9
       - gcc-arm-embedded
       - doxygen
       - doxygen-doc
