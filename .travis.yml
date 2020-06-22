@@ -1,5 +1,5 @@
 language: c
-dist: bionic
+dist: focal
 # Blacklist
 branches:
   except:
@@ -16,10 +16,7 @@ addons:
   apt:
     sources:
       - sourceline: "ppa:team-gcc-arm-embedded/ppa"
-      - sourceline: "ppa:jonathonf/gcc-9.0"
     packages:
-      - gcc-9
-      - g++-9
       - gcc-arm-embedded
       - doxygen
       - doxygen-doc
@@ -27,9 +24,6 @@ addons:
       - doxygen-gui
       - graphviz
 
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install gcc --only-upgrade
 script:
   - make
 
