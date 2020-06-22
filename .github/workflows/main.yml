@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Add repository for toolchain
+        run: sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa & sudo apt-get update
       - name: Install toolchain
         run: sudo apt-get install gcc-arm-embedded
       - name: Build
