@@ -10,7 +10,7 @@
 #include "./usb/usb_conf.c"
 #include "./usb/webusb.c"
 //WIP: Sensores/ADC
-#include "./sensors/input_handler.c"
+#include "./sensors/input_handler.cpp"
 #include "./sensors/sensors.cpp"
 //#include "./helpers/utils.c"
 #ifdef CPWM_ENABLE

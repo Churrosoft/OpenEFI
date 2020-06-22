@@ -11,7 +11,7 @@
 #include "../helpers/bootloader.c"
 #include "control_interface.h"
 // pa los sensores:
-#include "../sensors/input_handler.c"
+#include "../sensors/input_handler.cpp"
 #include "../sensors/utils/basic_electronics.c"
 #include "../../qfplib/qfplib-m3.h"
 //Variables de todo el socotroco:
