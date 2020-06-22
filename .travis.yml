@@ -19,6 +19,7 @@ addons:
     - sourceline: 'ppa:jonathonf/gcc-9.0'
     packages:
       - gcc-9
+      - g++-9
       - gcc-arm-embedded
       - doxygen
       - doxygen-doc
