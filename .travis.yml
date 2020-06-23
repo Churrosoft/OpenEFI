@@ -1,5 +1,5 @@
 language: c
-dist: bionic
+dist: focal
 # Blacklist
 branches:
   except:
@@ -14,17 +14,26 @@ env:
 
 addons:
   apt:
-    sources:
-    - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
-    - sourceline: 'ppa:jonathonf/gcc-9.0'
     packages:
-      - gcc-9
-      - gcc-arm-embedded
+      - wget
+      - libncurses-dev
       - doxygen
       - doxygen-doc
       - doxygen-latex
       - doxygen-gui
       - graphviz
+before_script:
+#gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+  - wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A
+  - sudo tar xjf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C /usr/share/
+  - sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc 
+  - sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-g++ /usr/bin/arm-none-eabi-g++
+  - sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb
+  - sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-size /usr/bin/arm-none-eabi-size
+  - sudo ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
+  - sudo ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+  - arm-none-eabi-gcc --version
+  - arm-none-eabi-g++ --version
 
 script:
   - make
