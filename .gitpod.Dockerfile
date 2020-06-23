@@ -23,9 +23,12 @@ RUN ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-ar /us
 RUN ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-objcopy  /usr/bin/arm-none-eabi-objcopy
 RUN ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
 RUN ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
 RUN arm-none-eabi-gcc --version
 RUN arm-none-eabi-g++ --version
-
+RUN python -V
 RUN gcc -v
 RUN arm-none-eabi-gcc --version
 RUN arm-none-eabi-g++ --version
