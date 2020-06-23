@@ -19,7 +19,7 @@ RUN apk add --quiet --no-cache \
     wget \
     build-base
 
-RUN apk add  gcc-arm-none-eabi --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
+RUN apk add syslinux-dev gcc-arm-none-eabi --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
 RUN python -V
 RUN gcc -v
 RUN arm-none-eabi-gcc --version
