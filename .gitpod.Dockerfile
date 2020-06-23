@@ -17,7 +17,8 @@ RUN apk add --quiet --no-cache \
     pkgconf \
     zlib-dev \
     wget \
-    build-base
+    build-base \
+    python
 
 RUN apk add  gcc-arm-none-eabi --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
 
