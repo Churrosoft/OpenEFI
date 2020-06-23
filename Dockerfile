@@ -17,7 +17,10 @@ RUN apk add --quiet --no-cache \
     pkgconf \
     zlib-dev \
     wget \
-    build-base
+    build-base \
+    clang \
+    g++ \
+    libstdc++
 
 RUN apk add syslinux-dev gcc-arm-none-eabi --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
 RUN python -V
