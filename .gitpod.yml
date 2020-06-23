@@ -2,3 +2,8 @@ image:
   file: .gitpod.Dockerfile
 tasks:
   - init: make
+
+vscode:
+  extensions:
+    - zhuangtongfa.material-theme@3.8.2:KbEIml+/ULXmHiBlf4RoOQ==
+    - PKief.material-icon-theme@4.2.0:BMxWnfsRyjgBONLuFiMF4g==

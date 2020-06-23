@@ -10,7 +10,8 @@ RUN apt-get update \
     make \
     git \
     gcc \
-    g++
+    g++ \
+    clangd
 
 RUN wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
 RUN tar xjf ./gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2 -C /usr/share/
