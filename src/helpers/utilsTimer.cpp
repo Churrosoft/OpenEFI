@@ -3,7 +3,7 @@
 
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/cm3/systick.h>
-#include "../../variables.h"
+#include "variables.h"
 #include "../sensors/sensors.cpp"
 /* 
  *Inicia el systick para contar los uS | mS desde que inicio todo

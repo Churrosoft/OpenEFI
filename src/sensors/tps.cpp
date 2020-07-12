@@ -56,7 +56,7 @@ uint8_t TPS::dtc(uint16_t in1)
     return 0;
 }
 
-uint8_t TPS::dtc(uint16_t in1)
+uint8_t TPS::dtc(uint16_t in1, uint16_t in2)
 {
     //TODO: laburar x1
     return 0;

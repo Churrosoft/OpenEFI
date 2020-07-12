@@ -1,11 +1,10 @@
 /* USB Control Interface command processing. */
-#include "../variables.h"
 #include <string.h>
 #include <libopencm3/cm3/scb.h>
 
 #include "commands.h"
 #include "defines.h"
-#include "../variables.h"
+#include "variables.h"
 //Structs para formatear data:
 #include "./dataStruct/status.h"
 #include "../helpers/bootloader.c"

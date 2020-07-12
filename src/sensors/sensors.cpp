@@ -34,6 +34,10 @@ static void sensors::loop()
 #endif
 };
 
+static void sensors::loop_low_priority()
+{
+}
+
 static void sensors::setup()
 {
   input_setup();
