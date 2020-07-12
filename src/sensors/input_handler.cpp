@@ -65,7 +65,6 @@ void input_setup()
 
 static void adc_setup(void)
 {
-	input_setup();
 	rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC1EN);
 	adc_power_off(ADC1);
 	rcc_peripheral_reset(&RCC_APB2RSTR, RCC_APB2RSTR_ADC1RST);

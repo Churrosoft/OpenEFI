@@ -8,7 +8,7 @@
 #define OPENEFI_VER_MINOR 0
 #define OPENEFI_VER_REV 3
 
-/*-----(Globales )-----*/
+/*-----( Globales )-----*/
 
 #define mtr 1           //!< habilita encendido
 #define CIL 4           //!< cantidad de cilindros o pistones, o camaras de combustion, etc ?)
@@ -69,7 +69,7 @@
 #define DE 1   // ni puta idea x2
 #define TBM 1  //turbo boost multiplier DEJAR EN 1 CARAJO, que sino rompes todo
 
-/*-----( input_handler )-----*/
+/*-----( Sensors )-----*/
 
 //  ADC:
 // R2 = R1 * (1 / ((Vref / Vin) - 1)
@@ -78,7 +78,16 @@
 #define ADC_MAX_VALUE 4095  //!< valor maximo del ADC, a 12 bit es 4095
 
 //  TPS:
-#define TPS_DUAL false      //!< Habilita el TPS doble, requiere remapeo de IO
+#define TPS_DUAL false       //!< Habilita el TPS doble, requiere remapeo de IO
+
+#define TPS_MIN_A 1700       //!< Valor minimo en mV para el sensor TPS (primer potenciometro); valores inferiores disparan DTC
+#define TPS_MIN_B 1700       //!< Valor minimo en mV para el sensor TPS (segundo potenciometro); valores inferiores disparan DTC
+#define TPS_MAX_A 4500       //!< Valor maximo en mV para el sensor TPS (primer potenciometro); valores superiores disparan DTC
+#define TPS_MAX_B 4500       //!< Valor maximo en mv para el sensor TPS (segundo potenciometro); valores superiores disparan DTC
+
+// qfp_fadd: suma | qfp_fdiv: division | qfp_fmul: multiplicacion | qfp_fln: logaritmo natural | qfp_fsub: resta
+#define TPS_CALC_FAST( mV ) ( (mV <= 3695) ? qfp_fdiv( qfp_fsub(mV, 1823), 37.44 ) :  qfp_fdiv( qfp_fsub(mV, 2943), 15.04 )  )
+#define TPS_CALC_A( mV )  ( (mV <= 3695) ?  (mV - 1823) / 37.44 :  (mV - 2943) / 15.04 ) //!< Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO MANDES UN MAP() DE ARDUINO ACA
 
 //  Sensor NTC
 float A = 1.12492089e-3;

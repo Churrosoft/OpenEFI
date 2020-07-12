@@ -12,7 +12,7 @@
 //WIP: Sensores/ADC
 #include "./sensors/input_handler.cpp"
 #include "./sensors/sensors.cpp"
-//#include "./helpers/utils.c"
+#include "./helpers/utilsTimer.cpp"
 #ifdef CPWM_ENABLE
 #include "./C_PWM.c"
 #endif
@@ -27,7 +27,7 @@ int main(void)
 	rcc_periph_clock_enable(RCC_GPIOC);
 	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
 	// iniciamos el systimer asi podemos contar tambien el bootime:
-	//utils_timer_setup();
+	utils_timer_setup();
 	adc_setup(); //WIP: Sensores/ADC
 	usbd_device *usbd_dev = usb_setup();
 	usbd_dev = usb_setup();
@@ -46,7 +46,7 @@ int main(void)
 
 	while (1)
 	{
-		//utils_timer_loop();
+		utils_timer_loop();
 		usbd_poll(usbd_dev);
 		/*
 			for (i = 0; i < 0x800000; i++){
