@@ -14,9 +14,6 @@ void utils_timer_setup(void);
  */
 void utils_timer_loop(void);
 
-//variables para almacenar los tiempos anteriores para la logica de utils_timer_loop
-uint32_t TimerTriggers[4]; //BUG: estan al dope
-
 void sys_tick_handler(void)
 {
 	Time.temp++;
@@ -44,7 +41,7 @@ void utils_timer_setup(void)
 void utils_timer_loop(void)
 {
 	// en teoria: puedo dividir el tiempo actual , y con el resto, fijarme si coincide o no:
-	//ex T = 3500 % 500 => cada 500mS
+	//ex T = 3500 % 500 == 0 => cada 500mS
 	if (Time.millis % 75 == 0)
 		sensors::loop();
 	if (Time.millis % 150 == 0)

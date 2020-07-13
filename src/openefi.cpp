@@ -10,18 +10,15 @@
 #include "./usb/usb_conf.c"
 #include "./usb/webusb.c"
 //WIP: Sensores/ADC
-#include "./sensors/input_handler.cpp"
 #include "./sensors/sensors.cpp"
 #include "./helpers/utilsTimer.cpp"
+
 #ifdef CPWM_ENABLE
 #include "./C_PWM.c"
 #endif
 
 int main(void)
 {
-	// Test Utils dentro de struct & union:
-	//utilstimer
-	//int i;
 	// setup inicial de clock, IO y USB
 	rcc_clock_setup_in_hse_8mhz_out_72mhz();
 	rcc_periph_clock_enable(RCC_GPIOC);
@@ -38,11 +35,6 @@ int main(void)
 	c_pwm_setup();
 #endif
 	// ---- fin del setup ----
-	gpio_clear(GPIOC, GPIO13);
-	gpio_set(C_PWM_ECN_PORT, GPIO6);
-	gpio_set(C_PWM_ECN_PORT, GPIO4);
-	gpio_set(C_PWM_ECN_PORT, GPIO5);
-	gpio_set(C_PWM_ECN_PORT, GPIO3);
 
 	while (1)
 	{
