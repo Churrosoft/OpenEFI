@@ -48,6 +48,7 @@
 #define ARRTp 45   //temperatura para definir si es arranque en frio o en caliente
 #define TARR 3500  //tiempo de inyeccion para arranque (frio)
 #define TARR2 2500 //tiempo de inyeccion para arranque (caliente)
+
 /*-----( Variables _LMB )-----*/
 
 #define LMBM false //en true si se utilizan las dos sondas lambda
@@ -85,15 +86,23 @@
 #define TPS_MAX_A 4500       //!< Valor maximo en mV para el sensor TPS (primer potenciometro); valores superiores disparan DTC
 #define TPS_MAX_B 4500       //!< Valor maximo en mv para el sensor TPS (segundo potenciometro); valores superiores disparan DTC
 
-// qfp_fadd: suma | qfp_fdiv: division | qfp_fmul: multiplicacion | qfp_fln: logaritmo natural | qfp_fsub: resta
 #define TPS_CALC_FAST( mV ) ( (mV <= 3695) ? qfp_fdiv( qfp_fsub(mV, 1823), 37.44 ) :  qfp_fdiv( qfp_fsub(mV, 2943), 15.04 )  )
 #define TPS_CALC_A( mV )  ( (mV <= 3695) ?  (mV - 1823) / 37.44 :  (mV - 2943) / 15.04 ) //!< Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO MANDES UN MAP() DE ARDUINO ACA
 
-//  Sensor NTC
+//  TEMP:
+#define TEMP_MIN 800
+#define TEMP_MAX 4800
+
 float A = 1.12492089e-3;
 float B = 2.372075385e-4;
 float C = 6.954079529e-8;
 //float C = 2.019202697e-07; // Modelo B de NTC
-float K = 2.5; //factor de disipacion en mW/C
+#define TEMP_K  2.5 //factor de disipacion en mW/C
+
+//  MAP:
+#define MAP_MIN 800
+#define MAP_MAX 4800
+
+#define MAP_CAL( mV ) ( mV * 4 )
 
 #endif

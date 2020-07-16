@@ -20,7 +20,7 @@
 #include "webusb.h"
 
 #include "usb_conf.h"
-#include "control_interface.c"
+#include "control_interface.cpp"
 
 #ifndef LANDING_PAGE_URL
 #define LANDING_PAGE_URL "tuner.openefi.xyz/"

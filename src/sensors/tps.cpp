@@ -1,7 +1,6 @@
 #ifndef TPS_CPP
 #define TPS_CPP
 #include <stdint.h>
-#include <compare>
 #include "./utils/basic_electronics.c"
 /*
     todo el codigo relacionado al control del sensor "TPS"

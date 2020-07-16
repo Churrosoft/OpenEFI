@@ -1,5 +1,6 @@
 #include "./input_handler.cpp"
 #include "./tps.cpp"
+#include "./temp.cpp"
 #include "defines.h"
 
 #ifndef SENSORS_CPP
@@ -21,6 +22,7 @@ namespace sensors
   {
     uint8_t TPS;
     uint16_t MAP;
+    uint16_t TEMP;
   } values{0, 0};
 
 } // namespace sensors
@@ -36,6 +38,7 @@ static void sensors::loop()
 
 static void sensors::loop_low_priority()
 {
+  values.TEMP = TEMP::get_value(get_input(6));
 }
 
 static void sensors::setup()

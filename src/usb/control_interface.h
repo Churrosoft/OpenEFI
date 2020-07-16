@@ -12,11 +12,17 @@ typedef struct {
     // CRC16 del mensaje
     uint16_t checksum;
 } SerialMessage;
+struct usb_spam_interface
+{
+    bool spam;
+    uint16_t type;
+} usb_spam{0,0};
 
 bool get_frame(char*, int);
 char *get_msg(void);
 void clear_msg(void);
 void send_message(usbd_device*, SerialMessage*);
 void process_frame(usbd_device*, SerialMessage*);
+void usb_spam_loop();
 uint16_t crc16(const unsigned char*, uint8_t);
 #endif
