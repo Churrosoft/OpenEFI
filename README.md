@@ -48,3 +48,5 @@ para la configuracion inicial, y para la visualizacion de parametros en tiempo r
 ### ¿tiene soporte para un scanner común?¿cómo se leen los DTC's?
 No, por el momento no tenemos planeado agregar soporte a CAN hasta llegar al MVP, así que no se pueden usar scanners automotrices normales acá
 para leer los DTC se utiliza OpenEFI-Tuner
+
+[![Invitame un café en cafecito.app](https://cdn.cafecito.app/imgs/buttons/button_5.svg)](https://cafecito.app/openefi)
