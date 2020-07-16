@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['ecnflag_37',['ecnFlag',['../structC__PWM.html#a6b4fd2b57fa098738a9151c875fcef5d',1,'C_PWM']]],
-  ['ecnpins_38',['ecnPins',['../structC__PWM.html#addb10bf1c8d33c1f3193c17c2ea62205',1,'C_PWM']]],
-  ['ecnsubflagb_39',['ecnSubFlagB',['../structC__PWM.html#a834c8d7daeba6800e4055f62ce394455',1,'C_PWM']]]
+  ['inypins_57',['inyPins',['../structC__PWM.html#a971dcd6bcf8df62e73d10b7b0c2cd3e3',1,'C_PWM']]],
+  ['inysubflagb_58',['inySubFlagB',['../structC__PWM.html#afea15442fe64fbfb915cefd6538bc1b9',1,'C_PWM']]]
 ];

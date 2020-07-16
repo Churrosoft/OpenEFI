@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenEFI: /home/travis/build/openefi/OpenEFI/src/defines.h File Reference</title>
+<title>OpenEFI: /home/travis/build/openefi/OpenEFI/src/include/defines.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -83,7 +83,8 @@ $(document).ready(function(){initNavTree('defines_8h.html',''); initResizable();
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">defines.h File Reference</div>  </div>
 </div><!--header-->
@@ -125,20 +126,29 @@ Macros</h2></td></tr>
 <tr class="memitem:abe4d4f0baa8393107c2882b58e411fef"><td class="memItemLeft" align="right" valign="top"><a id="abe4d4f0baa8393107c2882b58e411fef"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>RPM_per</b>&#160;&#160;&#160;500</td></tr>
 <tr class="separator:abe4d4f0baa8393107c2882b58e411fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7ea84ea521801063367444a91786f7b"><td class="memItemLeft" align="right" valign="top"><a id="ad7ea84ea521801063367444a91786f7b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad7ea84ea521801063367444a91786f7b">CPWM_ENABLE</a></td></tr>
+<tr class="memdesc:ad7ea84ea521801063367444a91786f7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Habilita el control de PWM. <br /></td></tr>
+<tr class="separator:ad7ea84ea521801063367444a91786f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ea16d89c4d1fb6e827010391c1da564"><td class="memItemLeft" align="right" valign="top"><a id="a3ea16d89c4d1fb6e827010391c1da564"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PMSI</b>&#160;&#160;&#160;80</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a3ea16d89c4d1fb6e827010391c1da564">PMSI</a>&#160;&#160;&#160;240</td></tr>
+<tr class="memdesc:a3ea16d89c4d1fb6e827010391c1da564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cantidad de dientes entre PMS. <br /></td></tr>
 <tr class="separator:a3ea16d89c4d1fb6e827010391c1da564"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad47ff2a360a546f30a9b0bf7552a134c"><td class="memItemLeft" align="right" valign="top"><a id="ad47ff2a360a546f30a9b0bf7552a134c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>C_PWM_INY_PORT</b>&#160;&#160;&#160;GPIOA</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad47ff2a360a546f30a9b0bf7552a134c">C_PWM_INY_PORT</a>&#160;&#160;&#160;GPIOB</td></tr>
+<tr class="memdesc:ad47ff2a360a546f30a9b0bf7552a134c"><td class="mdescLeft">&#160;</td><td class="mdescRight">puerto de los pines de inyeccion 2 3 4 5 2 4 5 3 <br /></td></tr>
 <tr class="separator:ad47ff2a360a546f30a9b0bf7552a134c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0a8b5ede94315145fe1b8dadfd137a7"><td class="memItemLeft" align="right" valign="top"><a id="af0a8b5ede94315145fe1b8dadfd137a7"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>C_PWM_INY</b>&#160;&#160;&#160;{ GPIO2, GPIO4, GPIO5, GPIO3 }</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#af0a8b5ede94315145fe1b8dadfd137a7">C_PWM_INY</a>&#160;&#160;&#160;{ GPIO6, GPIO4, GPIO5, GPIO3 }</td></tr>
+<tr class="memdesc:af0a8b5ede94315145fe1b8dadfd137a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">pines del STM32 para la inyeccion <br /></td></tr>
 <tr class="separator:af0a8b5ede94315145fe1b8dadfd137a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7537c9dfde674e79981817392b56042e"><td class="memItemLeft" align="right" valign="top"><a id="a7537c9dfde674e79981817392b56042e"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>C_PWM_ECN_PORT</b>&#160;&#160;&#160;GPIOC</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a7537c9dfde674e79981817392b56042e">C_PWM_ECN_PORT</a>&#160;&#160;&#160;GPIOB</td></tr>
+<tr class="memdesc:a7537c9dfde674e79981817392b56042e"><td class="mdescLeft">&#160;</td><td class="mdescRight">puerto de los pines de encendido <br /></td></tr>
 <tr class="separator:a7537c9dfde674e79981817392b56042e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdf008185c714e7b6fc86db16294d562"><td class="memItemLeft" align="right" valign="top"><a id="afdf008185c714e7b6fc86db16294d562"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>C_PWM_ECN</b>&#160;&#160;&#160;{ GPIO15, GPIO14 }</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#afdf008185c714e7b6fc86db16294d562">C_PWM_ECN</a>&#160;&#160;&#160;{ GPIO8, GPIO7 }</td></tr>
+<tr class="memdesc:afdf008185c714e7b6fc86db16294d562"><td class="mdescLeft">&#160;</td><td class="mdescRight">pines del STM32 para el encendido <br /></td></tr>
 <tr class="separator:afdf008185c714e7b6fc86db16294d562"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaeb2f99c34c54e97fc729bf4fee024ad"><td class="memItemLeft" align="right" valign="top"><a id="aaeb2f99c34c54e97fc729bf4fee024ad"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>AVCI</b>&#160;&#160;&#160;30</td></tr>
@@ -207,21 +217,81 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>TBM</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a8da074f500518e5192b018532a679406"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a918f64eb53db8e8dc694f36a87646476"><td class="memItemLeft" align="right" valign="top"><a id="a918f64eb53db8e8dc694f36a87646476"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>R1</b>&#160;&#160;&#160;10000</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a918f64eb53db8e8dc694f36a87646476">R1</a>&#160;&#160;&#160;10000</td></tr>
+<tr class="memdesc:a918f64eb53db8e8dc694f36a87646476"><td class="mdescLeft">&#160;</td><td class="mdescRight">para testear ahora todos los sensores tienen una resitencia de 10k en el divisor resistivo <br /></td></tr>
 <tr class="separator:a918f64eb53db8e8dc694f36a87646476"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c4a8191a821caeaf796e5dbef63750d"><td class="memItemLeft" align="right" valign="top"><a id="a7c4a8191a821caeaf796e5dbef63750d"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>Vref</b>&#160;&#160;&#160;3300</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a7c4a8191a821caeaf796e5dbef63750d">Vref</a>&#160;&#160;&#160;3300</td></tr>
+<tr class="memdesc:a7c4a8191a821caeaf796e5dbef63750d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Volts del Vref del ADC, luego se puede reemplazar por el registro para que sea mas exacto. <br /></td></tr>
 <tr class="separator:a7c4a8191a821caeaf796e5dbef63750d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e965b09ba8c46425032e6dd576f9bce"><td class="memItemLeft" align="right" valign="top"><a id="a8e965b09ba8c46425032e6dd576f9bce"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ADC_MAX_VALUE</b>&#160;&#160;&#160;4095</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a8e965b09ba8c46425032e6dd576f9bce">ADC_MAX_VALUE</a>&#160;&#160;&#160;4095</td></tr>
+<tr class="memdesc:a8e965b09ba8c46425032e6dd576f9bce"><td class="mdescLeft">&#160;</td><td class="mdescRight">valor maximo del ADC, a 12 bit es 4095 <br /></td></tr>
 <tr class="separator:a8e965b09ba8c46425032e6dd576f9bce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ece768bdf35a4e819ddc495181392b5"><td class="memItemLeft" align="right" valign="top"><a id="a6ece768bdf35a4e819ddc495181392b5"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a6ece768bdf35a4e819ddc495181392b5">TPS_DUAL</a>&#160;&#160;&#160;false</td></tr>
+<tr class="memdesc:a6ece768bdf35a4e819ddc495181392b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Habilita el TPS doble, requiere remapeo de IO. <br /></td></tr>
+<tr class="separator:a6ece768bdf35a4e819ddc495181392b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa512403a6a9fcbfa17d284985e860e22"><td class="memItemLeft" align="right" valign="top"><a id="aa512403a6a9fcbfa17d284985e860e22"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#aa512403a6a9fcbfa17d284985e860e22">TPS_MIN_A</a>&#160;&#160;&#160;1700</td></tr>
+<tr class="memdesc:aa512403a6a9fcbfa17d284985e860e22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor minimo en mV para el sensor TPS (primer potenciometro); valores inferiores disparan DTC. <br /></td></tr>
+<tr class="separator:aa512403a6a9fcbfa17d284985e860e22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a853e90a498b40419ef604574cf449fa1"><td class="memItemLeft" align="right" valign="top"><a id="a853e90a498b40419ef604574cf449fa1"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a853e90a498b40419ef604574cf449fa1">TPS_MIN_B</a>&#160;&#160;&#160;1700</td></tr>
+<tr class="memdesc:a853e90a498b40419ef604574cf449fa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor minimo en mV para el sensor TPS (segundo potenciometro); valores inferiores disparan DTC. <br /></td></tr>
+<tr class="separator:a853e90a498b40419ef604574cf449fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad68d322f7d60cda5ba71dd843e48710e"><td class="memItemLeft" align="right" valign="top"><a id="ad68d322f7d60cda5ba71dd843e48710e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad68d322f7d60cda5ba71dd843e48710e">TPS_MAX_A</a>&#160;&#160;&#160;4500</td></tr>
+<tr class="memdesc:ad68d322f7d60cda5ba71dd843e48710e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor maximo en mV para el sensor TPS (primer potenciometro); valores superiores disparan DTC. <br /></td></tr>
+<tr class="separator:ad68d322f7d60cda5ba71dd843e48710e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab32c8d7c8246a3671214e176fa5f767b"><td class="memItemLeft" align="right" valign="top"><a id="ab32c8d7c8246a3671214e176fa5f767b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ab32c8d7c8246a3671214e176fa5f767b">TPS_MAX_B</a>&#160;&#160;&#160;4500</td></tr>
+<tr class="memdesc:ab32c8d7c8246a3671214e176fa5f767b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor maximo en mv para el sensor TPS (segundo potenciometro); valores superiores disparan DTC. <br /></td></tr>
+<tr class="separator:ab32c8d7c8246a3671214e176fa5f767b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9819a104ea3f4cb384d5f32ff4b487e"><td class="memItemLeft" align="right" valign="top"><a id="aa9819a104ea3f4cb384d5f32ff4b487e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TPS_CALC_FAST</b>(mV)&#160;&#160;&#160;( (mV &lt;= 3695) ? qfp_fdiv( qfp_fsub(mV, 1823), 37.44 ) :  qfp_fdiv( qfp_fsub(mV, 2943), 15.04 )  )</td></tr>
+<tr class="separator:aa9819a104ea3f4cb384d5f32ff4b487e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad52b4f48f8cce28e36d77d1ced7e8dd9"><td class="memItemLeft" align="right" valign="top"><a id="ad52b4f48f8cce28e36d77d1ced7e8dd9"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad52b4f48f8cce28e36d77d1ced7e8dd9">TPS_CALC_A</a>(mV)&#160;&#160;&#160;( (mV &lt;= 3695) ?  (mV - 1823) / 37.44 :  (mV - 2943) / 15.04 )</td></tr>
+<tr class="memdesc:ad52b4f48f8cce28e36d77d1ced7e8dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO MANDES UN MAP() DE ARDUINO ACA. <br /></td></tr>
+<tr class="separator:ad52b4f48f8cce28e36d77d1ced7e8dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7d20c7d1ec1729bf6892ddabbac3ab0"><td class="memItemLeft" align="right" valign="top"><a id="ad7d20c7d1ec1729bf6892ddabbac3ab0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TEMP_MIN</b>&#160;&#160;&#160;800</td></tr>
+<tr class="separator:ad7d20c7d1ec1729bf6892ddabbac3ab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9acb14595bfb9523655370c1bb477506"><td class="memItemLeft" align="right" valign="top"><a id="a9acb14595bfb9523655370c1bb477506"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TEMP_MAX</b>&#160;&#160;&#160;4800</td></tr>
+<tr class="separator:a9acb14595bfb9523655370c1bb477506"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7403a6b95e1c03ed928e79655ea27e3b"><td class="memItemLeft" align="right" valign="top"><a id="a7403a6b95e1c03ed928e79655ea27e3b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TEMP_K</b>&#160;&#160;&#160;2.5</td></tr>
+<tr class="separator:a7403a6b95e1c03ed928e79655ea27e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62f8e261c267be877be0eb5cf5f60848"><td class="memItemLeft" align="right" valign="top"><a id="a62f8e261c267be877be0eb5cf5f60848"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAP_MIN</b>&#160;&#160;&#160;800</td></tr>
+<tr class="separator:a62f8e261c267be877be0eb5cf5f60848"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50a7429b3040b309e4f9b2bfc41fdf3f"><td class="memItemLeft" align="right" valign="top"><a id="a50a7429b3040b309e4f9b2bfc41fdf3f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAP_MAX</b>&#160;&#160;&#160;4800</td></tr>
+<tr class="separator:a50a7429b3040b309e4f9b2bfc41fdf3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12deed62d551d10ef3bb620afbc9e803"><td class="memItemLeft" align="right" valign="top"><a id="a12deed62d551d10ef3bb620afbc9e803"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAP_CAL</b>(mV)&#160;&#160;&#160;( mV * 4 )</td></tr>
+<tr class="separator:a12deed62d551d10ef3bb620afbc9e803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ad0fae016647bf6b083c331ca152b50e1"><td class="memItemLeft" align="right" valign="top"><a id="ad0fae016647bf6b083c331ca152b50e1"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>A</b> = 1.12492089e-3</td></tr>
+<tr class="separator:ad0fae016647bf6b083c331ca152b50e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8188fea1f6709096fe21a3ee084d00d0"><td class="memItemLeft" align="right" valign="top"><a id="a8188fea1f6709096fe21a3ee084d00d0"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b> = 2.372075385e-4</td></tr>
+<tr class="separator:a8188fea1f6709096fe21a3ee084d00d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad12b105c602c51bd04d7763f600688cc"><td class="memItemLeft" align="right" valign="top"><a id="ad12b105c602c51bd04d7763f600688cc"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>C</b> = 6.954079529e-8</td></tr>
+<tr class="separator:ad12b105c602c51bd04d7763f600688cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="defines_8h.html">defines.h</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b0856f6b0d80ccb263b2f415c91f9e17.html">include</a></li><li class="navelem"><a class="el" href="defines_8h.html">defines.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>

@@ -1,5 +1,5 @@
-\hypertarget{defines_8h}{}\doxysection{/home/travis/build/openefi/\+Open\+E\+F\+I/src/defines.h File Reference}
-\label{defines_8h}\index{/home/travis/build/openefi/OpenEFI/src/defines.h@{/home/travis/build/openefi/OpenEFI/src/defines.h}}
+\hypertarget{defines_8h}{}\doxysection{/home/travis/build/openefi/\+Open\+E\+F\+I/src/include/defines.h File Reference}
+\label{defines_8h}\index{/home/travis/build/openefi/OpenEFI/src/include/defines.h@{/home/travis/build/openefi/OpenEFI/src/include/defines.h}}
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -30,21 +30,24 @@
 \mbox{\Hypertarget{defines_8h_abe4d4f0baa8393107c2882b58e411fef}\label{defines_8h_abe4d4f0baa8393107c2882b58e411fef}} 
 \#define {\bfseries R\+P\+M\+\_\+per}~500
 \item 
+\mbox{\Hypertarget{defines_8h_ad7ea84ea521801063367444a91786f7b}\label{defines_8h_ad7ea84ea521801063367444a91786f7b}} 
+\#define \mbox{\hyperlink{defines_8h_ad7ea84ea521801063367444a91786f7b}{C\+P\+W\+M\+\_\+\+E\+N\+A\+B\+LE}}
+\begin{DoxyCompactList}\small\item\em Habilita el control de P\+WM. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_a3ea16d89c4d1fb6e827010391c1da564}\label{defines_8h_a3ea16d89c4d1fb6e827010391c1da564}} 
-\#define {\bfseries P\+M\+SI}~80
-\item 
+\#define \mbox{\hyperlink{defines_8h_a3ea16d89c4d1fb6e827010391c1da564}{P\+M\+SI}}~240
+\begin{DoxyCompactList}\small\item\em Cantidad de dientes entre P\+MS. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_ad47ff2a360a546f30a9b0bf7552a134c}\label{defines_8h_ad47ff2a360a546f30a9b0bf7552a134c}} 
-\#define {\bfseries C\+\_\+\+P\+W\+M\+\_\+\+I\+N\+Y\+\_\+\+P\+O\+RT}~G\+P\+I\+OA
-\item 
+\#define \mbox{\hyperlink{defines_8h_ad47ff2a360a546f30a9b0bf7552a134c}{C\+\_\+\+P\+W\+M\+\_\+\+I\+N\+Y\+\_\+\+P\+O\+RT}}~G\+P\+I\+OB
+\begin{DoxyCompactList}\small\item\em puerto de los pines de inyeccion 2 3 4 5 2 4 5 3 \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_af0a8b5ede94315145fe1b8dadfd137a7}\label{defines_8h_af0a8b5ede94315145fe1b8dadfd137a7}} 
-\#define {\bfseries C\+\_\+\+P\+W\+M\+\_\+\+I\+NY}~\{ G\+P\+I\+O2, G\+P\+I\+O4, G\+P\+I\+O5, G\+P\+I\+O3 \}
-\item 
+\#define \mbox{\hyperlink{defines_8h_af0a8b5ede94315145fe1b8dadfd137a7}{C\+\_\+\+P\+W\+M\+\_\+\+I\+NY}}~\{ G\+P\+I\+O6, G\+P\+I\+O4, G\+P\+I\+O5, G\+P\+I\+O3 \}
+\begin{DoxyCompactList}\small\item\em pines del S\+T\+M32 para la inyeccion \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_a7537c9dfde674e79981817392b56042e}\label{defines_8h_a7537c9dfde674e79981817392b56042e}} 
-\#define {\bfseries C\+\_\+\+P\+W\+M\+\_\+\+E\+C\+N\+\_\+\+P\+O\+RT}~G\+P\+I\+OC
-\item 
+\#define \mbox{\hyperlink{defines_8h_a7537c9dfde674e79981817392b56042e}{C\+\_\+\+P\+W\+M\+\_\+\+E\+C\+N\+\_\+\+P\+O\+RT}}~G\+P\+I\+OB
+\begin{DoxyCompactList}\small\item\em puerto de los pines de encendido \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_afdf008185c714e7b6fc86db16294d562}\label{defines_8h_afdf008185c714e7b6fc86db16294d562}} 
-\#define {\bfseries C\+\_\+\+P\+W\+M\+\_\+\+E\+CN}~\{ G\+P\+I\+O15, G\+P\+I\+O14 \}
-\item 
+\#define \mbox{\hyperlink{defines_8h_afdf008185c714e7b6fc86db16294d562}{C\+\_\+\+P\+W\+M\+\_\+\+E\+CN}}~\{ G\+P\+I\+O8, G\+P\+I\+O7 \}
+\begin{DoxyCompactList}\small\item\em pines del S\+T\+M32 para el encendido \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_aaeb2f99c34c54e97fc729bf4fee024ad}\label{defines_8h_aaeb2f99c34c54e97fc729bf4fee024ad}} 
 \#define {\bfseries A\+V\+CI}~30
 \item 
@@ -112,11 +115,62 @@
 \#define {\bfseries T\+BM}~1
 \item 
 \mbox{\Hypertarget{defines_8h_a918f64eb53db8e8dc694f36a87646476}\label{defines_8h_a918f64eb53db8e8dc694f36a87646476}} 
-\#define {\bfseries R1}~10000
-\item 
+\#define \mbox{\hyperlink{defines_8h_a918f64eb53db8e8dc694f36a87646476}{R1}}~10000
+\begin{DoxyCompactList}\small\item\em para testear ahora todos los sensores tienen una resitencia de 10k en el divisor resistivo \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_a7c4a8191a821caeaf796e5dbef63750d}\label{defines_8h_a7c4a8191a821caeaf796e5dbef63750d}} 
-\#define {\bfseries Vref}~3300
-\item 
+\#define \mbox{\hyperlink{defines_8h_a7c4a8191a821caeaf796e5dbef63750d}{Vref}}~3300
+\begin{DoxyCompactList}\small\item\em Volts del Vref del A\+DC, luego se puede reemplazar por el registro para que sea mas exacto. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_a8e965b09ba8c46425032e6dd576f9bce}\label{defines_8h_a8e965b09ba8c46425032e6dd576f9bce}} 
-\#define {\bfseries A\+D\+C\+\_\+\+M\+A\+X\+\_\+\+V\+A\+L\+UE}~4095
+\#define \mbox{\hyperlink{defines_8h_a8e965b09ba8c46425032e6dd576f9bce}{A\+D\+C\+\_\+\+M\+A\+X\+\_\+\+V\+A\+L\+UE}}~4095
+\begin{DoxyCompactList}\small\item\em valor maximo del A\+DC, a 12 bit es 4095 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a6ece768bdf35a4e819ddc495181392b5}\label{defines_8h_a6ece768bdf35a4e819ddc495181392b5}} 
+\#define \mbox{\hyperlink{defines_8h_a6ece768bdf35a4e819ddc495181392b5}{T\+P\+S\+\_\+\+D\+U\+AL}}~false
+\begin{DoxyCompactList}\small\item\em Habilita el T\+PS doble, requiere remapeo de IO. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_aa512403a6a9fcbfa17d284985e860e22}\label{defines_8h_aa512403a6a9fcbfa17d284985e860e22}} 
+\#define \mbox{\hyperlink{defines_8h_aa512403a6a9fcbfa17d284985e860e22}{T\+P\+S\+\_\+\+M\+I\+N\+\_\+A}}~1700
+\begin{DoxyCompactList}\small\item\em Valor minimo en mV para el sensor T\+PS (primer potenciometro); valores inferiores disparan D\+TC. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a853e90a498b40419ef604574cf449fa1}\label{defines_8h_a853e90a498b40419ef604574cf449fa1}} 
+\#define \mbox{\hyperlink{defines_8h_a853e90a498b40419ef604574cf449fa1}{T\+P\+S\+\_\+\+M\+I\+N\+\_\+B}}~1700
+\begin{DoxyCompactList}\small\item\em Valor minimo en mV para el sensor T\+PS (segundo potenciometro); valores inferiores disparan D\+TC. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_ad68d322f7d60cda5ba71dd843e48710e}\label{defines_8h_ad68d322f7d60cda5ba71dd843e48710e}} 
+\#define \mbox{\hyperlink{defines_8h_ad68d322f7d60cda5ba71dd843e48710e}{T\+P\+S\+\_\+\+M\+A\+X\+\_\+A}}~4500
+\begin{DoxyCompactList}\small\item\em Valor maximo en mV para el sensor T\+PS (primer potenciometro); valores superiores disparan D\+TC. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_ab32c8d7c8246a3671214e176fa5f767b}\label{defines_8h_ab32c8d7c8246a3671214e176fa5f767b}} 
+\#define \mbox{\hyperlink{defines_8h_ab32c8d7c8246a3671214e176fa5f767b}{T\+P\+S\+\_\+\+M\+A\+X\+\_\+B}}~4500
+\begin{DoxyCompactList}\small\item\em Valor maximo en mv para el sensor T\+PS (segundo potenciometro); valores superiores disparan D\+TC. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_aa9819a104ea3f4cb384d5f32ff4b487e}\label{defines_8h_aa9819a104ea3f4cb384d5f32ff4b487e}} 
+\#define {\bfseries T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+\+F\+A\+ST}(mV)~( (mV $<$= 3695) ? qfp\+\_\+fdiv( qfp\+\_\+fsub(mV, 1823), 37.\+44 ) \+:  qfp\+\_\+fdiv( qfp\+\_\+fsub(mV, 2943), 15.\+04 )  )
+\item 
+\mbox{\Hypertarget{defines_8h_ad52b4f48f8cce28e36d77d1ced7e8dd9}\label{defines_8h_ad52b4f48f8cce28e36d77d1ced7e8dd9}} 
+\#define \mbox{\hyperlink{defines_8h_ad52b4f48f8cce28e36d77d1ced7e8dd9}{T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+A}}(mV)~( (mV $<$= 3695) ?  (mV -\/ 1823) / 37.\+44 \+:  (mV -\/ 2943) / 15.\+04 )
+\begin{DoxyCompactList}\small\item\em Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO M\+A\+N\+D\+ES UN M\+A\+P() DE A\+R\+D\+U\+I\+NO A\+CA. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_ad7d20c7d1ec1729bf6892ddabbac3ab0}\label{defines_8h_ad7d20c7d1ec1729bf6892ddabbac3ab0}} 
+\#define {\bfseries T\+E\+M\+P\+\_\+\+M\+IN}~800
+\item 
+\mbox{\Hypertarget{defines_8h_a9acb14595bfb9523655370c1bb477506}\label{defines_8h_a9acb14595bfb9523655370c1bb477506}} 
+\#define {\bfseries T\+E\+M\+P\+\_\+\+M\+AX}~4800
+\item 
+\mbox{\Hypertarget{defines_8h_a7403a6b95e1c03ed928e79655ea27e3b}\label{defines_8h_a7403a6b95e1c03ed928e79655ea27e3b}} 
+\#define {\bfseries T\+E\+M\+P\+\_\+K}~2.\+5
+\item 
+\mbox{\Hypertarget{defines_8h_a62f8e261c267be877be0eb5cf5f60848}\label{defines_8h_a62f8e261c267be877be0eb5cf5f60848}} 
+\#define {\bfseries M\+A\+P\+\_\+\+M\+IN}~800
+\item 
+\mbox{\Hypertarget{defines_8h_a50a7429b3040b309e4f9b2bfc41fdf3f}\label{defines_8h_a50a7429b3040b309e4f9b2bfc41fdf3f}} 
+\#define {\bfseries M\+A\+P\+\_\+\+M\+AX}~4800
+\item 
+\mbox{\Hypertarget{defines_8h_a12deed62d551d10ef3bb620afbc9e803}\label{defines_8h_a12deed62d551d10ef3bb620afbc9e803}} 
+\#define {\bfseries M\+A\+P\+\_\+\+C\+AL}(mV)~( mV $\ast$ 4 )
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{defines_8h_ad0fae016647bf6b083c331ca152b50e1}\label{defines_8h_ad0fae016647bf6b083c331ca152b50e1}} 
+float {\bfseries A} = 1.\+12492089e-\/3
+\item 
+\mbox{\Hypertarget{defines_8h_a8188fea1f6709096fe21a3ee084d00d0}\label{defines_8h_a8188fea1f6709096fe21a3ee084d00d0}} 
+float {\bfseries B} = 2.\+372075385e-\/4
+\item 
+\mbox{\Hypertarget{defines_8h_ad12b105c602c51bd04d7763f600688cc}\label{defines_8h_ad12b105c602c51bd04d7763f600688cc}} 
+float {\bfseries C} = 6.\+954079529e-\/8
 \end{DoxyCompactItemize}

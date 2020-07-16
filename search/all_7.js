@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['serialmessage_15',['SerialMessage',['../structSerialMessage.html',1,'']]],
-  ['spiram_16',['SpiRAM',['../classSpiRAM.html',1,'']]],
-  ['status_17',['Status',['../structStatus.html',1,'']]]
+  ['pmsi_21',['PMSI',['../defines_8h.html#a3ea16d89c4d1fb6e827010391c1da564',1,'defines.h']]]
 ];
