@@ -160,7 +160,10 @@
 \#define {\bfseries M\+A\+P\+\_\+\+M\+AX}~4800
 \item 
 \mbox{\Hypertarget{defines_8h_a12deed62d551d10ef3bb620afbc9e803}\label{defines_8h_a12deed62d551d10ef3bb620afbc9e803}} 
-\#define {\bfseries M\+A\+P\+\_\+\+C\+AL}(mV)~( mV $\ast$ 4 )
+\#define {\bfseries M\+A\+P\+\_\+\+C\+AL}(mV)~(mV $\ast$ 16.\+66 + 167)
+\item 
+\mbox{\Hypertarget{defines_8h_ad3268edd4432873935142d340e766d3c}\label{defines_8h_ad3268edd4432873935142d340e766d3c}} 
+\#define {\bfseries M\+A\+P\+\_\+\+C\+A\+L\+\_\+\+F\+A\+ST}(mV)~( qfp\+\_\+fadd( qfp\+\_\+fmul(mV, 16.\+66), 167) )
 \end{DoxyCompactItemize}
 \doxysubsection*{Variables}
 \begin{DoxyCompactItemize}

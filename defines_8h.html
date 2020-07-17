@@ -271,8 +271,11 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MAP_MAX</b>&#160;&#160;&#160;4800</td></tr>
 <tr class="separator:a50a7429b3040b309e4f9b2bfc41fdf3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12deed62d551d10ef3bb620afbc9e803"><td class="memItemLeft" align="right" valign="top"><a id="a12deed62d551d10ef3bb620afbc9e803"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAP_CAL</b>(mV)&#160;&#160;&#160;( mV * 4 )</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAP_CAL</b>(mV)&#160;&#160;&#160;(mV * 16.66 + 167)</td></tr>
 <tr class="separator:a12deed62d551d10ef3bb620afbc9e803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3268edd4432873935142d340e766d3c"><td class="memItemLeft" align="right" valign="top"><a id="ad3268edd4432873935142d340e766d3c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAP_CAL_FAST</b>(mV)&#160;&#160;&#160;( qfp_fadd( qfp_fmul(mV, 16.66), 167) )</td></tr>
+<tr class="separator:ad3268edd4432873935142d340e766d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>

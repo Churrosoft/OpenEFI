@@ -28,6 +28,7 @@ var defines_8h =
     [ "L_CIL", "defines_8h.html#a51bf22cc164ce029157ccbc200052c1b", null ],
     [ "LMBM", "defines_8h.html#a98bf37417e0149395b02b68d8ad1dc0b", null ],
     [ "MAP_CAL", "defines_8h.html#a12deed62d551d10ef3bb620afbc9e803", null ],
+    [ "MAP_CAL_FAST", "defines_8h.html#ad3268edd4432873935142d340e766d3c", null ],
     [ "MAP_MAX", "defines_8h.html#a50a7429b3040b309e4f9b2bfc41fdf3f", null ],
     [ "MAP_MIN", "defines_8h.html#a62f8e261c267be877be0eb5cf5f60848", null ],
     [ "mtr", "defines_8h.html#aa2c7aad26910626ab51d4a915b4f3160", null ],
