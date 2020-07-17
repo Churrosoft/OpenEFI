@@ -103,6 +103,7 @@ float C = 6.954079529e-8;
 #define MAP_MIN 800
 #define MAP_MAX 4800
 
-#define MAP_CAL( mV ) ( mV * 4 )
+#define MAP_CAL( mV ) (mV * 16.66 + 167)
+#define MAP_CAL_FAST( mV ) ( qfp_fadd( qfp_fmul(mV, 16.66), 167) )
 
 #endif
