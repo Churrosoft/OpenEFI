@@ -27,7 +27,7 @@ namespace sensors
     uint16_t MAP;
     uint16_t TEMP;
     uint16_t IAT;
-  } values{0, 0};
+  } values{0, 0, 0, 0};
 
 } // namespace sensors
 
