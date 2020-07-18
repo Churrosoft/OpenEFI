@@ -1,12 +1,12 @@
-#ifndef MAP_CPP
-#define MAP_CPP
+#ifndef IAT_CPP
+#define IAT_CPP
 #include <stdint.h>
 #include "defines.h"
 #include "./utils/basic_electronics.c"
 /*
-    todo el codigo relacionado al control del sensor "MAP"
+    todo el codigo relacionado al control del sensor "IAT"
 */
-namespace MAP
+namespace IAT
 {
     /** @brief devuelve valor en kPa del sensor
      * dependiendo las opciones de compilacion se agrega:
@@ -26,23 +26,23 @@ namespace MAP
      * @param in valor en Volt del sensor
      */
     uint8_t dtc(uint16_t);
-} // namespace MAP
+} // namespace IAT
 
-uint16_t MAP::get_value(uint16_t filt_input)
+uint16_t IAT::get_value(uint16_t filt_input)
 {
-    return (uint16_t)MAP_CAL(filt_input);
+    return (uint16_t)IAT_CAL(filt_input);
 }
 
-uint32_t MAP::get_calibrate_value(uint16_t filt_input)
+uint32_t IAT::get_calibrate_value(uint16_t filt_input)
 {
-    return (uint32_t)MAP_CAL(filt_input) * 100;
+    return (uint32_t)IAT_CAL(filt_input) * 100;
 }
 
-uint8_t MAP::dtc(uint16_t in)
+uint8_t IAT::dtc(uint16_t in)
 {
-    if (in > MAP_MAX)
+    if (in > IAT_MAX)
         return 1;
-    if (in < MAP_MIN)
+    if (in < IAT_MIN)
         return -1;
     return 0;
 }

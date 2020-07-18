@@ -106,4 +106,11 @@ float C = 6.954079529e-8;
 #define MAP_CAL( mV ) (mV * 16.66 + 167)
 #define MAP_CAL_FAST( mV ) ( qfp_fadd( qfp_fmul(mV, 16.66), 167) )
 
+//  IAT:
+#define IAT_MIN 200
+#define IAT_MAX 4000
+
+#define IAT_CAL( mV ) ( (3800 - mV) / 35 )
+#define IAT_CAL_FAST( mV ) ( qfp_fdiv( qfp_fsub(3800, mV), 35 ) )
+
 #endif

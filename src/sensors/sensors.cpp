@@ -1,7 +1,10 @@
 #include "./input_handler.cpp"
+#include "defines.h"
+//sensores:
 #include "./tps.cpp"
 #include "./temp.cpp"
-#include "defines.h"
+#include "./iat.cpp"
+#include "./map.cpp"
 
 #ifndef SENSORS_CPP
 #define SENSORS_CPP
@@ -23,6 +26,7 @@ namespace sensors
     uint8_t TPS;
     uint16_t MAP;
     uint16_t TEMP;
+    uint16_t IAT;
   } values{0, 0};
 
 } // namespace sensors
@@ -34,6 +38,8 @@ static void sensors::loop()
 #else
   values.TPS = TPS::get_value(get_input(7));
 #endif
+  values.IAT = IAT::get_value(get_input(5));
+  values.MAP = MAP::get_value(get_input(4));
 };
 
 static void sensors::loop_low_priority()
