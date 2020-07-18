@@ -82,6 +82,10 @@ OPENCM3_DIR = ./libopencm3
 INCLUDE_DIR = $(OPENCM3_DIR)/include
 LIB_DIR     = $(OPENCM3_DIR)/lib
 
+# OpenEFI library
+LIB_DIR2     = src/lib
+INCLUDE_DIR2 = src/include
+
 ifeq ($(strip $(OPENCM3_DIR)),)
 $(warning "$(LIBPATHS)" "$(OPENCM3_DIR)")
 $(warning Cannot find libopencm3 library in the standard search paths.)
@@ -103,7 +107,9 @@ endef
 ifeq ($(strip $(DEVICE)),)
 # Old style, assume LDSCRIPT exists
 DEFS		+= -I$(OPENCM3_DIR)/include
+DEFS		+= -I$(INCLUDE_DIR2)
 LDFLAGS		+= -L$(OPENCM3_DIR)/lib
+LDFLAGS		+= -L$(LIB_DIR2)
 LDFLAGS		+= -L$(OPENCM3_DIR)/lib/stm32/f1
 LDLIBS		+= -l$(LIBNAME)
 LDSCRIPT	?= $(BINARY).ld
@@ -133,6 +139,7 @@ TGT_CXXFLAGS	+= $(OPT) $(CXXSTD) -g
 TGT_CXXFLAGS	+= $(ARCH_FLAGS)
 TGT_CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
 TGT_CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
+TGT_CXXFLAGS	+= -std=c++2a
 
 ###############################################################################
 # C & C++ preprocessor common flags
@@ -140,13 +147,15 @@ TGT_CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 TGT_CPPFLAGS	+= -MD
 TGT_CPPFLAGS	+= -Wall -Wundef
 TGT_CPPFLAGS    += -I$(INCLUDE_DIR) $(DEFS)
-
+TGT_CPPFLAGS    += -I$(INCLUDE_DIR2)
+TGT_CPPFLAGS	+= -l$(LIB_DIR2)
 
 ###############################################################################
 # Linker flags
 
 TGT_LDFLAGS		+= --static -nostartfiles
 TGT_LDFLAGS     += -L$(LIB_DIR)
+TGT_LDFLAGS		+= -L$(LIB_DIR2)
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=src/$(*).map

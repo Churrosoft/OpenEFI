@@ -2,17 +2,18 @@
 #ifndef INPUT_HANDLER
 #define INPUT_HANDLER
 #include <stdint.h>
-//#include <math.h>
 // libopencm3:
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/adc.h>
 // custom:
-#include "./ema_low_pass.c"
-#include "../../defines.h"
-#include "../../../qfplib/qfplib-m3.h"
-struct input_handler{
-	/* data */
+#include "./utils/ema_low_pass.c"
+#include "defines.h"
+
+//TODO: esto es un wrapper del ADC basicamente, refactorizar y dejar en namespace "ADC_Wrapper"
+
+struct input_handler
+{
 	struct EMALowPass values[16]; // valores pasados por EMA Low Pass
 } inputs;
 
@@ -20,51 +21,50 @@ struct input_handler{
   * @param pin entrada analogica a leer
 */
 uint16_t get_input(uint8_t);
-/** devuelve data RAW del adc
+/** @return ADC register data
 */
 uint16_t get_adc_data(uint8_t);
-/** inicia el ADC y los trigers por tiempo
+
+/** @brief inicia el ADC y los trigers por tiempo
 */
 void input_setup(void);
-/** @brief Convierte valor del ADC a volt:
- *  @param in : valor del adc a convertir
- */
-uint16_t convert_to_volt(uint16_t);
-uint16_t convert_to_resistance(uint16_t);
-uint16_t thermistor_get_temperature(int32_t);
 
-uint16_t get_input(uint8_t pin){
-	/*
-   el sw para cambiar I/O del 74HC4067 para elegir el canal
-   switch (pin){
-    case 0:
-		
-        break;
-    
-    default:
-        break;
-    } */
-
-	if(pin < 16){
-		for(uint8_t i = 0; i < 5; i++){
+uint16_t get_input(uint8_t pin)
+{
+	if (pin < 16)
+	{
+		for (uint8_t i = 0; i < 5; i++)
+		{
+#ifdef Alpha
 			inputs.values[pin].actualValue = get_adc_data(7);
-        	inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
+#else
+			inputs.values[pin].actualValue = get_adc_data(i);
+#endif
+			inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
 		}
 		return inputs.values[pin].lastValue;
 	}
 	return 0;
 }
 
-void input_setup(){
+void input_setup()
+{
 	rcc_periph_clock_enable(RCC_GPIOA);
+#ifdef Alpha
 	gpio_set_mode(GPIOA,
 				  GPIO_MODE_INPUT,
 				  GPIO_CNF_INPUT_ANALOG, // Analog mode
 				  GPIO7);
+#else
+	gpio_set_mode(
+		GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, // Analog mode
+		GPIO7 | GPIO6 | GPIO5 | GPIO4 | GPIO3 | GPIO2 | GPIO1 | GPIO0);
+
+#endif
 }
 
-static void adc_setup(void){
-	input_setup();
+static void adc_setup(void)
+{
 	rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC1EN);
 	adc_power_off(ADC1);
 	rcc_peripheral_reset(&RCC_APB2RSTR, RCC_APB2RSTR_ADC1RST);
@@ -79,30 +79,18 @@ static void adc_setup(void){
 	adc_power_on(ADC1);
 	adc_reset_calibration(ADC1);
 	adc_calibrate_async(ADC1);
-	while (adc_is_calibrating(ADC1));
+	while (adc_is_calibrating(ADC1))
+		; // W H YYYY
 }
 
-uint16_t convert_to_resistance(uint16_t adcval){
-  return (uint16_t) ( (R1 * ADC_MAX_VALUE) / adcval) - R1; //para resistencia pullUp dividir R1
-}
-
-uint16_t convert_to_volt(uint16_t in){
-	return (uint16_t)(in * Vref / ADC_MAX_VALUE);
-}
-
-uint16_t get_adc_data(uint8_t channel){
+uint16_t get_adc_data(uint8_t channel)
+{
 	adc_set_sample_time(ADC1, channel, ADC_SMPR_SMP_239DOT5CYC);
 	adc_set_regular_sequence(ADC1, 1, &channel);
 	adc_start_conversion_direct(ADC1);
-	while (!adc_eoc(ADC1));
+	while (!adc_eoc(ADC1))
+		;
 	return (uint16_t)adc_read_regular(ADC1);
-}
-
-uint16_t thermistor_get_temperature(int32_t resistance){
-  double temp = qfp_fln(resistance);//
-  // http://en.wikipedia.org/wiki/Steinhart–Hart_equation
-  temp = 1 / (0.001129148 + (0.000234125 + (0.0000000876741 * temp * temp ) )* temp );
-  return (uint16_t)(temp - 273.15) * 100;
 }
 
 #endif

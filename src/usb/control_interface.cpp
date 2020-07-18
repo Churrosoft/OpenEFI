@@ -1,32 +1,31 @@
 /* USB Control Interface command processing. */
-#include "../variables.h"
 #include <string.h>
 #include <libopencm3/cm3/scb.h>
 
 #include "commands.h"
-#include "../defines.h"
-#include "../variables.h"
+#include "defines.h"
+#include "variables.h"
 //Structs para formatear data:
 #include "./dataStruct/status.h"
 #include "../helpers/bootloader.c"
 #include "control_interface.h"
 // pa los sensores:
-#include "../sensores/utils/input_handler.c"
+#include "../sensors/sensors.cpp"
 #include "../../qfplib/qfplib-m3.h"
 //Variables de todo el socotroco:
 char frameBuffer[128] = {};
-int  buffLength = 0;
-
+int buffLength = 0;
 
 /** Procesa comandos.
  * @param usbd_dev
  * @param message Mensaje recibido.
- */ 
-void process_frame(usbd_device* usbd_dev, SerialMessage* message){
-    SerialMessage response = {PROTOCOL_VERSION_1, 0, 0, {},0};
+ */
+void process_frame(usbd_device *usbd_dev, SerialMessage *message)
+{
+    SerialMessage response = {PROTOCOL_VERSION_1, 0, 0, {}, 0};
     response.protocolVersion = PROTOCOL_VERSION_1;
     response.command = message->command;
-    uint16_t localCRC = crc16((unsigned char *) message, 126);
+    uint16_t localCRC = crc16((unsigned char *)message, 126);
     if (localCRC != message->checksum)
     {
         response.command = COMMAND_ERR;
@@ -35,9 +34,11 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
         return;
     }
     Status _status = {{}, 0, 0, 0};
-    switch (message->protocolVersion){
+    switch (message->protocolVersion)
+    {
     case PROTOCOL_VERSION_1:
-        switch (message->command){
+        switch (message->command)
+        {
         case COMMAND_PING:
             memcpy(response.payload, message->payload, sizeof(response.payload));
             break;
@@ -48,26 +49,10 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
             response.payload[2] = OPENEFI_VER_REV;
             break;
         case COMMAND_STATUS:
-            //switch (message->subcommand){
-            //case STATUS_TMP:
-            _status.RPM = thermistor_get_temperature( get_input(7));
-            _status.TEMP =  15;
-            
-            if(  get_adc_data(7) > 1500 ){
-		        gpio_toggle(GPIOC, GPIO13);
-               //  _status.V00 = 88;
-	        }
-            _status.V00 = 
-                convert_to_resistance(
-                    get_input(7)
-               );
+            _status.RPM = sensors::values.MAP;
+            _status.TEMP = sensors::values.TEMP;
+            _status.V00 = sensors::values.TPS;
             memcpy(response.payload, &_status, 122);
-            //    break;
-            //default:
-            //    response.command = COMMAND_ERR;
-            //    response.subcommand = ERROR_INVALID_COMMAND;
-            //    break;
-            //}
             break;
         case COMMAND_BOOTL_SW:
             // Escribimos los bytes mágicos en los registros backup rtc
@@ -93,33 +78,44 @@ void process_frame(usbd_device* usbd_dev, SerialMessage* message){
  * @param usbd_dev puntero a constructor del USB
  * @param message Mensaje a enviar.
  */
-void send_message(usbd_device *usbd_dev, SerialMessage* message){
+void send_message(usbd_device *usbd_dev, SerialMessage *message)
+{
     message->checksum = crc16((unsigned char *)message, 126);
-    char* msg = (char*) message;
+    char *msg = (char *)message;
     usbd_ep_write_packet(usbd_dev, 0x82, msg, 64);
-    for (int i = 0; i < 0x8000; i++) __asm__("nop");
+    for (int i = 0; i < 0x8000; i++)
+        __asm__("nop");
     usbd_ep_write_packet(usbd_dev, 0x82, (msg + 64), 64);
 }
 
-bool get_frame(char *tempbuf, int len){
-    if ((buffLength + len) <= 128){
+bool get_frame(char *tempbuf, int len)
+{
+    if ((buffLength + len) <= 128)
+    {
         memcpy(frameBuffer + buffLength, tempbuf, len);
         buffLength += len;
-        if(buffLength >= 128){
+        if (buffLength >= 128)
+        {
             return true;
         }
     }
     return false;
 }
 
-uint16_t crc16(const unsigned char* data_p, uint8_t length){
+void usb_spam_loop()
+{
+}
+
+uint16_t crc16(const unsigned char *data_p, uint8_t length)
+{
     uint8_t x;
     uint16_t crc = 0xFFFF;
 
-    while (length--){
+    while (length--)
+    {
         x = crc >> 8 ^ *data_p++;
-        x ^= x>>4;
-        crc = (crc << 8) ^ ((uint16_t)(x << 12)) ^ ((uint16_t)(x <<5)) ^ ((uint16_t)x);
+        x ^= x >> 4;
+        crc = (crc << 8) ^ ((uint16_t)(x << 12)) ^ ((uint16_t)(x << 5)) ^ ((uint16_t)x);
     }
     return crc;
 }
