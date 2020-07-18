@@ -276,6 +276,18 @@ Macros</h2></td></tr>
 <tr class="memitem:ad3268edd4432873935142d340e766d3c"><td class="memItemLeft" align="right" valign="top"><a id="ad3268edd4432873935142d340e766d3c"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MAP_CAL_FAST</b>(mV)&#160;&#160;&#160;( qfp_fadd( qfp_fmul(mV, 16.66), 167) )</td></tr>
 <tr class="separator:ad3268edd4432873935142d340e766d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae08546e74f01c11cddeee4736793de41"><td class="memItemLeft" align="right" valign="top"><a id="ae08546e74f01c11cddeee4736793de41"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>IAT_MIN</b>&#160;&#160;&#160;200</td></tr>
+<tr class="separator:ae08546e74f01c11cddeee4736793de41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ad1b8e80aaf47cb69cb75f9e4d3f97e"><td class="memItemLeft" align="right" valign="top"><a id="a2ad1b8e80aaf47cb69cb75f9e4d3f97e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>IAT_MAX</b>&#160;&#160;&#160;4000</td></tr>
+<tr class="separator:a2ad1b8e80aaf47cb69cb75f9e4d3f97e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01c4802e2190570f07ac7950ab28c263"><td class="memItemLeft" align="right" valign="top"><a id="a01c4802e2190570f07ac7950ab28c263"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>IAT_CAL</b>(mV)&#160;&#160;&#160;( (3800 - mV) / 35 )</td></tr>
+<tr class="separator:a01c4802e2190570f07ac7950ab28c263"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa821b398a207d350c2c9a543f2447328"><td class="memItemLeft" align="right" valign="top"><a id="aa821b398a207d350c2c9a543f2447328"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>IAT_CAL_FAST</b>(mV)&#160;&#160;&#160;( qfp_fdiv( qfp_fsub(3800, mV), 35 ) )</td></tr>
+<tr class="separator:aa821b398a207d350c2c9a543f2447328"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
