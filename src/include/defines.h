@@ -15,6 +15,7 @@
 #define L_CIL (CIL - 1) //!< cilindros logicos, para manejar arrays y demases
 #define DNT 300         //!< cantidad de dientes del sensor CKP
 #define Alpha 1         //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
+#define ED 1600         //!< cilindrada en CC del motor
 
 /*-----( RPM )-----*/
 
@@ -36,7 +37,21 @@
 // Encendido:
 #define ECNT 7 //tiempo en ms que se prende la bobina (cambie a su riesgo)
 
-/*-----( I_IALG )-----*/
+/*-----( I_TIME )-----*/
+/* n = PV / RT
+In order to use n = PV / RT to calculate the amount of air a motor ingests during the induction stroke we would need:
+
+P is pressure in the cylinder immediately after the intake valves close.
+V is volume, which we know from engine displacement.
+R we know (it’s the Ideal Gas Constant)
+T is the temperature of the gas in the cylinder immediately after the intake valves close.
+*/
+
+#define _R 8.31446261815324 // en Pascal
+#define _N_CALC( KPa, iat_temp) ( (( KPa * 1000) * ED ) / (_R * iat_temp) )
+
+
+/*-----( I_IALG )-----*/	
 //cuando tenga la libreria de memoria paso todo a variable, por ahora con define
 //int INY_L = 150,   //tiempo de apertura del inyector en microsegundos
 //INY_P = 500,   //tiempo en uS adicional para acelerar el motor
