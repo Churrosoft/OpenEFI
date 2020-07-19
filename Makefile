@@ -159,7 +159,7 @@ TGT_LDFLAGS		+= -L$(LIB_DIR2)
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=src/$(*).map
-TGT_LDFLAGS		+= -Wl,--gc-sections
+TGT_LDFLAGS		+= -Wl,--gc-sections,--print-memory-usage
 ifeq ($(V),99)
 TGT_LDFLAGS		+= -Wl,--print-gc-sections
 endif

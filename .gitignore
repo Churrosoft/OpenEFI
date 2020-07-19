@@ -10,3 +10,4 @@ qfplib
 test2.c
 utils/node_modules
 docs
+.pio

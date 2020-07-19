@@ -1,0 +1,18 @@
+# This is an OpenOCD script that connects to the device and displays the ARM semihosting log.
+# Used by tasks.json for "Connect To Blue Pill" command
+# openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -f scripts/connect.ocd
+
+# Disable all openocd messages.
+debug_level 0
+
+# Connect to the device.
+init
+
+# Enable ARM semihosting to show debug console output in OpenOCD console.
+arm semihosting enable
+
+echo "NOTE: Trash this window before uploading a program to the Blue Pill"
+
+# Restart the device.
+echo "Restarting the Blue Pill..."
+reset run
