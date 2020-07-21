@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/Luppy/.platformio/penv/bin:/Users/Luppy/.platformio/penv:/Users/Luppy/.local/bin:/usr/local/opt/llvm@3.9/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/bin:/usr/local/go/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/Users/Luppy/.rvm/bin:/Applications/apache-ant-1.8.4/bin:/usr/local/share/npm/bin/:/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/bin",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}

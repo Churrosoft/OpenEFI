@@ -1,0 +1,19 @@
+{
+    "name": "nano-float",
+    "frameworks": "*",
+    "platforms": "ststm32",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lupyuen/codal-libopencm3"
+    },
+    "description": "Tiny floating point library for Arm Cortex-M0 and M3",
+    "build": {        
+        "unflags": [
+            "-fno-rtti",
+            "-fno-threadsafe-statics"
+        ],
+        "flags": [
+            "-I inc"
+        ]
+    }
+}
