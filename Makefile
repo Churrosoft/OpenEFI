@@ -111,7 +111,7 @@ DEFS		+= -I$(INCLUDE_DIR2)
 LDFLAGS		+= -L$(OPENCM3_DIR)/lib
 LDFLAGS		+= -L$(LIB_DIR2)
 LDFLAGS		+= -L$(OPENCM3_DIR)/lib/stm32/f1
-LDLIBS		+= -l$(LIBNAME)
+LDLIBS		+= -l$(LIBNAME) 
 LDSCRIPT	?= $(BINARY).ld
 else
 # New style, assume device is provided, and we're generating the rest.
@@ -167,7 +167,7 @@ endif
 ###############################################################################
 # Used libraries
 
-LDLIBS		+= -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
+LDLIBS		+= -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group -Wl,--print-memory-usage
 
 ###############################################################################
 ###############################################################################
