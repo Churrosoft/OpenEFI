@@ -1,5 +1,7 @@
 #ifndef CONTROL_INTERFACE_H
 #define CONTROL_INTERFACE_H
+#include <libopencm3/usb/usbd.h>
+#include <libopencm3/usb/cdc.h>
 
 // Definición de mensajes
 typedef struct {
@@ -25,4 +27,6 @@ void send_message(usbd_device*, SerialMessage*);
 void process_frame(usbd_device*, SerialMessage*);
 void usb_spam_loop();
 uint16_t crc16(const unsigned char*, uint8_t);
+char frameBuffer[128] = {};
+int buffLength = 0;
 #endif

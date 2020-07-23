@@ -18,9 +18,9 @@
 
 #include <libopencm3/usb/usbd.h>
 #include "webusb.h"
-
+#include <stddef.h>
 #include "usb_conf.h"
-#include "control_interface.cpp"
+#include "control_interface.h"
 
 #ifndef LANDING_PAGE_URL
 #define LANDING_PAGE_URL "tuner.openefi.xyz/"

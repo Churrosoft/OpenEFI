@@ -13,8 +13,8 @@
 #include "../sensors/sensors.cpp"
 #include "../../qfplib/qfplib-m3.h"
 //Variables de todo el socotroco:
-char frameBuffer[128] = {};
-int buffLength = 0;
+/* char frameBuffer[128] = {};
+int buffLength = 0; */
 
 /** Procesa comandos.
  * @param usbd_dev

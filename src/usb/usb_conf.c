@@ -27,9 +27,12 @@
 #include <libopencm3/stm32/desig.h>
 #include "webusb.h"
 
-#include "usb21.c"
+#include "usb21.h"
 #include "webusb.h"
 #include "usb_conf.h"
+
+/* Table 6: Data Interface Class Code */
+#define USB_CLASS_DATA			0x0A
 
 // Endpoints disponibles
 static const struct usb_endpoint_descriptor data_endp[2] = {{
