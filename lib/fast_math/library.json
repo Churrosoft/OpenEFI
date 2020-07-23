@@ -1,12 +1,12 @@
 {
-    "name": "nano-float",
+    "name": "fast_math",
     "frameworks": "*",
     "platforms": "ststm32",
     "repository": {
         "type": "git",
-        "url": "https://github.com/lupyuen/codal-libopencm3"
+        "url": "https://github.com/openefi/fast_math"
     },
-    "description": "Tiny floating point library for Arm Cortex-M0 and M3",
+    "description": "Bitwise goes brrrrrr",
     "build": {        
         "unflags": [
             "-fno-rtti",
