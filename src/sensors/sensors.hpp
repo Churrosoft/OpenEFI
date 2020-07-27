@@ -23,13 +23,16 @@ namespace sensors
   static void loop_low_priority(void);
 
   //Struct con info de todos los sensores
-  struct values
+  struct SensorValues
   {
     uint8_t _TPS;
     uint16_t _MAP;
     uint16_t TEMP;
     uint16_t IAT;
-  } values{0, 0, 0, 0};
+  };
+  typedef struct SensorValues SensorValues;
+
+  extern SensorValues values;
 
 } // namespace sensors
 

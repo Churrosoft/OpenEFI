@@ -15,7 +15,10 @@
 #include <libopencm3/usb/cdc.h>
 // Librerias locales
 /* #include "defines.h" */
-#include "./usb/usb_conf.h"
+extern "C" {
+ #include "./usb/usb_conf.h"
+}
+
 #include "./usb/webusb.h"
 
 int main(void)
@@ -35,7 +38,7 @@ int main(void)
 	debug_force_flush(); //  Flush the debug buffer before we halt.
 #endif
 
-	fast_mul_10(45);
+	/* fast_mul_10(45); */
 	usbd_device *usbd_dev = usb_setup();
 	usbd_dev = usb_setup();
 	webusb_setup(usbd_dev);

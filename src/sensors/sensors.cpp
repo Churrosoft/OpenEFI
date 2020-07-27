@@ -1,5 +1,7 @@
 #include "sensors.hpp"
 
+sensors::SensorValues sensors::values = {0, 0, 0, 0};
+
 static void sensors::loop()
 {
 #if TPS_DUAL
