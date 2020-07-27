@@ -7,15 +7,18 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/adc.h>
 // custom:
+extern "C"
+{
 #include "./utils/ema.h"
+}
 #include "defines.h"
 
 //TODO: esto es un wrapper del ADC basicamente, refactorizar y dejar en namespace "ADC_Wrapper"
 
 struct input_handler
 {
-    struct EMALowPass values[16]; // valores pasados por EMA Low Pass
-} ;
+  struct EMALowPass values[16]; // valores pasados por EMA Low Pass
+};
 extern struct input_handler inputs;
 /** devuelve input selecionada pasada por filtro EMA Low Pass
   * @param pin entrada analogica a leer

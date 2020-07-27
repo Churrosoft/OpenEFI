@@ -15,12 +15,12 @@ namespace sensors
 {
   /** @brief Setup inicial de todos los sensores
     */
-  static void setup(void);
+  void setup(void);
 
   /** @brief Loop principal de los sensores, corre cada 75mS */
-  static void loop(void);
+  void loop(void);
   /** @brief Loop secundario, corre cada 250mS */
-  static void loop_low_priority(void);
+  void loop_low_priority(void);
 
   //Struct con info de todos los sensores
   struct SensorValues

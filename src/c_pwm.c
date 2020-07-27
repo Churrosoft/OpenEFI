@@ -1,34 +1,9 @@
 /*
 	** Esta wea se encarga del PWM para inyectores y bobinas, ademas de la sincronizacion del cigueñal
 */
+#include "c_pwm.h"
 
-#include "defines.h"
-
-// libopencm3:
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/cm3/nvic.h>
-#include <libopencm3/stm32/exti.h>
-#include <libopencm3/stm32/timer.h>
-
-struct C_PWM
-{
-	//variables para el control de la inyeccion
-	uint16_t inyFlag;
-	uint8_t inySubFlagA;   //! se utiliza para manejar el array con los inyectores (encendido)
-	uint8_t inySubFlagB;   //! se utiliza para manejar el array con los inyectores (apagado)
-	uint16_t inyPins[CIL]; //! array con pines para los inyectores
-	uint16_t time;		   //! tiempo de inyeccion
-//variables para el control de encendido
-#if mtr == 1
-	uint16_t ecnFlag;
-	uint8_t ecnSubFlagA; //! se utiliza para manejar el array con las bobinas (apagado)
-	uint8_t ecnSubFlagB; //! se utiliza para manejar el array con las bobinas (encendido)
-	uint16_t ecnPins[CIL];
-	uint16_t avc; //! avance de encendido
-#endif
-
-} myPWM = {
+C_PWM myPWM = {
 	0, 0, 0, C_PWM_INY, 1500
 #if mtr == 1
 	,
@@ -36,15 +11,7 @@ struct C_PWM
 #endif
 };
 
-//declaracion de funciones:
-static void tim_setup(void);	  // Inicia el timer2 && timer3
-static void exti_setup(void);	  // Inicia la interrupcion externa en el pin PB0
-void new_iny_time(unsigned long); // setea el tiempo proximo para el ISR del TIM2
-void new_ecn_time(unsigned long); // setea el tiempo proximo para el ISR del TIM3
-/*
- * Inicia los pines, configura el ISR para las interrupciones e inicia el timer
- */
-static void c_pwm_setup(void)
+void c_pwm_setup(void)
 {
 	tim_setup();
 	exti_setup();
@@ -63,7 +30,7 @@ static void c_pwm_setup(void)
 }
 
 //TIMER's
-static void tim_setup()
+void tim_setup()
 {
 	// TIMER 2
 	rcc_periph_clock_enable(RCC_TIM2);
@@ -137,7 +104,7 @@ void tim3_isr()
 }
 
 //INTERRUPT
-static void exti_setup()
+void exti_setup()
 {
 	/* Enable GPIOA | AFI0 clock. */
 	rcc_periph_clock_enable(RCC_GPIOB);

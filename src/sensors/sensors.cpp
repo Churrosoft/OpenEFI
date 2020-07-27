@@ -2,7 +2,7 @@
 
 sensors::SensorValues sensors::values = {0, 0, 0, 0};
 
-static void sensors::loop()
+void sensors::loop()
 {
 #if TPS_DUAL
 #error Function not yet implemented.
@@ -13,12 +13,12 @@ static void sensors::loop()
   sensors::values._MAP = MAP::get_value(get_input(4));
 };
 
-static void sensors::loop_low_priority()
+void sensors::loop_low_priority()
 {
   values.TEMP = TEMP::get_value(get_input(6));
 }
 
-static void sensors::setup()
+void sensors::setup()
 {
   input_setup();
   adc_setup();
