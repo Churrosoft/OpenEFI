@@ -14,7 +14,7 @@
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 // Librerias locales
-#include "defines.h"
+/* #include "defines.h" */
 #include "./usb/usb_conf.h"
 #include "./usb/webusb.h"
 

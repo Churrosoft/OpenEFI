@@ -3,7 +3,8 @@
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 // Definición de mensajes
-typedef struct {
+typedef struct
+{
     // Versión del protocolo. Por ahora PROTOCOL_VERSION_1.
     uint8_t protocolVersion;
     // Comando a ejecutar.
@@ -19,15 +20,15 @@ struct usb_spam_interface
     bool spam;
     uint16_t type;
 };
-struct usb_spam_interface usb_spam = {0,0};
 
-bool get_frame(char*, int);
+extern char frameBuffer[];
+extern int buffLength;
+
+bool get_frame(char *, int);
 char *get_msg(void);
 void clear_msg(void);
-void send_message(usbd_device*, SerialMessage*);
-void process_frame(usbd_device*, SerialMessage*);
+void send_message(usbd_device *, SerialMessage *);
+void process_frame(usbd_device *, SerialMessage *);
 void usb_spam_loop();
-uint16_t crc16(const unsigned char*, uint8_t);
-char frameBuffer[128] = {};
-int buffLength = 0;
+uint16_t crc16(const unsigned char *, uint8_t);
 #endif

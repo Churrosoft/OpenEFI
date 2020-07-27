@@ -1,11 +1,6 @@
-#ifndef IAT_CPP
-#define IAT_CPP
-#include <stdint.h>
-#include "defines.h"
-#include "./utils/basic_electronics.c"
-/*
-    todo el codigo relacionado al control del sensor "IAT"
-*/
+#ifndef IAT_HPP
+#define IAT_HPP
+
 namespace IAT
 {
     /** @brief devuelve valor en kPa del sensor
@@ -27,24 +22,5 @@ namespace IAT
      */
     uint8_t dtc(uint16_t);
 } // namespace IAT
-
-uint16_t IAT::get_value(uint16_t filt_input)
-{
-    return (uint16_t)IAT_CAL(filt_input);
-}
-
-uint32_t IAT::get_calibrate_value(uint16_t filt_input)
-{
-    return (uint32_t)IAT_CAL(filt_input) * 100;
-}
-
-uint8_t IAT::dtc(uint16_t in)
-{
-    if (in > IAT_MAX)
-        return 1;
-    if (in < IAT_MIN)
-        return -1;
-    return 0;
-}
 
 #endif

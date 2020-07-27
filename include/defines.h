@@ -23,13 +23,19 @@
 
 /*-----( C_PWM )-----*/
 
-#define CPWM_ENABLE             //!< Habilita el control de PWM
-#define PMSI 240                //!< Cantidad de dientes entre PMS
+#define CPWM_ENABLE //!< Habilita el control de PWM
+#define PMSI 240    //!< Cantidad de dientes entre PMS
 
-#define C_PWM_INY_PORT GPIOB                        //!<    puerto de los pines de inyeccion 2 3 4 5  2 4 5 3
-#define C_PWM_INY { GPIO6, GPIO4, GPIO5, GPIO3 }    //!<    pines del STM32 para la inyeccion
-#define C_PWM_ECN_PORT GPIOB                        //!<    puerto de los pines de encendido
-#define C_PWM_ECN { GPIO8, GPIO7 }                  //!<    pines del STM32 para el encendido
+#define C_PWM_INY_PORT GPIOB //!<    puerto de los pines de inyeccion 2 3 4 5  2 4 5 3
+#define C_PWM_INY                  \
+    {                              \
+        GPIO6, GPIO4, GPIO5, GPIO3 \
+    }                        //!<    pines del STM32 para la inyeccion
+#define C_PWM_ECN_PORT GPIOB //!<    puerto de los pines de encendido
+#define C_PWM_ECN    \
+    {                \
+        GPIO8, GPIO7 \
+    } //!<    pines del STM32 para el encendido
 
 // Inyeción:
 #define AVCI 30 //avance de inyeccion (si queres quemar las valvulas dejalo en 0)
@@ -48,10 +54,9 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 */
 
 #define _R 8.31446261815324 // en Pascal
-#define _N_CALC( KPa, iat_temp) ( (( KPa * 1000) * ED ) / (_R * iat_temp) )
+#define _N_CALC(KPa, iat_temp) (((KPa * 1000) * ED) / (_R * iat_temp))
 
-
-/*-----( I_IALG )-----*/	
+/*-----( I_IALG )-----*/
 //cuando tenga la libreria de memoria paso todo a variable, por ahora con define
 //int INY_L = 150,   //tiempo de apertura del inyector en microsegundos
 //INY_P = 500,   //tiempo en uS adicional para acelerar el motor
@@ -89,43 +94,43 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 
 //  ADC:
 // R2 = R1 * (1 / ((Vref / Vin) - 1)
-#define R1 10000            //!< para testear ahora todos los sensores tienen una resitencia de 10k en el divisor resistivo
-#define Vref 3300           //!< Volts del Vref del ADC, luego se puede reemplazar por el registro para que sea mas exacto
-#define ADC_MAX_VALUE 4095  //!< valor maximo del ADC, a 12 bit es 4095
+#define R1 10000           //!< para testear ahora todos los sensores tienen una resitencia de 10k en el divisor resistivo
+#define Vref 3300          //!< Volts del Vref del ADC, luego se puede reemplazar por el registro para que sea mas exacto
+#define ADC_MAX_VALUE 4095 //!< valor maximo del ADC, a 12 bit es 4095
 
 //  TPS:
-#define TPS_DUAL false       //!< Habilita el TPS doble, requiere remapeo de IO
+#define TPS_DUAL false //!< Habilita el TPS doble, requiere remapeo de IO
 
-#define TPS_MIN_A 1700       //!< Valor minimo en mV para el sensor TPS (primer potenciometro); valores inferiores disparan DTC
-#define TPS_MIN_B 1700       //!< Valor minimo en mV para el sensor TPS (segundo potenciometro); valores inferiores disparan DTC
-#define TPS_MAX_A 4500       //!< Valor maximo en mV para el sensor TPS (primer potenciometro); valores superiores disparan DTC
-#define TPS_MAX_B 4500       //!< Valor maximo en mv para el sensor TPS (segundo potenciometro); valores superiores disparan DTC
+#define TPS_MIN_A 1700 //!< Valor minimo en mV para el sensor TPS (primer potenciometro); valores inferiores disparan DTC
+#define TPS_MIN_B 1700 //!< Valor minimo en mV para el sensor TPS (segundo potenciometro); valores inferiores disparan DTC
+#define TPS_MAX_A 4500 //!< Valor maximo en mV para el sensor TPS (primer potenciometro); valores superiores disparan DTC
+#define TPS_MAX_B 4500 //!< Valor maximo en mv para el sensor TPS (segundo potenciometro); valores superiores disparan DTC
 
-#define TPS_CALC_FAST( mV ) ( (mV <= 3695) ? qfp_fdiv( qfp_fsub(mV, 1823), 37.44 ) :  qfp_fdiv( qfp_fsub(mV, 2943), 15.04 )  )
-#define TPS_CALC_A( mV )  ( (mV <= 3695) ?  (mV - 1823) / 37.44 :  (mV - 2943) / 15.04 ) //!< Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO MANDES UN MAP() DE ARDUINO ACA
+#define TPS_CALC_FAST(mV) ((mV <= 3695) ? qfp_fdiv(qfp_fsub(mV, 1823), 37.44) : qfp_fdiv(qfp_fsub(mV, 2943), 15.04))
+#define TPS_CALC_A(mV) ((mV <= 3695) ? (mV - 1823) / 37.44 : (mV - 2943) / 15.04) //!< Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO MANDES UN MAP() DE ARDUINO ACA
 
 //  TEMP:
 #define TEMP_MIN 800
 #define TEMP_MAX 4800
 
-float A = 1.12492089e-3;
-float B = 2.372075385e-4;
-float C = 6.954079529e-8;
+#define A 1.12492089e-3
+#define B 2.372075385e-4
+#define C 6.954079529e-8
 //float C = 2.019202697e-07; // Modelo B de NTC
-#define TEMP_K  2.5 //factor de disipacion en mW/C
+#define TEMP_K 2.5 //factor de disipacion en mW/C
 
 //  MAP:
 #define MAP_MIN 800
 #define MAP_MAX 4800
 
-#define MAP_CAL( mV ) (mV * 16.66 + 167)
-#define MAP_CAL_FAST( mV ) ( qfp_fadd( qfp_fmul(mV, 16.66), 167) )
+#define MAP_CAL(mV) (mV * 16.66 + 167)
+#define MAP_CAL_FAST(mV) (qfp_fadd(qfp_fmul(mV, 16.66), 167))
 
 //  IAT:
 #define IAT_MIN 200
 #define IAT_MAX 4000
 
-#define IAT_CAL( mV ) ( (3800 - mV) / 35 )
-#define IAT_CAL_FAST( mV ) ( qfp_fdiv( qfp_fsub(3800, mV), 35 ) )
+#define IAT_CAL(mV) ((3800 - mV) / 35)
+#define IAT_CAL_FAST(mV) (qfp_fdiv(qfp_fsub(3800, mV), 35))
 
 #endif

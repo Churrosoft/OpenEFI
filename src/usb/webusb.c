@@ -15,12 +15,12 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
+#include "control_interface.h"
+#include <string.h>
 #include <libopencm3/usb/usbd.h>
 #include "webusb.h"
 #include <stddef.h>
 #include "usb_conf.h"
-#include "control_interface.h"
 
 #ifndef LANDING_PAGE_URL
 #define LANDING_PAGE_URL "tuner.openefi.xyz/"
@@ -31,7 +31,7 @@
 #define LANDING_PAGE_DESCRIPTOR_SIZE (WEBUSB_DT_URL_DESCRIPTOR_SIZE + sizeof(LANDING_PAGE_URL) - 1)
 
 _Static_assert((LANDING_PAGE_DESCRIPTOR_SIZE < 256),
-              "Landing page URL is too long");
+               "Landing page URL is too long");
 
 const struct webusb_platform_descriptor webusb_platform = {
     .bLength = WEBUSB_PLATFORM_DESCRIPTOR_SIZE,
@@ -62,7 +62,8 @@ webusb_control_vendor_request(
     if (req->bRequest != WEBUSB_VENDOR_CODE)
         return USBD_REQ_NEXT_CALLBACK;
 
-    switch (req->wIndex){
+    switch (req->wIndex)
+    {
     case WEBUSB_REQ_GET_URL:
         if (req->wValue != 1)
             break;
@@ -78,15 +79,18 @@ webusb_control_vendor_request(
 }
 
 // Recepción de datos
-static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
+static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
+{
     (void)ep;
     (void)usbd_dev;
 
     char tempbuf2[64] = "";
 
     int len = usbd_ep_read_packet(usbd_dev, 0x01, tempbuf2, 64);
-    if (len > 0){
-        if (get_frame(tempbuf2, len)){
+    if (len > 0)
+    {
+        if (get_frame(tempbuf2, len))
+        {
             // Cuando ya tenemos un frame completo, lo procesamos.
             process_frame(usbd_dev, (SerialMessage *)&frameBuffer);
 
@@ -98,7 +102,8 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep){
     }
 }
 
-static void webusb_set_config(usbd_device *usbd_dev, uint16_t wValue){
+static void webusb_set_config(usbd_device *usbd_dev, uint16_t wValue)
+{
     (void)wValue;
     usbd_ep_setup(usbd_dev, 0x01, USB_ENDPOINT_ATTR_BULK, 64, cdcacm_data_rx_cb);
     usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_BULK, 64, NULL);
@@ -110,6 +115,7 @@ static void webusb_set_config(usbd_device *usbd_dev, uint16_t wValue){
         webusb_control_vendor_request);
 }
 
-void webusb_setup(usbd_device *usbd_dev){
+void webusb_setup(usbd_device *usbd_dev)
+{
     usbd_register_set_config_callback(usbd_dev, webusb_set_config);
 }
