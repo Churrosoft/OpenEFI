@@ -9,6 +9,7 @@ libopencm3
 qfplib
 test2.c
 utils/node_modules
+logs
 docs
 .pio
 .pio
