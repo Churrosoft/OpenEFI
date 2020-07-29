@@ -1,0 +1,131 @@
+{
+    // Defines the Visual Studio Code Tasks for building and debugging.
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🔎 Disassemble STM32 Blue Pill",
+            "type": "shell",
+            "windows": {
+                "command": "cmd",
+                "args": [
+                    "/c",
+                    " \"%userprofile%/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-objdump\" --wide --syms --source --line-numbers .pioenvs/bluepill_f103c8/firmware.elf >firmware.dump "
+                ]
+            },
+            "osx": {
+                "command": 
+                " ~/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-objdump --wide --syms --source --line-numbers .pioenvs/bluepill_f103c8/firmware.elf >firmware.dump "
+            },
+            "linux": {
+                "command": 
+                " ~/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-objdump --wide --syms --source --line-numbers .pioenvs/bluepill_f103c8/firmware.elf >firmware.dump "
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "🔗 Connect To STM32 Blue Pill",
+            "type": "shell",
+            "windows": {
+                "command": "c:\\openocd\\bin\\openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -f scripts/connect.ocd"
+            },
+            "osx": {
+                "command": " pkill openocd ; openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -f scripts/connect.ocd"
+            },
+            "linux": {
+                "command": " pkill openocd ; openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -f scripts/connect.ocd"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "🔗 Emulate STM32 Blue Pill",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "bash",
+                "args": [
+                    "-c",
+                    "../qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-f103c8 -semihosting -kernel .pioenvs/bluepill_f103c8/firmware.bin"
+                ]
+            },
+            "osx": {
+                "command": "../qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-f103c8 -semihosting -kernel .pioenvs/bluepill_f103c8/firmware.bin"
+            },
+            "linux": {
+                "command": "../qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-f103c8 -semihosting -kernel .pioenvs/bluepill_f103c8/firmware.bin"
+            },
+            "problemMatcher": {
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):([^:]+):(FAIL):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "code": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "🐛 Debug STM32 Blue Pill Emulator",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "bash",
+                "args": [
+                    "-c",
+                    "../qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-f103c8 -s -S -semihosting -kernel .pioenvs/bluepill_f103c8/firmware.bin"
+                ]
+            },
+            "osx": {
+                "command": "../qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-f103c8 -s -S -semihosting -kernel .pioenvs/bluepill_f103c8/firmware.bin"
+            },
+            "linux": {
+                "command": "../qemu_stm32/arm-softmmu/qemu-system-arm -M stm32-f103c8 -s -S -semihosting -kernel .pioenvs/bluepill_f103c8/firmware.bin"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Build",
+            "problemMatcher": [
+                "$platformio"
+            ]
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Upload",
+            "problemMatcher": [
+                "$platformio"
+            ]
+        }
+    ]
+}

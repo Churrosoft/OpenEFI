@@ -1,0 +1,19 @@
+{
+    "name": "fast_math",
+    "frameworks": "*",
+    "platforms": "ststm32",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/openefi/fast_math"
+    },
+    "description": "Bitwise goes brrrrrr",
+    "build": {        
+        "unflags": [
+            "-fno-rtti",
+            "-fno-threadsafe-statics"
+        ],
+        "flags": [
+            "-I inc"
+        ]
+    }
+}

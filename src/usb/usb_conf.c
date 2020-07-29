@@ -27,9 +27,12 @@
 #include <libopencm3/stm32/desig.h>
 #include "webusb.h"
 
-#include "usb21.c"
+#include "usb21.h"
 #include "webusb.h"
 #include "usb_conf.h"
+
+/* Table 6: Data Interface Class Code */
+#define USB_CLASS_DATA			0x0A
 
 // Endpoints disponibles
 static const struct usb_endpoint_descriptor data_endp[2] = {{
@@ -127,11 +130,11 @@ static const char *usb_strings[] = {
 /* Buffer to be used for control requests. */
 static uint8_t usbd_control_buffer[USB_CONTROL_BUF_SIZE] __attribute__ ((aligned (2)));
 
-const usbd_driver* usb_init(void) {
+const usbd_driver* usb_init() {
     return &st_usbfs_v1_usb_driver;
 }
 
-usbd_device* usb_setup(void) {
+usbd_device* usb_setup() {
     int num_strings = sizeof(usb_strings)/sizeof(const char*);
     desig_get_unique_id_as_string(serial_number, USB_SERIAL_NUM_LENGTH+1);
     serial_number[USB_SERIAL_NUM_LENGTH] = '\0';

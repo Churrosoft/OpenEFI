@@ -7,14 +7,19 @@
 #include "variables.h"
 //Structs para formatear data:
 #include "./dataStruct/status.h"
-#include "../helpers/bootloader.c"
+extern "C"
+{
+#include "../helpers/bootloader.h"
+}
 #include "control_interface.h"
-// pa los sensores:
-#include "../sensors/sensors.cpp"
-#include "../../qfplib/qfplib-m3.h"
+#include <libopencm3/usb/usbd.h>
+#include <libopencm3/usb/cdc.h>
+#include "sensors/sensors.hpp"
+
 //Variables de todo el socotroco:
 char frameBuffer[128] = {};
 int buffLength = 0;
+struct usb_spam_interface usb_spam = {0, 0};
 
 /** Procesa comandos.
  * @param usbd_dev
@@ -49,9 +54,9 @@ void process_frame(usbd_device *usbd_dev, SerialMessage *message)
             response.payload[2] = OPENEFI_VER_REV;
             break;
         case COMMAND_STATUS:
-            _status.RPM = sensors::values.MAP;
+            _status.RPM = sensors::values._MAP;
             _status.TEMP = sensors::values.TEMP;
-            _status.V00 = sensors::values.TPS;
+            _status.V00 = sensors::values._TPS;
             memcpy(response.payload, &_status, 122);
             break;
         case COMMAND_BOOTL_SW:

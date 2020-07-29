@@ -1,8 +1,7 @@
-#ifndef CPWM_UTILS
-#define CPWM_UTILS
-
 #include "defines.h"
 #include <stdint.h>
+#ifndef CPWM_UTILS
+#define CPWM_UTILS
 
 /** convierte grados en dientes del volante de inercia
  * @param grad grados a convertir

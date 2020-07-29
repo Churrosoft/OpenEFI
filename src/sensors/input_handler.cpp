@@ -1,34 +1,6 @@
-/* Esto se va a encargar de manejar el CD74HC4067 para obtener los diferentes sensores */
-#ifndef INPUT_HANDLER
-#define INPUT_HANDLER
-#include <stdint.h>
-// libopencm3:
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/adc.h>
-// custom:
-#include "./utils/ema_low_pass.c"
-#include "defines.h"
 
-//TODO: esto es un wrapper del ADC basicamente, refactorizar y dejar en namespace "ADC_Wrapper"
-
-struct input_handler
-{
-	struct EMALowPass values[16]; // valores pasados por EMA Low Pass
-} inputs;
-
-/** devuelve input selecionada pasada por filtro EMA Low Pass
-  * @param pin entrada analogica a leer
-*/
-uint16_t get_input(uint8_t);
-/** @return ADC register data
-*/
-uint16_t get_adc_data(uint8_t);
-
-/** @brief inicia el ADC y los trigers por tiempo
-*/
-void input_setup(void);
-
+#include "input_handler.hpp"
+struct input_handler inputs;
 uint16_t get_input(uint8_t pin)
 {
 	if (pin < 16)
@@ -63,7 +35,7 @@ void input_setup()
 #endif
 }
 
-static void adc_setup(void)
+void adc_setup()
 {
 	rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC1EN);
 	adc_power_off(ADC1);
@@ -75,7 +47,6 @@ static void adc_setup(void)
 	adc_set_right_aligned(ADC1);
 	adc_set_single_conversion_mode(ADC1);
 	adc_set_sample_time(ADC1, ADC_CHANNEL_TEMP, ADC_SMPR_SMP_239DOT5CYC);
-	adc_enable_temperature_sensor();
 	adc_power_on(ADC1);
 	adc_reset_calibration(ADC1);
 	adc_calibrate_async(ADC1);
@@ -92,5 +63,3 @@ uint16_t get_adc_data(uint8_t channel)
 		;
 	return (uint16_t)adc_read_regular(ADC1);
 }
-
-#endif
