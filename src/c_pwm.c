@@ -2,6 +2,9 @@
 	** Esta wea se encarga del PWM para inyectores y bobinas, ademas de la sincronizacion del cigueñal
 */
 #include "c_pwm.h"
+#include "variables.h"
+
+bool SINC = false;
 
 C_PWM myPWM = {
 	0, 0, 0, C_PWM_INY, 1500
@@ -139,29 +142,35 @@ void new_ecn_time(unsigned long nTime)
 
 void exti0_isr()
 {
-	myPWM.inyFlag++;
-	if (myPWM.inyFlag >= (PMSI - AVCI))
+	if (SINC)
 	{
-		if (myPWM.inySubFlagA > CIL)
-			myPWM.inySubFlagA = 0;
-		gpio_set(C_PWM_INY_PORT, myPWM.inyPins[myPWM.inySubFlagA]);
-		//CHIMER
-		new_iny_time(myPWM.time);
-		myPWM.inySubFlagA++;
-		myPWM.inyFlag = 0;
-	}
+		myPWM.inyFlag++;
+		if (myPWM.inyFlag >= (PMSI - AVCI))
+		{
+			if (myPWM.inySubFlagA > CIL)
+				myPWM.inySubFlagA = 0;
+			gpio_set(C_PWM_INY_PORT, myPWM.inyPins[myPWM.inySubFlagA]);
+			//CHIMER
+			new_iny_time(myPWM.time);
+			myPWM.inySubFlagA++;
+			myPWM.inyFlag = 0;
+		}
 #if mtr == 1
-	myPWM.ecnFlag++;
-	if (myPWM.ecnFlag >= (PMSI - myPWM.avc))
-	{
-		gpio_set(C_PWM_ECN_PORT, myPWM.ecnPins[myPWM.ecnSubFlagA]);
-		//CHIMER gpio_clear
-		new_ecn_time(15); // => go define
-		myPWM.ecnSubFlagA++;
-		if (myPWM.ecnSubFlagA > (CIL / 2))
-			myPWM.ecnSubFlagA = 0;
-		myPWM.ecnFlag = 0;
-	}
+		myPWM.ecnFlag++;
+		if (myPWM.ecnFlag >= (PMSI - myPWM.avc))
+		{
+			gpio_set(C_PWM_ECN_PORT, myPWM.ecnPins[myPWM.ecnSubFlagA]);
+			new_ecn_time(ECNT);
+			myPWM.ecnSubFlagA++;
+			if (myPWM.ecnSubFlagA > (CIL / 2))
+				myPWM.ecnSubFlagA = 0;
+			myPWM.ecnFlag = 0;
+		}
 #endif
+	}
+	else
+	{
+		/* sinc(); */
+	}
 	exti_reset_request(EXTI0);
 }

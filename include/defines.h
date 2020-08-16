@@ -24,7 +24,9 @@
 /*-----( C_PWM )-----*/
 
 #define CPWM_ENABLE //!< Habilita el control de PWM
-#define PMSI 240    //!< Cantidad de dientes entre PMS
+#define SINC_ENABLE //!< No borre este define, no sea tarado
+
+#define PMSI 240 //!< Cantidad de dientes entre PMS
 
 #define C_PWM_INY_PORT GPIOB //!<    puerto de los pines de inyeccion 2 3 4 5  2 4 5 3
 #define C_PWM_INY                  \
