@@ -1,34 +1,35 @@
-#include "defines.h"
-#include <stdint.h>
-#ifndef CPWM_UTILS
-#define CPWM_UTILS
+#include "c_pwm_utils.h"
 
-/** convierte grados en dientes del volante de inercia
- * @param grad grados a convertir
- * @return dientes equivalentes al angulo
-*/ 
-uint_fast16_t grad_to_dnt( float );
-
-//convierte grados en dientes del sensor hall
-int dientes(float grados){
-    float grad = 360 / DNT; //dividimos 360 grados por la cantidad de dientes
-    //dividimos grados por grad, luego multiplicamos por 100 para transformar el float en int
-    int x2 = (grados / (360 / DNT)) * 100;
-    //dividimos por 100, al hacer esto se eliminan los decimales, en prox ver redondear
-    int dnt2 = x2 / 100;
-    return dnt2;
+uint_fast16_t grad_to_dnt(float grad) {
+  return (uint_fast16_t)grad / (360 / DNT);
 }
 
-uint_fast16_t grad_to_dnt( float grad){
-    return (uint_fast16_t) grad / (360 / DNT);
+uint16_t dnt_to_grad(uint16_t _dnt) {
+  return fast_mul_10((360 / DNT) * _dnt);
 }
-// OLD code:
+
+void RPM() {
+  T_RPM_AC = millis();
+  if (T_RPM_AC - T_RPM_A >= RPM_per) {
+    T_RPM_A = T_RPM_AC;
+    _RPM = (_POS / DNT) * 90;  // calculo para obtener las rpm
+    _POS = 0;
+  }
+}
+
 /*
-  float grad = 360 / DNT; //dividimos 360 grados por la cantidad de dientes
-  //dividimos grados por grad, luego multiplicamos por 100 para transformar el float en int
-  int x2 = (grados / grad) * 100;
-  //dividimos por 100, al hacer esto se eliminan los decimales, en prox ver redondear
-  int dnt2 = x2 / 100;
-  return dnt2;
+  TODO: revisar si no mata mucho el rendimiento hacerlo en todos los ciclos (
+  por las duda' ) this shit se ejecuta cada vez que no esta sincronizado el
+  cigueñal, para bueno, sincronizarlo se exporta aca para no armar bardo el
+  archivo principal en teoria: en la ecu anteriormente si el diente actual es +-
+  60% mayor que el tiempo anterior es el diente doble = el proximo diente es el
+  1, == ya ta sincroniza2
 */
+
+bool sinc() {
+#ifdef SINC_ENABLE
+  return false;
+#else
+  return true;
 #endif
+}

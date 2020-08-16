@@ -11,6 +11,10 @@
 #include <libopencm3/stm32/exti.h>
 #include <libopencm3/stm32/timer.h>
 
+#include "defines.h"
+#include "variables.h"
+/* #include "./helpers/c_pwm_utils.h" */
+
 #ifndef C_PWM_HEADER
 #define C_PWM_HEADER
 
