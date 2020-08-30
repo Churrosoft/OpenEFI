@@ -8,4 +8,6 @@ void timer_schedule() {
     sensors::loop();
   if (Time.millis % 150 == 0)
     sensors::loop_low_priority();
+  if (Time.millis % RPM_per == 0)
+    RPM();
 }

@@ -1,4 +1,6 @@
 #include "c_pwm_utils.h"
+uint64_t T_RPM_AC = 0, T_RPM_A = 0;
+int _RPM = 0, _POS = 0;
 
 uint_fast16_t grad_to_dnt(float grad) {
   return (uint_fast16_t)grad / (360 / DNT);
@@ -28,7 +30,22 @@ void RPM() {
 
 bool sinc() {
 #ifdef SINC_ENABLE
-  return false;
+  if (!SINC) {
+    if (sincB) {
+      Tb = micros();
+      T1 = Tb - Ta;
+      Ta = Tb;
+      sincB = false;
+    } else {
+      Tb = micros();
+      T2 = Tb - Ta;
+      Ta = Tb;
+      sincB = true;
+      return T2 > (T1 + (T1 / 2.3));
+    }
+    return false;
+  }
+  return true;
 #else
   return true;
 #endif

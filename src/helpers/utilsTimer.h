@@ -13,4 +13,8 @@ void utils_timer_setup(void);
  */
 uint32_t millis(void);
 
+/** @brief devuelve uS desde que se prendio el mcu
+ */
+uint32_t micros(void);
+
 #endif

@@ -1,4 +1,5 @@
 #include "utilsTimer.h"
+
 UtilsTimer Time = {0, 0, 0};
 
 void sys_tick_handler(void) {
@@ -22,6 +23,6 @@ void utils_timer_setup(void) {
   systick_counter_enable();
 }
 
-uint32_t millis() {
-  return Time.millis;
-}
+uint32_t millis() { return Time.millis; }
+
+uint32_t micros() { return Time.micros; }

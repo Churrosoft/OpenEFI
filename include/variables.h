@@ -16,8 +16,8 @@ extern bool
 
 /*-----( Variables RPM )-----*/
 
-extern long T_RPM_AC; //para saber tiempo actual
-extern long T_RPM_A;  //para saber tiempo anterior
+extern uint64_t T_RPM_AC; //para saber tiempo actual
+extern uint64_t T_RPM_A;  //para saber tiempo anterior
 
 /*-----( Variables sincronizado )-----*/
 extern bool sincB;

@@ -13,7 +13,7 @@
 
 #include "defines.h"
 #include "variables.h"
-/* #include "./helpers/c_pwm_utils.h" */
+#include "./helpers/c_pwm_utils.h"
 
 #ifndef C_PWM_HEADER
 #define C_PWM_HEADER
