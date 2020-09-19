@@ -2,7 +2,6 @@
 // custom:
 #include "./ema.h"
 #include "defines.h"
-#include "../../../qfplib/qfplib-m3.h"
 
 uint16_t convert_to_resistance(uint16_t adcval)
 {
