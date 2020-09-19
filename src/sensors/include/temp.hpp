@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "defines.h"
 #include "../utils/basic_electronics.h"
-#include "../../qfplib/qfplib-m3.h"
+#include <math.h>
 
 #ifndef TEMP_CPP
 #define TEMP_CPP

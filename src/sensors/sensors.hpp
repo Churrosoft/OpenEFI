@@ -1,6 +1,6 @@
 #ifndef SENSORS_CPP
 #define SENSORS_CPP
-#include "../../qfplib/qfplib-m3.h"
+
 #include "./input_handler.hpp"
 #include "defines.h"
 //sensores:

@@ -108,7 +108,6 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define TPS_MAX_A 4500 //!< Valor maximo en mV para el sensor TPS (primer potenciometro); valores superiores disparan DTC
 #define TPS_MAX_B 4500 //!< Valor maximo en mv para el sensor TPS (segundo potenciometro); valores superiores disparan DTC
 
-#define TPS_CALC_FAST(mV) ((mV <= 3695) ? qfp_fdiv(qfp_fsub(mV, 1823), 37.44) : qfp_fdiv(qfp_fsub(mV, 2943), 15.04))
 #define TPS_CALC_A(mV) ((mV <= 3695) ? (mV - 1823) / 37.44 : (mV - 2943) / 15.04) //!< Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO MANDES UN MAP() DE ARDUINO ACA
 
 //  TEMP:
@@ -125,14 +124,12 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define MAP_MIN 800
 #define MAP_MAX 4800
 
-#define MAP_CAL(mV) (mV * 16.66 + 167)
-#define MAP_CAL_FAST(mV) (qfp_fadd(qfp_fmul(mV, 16.66), 167))
+#define MAP_CAL(mV) (mV * 16.66 + 167) 
 
 //  IAT:
 #define IAT_MIN 200
 #define IAT_MAX 4000
 
 #define IAT_CAL(mV) ((3800 - mV) / 35)
-#define IAT_CAL_FAST(mV) (qfp_fdiv(qfp_fsub(3800, mV), 35))
 
 #endif
