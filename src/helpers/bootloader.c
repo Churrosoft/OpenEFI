@@ -7,7 +7,7 @@ void rtc_backup_write(uint8_t reg, uint32_t value);
 
 void rtc_backup_write(uint8_t reg, uint32_t value) {
     rcc_periph_clock_enable(RCC_PWR);
-    rcc_periph_clock_enable(RCC_BKP);
+    rcc_periph_clock_enable(RCC_RTC);
 
     pwr_disable_backup_domain_write_protect();
     RTC_BKP_DR((int)reg*2) = value & 0xFFFFUL;

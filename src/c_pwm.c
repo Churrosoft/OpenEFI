@@ -25,11 +25,11 @@ void c_pwm_setup(void) {
   /* Configure INY outputs*/
   rcc_periph_clock_enable(RCC_GPIOB);
   for (uint8_t i = 0; i < CIL; i++) {
-    gpio_set_mode(C_PWM_INY_PORT, GPIO_MODE_OUTPUT_2_MHZ,
+    gpio_set_mode(C_PWM_INY_PORT, GPIO_MODE_OUTPUT,
                   GPIO_CNF_OUTPUT_PUSHPULL, myPWM.inyPins[i]);
 #if mtr == 1
     if (i < (CIL / 2)) {
-      gpio_set_mode(C_PWM_ECN_PORT, GPIO_MODE_OUTPUT_2_MHZ,
+      gpio_set_mode(C_PWM_ECN_PORT, GPIO_MODE_OUTPUT,
                     GPIO_CNF_OUTPUT_PUSHPULL, myPWM.ecnPins[i]);
     }
 #endif
@@ -114,7 +114,7 @@ void exti_setup() {
   nvic_enable_irq(NVIC_EXTI0_IRQ);
 
   /* Set GPIO0 (in GPIO port A) to 'input float'. */
-  gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO0);
+  gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO0);
 
   /* Configure the EXTI subsystem. */
   exti_select_source(EXTI0, GPIOB);
