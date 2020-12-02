@@ -106,6 +106,7 @@ void Error_Handler(void);
 #define INY4_GPIO_Port GPIOD
 #define CKP_Pin GPIO_PIN_12
 #define CKP_GPIO_Port GPIOD
+#define CKP_EXTI_IRQn EXTI15_10_IRQn
 #define ECN1_Pin GPIO_PIN_13
 #define ECN1_GPIO_Port GPIOD
 #define ECN2_Pin GPIO_PIN_14
@@ -116,6 +117,7 @@ void Error_Handler(void);
 #define ECN4_GPIO_Port GPIOC
 #define CPS_Pin GPIO_PIN_7
 #define CPS_GPIO_Port GPIOC
+#define CPS_EXTI_IRQn EXTI9_5_IRQn
 #define AUX_OUT_0_Pin GPIO_PIN_8
 #define AUX_OUT_0_GPIO_Port GPIOC
 #define AUX_OUT_1_Pin GPIO_PIN_9
