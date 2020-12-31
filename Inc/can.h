@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    can.h
-  * @brief   This file contains all the function prototypes for
-  *          the can.c file
+  * File Name          : CAN.h
+  * Description        : This file provides code for the configuration
+  *                      of the CAN instances.
   ******************************************************************************
   * @attention
   *
@@ -17,11 +17,10 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __CAN_H__
-#define __CAN_H__
-
+#ifndef __can_H
+#define __can_H
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -46,7 +45,14 @@ void MX_CAN1_Init(void);
 #ifdef __cplusplus
 }
 #endif
+#endif /*__ can_H */
 
-#endif /* __CAN_H__ */
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

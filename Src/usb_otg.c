@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    usb_otg.c
-  * @brief   This file provides code for the configuration
-  *          of the USB_OTG instances.
+  * File Name          : USB_OTG.c
+  * Description        : This file provides code for the configuration
+  *                      of the USB_OTG instances.
   ******************************************************************************
   * @attention
   *
