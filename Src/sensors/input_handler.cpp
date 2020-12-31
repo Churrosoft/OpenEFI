@@ -35,6 +35,7 @@ void adc_setup()
 
 uint16_t get_adc_data(uint8_t channel)
 {
+#warning Channel selector not finished
     HAL_ADC_Start(&hadc1);
     // Poll ADC1 Perihperal & TimeOut = 1mSec
     HAL_ADC_PollForConversion(&hadc1, 1);
