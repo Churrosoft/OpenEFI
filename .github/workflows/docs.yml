@@ -12,20 +12,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        name: install Doxygen && deps
+
+      - name: install Doxygen && deps
         shell: bash
         run: |
           sudo apt update
           sudo apt install  wget libncurses-dev doxygen doxygen-doc doxygen-latex doxygen-gui graphviz
         
-      - uses: actions/checkout@v2 
-        name: Build docs
+      - name: Build docs
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
         shell: bash
         run: ./gen_docc.sh "$GH_REPO_TOKEN"
 
-     
       - uses: actions/upload-artifact@v2
         name: Upload docs to artifacts
         with:
