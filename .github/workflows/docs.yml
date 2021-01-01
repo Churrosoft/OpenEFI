@@ -1,0 +1,31 @@
+name: DOCS
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - shell: bash
+        - name: install Doxygen && deps
+          run: |
+            sudo apt update
+            sudo apt install  wget libncurses-dev doxygen doxygen-doc doxygen-latex doxygen-gui graphviz
+        
+        - uses: actions/checkout@v2
+        - shell: bash
+        - name: Build docs
+          env:
+            GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
+          run: ./gen_docc.sh "$GH_REPO_TOKEN"
+
+        - name: Upload docs to artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            name: artifacts
+            path: ./
