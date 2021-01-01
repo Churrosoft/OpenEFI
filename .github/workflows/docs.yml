@@ -25,8 +25,9 @@ jobs:
       - shell: bash
         run: ./gen_docc.sh "$GH_REPO_TOKEN"
 
+     
+      - uses: actions/upload-artifact@v2
       - name: Upload docs to artifacts
-        uses: actions/upload-artifact@v2
         with:
           name: artifacts
           path: ./
