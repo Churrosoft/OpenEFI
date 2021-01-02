@@ -29,8 +29,6 @@ jobs:
 
       - name: A ver donde corno estamos
         run: |
-          sudo apt update
-          sudo apt install find
           echo $PWD
           find . -type f -name "*.bin"
           find . -type f -name "*.elf"
