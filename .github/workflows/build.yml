@@ -31,4 +31,4 @@ jobs:
         name: Upload firmware files
         with:
           name: firmware 
-          path: ${{ github.workspace }}/.pio/build/*.bin , ${{ github.workspace }}/.pio/build/*.elf
+          path: ${{ github.workspace }}/.pio/build/black_f407vg/*.bin , ${{ github.workspace }}/.pio/build/black_f407vg/*.elf
