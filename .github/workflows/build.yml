@@ -35,7 +35,7 @@ jobs:
       - name: create build tag (1/2)
         run: echo "TEMP_TAG=${BINARY##*/}" >> $GITHUB_ENV
       - name: create build tag (2/2)
-        run: echo "BUILD_TAG=$(echo ${TEMP_TAG%.*})" >> .env
+        run: echo "BUILD_TAG=$(echo ${TEMP_TAG%.*})" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v2
         name: Upload firmware files
