@@ -39,4 +39,4 @@ jobs:
          ELF: $(find . -type f -name "*.elf")
         with:
           name: firmware 
-          path: ${BINARY}, ${ELF}
+          path: ${{ env.BINARY }}, ${{ env.ELF }}
