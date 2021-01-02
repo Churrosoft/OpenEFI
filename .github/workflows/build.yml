@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: '3.x'
         
-      - name:  Set up Platformio
+      - name: Set up Platformio
         run:
             pip install -U platformio
             platformio update
@@ -31,4 +31,4 @@ jobs:
         name: Upload firmware files
         with:
           name: firmware 
-          path: ${{ github.workspace }}/.pio/build/black_f407vg/*.bin , ${{ github.workspace }}/.pio/build/black_f407vg/*.elf
+          path: .pio/build/black_f407vg/*.bin , .pio/build/black_f407vg/*.elf
