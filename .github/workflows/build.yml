@@ -28,7 +28,7 @@ jobs:
             platformio run
 
       - name: A ver donde corno estamos
-        run: 
+        run: |
           sudo apt update
           sudo apt install find
           echo $PWD
