@@ -29,6 +29,8 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         name: Upload firmware files
+        run:
+          echo $PWD
         with:
           name: firmware 
           path: .pio/build/**/*.bin , .pio/**/**.elf
