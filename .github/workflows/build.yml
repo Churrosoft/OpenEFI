@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: "ubuntu-18.04"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+        
+      - name:  Set up Platformio
+        run:
+            pip install -U platformio
+            platformio update
+
+      - name: Build firmware
+        run:
+            platformio run
+
+      - uses: actions/upload-artifact@v2
+        name: Upload firmware files
+        with:
+          name: firmware 
+          path: ${{ github.workspace }}/.pio/build/*.bin , ${{ github.workspace }}/.pio/build/*.elf

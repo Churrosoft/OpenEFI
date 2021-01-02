@@ -44,7 +44,7 @@ set -e
 # Create a clean working directory for this script.
 #mkdir code_docs
 #cd code_docs
-
+echo $PWD
 # Get the current gh-pages branch
 git clone -b gh-pages https://git@$GH_REPO_REF
 cd ./OpenEFI
