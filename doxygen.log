@@ -7,6 +7,14 @@ warning: ignoring unsupported tag `FORMULA_MACROFILE      =' at line 1567, file 
 warning: ignoring unsupported tag `LATEX_MAKEINDEX_CMD    =' at line 1751, file ../Doxyfile
 warning: ignoring unsupported tag `LATEX_EMOJI_DIRECTORY  =' at line 1893, file ../Doxyfile
 warning: ignoring unsupported tag `XML_NS_MEMB_FILE_SCOPE =' at line 2037, file ../Doxyfile
+warning: tag INPUT: input source `./Src' does not exist
+warning: tag INPUT: input source `./Inc' does not exist
+warning: tag INPUT: input source `../../Src' does not exist
+warning: tag INPUT: input source `../../Inc' does not exist
+warning: source ./Src is not a readable file or directory... skipping.
+warning: source ./Inc is not a readable file or directory... skipping.
+warning: source ../../Src is not a readable file or directory... skipping.
+warning: source ../../Inc is not a readable file or directory... skipping.
 Searching for include files...
 Searching for example files...
 Searching for images...
