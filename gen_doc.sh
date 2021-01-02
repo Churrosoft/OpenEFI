@@ -42,12 +42,12 @@ echo 'Setting up the script...'
 set -e
 
 # Create a clean working directory for this script.
-mkdir code_docs
-cd code_docs
+#mkdir code_docs
+#cd code_docs
 
 # Get the current gh-pages branch
-git clone -b gh-pages https://git@$GH_REPO_REF
-cd ./OpenEFI
+#git clone -b gh-pages https://git@$GH_REPO_REF
+#cd ./OpenEFI
 
 ##### Configure git.
 # Set the push default to simple i.e. push only the current branch.

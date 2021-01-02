@@ -23,7 +23,9 @@ jobs:
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
         shell: bash
-        run: ./gen_docc.sh "$GH_REPO_TOKEN"
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          ./gen_docc.sh "$GH_REPO_TOKEN"
 
       - uses: actions/upload-artifact@v2
         name: Upload docs to artifacts
