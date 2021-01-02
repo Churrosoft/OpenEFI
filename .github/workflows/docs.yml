@@ -24,7 +24,9 @@ jobs:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
         shell: bash
         run: |
+          tree -L 2
           cd "$GITHUB_WORKSPACE"
+          tree -L 3
           ./gen_docc.sh "$GH_REPO_TOKEN"
 
       - uses: actions/upload-artifact@v2
