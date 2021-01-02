@@ -34,6 +34,9 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         name: Upload firmware files
+        env:
+         BINARY: $(find . -type f -name "*.bin")
+         ELF: $(find . -type f -name "*.elf")
         with:
           name: firmware 
-          path: ./.pio/build/**/*.bin , ./.pio/**/**.elf
+          path: ${BINARY}, ${ELF}
