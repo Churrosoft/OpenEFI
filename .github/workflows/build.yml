@@ -29,14 +29,13 @@ jobs:
 
       - name: Check if firmware files exits
         run: |
-          find . -type f -name "*.bin"
-          find . -type f -name "*.elf"
+          echo "BINARY=$(find . -type f -name "*.bin")" >> $GITHUB_ENV
+          echo "BINARY=$(find . -type f -name "*.elf")" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v2
         name: Upload firmware files
-        env:
-         BINARY: $(find . -type f -name "*.bin")
-         ELF: $(find . -type f -name "*.elf")
         with:
           name: firmware 
-          path: ${{ env.BINARY }}, ${{ env.ELF }}
+          files: |
+            ${{ env.BINARY }}
+            ${{ env.ELF }}
