@@ -27,9 +27,8 @@ jobs:
         run:
             platformio run
 
-      - name: A ver donde corno estamos
+      - name: Check if firmware files exits
         run: |
-          echo $PWD
           find . -type f -name "*.bin"
           find . -type f -name "*.elf"
 
@@ -37,4 +36,4 @@ jobs:
         name: Upload firmware files
         with:
           name: firmware 
-          path: .pio/build/**/*.bin , .pio/**/**.elf
+          path: ./.pio/build/**/*.bin , ./.pio/**/**.elf
