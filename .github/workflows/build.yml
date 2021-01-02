@@ -31,9 +31,11 @@ jobs:
         run: |
           echo "BINARY=$(find . -type f -name "*.bin")" >> $GITHUB_ENV
           echo "ELF=$(find . -type f -name "*.elf")" >> $GITHUB_ENV
-          BIN=$(find . -type f -name "*.elf")
-          NAME=${BIN##*/}
-          echo "BUILD_TAG=$(echo ${NAME%.*})" >> .env
+
+      - name: create build tag (1/2)
+        run: echo "TEMP_TAG=${BINARY##*/}" >> $GITHUB_ENV
+      - name: create build tag (2/2)
+        run: echo "BUILD_TAG=$(echo ${TEMP_TAG%.*})" >> .env
 
       - uses: actions/upload-artifact@v2
         name: Upload firmware files
