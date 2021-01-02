@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-18.04"
 
     steps:
       - uses: actions/checkout@v2
@@ -17,17 +17,16 @@ jobs:
         shell: bash
         run: |
           sudo apt update
-          sudo apt install  wget libncurses-dev doxygen doxygen-doc doxygen-latex doxygen-gui graphviz
+          sudo apt install -y wget libncurses-dev doxygen doxygen-doc doxygen-latex doxygen-gui graphviz tree git
         
       - name: Build docs
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
         shell: bash
         run: |
-          tree -L 2
           cd "$GITHUB_WORKSPACE"
-          tree -L 3
-          ./gen_docc.sh "$GH_REPO_TOKEN"
+          chmod +x ./gen_doc.sh
+          ./gen_doc.sh "$GH_REPO_TOKEN"
 
       - uses: actions/upload-artifact@v2
         name: Upload docs to artifacts

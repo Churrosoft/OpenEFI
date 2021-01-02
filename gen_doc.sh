@@ -32,9 +32,9 @@
 # 
 ################################################################################
 GH_REPO_TOKEN=$1
-GH_REPO_NAME: OpenEFI
-DOXYFILE: ./Doxyfile
-GH_REPO_REF: github.com/openefi/OpenEFI.git
+GH_REPO_NAME=OpenEFI
+DOXYFILE="../Doxyfile"
+GH_REPO_REF=github.com/openefi/OpenEFI.git
 ################################################################################
 ##### Setup this script and get the current gh-pages branch.               #####
 echo 'Setting up the script...'
@@ -46,15 +46,15 @@ set -e
 #cd code_docs
 
 # Get the current gh-pages branch
-#git clone -b gh-pages https://git@$GH_REPO_REF
-#cd ./OpenEFI
+git clone -b gh-pages https://git@$GH_REPO_REF
+cd ./OpenEFI
 
 ##### Configure git.
 # Set the push default to simple i.e. push only the current branch.
 git config --global push.default simple
-# Pretend to be an user called Travis CI.
-git config user.name "Travis CI"
-git config user.email "travis@travis-ci.org"
+# Pretend to be an user called GitHub CI.
+git config user.name "GitHub CI"
+git config user.email "github@github-ci.org"
 
 # Remove everything currently in the gh-pages branch.
 # GitHub is smart enough to know which files have changed and which files have
