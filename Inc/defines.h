@@ -15,7 +15,7 @@
 #define mtr 1           //!< habilita encendido
 #define CIL 4           //!< cantidad de cilindros o pistones, o camaras de combustion, etc ?)
 #define L_CIL (CIL - 1) //!< cilindros logicos, para manejar arrays y demases
-#define DNT 300         //!< cantidad de dientes del sensor CKP
+#define DNT 58         //!< cantidad de dientes del sensor CKP
 #define Alpha 1         //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 #define ED 1600         //!< cilindrada en CC del motor
 
@@ -116,9 +116,6 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define TEMP_MIN 800
 #define TEMP_MAX 4800
 
-const uint32_t A = 1.12492089e-3;
-const uint32_t B = 2.372075385e-4;
-const uint32_t C = 6.954079529e-8;
 //float C = 2.019202697e-07; // Modelo B de NTC
 #define TEMP_K 2.5 //factor de disipacion en mW/C
 

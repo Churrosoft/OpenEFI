@@ -21,6 +21,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_it.h"
+#include "variables.h"
+#include "./sensors/utils/sinc.h"
+
+uint32_t _POS;
+uint32_t _POS_AE;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -208,6 +213,22 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 
   /* USER CODE END EXTI9_5_IRQn 0 */
+  /** la manera "catolica", seria sobre-escribir la funcion HAL_GPIO_EXTI_Callback, pero t2 slow 
+   * CKP => PC6
+   * CMP => PC7
+   * TODO: remapear pines con sus correspondientes en main.h
+   */
+  if (__HAL_GPIO_EXTI_GET_FLAG(GPIO_PIN_6))
+  {
+    _POS++;
+  }
+
+  if (__HAL_GPIO_EXTI_GET_FLAG(GPIO_PIN_7))
+  {
+    _POS_AE++;
+  }
+
+  SINC = sinc();
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_7);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */

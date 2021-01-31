@@ -1,6 +1,10 @@
 #include "../include/temp.hpp"
 #include <math.h>
 
+const uint32_t A = 1.12492089e-3;
+const uint32_t B = 2.372075385e-4;
+const uint32_t C = 6.954079529e-8;
+
 uint16_t TEMP::get_value(uint16_t filt_input) {
   // http://en.wikipedia.org/wiki/Steinhart–Hart_equation
   // C standard equivalent:
