@@ -75,7 +75,7 @@ void memory::read_multiple(uint8_t a, uint8_t b, uint8_t c, uint8_t *buffer,
   }
 }
 
-void memory::write__single(uint8_t a, uint8_t b, uint8_t c, uint8_t data) {
+void memory::write_single(uint8_t a, uint8_t b, uint8_t c, uint8_t data) {
   if (!memory::is_busy()) {
     memory::CS(true);
     HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
