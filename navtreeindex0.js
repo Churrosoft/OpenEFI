@@ -189,6 +189,7 @@ var NAVTREEINDEX0 =
 "main_8h_source.html":[1,0,0,4],
 "map_8hpp_source.html":[1,0,1,2,0,1],
 "memory_8hpp_source.html":[1,0,1,1,0,1],
+"memory__dtc_8hpp_source.html":[1,0,1,1,0,2],
 "pages.html":[],
 "sensors_8hpp_source.html":[1,0,1,2,3],
 "sinc_8h.html":[1,0,1,2,1,2],
