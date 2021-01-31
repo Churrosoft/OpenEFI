@@ -35,7 +35,6 @@ void \hyperlink{stm32f4xx__it_8h_a6303e1f258cbdc1f970ce579cc015623}{Pend\+S\+V\+
 \mbox{\Hypertarget{stm32f4xx__it_8h_ab5e09814056d617c521549e542639b7e}\label{stm32f4xx__it_8h_ab5e09814056d617c521549e542639b7e}} 
 void \hyperlink{stm32f4xx__it_8h_ab5e09814056d617c521549e542639b7e}{Sys\+Tick\+\_\+\+Handler} (void)
 \begin{DoxyCompactList}\small\item\em This function handles System tick timer. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{stm32f4xx__it_8h_a7b2096b8b2643286dc3a7e5110e5ae85}\label{stm32f4xx__it_8h_a7b2096b8b2643286dc3a7e5110e5ae85}} 
 void \hyperlink{stm32f4xx__it_8h_a7b2096b8b2643286dc3a7e5110e5ae85}{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler} (void)
 \begin{DoxyCompactList}\small\item\em This function handles E\+X\+TI line\mbox{[}9\+:5\mbox{]} interrupts. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{stm32f4xx__it_8h_a738473a5b43f6c92b80ce1d3d6f77ed9}\label{stm32f4xx__it_8h_a738473a5b43f6c92b80ce1d3d6f77ed9}} 
@@ -55,3 +54,16 @@ This file contains the headers of the interrupt handlers.
 \subsubsection*{\begin{center}\copyright{} Copyright (c) 2020 S\+T\+Microelectronics. All rights reserved.\end{center} }
 
 This software component is licensed by ST under B\+SD 3-\/\+Clause license, the \char`\"{}\+License\char`\"{}; You may not use this file except in compliance with the License. You may obtain a copy of the License at\+: opensource.\+org/licenses/\+B\+S\+D-\/3-\/\+Clause 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{stm32f4xx__it_8h_a7b2096b8b2643286dc3a7e5110e5ae85}\label{stm32f4xx__it_8h_a7b2096b8b2643286dc3a7e5110e5ae85}} 
+\index{stm32f4xx\+\_\+it.\+h@{stm32f4xx\+\_\+it.\+h}!E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler@{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler}}
+\index{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler@{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler}!stm32f4xx\+\_\+it.\+h@{stm32f4xx\+\_\+it.\+h}}
+\subsubsection{\texorpdfstring{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler()}{EXTI9\_5\_IRQHandler()}}
+{\footnotesize\ttfamily void E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+This function handles E\+X\+TI line\mbox{[}9\+:5\mbox{]} interrupts. 
+
+la manera \char`\"{}catolica\char`\"{}, seria sobre-\/escribir la funcion H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+Callback, pero t2 slow C\+KP =$>$ P\+C6 C\+MP =$>$ P\+C7 T\+O\+DO\+: remapear pines con sus correspondientes en \hyperlink{main_8h}{main.\+h}

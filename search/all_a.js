@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['pendsv_5fhandler',['PendSV_Handler',['../stm32f4xx__it_8c.html#a6303e1f258cbdc1f970ce579cc015623',1,'PendSV_Handler(void):&#160;stm32f4xx_it.c'],['../stm32f4xx__it_8h.html#a6303e1f258cbdc1f970ce579cc015623',1,'PendSV_Handler(void):&#160;stm32f4xx_it.c']]],
-  ['pmsi',['PMSI',['../defines_8h.html#a3ea16d89c4d1fb6e827010391c1da564',1,'defines.h']]]
+  ['nmi_5fhandler',['NMI_Handler',['../stm32f4xx__it_8c.html#a6ad7a5e3ee69cb6db6a6b9111ba898bc',1,'NMI_Handler(void):&#160;stm32f4xx_it.c'],['../stm32f4xx__it_8h.html#a6ad7a5e3ee69cb6db6a6b9111ba898bc',1,'NMI_Handler(void):&#160;stm32f4xx_it.c']]]
 ];

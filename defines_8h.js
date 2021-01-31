@@ -58,8 +58,5 @@ var defines_8h =
     [ "TPS_MAX_B", "defines_8h.html#ab32c8d7c8246a3671214e176fa5f767b", null ],
     [ "TPS_MIN_A", "defines_8h.html#aa512403a6a9fcbfa17d284985e860e22", null ],
     [ "TPS_MIN_B", "defines_8h.html#a853e90a498b40419ef604574cf449fa1", null ],
-    [ "Vref", "defines_8h.html#a7c4a8191a821caeaf796e5dbef63750d", null ],
-    [ "A", "defines_8h.html#a789ccbc6a012ce7be0f1ca567a420707", null ],
-    [ "B", "defines_8h.html#afc585498f477e248adb6a8941d307906", null ],
-    [ "C", "defines_8h.html#af3db872a0ebdadcd77426b6e3883e1be", null ]
+    [ "Vref", "defines_8h.html#a7c4a8191a821caeaf796e5dbef63750d", null ]
 ];

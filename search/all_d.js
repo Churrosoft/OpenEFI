@@ -1,10 +1,12 @@
 var searchData=
 [
-  ['tim8_5ftrg_5fcom_5ftim14_5firqhandler',['TIM8_TRG_COM_TIM14_IRQHandler',['../stm32f4xx__it_8c.html#a4c8359a023f7ede4a9d9f94ea6fb92da',1,'TIM8_TRG_COM_TIM14_IRQHandler(void):&#160;stm32f4xx_it.c'],['../stm32f4xx__it_8h.html#a4c8359a023f7ede4a9d9f94ea6fb92da',1,'TIM8_TRG_COM_TIM14_IRQHandler(void):&#160;stm32f4xx_it.c']]],
-  ['tps_5fcalc_5fa',['TPS_CALC_A',['../defines_8h.html#ad52b4f48f8cce28e36d77d1ced7e8dd9',1,'defines.h']]],
-  ['tps_5fdual',['TPS_DUAL',['../defines_8h.html#a6ece768bdf35a4e819ddc495181392b5',1,'defines.h']]],
-  ['tps_5fmax_5fa',['TPS_MAX_A',['../defines_8h.html#ad68d322f7d60cda5ba71dd843e48710e',1,'defines.h']]],
-  ['tps_5fmax_5fb',['TPS_MAX_B',['../defines_8h.html#ab32c8d7c8246a3671214e176fa5f767b',1,'defines.h']]],
-  ['tps_5fmin_5fa',['TPS_MIN_A',['../defines_8h.html#aa512403a6a9fcbfa17d284985e860e22',1,'defines.h']]],
-  ['tps_5fmin_5fb',['TPS_MIN_B',['../defines_8h.html#a853e90a498b40419ef604574cf449fa1',1,'defines.h']]]
+  ['sensorvalues',['SensorValues',['../structsensors_1_1SensorValues.html',1,'sensors']]],
+  ['sinc_2eh',['sinc.h',['../sinc_8h.html',1,'']]],
+  ['sinc_5fenable',['SINC_ENABLE',['../defines_8h.html#a1941541eecb2be882abc1a4f0291771b',1,'defines.h']]],
+  ['stm32f4xx_5fhal_5fmsp_2ec',['stm32f4xx_hal_msp.c',['../stm32f4xx__hal__msp_8c.html',1,'']]],
+  ['stm32f4xx_5fit_2ec',['stm32f4xx_it.c',['../stm32f4xx__it_8c.html',1,'']]],
+  ['stm32f4xx_5fit_2eh',['stm32f4xx_it.h',['../stm32f4xx__it_8h.html',1,'']]],
+  ['svc_5fhandler',['SVC_Handler',['../stm32f4xx__it_8c.html#a3e5ddb3df0d62f2dc357e64a3f04a6ce',1,'SVC_Handler(void):&#160;stm32f4xx_it.c'],['../stm32f4xx__it_8h.html#a3e5ddb3df0d62f2dc357e64a3f04a6ce',1,'SVC_Handler(void):&#160;stm32f4xx_it.c']]],
+  ['systemclock_5fconfig',['SystemClock_Config',['../main_8c.html#a70af21c671abfcc773614a9a4f63d920',1,'main.c']]],
+  ['systick_5fhandler',['SysTick_Handler',['../stm32f4xx__it_8c.html#ab5e09814056d617c521549e542639b7e',1,'SysTick_Handler(void):&#160;stm32f4xx_it.c'],['../stm32f4xx__it_8h.html#ab5e09814056d617c521549e542639b7e',1,'SysTick_Handler(void):&#160;stm32f4xx_it.c']]]
 ];

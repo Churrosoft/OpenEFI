@@ -12,5 +12,7 @@ var stm32f4xx__it_8c =
     [ "SysTick_Handler", "stm32f4xx__it_8c.html#ab5e09814056d617c521549e542639b7e", null ],
     [ "TIM8_TRG_COM_TIM14_IRQHandler", "stm32f4xx__it_8c.html#a4c8359a023f7ede4a9d9f94ea6fb92da", null ],
     [ "UsageFault_Handler", "stm32f4xx__it_8c.html#a1d98923de2ed6b7309b66f9ba2971647", null ],
+    [ "_POS", "stm32f4xx__it_8c.html#abf016c726780dffba8ad12ac7d11d962", null ],
+    [ "_POS_AE", "stm32f4xx__it_8c.html#a9a8abf177b9585f7afb77b9c12b322d8", null ],
     [ "htim14", "stm32f4xx__it_8c.html#ae4b8faf50eeb07577983d36e4c3894b8", null ]
 ];
