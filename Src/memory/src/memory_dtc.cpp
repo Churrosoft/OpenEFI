@@ -26,7 +26,7 @@ void write_dtc(uint8_t *dtc_code)
     uint16_t dtc = get_all_dtc();
     if (dtc != 0xFF)
     {
-        uint8_t ptr = (DTC_FLAG_ADDR + dtc);
+        uint32_t ptr = (DTC_FLAG_ADDR + dtc);
         memory::write_multiple(ptr >> 24, ptr >> 16, ptr >> 8, dtc_code, 5);
         memory::write_single(DTC_FLAG_ADDR >> 24, DTC_FLAG_ADDR >> 16, DTC_FLAG_ADDR >> 8, dtc + 1);
     }
@@ -40,7 +40,7 @@ void write_dtc(uint8_t *dtc_code)
 uint8_t *read_dtc(uint8_t dtc_number)
 {
     uint8_t *data = 0;
-    uint8_t ptr = (DTC_FLAG_ADDR + dtc_number);
+    uint32_t ptr = (DTC_FLAG_ADDR + dtc_number);
     memory::read_multiple(ptr >> 24, ptr >> 16, ptr >> 8, data, 5);
     return data;
 }
