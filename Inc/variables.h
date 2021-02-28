@@ -14,6 +14,7 @@ extern uint32_t _RPM, //	las rpm :V
 	_AE;			  //	avance de encendido
 
 extern bool
+	MOTOR_ENABLE,     //	cache de "can_turn_on"
 	SINC; //	indica si se sincronizo el PMS
 
 /*-----( Variables RPM )-----*/

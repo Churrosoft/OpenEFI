@@ -29,10 +29,10 @@ extern "C"
 #include "usb_otg.h"
 #include "gpio.h"
 }
-#include "memory/include/memory_immobilizer.hpp"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "memory/include/memory_immobilizer.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,7 +50,7 @@ extern "C"
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
+bool MOTOR_ENABLE;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -101,14 +101,16 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM9_Init();
   MX_USB_OTG_FS_PCD_Init();
-  /* USER CODE BEGIN 2 */
 
+  /* USER CODE BEGIN 2 */
+  MOTOR_ENABLE = can_turn_on();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  can_turn_on();
-  while (1) {
+
+  while (1)
+  {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -145,8 +147,7 @@ void SystemClock_Config(void)
   }
   /** Initializes the CPU, AHB and APB busses clocks
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
@@ -162,7 +163,7 @@ void SystemClock_Config(void)
 
 /* USER CODE END 4 */
 
- /**
+/**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM14 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
@@ -175,7 +176,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM14) {
+  if (htim->Instance == TIM14)
+  {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
@@ -193,7 +195,8 @@ void Error_Handler(void)
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   HAL_GPIO_WritePin(MIL_OUT_GPIO_Port, MIL_OUT_Pin, GPIO_PIN_SET);
-  while (1) {
+  while (1)
+  {
     HAL_GPIO_WritePin(CHK_OUT_GPIO_Port, CHK_OUT_Pin, GPIO_PIN_SET);
     HAL_Delay(100);
     HAL_GPIO_WritePin(CHK_OUT_GPIO_Port, CHK_OUT_Pin, GPIO_PIN_RESET);
@@ -201,7 +204,7 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

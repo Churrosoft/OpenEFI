@@ -10,7 +10,7 @@ unsigned long T2;
 unsigned long Ta;
 unsigned long Tb;
 bool SINC;
-
+bool MOTOR_ENABLE;
 // HAL:
 extern TIM_HandleTypeDef htim3;
 
@@ -25,6 +25,9 @@ uint_fast16_t grad_to_dnt( float grad){
 
 bool sinc() {
 #ifdef SINC_ENABLE
+  if(!MOTOR_ENABLE)
+    return false;
+
   if (!SINC) {
     if (sincB) {
       Tb =  __HAL_TIM_GET_COUNTER(&htim3);
