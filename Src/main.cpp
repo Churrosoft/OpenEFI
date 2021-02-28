@@ -19,6 +19,8 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+extern "C"
+{
 #include "main.h"
 #include "adc.h"
 #include "can.h"
@@ -26,7 +28,8 @@
 #include "tim.h"
 #include "usb_otg.h"
 #include "gpio.h"
-
+}
+#include "memory/include/memory_immobilizer.hpp"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -104,6 +107,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  can_turn_on();
   while (1) {
     /* USER CODE END WHILE */
 
@@ -188,11 +192,11 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
-  HAL_GPIO_WritePin(MIL_OUT_GPIO_Port, MIL_OUT_Pin, 1);
+  HAL_GPIO_WritePin(MIL_OUT_GPIO_Port, MIL_OUT_Pin, GPIO_PIN_SET);
   while (1) {
-    HAL_GPIO_WritePin(CHK_OUT_GPIO_Port, CHK_OUT_Pin, 1);
+    HAL_GPIO_WritePin(CHK_OUT_GPIO_Port, CHK_OUT_Pin, GPIO_PIN_SET);
     HAL_Delay(100);
-    HAL_GPIO_WritePin(CHK_OUT_GPIO_Port, CHK_OUT_Pin, 0);
+    HAL_GPIO_WritePin(CHK_OUT_GPIO_Port, CHK_OUT_Pin, GPIO_PIN_RESET);
   }
   /* USER CODE END Error_Handler_Debug */
 }

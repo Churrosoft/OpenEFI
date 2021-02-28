@@ -37,6 +37,11 @@ void write_dtc(uint8_t *dtc_code)
     }
 }
 
+// busca un codigo en la memoria para ver si ya existe, (no vamo a grabar las cosas dos veces vite')
+bool search_dtc(uint8_t *dtc_code){
+return false;
+}
+
 uint8_t *read_dtc(uint8_t dtc_number)
 {
     uint8_t *data = 0;

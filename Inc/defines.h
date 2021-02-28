@@ -115,6 +115,7 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 //  TEMP:
 #define TEMP_MIN 800
 #define TEMP_MAX 4800
+#define TEMP_OPEN 600
 
 //float C = 2.019202697e-07; // Modelo B de NTC
 #define TEMP_K 2.5 //factor de disipacion en mW/C
@@ -128,6 +129,7 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 //  IAT:
 #define IAT_MIN 200
 #define IAT_MAX 4000
+#define IAT_OPEN 190
 
 #define IAT_CAL(mV) ((3800 - mV) / 35)
 

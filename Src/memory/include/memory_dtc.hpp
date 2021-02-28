@@ -10,6 +10,7 @@
  */
 #include <stdint.h>
 #include "memory.hpp"
+#include "dtc_codes.h"
 
 uint16_t get_all_dtc();
 void write_dtc(char *);

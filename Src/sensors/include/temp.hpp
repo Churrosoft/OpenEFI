@@ -21,7 +21,9 @@ namespace TEMP
     /** @brief revisa el estado del sensor para disparar un DTC en caso que sea necesario
      * @param in valor en Volt del sensor
      */
-    uint8_t dtc(uint16_t);
+    uint8_t* dtc(void);
+
+    extern uint16_t last_value;
 } // namespace TEMP
 
 #endif
