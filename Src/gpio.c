@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -54,7 +54,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, R_ECN_INY_Pin|R_GNC_GLP_Pin|R_AAC_Pin|MTR_STEP_Pin
                           |MTR_DIR_Pin|MTR_FAULT_Pin|MTR_ENABLE_Pin|RPM_OUT_Pin
                           |PMIC_CS_Pin|MEMORY_CS_Pin|AUX_CS_1_Pin|AUX_CS_2_Pin
-                          |R_LMB_Pin|CHK_OUTE1_Pin, GPIO_PIN_RESET);
+                          |R_LMB_Pin|GPIO_PIN_1, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, LED0_Pin|LED1_Pin|LED2_Pin|MIL_OUT_Pin
@@ -75,11 +75,11 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pins : PEPin PEPin PEPin PEPin
                            PEPin PEPin PEPin PEPin
                            PEPin PEPin PEPin PEPin
-                           PEPin PEPin */
+                           PEPin PE1 */
   GPIO_InitStruct.Pin = R_ECN_INY_Pin|R_GNC_GLP_Pin|R_AAC_Pin|MTR_STEP_Pin
                           |MTR_DIR_Pin|MTR_FAULT_Pin|MTR_ENABLE_Pin|RPM_OUT_Pin
                           |PMIC_CS_Pin|MEMORY_CS_Pin|AUX_CS_1_Pin|AUX_CS_2_Pin
-                          |R_LMB_Pin|CHK_OUTE1_Pin;
+                          |R_LMB_Pin|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

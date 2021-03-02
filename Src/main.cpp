@@ -24,6 +24,7 @@ extern "C"
 #include "main.h"
 #include "adc.h"
 #include "can.h"
+#include "dma.h"
 #include "spi.h"
 #include "tim.h"
 #include "usb_otg.h"
@@ -33,6 +34,7 @@ extern "C"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "memory/include/memory_immobilizer.hpp"
+#include "sensors/sensors.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +96,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   MX_CAN1_Init();
   MX_SPI2_Init();
@@ -101,6 +104,7 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM9_Init();
   MX_USB_OTG_FS_PCD_Init();
+  MX_ADC2_Init();
 
   /* USER CODE BEGIN 2 */
   MOTOR_ENABLE = can_turn_on();

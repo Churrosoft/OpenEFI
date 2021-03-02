@@ -33,7 +33,7 @@ uint8_t *TEMP::dtc()
   if (last_value > TEMP_MAX)
     return NEW_DTC DTC_ECT_SENSOR_HIGH;
   if (last_value < TEMP_MIN && last_value > TEMP_OPEN)
-    return NEW_DTC DTC_ECT_SENSOR_HIGH;
+    return NEW_DTC DTC_ECT_SENSOR_LOW;
   else
     return NEW_DTC DTC_ECT_OUT_OF_RANGE;
   return 0;

@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "defines.h"
+#include "dtc_codes.h"
 #include "../utils/basic_electronics.h"
 #include "../include/map.hpp"
 
@@ -13,11 +14,11 @@ uint32_t MAP::get_calibrate_value(uint16_t filt_input)
     return (uint32_t)MAP_CAL(filt_input) * 100;
 }
 
-uint8_t MAP::dtc(uint16_t in)
+uint8_t *MAP::dtc()
 {
-    if (in > MAP_MAX)
-        return 1;
-    if (in < MAP_MIN)
-        return -1;
+    if (MAP::last_value > MAP_MAX)
+        return NEW_DTC DTC_MAP_SENSOR_HIGH;
+    if (MAP::last_value < MAP_MIN)
+        return NEW_DTC DTC_MAP_SENSOR_LOW;
     return 0;
 }

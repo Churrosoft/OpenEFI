@@ -11,7 +11,7 @@ uint16_t get_input(uint8_t pin)
         for (uint8_t i = 0; i < 5; i++)
         {
 #ifdef Alpha
-            inputs.values[pin].actualValue = get_adc_data(7);
+            inputs.values[pin].actualValue = get_adc_data(ADC_A1_Pin);
 #else
             inputs.values[pin].actualValue = get_adc_data(i);
 #endif
