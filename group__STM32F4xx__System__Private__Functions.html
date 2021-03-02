@@ -123,8 +123,8 @@ Functions</h2></td></tr>
 <li>If SYSCLK source is HSE, SystemCoreClock will contain the <a class="el" href="group__STM32F4xx__System__Private__Includes.html#gaeafcff4f57440c60e64812dddd13e7cb">HSE_VALUE(**)</a></li>
 <li>If SYSCLK source is PLL, SystemCoreClock will contain the <a class="el" href="group__STM32F4xx__System__Private__Includes.html#gaeafcff4f57440c60e64812dddd13e7cb">HSE_VALUE(**)</a> or <a class="el" href="group__STM32F4xx__System__Private__Includes.html#gaaa8c76e274d0f6dd2cefb5d0b17fbc37">HSI_VALUE(*)</a> multiplied/divided by the PLL factors.</li>
 </ul>
-<p>(*) HSI_VALUE is a constant defined in stm32f4xx_hal_conf.h file (default value 16 MHz) but the real value may vary depending on the variations in voltage and temperature.</p>
-<p>(**) HSE_VALUE is a constant defined in stm32f4xx_hal_conf.h file (its value depends on the application requirements), user has to ensure that HSE_VALUE is same as the real frequency of the crystal used. Otherwise, this function may have wrong result.</p>
+<p>(*) HSI_VALUE is a constant defined in <a class="el" href="stm32f4xx__hal__conf_8h_source.html">stm32f4xx_hal_conf.h</a> file (default value 16 MHz) but the real value may vary depending on the variations in voltage and temperature.</p>
+<p>(**) HSE_VALUE is a constant defined in <a class="el" href="stm32f4xx__hal__conf_8h_source.html">stm32f4xx_hal_conf.h</a> file (its value depends on the application requirements), user has to ensure that HSE_VALUE is same as the real frequency of the crystal used. Otherwise, this function may have wrong result.</p>
 <ul>
 <li>The result of this function could be not correct when using fractional value for HSE crystal.</li>
 </ul>
