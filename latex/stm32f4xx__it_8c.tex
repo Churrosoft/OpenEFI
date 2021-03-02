@@ -7,8 +7,6 @@ Interrupt Service Routines.
 
 {\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}stm32f4xx\+\_\+it.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}variables.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}./sensors/utils/sinc.\+h\char`\"{}}\newline
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -39,6 +37,7 @@ void \hyperlink{stm32f4xx__it_8c_a6303e1f258cbdc1f970ce579cc015623}{Pend\+S\+V\+
 \mbox{\Hypertarget{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}\label{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}} 
 void \hyperlink{stm32f4xx__it_8c_ab5e09814056d617c521549e542639b7e}{Sys\+Tick\+\_\+\+Handler} (void)
 \begin{DoxyCompactList}\small\item\em This function handles System tick timer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a7b2096b8b2643286dc3a7e5110e5ae85}\label{stm32f4xx__it_8c_a7b2096b8b2643286dc3a7e5110e5ae85}} 
 void \hyperlink{stm32f4xx__it_8c_a7b2096b8b2643286dc3a7e5110e5ae85}{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler} (void)
 \begin{DoxyCompactList}\small\item\em This function handles E\+X\+TI line\mbox{[}9\+:5\mbox{]} interrupts. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{stm32f4xx__it_8c_a738473a5b43f6c92b80ce1d3d6f77ed9}\label{stm32f4xx__it_8c_a738473a5b43f6c92b80ce1d3d6f77ed9}} 
@@ -46,15 +45,21 @@ void \hyperlink{stm32f4xx__it_8c_a738473a5b43f6c92b80ce1d3d6f77ed9}{E\+X\+T\+I15
 \begin{DoxyCompactList}\small\item\em This function handles E\+X\+TI line\mbox{[}15\+:10\mbox{]} interrupts. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{stm32f4xx__it_8c_a4c8359a023f7ede4a9d9f94ea6fb92da}\label{stm32f4xx__it_8c_a4c8359a023f7ede4a9d9f94ea6fb92da}} 
 void \hyperlink{stm32f4xx__it_8c_a4c8359a023f7ede4a9d9f94ea6fb92da}{T\+I\+M8\+\_\+\+T\+R\+G\+\_\+\+C\+O\+M\+\_\+\+T\+I\+M14\+\_\+\+I\+R\+Q\+Handler} (void)
-\begin{DoxyCompactList}\small\item\em This function handles T\+I\+M8 trigger and commutation interrupts and T\+I\+M14 global interrupt. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em This function handles T\+I\+M8 trigger and commutation interrupts and T\+I\+M14 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_aaf6ce196dde98712e1223b99766e06c0}\label{stm32f4xx__it_8c_aaf6ce196dde98712e1223b99766e06c0}} 
+void \hyperlink{stm32f4xx__it_8c_aaf6ce196dde98712e1223b99766e06c0}{D\+M\+A2\+\_\+\+Stream0\+\_\+\+I\+R\+Q\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A2 stream0 global interrupt. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{stm32f4xx__it_8c_a7e367d7c7b74485c4c75cdef30ad01e1}\label{stm32f4xx__it_8c_a7e367d7c7b74485c4c75cdef30ad01e1}} 
+void \hyperlink{stm32f4xx__it_8c_a7e367d7c7b74485c4c75cdef30ad01e1}{D\+M\+A2\+\_\+\+Stream2\+\_\+\+I\+R\+Q\+Handler} (void)
+\begin{DoxyCompactList}\small\item\em This function handles D\+M\+A2 stream2 global interrupt. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{stm32f4xx__it_8c_abf016c726780dffba8ad12ac7d11d962}\label{stm32f4xx__it_8c_abf016c726780dffba8ad12ac7d11d962}} 
-uint32\+\_\+t {\bfseries \+\_\+\+P\+OS}
+\mbox{\Hypertarget{stm32f4xx__it_8c_a1c126854bb1813d31ab4776b21dcc51f}\label{stm32f4xx__it_8c_a1c126854bb1813d31ab4776b21dcc51f}} 
+D\+M\+A\+\_\+\+Handle\+Type\+Def {\bfseries hdma\+\_\+adc1}
 \item 
-\mbox{\Hypertarget{stm32f4xx__it_8c_a9a8abf177b9585f7afb77b9c12b322d8}\label{stm32f4xx__it_8c_a9a8abf177b9585f7afb77b9c12b322d8}} 
-uint32\+\_\+t {\bfseries \+\_\+\+P\+O\+S\+\_\+\+AE}
+\mbox{\Hypertarget{stm32f4xx__it_8c_ad99dd74cc50b61cf07680c1adaf80337}\label{stm32f4xx__it_8c_ad99dd74cc50b61cf07680c1adaf80337}} 
+D\+M\+A\+\_\+\+Handle\+Type\+Def {\bfseries hdma\+\_\+adc2}
 \item 
 \mbox{\Hypertarget{stm32f4xx__it_8c_ae4b8faf50eeb07577983d36e4c3894b8}\label{stm32f4xx__it_8c_ae4b8faf50eeb07577983d36e4c3894b8}} 
 T\+I\+M\+\_\+\+Handle\+Type\+Def {\bfseries htim14}
@@ -67,19 +72,6 @@ Interrupt Service Routines.
 \begin{DoxyAttention}{Attention}
 
 \end{DoxyAttention}
-\subsubsection*{\begin{center}\copyright{} Copyright (c) 2020 S\+T\+Microelectronics. All rights reserved.\end{center} }
+\subsubsection*{\begin{center}\copyright{} Copyright (c) 2021 S\+T\+Microelectronics. All rights reserved.\end{center} }
 
 This software component is licensed by ST under B\+SD 3-\/\+Clause license, the \char`\"{}\+License\char`\"{}; You may not use this file except in compliance with the License. You may obtain a copy of the License at\+: opensource.\+org/licenses/\+B\+S\+D-\/3-\/\+Clause 
-
-\subsection{Function Documentation}
-\mbox{\Hypertarget{stm32f4xx__it_8c_a7b2096b8b2643286dc3a7e5110e5ae85}\label{stm32f4xx__it_8c_a7b2096b8b2643286dc3a7e5110e5ae85}} 
-\index{stm32f4xx\+\_\+it.\+c@{stm32f4xx\+\_\+it.\+c}!E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler@{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler}}
-\index{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler@{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler}!stm32f4xx\+\_\+it.\+c@{stm32f4xx\+\_\+it.\+c}}
-\subsubsection{\texorpdfstring{E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler()}{EXTI9\_5\_IRQHandler()}}
-{\footnotesize\ttfamily void E\+X\+T\+I9\+\_\+5\+\_\+\+I\+R\+Q\+Handler (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
-
-
-
-This function handles E\+X\+TI line\mbox{[}9\+:5\mbox{]} interrupts. 
-
-la manera \char`\"{}catolica\char`\"{}, seria sobre-\/escribir la funcion H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+E\+X\+T\+I\+\_\+\+Callback, pero t2 slow C\+KP =$>$ P\+C6 C\+MP =$>$ P\+C7 T\+O\+DO\+: remapear pines con sus correspondientes en \hyperlink{main_8h}{main.\+h}

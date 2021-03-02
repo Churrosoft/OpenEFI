@@ -1,0 +1,52 @@
+\hypertarget{system__stm32f4xx_8c}{}\section{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Src/system\+\_\+stm32f4xx.c File Reference}
+\label{system__stm32f4xx_8c}\index{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Src/system\+\_\+stm32f4xx.\+c@{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Src/system\+\_\+stm32f4xx.\+c}}
+
+
+C\+M\+S\+IS Cortex-\/\+M4 Device Peripheral Access Layer System Source File.  
+
+
+{\ttfamily \#include \char`\"{}stm32f4xx.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__STM32F4xx__System__Private__Includes_gaeafcff4f57440c60e64812dddd13e7cb}{H\+S\+E\+\_\+\+V\+A\+L\+UE}~((uint32\+\_\+t)25000000)
+\item 
+\#define \hyperlink{group__STM32F4xx__System__Private__Includes_gaaa8c76e274d0f6dd2cefb5d0b17fbc37}{H\+S\+I\+\_\+\+V\+A\+L\+UE}~((uint32\+\_\+t)16000000)
+\item 
+\#define \hyperlink{group__STM32F4xx__System__Private__Defines_ga40e1495541cbb4acbe3f1819bd87a9fe}{V\+E\+C\+T\+\_\+\+T\+A\+B\+\_\+\+O\+F\+F\+S\+ET}~0x00
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__STM32F4xx__System__Private__Functions_ga93f514700ccf00d08dbdcff7f1224eb2}{System\+Init} (void)
+\begin{DoxyCompactList}\small\item\em Setup the microcontroller system Initialize the F\+PU setting, vector table location and External memory configuration. \end{DoxyCompactList}\item 
+void \hyperlink{group__STM32F4xx__System__Private__Functions_gae0c36a9591fe6e9c45ecb21a794f0f0f}{System\+Core\+Clock\+Update} (void)
+\begin{DoxyCompactList}\small\item\em Update System\+Core\+Clock variable according to Clock Register Values. The System\+Core\+Clock variable contains the core clock (H\+C\+LK), it can be used by the user application to setup the Sys\+Tick timer or configure other parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t {\bfseries System\+Core\+Clock} = 16000000
+\item 
+const uint8\+\_\+t {\bfseries A\+H\+B\+Presc\+Table} \mbox{[}16\mbox{]} = \{0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9\}
+\item 
+const uint8\+\_\+t {\bfseries A\+P\+B\+Presc\+Table} \mbox{[}8\mbox{]} = \{0, 0, 0, 0, 1, 2, 3, 4\}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+C\+M\+S\+IS Cortex-\/\+M4 Device Peripheral Access Layer System Source File. 
+
+\begin{DoxyAuthor}{Author}
+M\+CD Application Team This file provides two functions and one global variable to be called from user application\+:
+\begin{DoxyItemize}
+\item \hyperlink{group__STM32F4xx__System__Private__Functions_ga93f514700ccf00d08dbdcff7f1224eb2}{System\+Init()}\+: This function is called at startup just after reset and before branch to main program. This call is made inside the \char`\"{}startup\+\_\+stm32f4xx.\+s\char`\"{} file.
+\item System\+Core\+Clock variable\+: Contains the core clock (H\+C\+LK), it can be used by the user application to setup the Sys\+Tick timer or configure other parameters.
+\item \hyperlink{group__STM32F4xx__System__Private__Functions_gae0c36a9591fe6e9c45ecb21a794f0f0f}{System\+Core\+Clock\+Update()}\+: Updates the variable System\+Core\+Clock and must be called whenever the core clock is changed during program execution.
+\end{DoxyItemize}
+\end{DoxyAuthor}
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+\subsubsection*{\begin{center}\copyright{} Copyright (c) 2017 S\+T\+Microelectronics. All rights reserved.\end{center} }
+
+This software component is licensed by ST under B\+SD 3-\/\+Clause license, the \char`\"{}\+License\char`\"{}; You may not use this file except in compliance with the License. You may obtain a copy of the License at\+: opensource.\+org/licenses/\+B\+S\+D-\/3-\/\+Clause 
