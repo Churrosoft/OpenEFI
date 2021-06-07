@@ -1,5 +1,6 @@
 // custom:
 #include "defines.h"
+#include "user_defines.h"
 
 uint16_t convert_to_resistance(uint16_t adcval)
 {

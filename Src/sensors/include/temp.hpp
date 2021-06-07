@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include "defines.h"
+#include "user_defines.h"
+
 #include "../utils/basic_electronics.h"
 #include <math.h>
 

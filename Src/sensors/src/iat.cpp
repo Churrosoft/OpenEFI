@@ -3,6 +3,8 @@
 */
 #include <stdint.h>
 #include "defines.h"
+#include "user_defines.h"
+
 #include "dtc_codes.h"
 #include "../include/iat.hpp"
 #include "../utils/basic_electronics.c"

@@ -1,20 +1,22 @@
 
 #include "input_handler.hpp"
 ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc2;
 
 struct input_handler inputs;
+uint32_t ADC_A_RAW_DATA[5];
+uint32_t ADC_B_RAW_DATA[10];
 
 uint16_t get_input(uint8_t pin)
 {
-    if (pin < 16)
+    if (pin < 15)
     {
         for (uint8_t i = 0; i < 5; i++)
         {
-#ifdef Alpha
-            inputs.values[pin].actualValue = get_adc_data(ADC_A1_Pin);
-#else
-            inputs.values[pin].actualValue = get_adc_data(i);
-#endif
+            if (pin < 5)
+                inputs.values[pin].actualValue = ADC_A_RAW_DATA[pin];
+            else
+                inputs.values[pin].actualValue = ADC_B_RAW_DATA[pin];
             inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
         }
         return inputs.values[pin].lastValue;
@@ -29,15 +31,14 @@ void input_setup()
 
 void adc_setup()
 {
-    // Calibrate The ADC On Power-Up For Better Accuracy
-    //HAL_ADCEx_Calibration_Start(&hadc1);
+    if (HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 5) != HAL_OK)
+        Error_Handler();
+    if (HAL_ADC_Start_DMA(&hadc2, ADC_B_RAW_DATA, 10) != HAL_OK)
+        Error_Handler();
 }
 
 uint16_t get_adc_data(uint8_t channel)
 {
-#warning Channel selector not finished
-    HAL_ADC_Start(&hadc1);
-    // Poll ADC1 Perihperal & TimeOut = 1mSec
-    HAL_ADC_PollForConversion(&hadc1, 1);
-    return HAL_ADC_GetValue(&hadc1);
+
+#pragma GCC warning "Function decreapated"
 }

@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include "defines.h"
+#include "user_defines.h"
+
 #include "../utils/basic_electronics.h"
 /*
     todo el codigo relacionado al control del sensor "MAP"

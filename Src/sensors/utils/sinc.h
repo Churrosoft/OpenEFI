@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include "variables.h"
 #include "defines.h"
+#include "user_defines.h"
+
 //HAL:
 #include "main.h"
 #include "tim.h"

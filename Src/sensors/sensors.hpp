@@ -3,11 +3,14 @@
 
 #include "./input_handler.hpp"
 #include "defines.h"
+#include "user_defines.h"
+
 //sensores:
 #include "./include/tps.hpp"
 #include "./include/temp.hpp"
 #include "./include/iat.hpp"
 #include "./include/map.hpp"
+#include "./input_handler.hpp"
 
 #include <stdint.h>
 

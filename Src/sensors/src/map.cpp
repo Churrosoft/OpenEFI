@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include "defines.h"
+#include "user_defines.h"
+
 #include "dtc_codes.h"
 #include "../utils/basic_electronics.h"
 #include "../include/map.hpp"

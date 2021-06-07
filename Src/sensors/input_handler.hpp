@@ -9,10 +9,9 @@ extern "C"
 #include "./utils/ema.h"
 }
 #include "defines.h"
+#include "user_defines.h"
 
 void SystemClock_Config(void);
-/* static void MX_GPIO_Init(void);
-static void MX_ADC1_Init(void); */
 //TODO: esto es un wrapper del ADC basicamente, refactorizar y dejar en namespace "ADC_Wrapper"
 
 struct input_handler
@@ -33,4 +32,7 @@ uint16_t get_adc_data(uint8_t);
 void input_setup(void);
 void adc_setup(); //static?
 // var interna:
+extern uint32_t ADC_A_RAW_DATA[5];
+extern uint32_t ADC_B_RAW_DATA[10];
+
 #endif
