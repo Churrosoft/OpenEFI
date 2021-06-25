@@ -9,6 +9,7 @@
 #undef L_CIL
 #undef DNT
 #undef DNT_MISSING
+#undef LOGIC_DNT
 #undef Alpha
 #undef ED
 #undef PMSI
@@ -22,6 +23,7 @@
 #define L_CIL (CIL - 1) //!< cilindros logicos, para manejar arrays y demases
 #define DNT 60          //!< cantidad de dientes de la rueda fonica
 #define DNT_MISSING 2   //!< cantidad de dientes faltantes en PMS
+#define LOGIC_DNT (DNT - DNT_MISSING)
 #define Alpha 1         //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 #define ED 1600         //!< cilindrada en CC del motor
 

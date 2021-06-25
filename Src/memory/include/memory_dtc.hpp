@@ -3,6 +3,7 @@
 /**
  * DTC Example:
  * primer byte en primer pagina podria indicar si hay o no dtcs grabados
+ * segundo byte cantidad total de DTC guardados
  * P0XXX => 6 char => 6 bytes (byte adicional para indicar si es temporal | permanente?)
  * max dtc on memory => 50 => 200 bytes
  * memory init addr: 0x1000

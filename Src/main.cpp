@@ -65,6 +65,9 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#include <iostream>
+using std::cout;
+using std::endl;
 
 /* USER CODE END 0 */
 
@@ -107,7 +110,10 @@ int main(void)
   MX_ADC2_Init();
 
   /* USER CODE BEGIN 2 */
-  MOTOR_ENABLE = can_turn_on();
+  // MOTOR_ENABLE = can_turn_on();
+  cout << "---------" << endl;
+  cout << "EEE ATRR PERROOOOOOOO" << endl;
+  cout << "---------" << endl;
   /* USER CODE END 2 */
 
   /* Infinite loop */

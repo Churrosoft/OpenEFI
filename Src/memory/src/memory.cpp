@@ -20,11 +20,15 @@ bool memory::is_busy() {
 
 void memory::CS(bool set) {
   if (set)
-    HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
-                      GPIO_PinState::GPIO_PIN_SET);
+    HAL_GPIO_WritePin(
+      MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
+      GPIO_PinState::GPIO_PIN_SET
+    );
   else
-    HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
-                      GPIO_PinState::GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(
+      MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
+      GPIO_PinState::GPIO_PIN_RESET
+    );
 }
 
 uint8_t memory::get_id() {
@@ -78,18 +82,12 @@ void memory::read_multiple(uint8_t a, uint8_t b, uint8_t c, uint8_t *buffer,
 void memory::write_single(uint8_t a, uint8_t b, uint8_t c, uint8_t data) {
   if (!memory::is_busy()) {
     memory::CS(true);
-    HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
-                      GPIO_PinState::GPIO_PIN_SET);
-
     HAL_SPI_Transmit(&hspi2, (uint8_t *)PAGE_PROGRAM, 1, 50);
     HAL_SPI_Transmit(&hspi2, (uint8_t *)a, 1, 50);
     HAL_SPI_Transmit(&hspi2, (uint8_t *)b, 1, 50);
     HAL_SPI_Transmit(&hspi2, (uint8_t *)c, 1, 50);
 
     HAL_SPI_Transmit(&hspi2, (uint8_t *)data, 1, 200);
-
-    HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
-                      GPIO_PinState::GPIO_PIN_RESET);
     memory::CS(false);
   }
 }

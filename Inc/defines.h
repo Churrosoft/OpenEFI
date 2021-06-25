@@ -1,5 +1,6 @@
 /** @file */
 #include <stdint.h>
+#include "main.h"
 
 // Acá todos los defines
 #ifndef DEFINES_H
@@ -12,13 +13,17 @@
 
 /*-----( Globales )-----*/
 
-#define mtr 1           //!< habilita encendido
-#define CIL 4           //!< cantidad de cilindros o pistones, o camaras de combustion, etc ?)
-#define L_CIL (CIL - 1) //!< cilindros logicos, para manejar arrays y demases
-#define DNT 58         //!< cantidad de dientes del sensor CKP
-#define Alpha 1         //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
-#define ED 1600         //!< cilindrada en CC del motor
-
+#define mtr 1             //!< habilita encendido
+#define CIL 4             //!< cantidad de cilindros o pistones, o camaras de combustion, etc ?)
+#define L_CIL (CIL - 1)   //!< cilindros logicos, para manejar arrays y demases
+#define DNT 60            //!< cantidad de dientes del sensor CKP
+#define DNT_MISSING 0     //!< cantidad de dientes faltantes en PMS
+#define DNT_DOUBLE_SCAN 2 //!< 1 == interrupcion por diente
+#define LOGIC_DNT ((DNT - DNT_MISSING ) * DNT_DOUBLE_SCAN )
+#define Alpha 1 //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
+#define ED 1600 //!< cilindrada en CC del motor
+#define EGN_SECUENCY { 1, 3, 4, 2 }; // secuencia encendido
+#define ING_SECUENCY { 3, 4, 1, 2 }; // secuencia inyeccion
 /*-----( RPM )-----*/
 
 #define RPM_per 500 //periodo en ms en el que se actualizan las rpm ( si lo cambias , o arreglas el calculo para las rpm,o se rompe todo maquinola)
@@ -30,18 +35,8 @@
 
 #define PMSI 240 //!< Cantidad de dientes entre PMS
 
-#define C_PWM_INY_PORT GPIOB //!<    puerto de los pines de inyeccion 2 3 4 5  2 4 5 3
-#define C_PWM_INY                  \
-    {                              \
-        GPIO6, GPIO4, GPIO5, GPIO3 \
-    }                        //!<    pines del STM32 para la inyeccion
-#define C_PWM_ECN_PORT GPIOB //!<    puerto de los pines de encendido
-#define C_PWM_ECN    \
-    {                \
-        GPIO8, GPIO7 \
-    } //!<    pines del STM32 para el encendido
-
 // Inyeción:
+#define AVCPER 360 / (CIL / 2)
 #define AVCI 30 //avance de inyeccion (si queres quemar las valvulas dejalo en 0)
 
 // Encendido:
@@ -124,7 +119,7 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define MAP_MIN 800
 #define MAP_MAX 4800
 
-#define MAP_CAL(mV) (mV * 16.66 + 167) 
+#define MAP_CAL(mV) (mV * 16.66 + 167)
 
 //  IAT:
 #define IAT_MIN 200
@@ -132,5 +127,14 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define IAT_OPEN 190
 
 #define IAT_CAL(mV) ((3800 - mV) / 35)
+
+/*-----( Helpers )-----*/
+
+#define ROUND_16(NUMBER) ((float)((uint16_t)NUMBER * 100 + .5) / 100)
+#define ROUND_32(NUMBER) ((float)((uint32_t)NUMBER * 100 + .5) / 100)
+
+/*-----( pa' el debug )-----*/
+
+#define CPWM_DEBUG 1
 
 #endif

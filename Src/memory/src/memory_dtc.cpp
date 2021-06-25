@@ -15,16 +15,16 @@ uint16_t get_all_dtc()
     return memory::read_single(DTC_FLAG_ADDR >> 24, DTC_FLAG_ADDR >> 16, DTC_FLAG_ADDR >> 8);
 }
 
-/* bool is_dtc(){
+bool is_dtc(){
     // devuelve true en caso de que exista un dtc;
     uint16_t data = memory::read_single(DTC_FLAG_ADDR >> 24, DTC_FLAG_ADDR >> 16, DTC_FLAG_ADDR >> 8);
     return data == 0xFF;
-} */
+}
 
 void write_dtc(uint8_t *dtc_code)
 {
     uint16_t dtc = get_all_dtc();
-    if (dtc != 0xFF)
+    if (is_dtc())
     {
         uint32_t ptr = (DTC_FLAG_ADDR + dtc);
         memory::write_multiple(ptr >> 24, ptr >> 16, ptr >> 8, dtc_code, 5);
