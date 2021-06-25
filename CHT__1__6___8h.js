@@ -8,6 +8,7 @@ var CHT__1__6___8h =
     [ "ECNT", "CHT__1__6___8h.html#a9e79d5259fccd8957c32fb5c39e80be7", null ],
     [ "ED", "CHT__1__6___8h.html#a0e557f1d3a1e9da3ef071cee0dbe7c8e", null ],
     [ "L_CIL", "CHT__1__6___8h.html#a51bf22cc164ce029157ccbc200052c1b", null ],
+    [ "LOGIC_DNT", "CHT__1__6___8h.html#a05e541f32be39b569799db0ef38e9168", null ],
     [ "mtr", "CHT__1__6___8h.html#aa2c7aad26910626ab51d4a915b4f3160", null ],
     [ "PMSI", "CHT__1__6___8h.html#a3ea16d89c4d1fb6e827010391c1da564", null ]
 ];

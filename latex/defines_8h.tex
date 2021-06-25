@@ -1,6 +1,7 @@
 \hypertarget{defines_8h}{}\section{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Inc/defines.h File Reference}
 \label{defines_8h}\index{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Inc/defines.\+h@{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Inc/defines.\+h}}
 {\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -23,14 +24,29 @@
 \#define \hyperlink{defines_8h_a51bf22cc164ce029157ccbc200052c1b}{L\+\_\+\+C\+IL}~(\hyperlink{CHT__1__6___8h_a45f252e6f7774e84484118243dfe45b4}{C\+IL} -\/ 1)
 \begin{DoxyCompactList}\small\item\em cilindros logicos, para manejar arrays y demases \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_a6b476c09f52c46c89cca6a640c6a8efa}\label{defines_8h_a6b476c09f52c46c89cca6a640c6a8efa}} 
-\#define \hyperlink{defines_8h_a6b476c09f52c46c89cca6a640c6a8efa}{D\+NT}~58
+\#define \hyperlink{defines_8h_a6b476c09f52c46c89cca6a640c6a8efa}{D\+NT}~60
 \begin{DoxyCompactList}\small\item\em cantidad de dientes del sensor C\+KP \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a4c86bd837e15883adc26d5f67e78b673}\label{defines_8h_a4c86bd837e15883adc26d5f67e78b673}} 
+\#define \hyperlink{defines_8h_a4c86bd837e15883adc26d5f67e78b673}{D\+N\+T\+\_\+\+M\+I\+S\+S\+I\+NG}~0
+\begin{DoxyCompactList}\small\item\em cantidad de dientes faltantes en P\+MS \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a47467f21cf6f32b35425e9a5f97f2d89}\label{defines_8h_a47467f21cf6f32b35425e9a5f97f2d89}} 
+\#define \hyperlink{defines_8h_a47467f21cf6f32b35425e9a5f97f2d89}{D\+N\+T\+\_\+\+D\+O\+U\+B\+L\+E\+\_\+\+S\+C\+AN}~2
+\begin{DoxyCompactList}\small\item\em 1 == interrupcion por diente \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a05e541f32be39b569799db0ef38e9168}\label{defines_8h_a05e541f32be39b569799db0ef38e9168}} 
+\#define {\bfseries L\+O\+G\+I\+C\+\_\+\+D\+NT}~((\hyperlink{CHT__1__6___8h_a6b476c09f52c46c89cca6a640c6a8efa}{D\+NT} -\/ \hyperlink{CHT__1__6___8h_a4c86bd837e15883adc26d5f67e78b673}{D\+N\+T\+\_\+\+M\+I\+S\+S\+I\+NG} ) $\ast$ \hyperlink{defines_8h_a47467f21cf6f32b35425e9a5f97f2d89}{D\+N\+T\+\_\+\+D\+O\+U\+B\+L\+E\+\_\+\+S\+C\+AN} )
+\item 
 \mbox{\Hypertarget{defines_8h_ad9146e8f480ce926f45e4ef151653b9f}\label{defines_8h_ad9146e8f480ce926f45e4ef151653b9f}} 
 \#define \hyperlink{defines_8h_ad9146e8f480ce926f45e4ef151653b9f}{Alpha}~1
 \begin{DoxyCompactList}\small\item\em modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?) \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_a0e557f1d3a1e9da3ef071cee0dbe7c8e}\label{defines_8h_a0e557f1d3a1e9da3ef071cee0dbe7c8e}} 
 \#define \hyperlink{defines_8h_a0e557f1d3a1e9da3ef071cee0dbe7c8e}{ED}~1600
 \begin{DoxyCompactList}\small\item\em cilindrada en CC del motor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a74ff8c9ce406da60cd7bbfe2e2166cc2}\label{defines_8h_a74ff8c9ce406da60cd7bbfe2e2166cc2}} 
+\#define {\bfseries E\+G\+N\+\_\+\+S\+E\+C\+U\+E\+N\+CY}~\{ 1, 3, 4, 2 \};
+\item 
+\mbox{\Hypertarget{defines_8h_a267514d4f83c7a3ce49e997386ef97ef}\label{defines_8h_a267514d4f83c7a3ce49e997386ef97ef}} 
+\#define {\bfseries I\+N\+G\+\_\+\+S\+E\+C\+U\+E\+N\+CY}~\{ 3, 4, 1, 2 \};
+\item 
 \mbox{\Hypertarget{defines_8h_abe4d4f0baa8393107c2882b58e411fef}\label{defines_8h_abe4d4f0baa8393107c2882b58e411fef}} 
 \#define {\bfseries R\+P\+M\+\_\+per}~500
 \item 
@@ -43,16 +59,9 @@
 \mbox{\Hypertarget{defines_8h_a3ea16d89c4d1fb6e827010391c1da564}\label{defines_8h_a3ea16d89c4d1fb6e827010391c1da564}} 
 \#define \hyperlink{defines_8h_a3ea16d89c4d1fb6e827010391c1da564}{P\+M\+SI}~240
 \begin{DoxyCompactList}\small\item\em Cantidad de dientes entre P\+MS. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{defines_8h_ad47ff2a360a546f30a9b0bf7552a134c}\label{defines_8h_ad47ff2a360a546f30a9b0bf7552a134c}} 
-\#define \hyperlink{defines_8h_ad47ff2a360a546f30a9b0bf7552a134c}{C\+\_\+\+P\+W\+M\+\_\+\+I\+N\+Y\+\_\+\+P\+O\+RT}~G\+P\+I\+OB
-\begin{DoxyCompactList}\small\item\em puerto de los pines de inyeccion 2 3 4 5 2 4 5 3 \end{DoxyCompactList}\item 
-\#define \hyperlink{defines_8h_af0a8b5ede94315145fe1b8dadfd137a7}{C\+\_\+\+P\+W\+M\+\_\+\+I\+NY}
-\begin{DoxyCompactList}\small\item\em pines del S\+T\+M32 para la inyeccion \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{defines_8h_a7537c9dfde674e79981817392b56042e}\label{defines_8h_a7537c9dfde674e79981817392b56042e}} 
-\#define \hyperlink{defines_8h_a7537c9dfde674e79981817392b56042e}{C\+\_\+\+P\+W\+M\+\_\+\+E\+C\+N\+\_\+\+P\+O\+RT}~G\+P\+I\+OB
-\begin{DoxyCompactList}\small\item\em puerto de los pines de encendido \end{DoxyCompactList}\item 
-\#define \hyperlink{defines_8h_afdf008185c714e7b6fc86db16294d562}{C\+\_\+\+P\+W\+M\+\_\+\+E\+CN}
-\begin{DoxyCompactList}\small\item\em pines del S\+T\+M32 para el encendido \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a67ecea5b298afc048a0b60243bf9145c}\label{defines_8h_a67ecea5b298afc048a0b60243bf9145c}} 
+\#define {\bfseries A\+V\+C\+P\+ER}~360 / (\hyperlink{CHT__1__6___8h_a45f252e6f7774e84484118243dfe45b4}{C\+IL} / 2)
+\item 
 \mbox{\Hypertarget{defines_8h_aaeb2f99c34c54e97fc729bf4fee024ad}\label{defines_8h_aaeb2f99c34c54e97fc729bf4fee024ad}} 
 \#define {\bfseries A\+V\+CI}~30
 \item 
@@ -184,39 +193,13 @@
 \item 
 \mbox{\Hypertarget{defines_8h_a01c4802e2190570f07ac7950ab28c263}\label{defines_8h_a01c4802e2190570f07ac7950ab28c263}} 
 \#define {\bfseries I\+A\+T\+\_\+\+C\+AL}(mV)~((3800 -\/ mV) / 35)
+\item 
+\mbox{\Hypertarget{defines_8h_a140d5fcd35a311c304756863a2d79150}\label{defines_8h_a140d5fcd35a311c304756863a2d79150}} 
+\#define {\bfseries R\+O\+U\+N\+D\+\_\+16}(N\+U\+M\+B\+ER)~((float)((uint16\+\_\+t)N\+U\+M\+B\+ER $\ast$ 100 + .\+5) / 100)
+\item 
+\mbox{\Hypertarget{defines_8h_a3af919d5aad2d3fd16052cb3d57824bd}\label{defines_8h_a3af919d5aad2d3fd16052cb3d57824bd}} 
+\#define {\bfseries R\+O\+U\+N\+D\+\_\+32}(N\+U\+M\+B\+ER)~((float)((uint32\+\_\+t)N\+U\+M\+B\+ER $\ast$ 100 + .\+5) / 100)
+\item 
+\mbox{\Hypertarget{defines_8h_a554504c04c7fffd2f498665cc34610c6}\label{defines_8h_a554504c04c7fffd2f498665cc34610c6}} 
+\#define {\bfseries C\+P\+W\+M\+\_\+\+D\+E\+B\+UG}~1
 \end{DoxyCompactItemize}
-
-
-\subsection{Macro Definition Documentation}
-\mbox{\Hypertarget{defines_8h_afdf008185c714e7b6fc86db16294d562}\label{defines_8h_afdf008185c714e7b6fc86db16294d562}} 
-\index{defines.\+h@{defines.\+h}!C\+\_\+\+P\+W\+M\+\_\+\+E\+CN@{C\+\_\+\+P\+W\+M\+\_\+\+E\+CN}}
-\index{C\+\_\+\+P\+W\+M\+\_\+\+E\+CN@{C\+\_\+\+P\+W\+M\+\_\+\+E\+CN}!defines.\+h@{defines.\+h}}
-\subsubsection{\texorpdfstring{C\+\_\+\+P\+W\+M\+\_\+\+E\+CN}{C\_PWM\_ECN}}
-{\footnotesize\ttfamily \#define C\+\_\+\+P\+W\+M\+\_\+\+E\+CN}
-
-{\bfseries Value\+:}
-\begin{DoxyCode}
-\{                \(\backslash\)
-        GPIO8, GPIO7 \(\backslash\)
-    \}
-\end{DoxyCode}
-
-
-pines del S\+T\+M32 para el encendido 
-
-\mbox{\Hypertarget{defines_8h_af0a8b5ede94315145fe1b8dadfd137a7}\label{defines_8h_af0a8b5ede94315145fe1b8dadfd137a7}} 
-\index{defines.\+h@{defines.\+h}!C\+\_\+\+P\+W\+M\+\_\+\+I\+NY@{C\+\_\+\+P\+W\+M\+\_\+\+I\+NY}}
-\index{C\+\_\+\+P\+W\+M\+\_\+\+I\+NY@{C\+\_\+\+P\+W\+M\+\_\+\+I\+NY}!defines.\+h@{defines.\+h}}
-\subsubsection{\texorpdfstring{C\+\_\+\+P\+W\+M\+\_\+\+I\+NY}{C\_PWM\_INY}}
-{\footnotesize\ttfamily \#define C\+\_\+\+P\+W\+M\+\_\+\+I\+NY}
-
-{\bfseries Value\+:}
-\begin{DoxyCode}
-\{                              \(\backslash\)
-        GPIO6, GPIO4, GPIO5, GPIO3 \(\backslash\)
-    \}
-\end{DoxyCode}
-
-
-pines del S\+T\+M32 para la inyeccion 
-
