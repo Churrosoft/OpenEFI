@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['stm32_5fusb_5fdevice_5flibrary',['STM32_USB_DEVICE_LIBRARY',['../group__STM32__USB__DEVICE__LIBRARY.html',1,'']]],
+  ['stm32_5fusb_5fotg_5fdevice_5flibrary',['STM32_USB_OTG_DEVICE_LIBRARY',['../group__STM32__USB__OTG__DEVICE__LIBRARY.html',1,'']]],
   ['stm32f4xx_5fsystem',['Stm32f4xx_system',['../group__stm32f4xx__system.html',1,'']]],
   ['stm32f4xx_5fsystem_5fprivate_5fdefines',['STM32F4xx_System_Private_Defines',['../group__STM32F4xx__System__Private__Defines.html',1,'']]],
   ['stm32f4xx_5fsystem_5fprivate_5ffunctionprototypes',['STM32F4xx_System_Private_FunctionPrototypes',['../group__STM32F4xx__System__Private__FunctionPrototypes.html',1,'']]],
