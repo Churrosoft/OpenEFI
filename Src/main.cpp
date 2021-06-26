@@ -27,7 +27,7 @@ extern "C"
 #include "dma.h"
 #include "spi.h"
 #include "tim.h"
-#include "usb_otg.h"
+#include "usb_device.h"
 #include "gpio.h"
 }
 
@@ -65,10 +65,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#include <iostream>
-using std::cout;
-using std::endl;
-
 /* USER CODE END 0 */
 
 /**
@@ -106,14 +102,11 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_TIM9_Init();
-  MX_USB_OTG_FS_PCD_Init();
   MX_ADC2_Init();
+  MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
-  // MOTOR_ENABLE = can_turn_on();
-  cout << "---------" << endl;
-  cout << "EEE ATRR PERROOOOOOOO" << endl;
-  cout << "---------" << endl;
+  MOTOR_ENABLE = can_turn_on();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -157,7 +150,8 @@ void SystemClock_Config(void)
   }
   /** Initializes the CPU, AHB and APB busses clocks
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;

@@ -9,10 +9,6 @@
   * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -112,12 +108,12 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**ADC1 GPIO Configuration
-    PA0-WKUP      ------> ADC1_IN0
-    PA1           ------> ADC1_IN1
-    PA2           ------> ADC1_IN2
-    PA3           ------> ADC1_IN3
-    PA4           ------> ADC1_IN4
-    PA5           ------> ADC1_IN5
+    PA0-WKUP     ------> ADC1_IN0
+    PA1     ------> ADC1_IN1
+    PA2     ------> ADC1_IN2
+    PA3     ------> ADC1_IN3
+    PA4     ------> ADC1_IN4
+    PA5     ------> ADC1_IN5
     */
     GPIO_InitStruct.Pin = ADC_A1_Pin|ADC_A2_Pin|ADC_A3_Pin|ADC_A4_Pin
                           |ADC_A5_Pin|ADC_A6_Pin;
@@ -161,7 +157,6 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**ADC2 GPIO Configuration
     PC0     ------> ADC2_IN10
-    PC1     ------> ADC2_IN11
     PC2     ------> ADC2_IN12
     PC3     ------> ADC2_IN13
     PA6     ------> ADC2_IN6
@@ -171,8 +166,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     PB0     ------> ADC2_IN8
     PB1     ------> ADC2_IN9
     */
-    GPIO_InitStruct.Pin = ADC_B5_Pin|ADC_B6_Pin|ADC_B7_Pin|ADC_B8_Pin
-                          |ADC_B9_Pin|ADC_B10_Pin;
+    GPIO_InitStruct.Pin = ADC_B5_Pin|ADC_B7_Pin|ADC_B8_Pin|ADC_B9_Pin
+                          |ADC_B10_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -224,12 +219,12 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
     __HAL_RCC_ADC1_CLK_DISABLE();
 
     /**ADC1 GPIO Configuration
-    PA0-WKUP      ------> ADC1_IN0
-    PA1           ------> ADC1_IN1
-    PA2           ------> ADC1_IN2
-    PA3           ------> ADC1_IN3
-    PA4           ------> ADC1_IN4
-    PA5           ------> ADC1_IN5
+    PA0-WKUP     ------> ADC1_IN0
+    PA1     ------> ADC1_IN1
+    PA2     ------> ADC1_IN2
+    PA3     ------> ADC1_IN3
+    PA4     ------> ADC1_IN4
+    PA5     ------> ADC1_IN5
     */
     HAL_GPIO_DeInit(GPIOA, ADC_A1_Pin|ADC_A2_Pin|ADC_A3_Pin|ADC_A4_Pin
                           |ADC_A5_Pin|ADC_A6_Pin);
@@ -250,7 +245,6 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 
     /**ADC2 GPIO Configuration
     PC0     ------> ADC2_IN10
-    PC1     ------> ADC2_IN11
     PC2     ------> ADC2_IN12
     PC3     ------> ADC2_IN13
     PA6     ------> ADC2_IN6
@@ -260,8 +254,8 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
     PB0     ------> ADC2_IN8
     PB1     ------> ADC2_IN9
     */
-    HAL_GPIO_DeInit(GPIOC, ADC_B5_Pin|ADC_B6_Pin|ADC_B7_Pin|ADC_B8_Pin
-                          |ADC_B9_Pin|ADC_B10_Pin);
+    HAL_GPIO_DeInit(GPIOC, ADC_B5_Pin|ADC_B7_Pin|ADC_B8_Pin|ADC_B9_Pin
+                          |ADC_B10_Pin);
 
     HAL_GPIO_DeInit(GPIOA, ADC_B1_Pin|ADC_B2_Pin);
 

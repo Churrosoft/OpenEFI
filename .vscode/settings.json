@@ -5,7 +5,9 @@
   },
   "files.associations": {
     "defines.h": "c",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "usbd_core.h": "c",
+    "usbd_desc.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",
