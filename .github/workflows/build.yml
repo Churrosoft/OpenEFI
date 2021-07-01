@@ -23,6 +23,10 @@ jobs:
             pip install -U platformio
             platformio update
 
+      - name: Pull build deps
+        run:
+            git submodule update --init --recursive
+
       - name: Build firmware
         run:
             platformio run
