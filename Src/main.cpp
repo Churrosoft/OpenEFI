@@ -17,7 +17,8 @@
  ******************************************************************************
  */
 /* USER CODE END Header */
-
+#define DEBUG
+#define TESTING
 /* Includes ------------------------------------------------------------------*/
 extern "C"
 {
@@ -29,8 +30,21 @@ extern "C"
 #include "tim.h"
 #include "usb_device.h"
 #include "gpio.h"
+  void initialise_monitor_handles(void);
 }
 
+#ifdef TRACE
+#include <stdio.h>
+#include <stdlib.h>
+#include "../lib/diag/Trace.h"
+#endif
+
+#ifdef TESTING
+#pragma GCC warning "TESTING ENABLED"
+#include <unity.h>
+#include "../test/cpwm_test.cpp"
+extern int run_tests(void);
+#endif
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "memory/include/memory_immobilizer.hpp"
@@ -65,6 +79,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 /* USER CODE END 0 */
 
 /**
@@ -83,6 +98,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  initialise_monitor_handles();
 
   /* USER CODE END Init */
 
@@ -105,8 +121,22 @@ int main(void)
   MX_ADC2_Init();
   MX_USB_DEVICE_Init();
 
-  /* USER CODE BEGIN 2 */
+/* USER CODE BEGIN 2 */
+
+// Send a message to the standard output.
+// puts("Standard output message.");
+// Send a message to the standard error.
+// fprintf(stderr, "Standard error message.\n");
+#ifdef TESTING
+  UNITY_BEGIN();
+  puts("INIT_TESTING");
+  run_tests();
+  UNITY_END();
+  puts("END_TESTING");
+
+#else
   MOTOR_ENABLE = can_turn_on();
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -150,8 +180,7 @@ void SystemClock_Config(void)
   }
   /** Initializes the CPU, AHB and APB busses clocks
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;

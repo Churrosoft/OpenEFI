@@ -1,11 +1,5 @@
 #include "../include/cpwm.hpp"
 
-#if CPWM_DEBUG == 1
-#include <iostream>
-using std::cout;
-using std::endl;
-#endif
-
 uint16_t CPWM::iny_time = 0;
 uint16_t CPWM::iny_pin = 0;
 
@@ -76,18 +70,10 @@ void CPWM::write_ecn(uint8_t chanel, uint8_t pinState)
 
 void CPWM::interrupt()
 {
-    using std::cout;
-    using std::endl;
     CPWM::ckp_deg = ROUND_16((360 / LOGIC_DNT) * CPWM::ckp_tick);
 
     if (abs(CPWM::ckp_deg - (AVCPER - AVCI) * (CPWM::iny_pin + 1)) <= 5)
     {
-#if CPWM_DEBUG == 1
-        cout << "---------" << endl;
-        cout << "INTR: " << CPWM::ckp_tick << endl;
-        cout << "DEG: " << CPWM::ckp_deg << endl;
-        cout << "do iny on: " << CPWM::iny_pin << " cil " << endl;
-#endif
         if (CPWM::iny_pin < L_CIL)
             CPWM::iny_pin++;
         else
@@ -96,12 +82,6 @@ void CPWM::interrupt()
 
     if (abs(CPWM::ckp_deg - (AVCPER - CPWM::avc_deg) * (CPWM::eng_pin + 1)) <= 5)
     {
-#if CPWM_DEBUG == 1
-        cout << "---------" << endl;
-        cout << "INTR: " << CPWM::ckp_tick << endl;
-        cout << "DEG: " << CPWM::ckp_deg << endl;
-        cout << "do ing on: " << CPWM::eng_pin << " cil " << endl;
-#endif
         if (CPWM::eng_pin < L_CIL)
             CPWM::eng_pin++;
         else
@@ -110,12 +90,6 @@ void CPWM::interrupt()
 
     if (CPWM::ckp_tick >= LOGIC_DNT * 2)
     {
-#if CPWM_DEBUG == 1
-        cout << "---------" << endl;
-        cout << "INTR: " << CPWM::ckp_tick << endl;
-        cout << "DEG: " << CPWM::ckp_deg << endl;
-        cout << "reset tick" << endl;
-#endif
         CPWM::ckp_tick = 0;
     }
     CPWM::ckp_tick++;
