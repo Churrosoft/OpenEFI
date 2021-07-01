@@ -1,4 +1,4 @@
-name: Docker
+name: Test
 
 on:
   push:
@@ -42,7 +42,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          ./run_qemu.sh .pio/build/black_f407vg/firmware.bin || true
+          ./launch_qemu.sh .pio/build/black_f407vg/firmware.bin || true
           python3 generate_report.py
 
       - name: Generate Report (HTML)
