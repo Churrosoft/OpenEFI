@@ -96,10 +96,14 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-  initialise_monitor_handles();
-
+/* USER CODE BEGIN Init */
+#ifdef TESTING
+  UNITY_BEGIN();
+  puts("INIT_TESTING \n");
+  run_tests();
+  UNITY_END();
+  puts("END_TESTING \n");
+#endif
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -119,24 +123,17 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM9_Init();
   MX_ADC2_Init();
-  MX_USB_DEVICE_Init();
 
-/* USER CODE BEGIN 2 */
+  // MX_USB_DEVICE_Init();
 
-// Send a message to the standard output.
-// puts("Standard output message.");
-// Send a message to the standard error.
-// fprintf(stderr, "Standard error message.\n");
-#ifdef TESTING
-  UNITY_BEGIN();
-  puts("INIT_TESTING");
-  run_tests();
-  UNITY_END();
-  puts("END_TESTING");
+  /* USER CODE BEGIN 2 */
 
-#else
+  // Send a message to the standard output.
+  // puts("Standard output message.");
+  // Send a message to the standard error.
+  // fprintf(stderr, "Standard error message.\n");
+
   MOTOR_ENABLE = can_turn_on();
-#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
