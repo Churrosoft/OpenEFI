@@ -1,10 +1,9 @@
 var NAVTREEINDEX1 =
 {
-"group__USBD__DESC__Private__Functions.html#ga40ed2a0fb60c50a285983a09ba6921d6":[2,0,1,8,8],
 "group__USBD__DESC__Private__Functions.html#ga6427a671827813efe1a46c3dfcb05683":[2,0,1,8,12],
 "group__USBD__DESC__Private__Functions.html#ga6427a671827813efe1a46c3dfcb05683":[0,1,1,5,4],
-"group__USBD__DESC__Private__Functions.html#gaad2a1d1451821845eda602a82b1cd213":[2,0,1,8,14],
 "group__USBD__DESC__Private__Functions.html#gaad2a1d1451821845eda602a82b1cd213":[0,1,1,5,6],
+"group__USBD__DESC__Private__Functions.html#gaad2a1d1451821845eda602a82b1cd213":[2,0,1,8,14],
 "group__USBD__DESC__Private__Functions.html#gab248f43276f92d982ab5853111e4fb10":[0,1,1,5,2],
 "group__USBD__DESC__Private__Functions.html#gab248f43276f92d982ab5853111e4fb10":[2,0,1,8,10],
 "group__USBD__DESC__Private__Functions.html#gac02628ceb6a6a071e192dcb85063c0cc":[2,0,1,8,11],
@@ -12,8 +11,8 @@ var NAVTREEINDEX1 =
 "group__USBD__DESC__Private__Macros.html":[0,1,1,2],
 "group__USBD__DESC__Private__TypesDefinitions.html":[0,1,1,0],
 "group__USBD__DESC__Private__Variables.html":[0,1,1,4],
-"group__USBD__DESC__Private__Variables.html#ga542bfea0b6dcf06e06a505bdc49c7e04":[0,1,1,4,0],
 "group__USBD__DESC__Private__Variables.html#ga542bfea0b6dcf06e06a505bdc49c7e04":[2,0,1,8,15],
+"group__USBD__DESC__Private__Variables.html#ga542bfea0b6dcf06e06a505bdc49c7e04":[0,1,1,4,0],
 "group__USBD__DESC__Private__Variables.html#gae36d67393118d9d8531a8d633e23a797":[2,0,1,8,16],
 "group__USBD__DESC__Private__Variables.html#gae36d67393118d9d8531a8d633e23a797":[0,1,1,4,1],
 "group__USBD__DEVICE.html":[0,2,0],
@@ -25,8 +24,8 @@ var NAVTREEINDEX1 =
 "group__USBD__DFU.html":[0,1,0],
 "group__USBD__DFU.html#ga8f683037a1d883111e2cb0722c47991b":[2,0,1,9,1],
 "group__USBD__DFU__Exported__Variables.html":[0,1,0,4],
-"group__USBD__DFU__Exported__Variables.html#gafe8a2d9e10b33d5e7906f9f04f95358e":[2,0,1,6,1],
 "group__USBD__DFU__Exported__Variables.html#gafe8a2d9e10b33d5e7906f9f04f95358e":[2,0,1,9,2],
+"group__USBD__DFU__Exported__Variables.html#gafe8a2d9e10b33d5e7906f9f04f95358e":[2,0,1,6,1],
 "group__USBD__DFU__Private__Defines.html":[0,1,0,1],
 "group__USBD__DFU__Private__Defines.html#gac85338af5e7940ee58d81965f182a7ce":[2,0,1,9,0],
 "group__USBD__DFU__Private__FunctionPrototypes.html":[0,1,0,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "usbd__conf_8c.html#a0c449541523759cf62be9c9d47540c5d":[2,0,1,7,1],
 "usbd__conf_8c.html#a0e14acd4564979743bc0a89aa5f15428":[2,0,1,7,13],
 "usbd__conf_8c.html#a10080ed9555110afba809de968314985":[2,0,1,7,20],
-"usbd__conf_8c.html#a1679f5c50539a3dfca1391557e7a757b":[2,0,1,7,2]
+"usbd__conf_8c.html#a1679f5c50539a3dfca1391557e7a757b":[2,0,1,7,2],
+"usbd__conf_8c.html#a1730ffe1e560465665eb47d9264826f9":[2,0,1,7,0]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"usbd__conf_8c.html#a1730ffe1e560465665eb47d9264826f9":[2,0,1,7,0],
 "usbd__conf_8c.html#a24b61e95db7e4c7ad30a835e8d905943":[2,0,1,7,22],
 "usbd__conf_8c.html#a25f930b5fe696224f8e71dacf5f324b4":[2,0,1,7,4],
 "usbd__conf_8c.html#a2a0f10f93cc4246272b63661051a64b7":[2,0,1,7,23],
