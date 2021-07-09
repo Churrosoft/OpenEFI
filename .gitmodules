@@ -1,3 +1,6 @@
 [submodule "lib/Unity"]
 	path = lib/Unity
 	url = https://github.com/ThrowTheSwitch/Unity.git
+[submodule "lib/Semihosting"]
+	path = lib/Semihosting
+	url = https://github.com/Churrosoft/semihosting_stm32f4.git
