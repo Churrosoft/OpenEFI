@@ -68,7 +68,7 @@ rm -rf *
 # Presumably this is only needed when the SHORT_NAMES option in Doxygen is set
 # to NO, which it is by default. So creating the file just in case.
 echo "" > .nojekyll
-
+echo "devdocs.openefi.tech" > CNAME
 ################################################################################
 ##### Generate the Doxygen code documentation and log the output.          #####
 echo 'Generating Doxygen code documentation...'
@@ -95,7 +95,7 @@ if [ -f "index.html" ]; then
     # Force push to the remote gh-pages branch.
     # The ouput is redirected to /dev/null to hide any sensitive credential data
     # that might otherwise be exposed.
-    git push --force "https://${GH_REPO_TOKEN}@${GH_REPO_REF}" > /dev/null 2>&1
+    git push --force "https://${GH_REPO_TOKEN}@${GH_REPO_REF}" > /dev/null 2>&1 || true
 else
     echo '' >&2
     echo 'Warning: No documentation (html) files have been found!' >&2

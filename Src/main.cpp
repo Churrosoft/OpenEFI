@@ -18,7 +18,6 @@
  */
 /* USER CODE END Header */
 #define DEBUG
-#define TESTING
 /* Includes ------------------------------------------------------------------*/
 extern "C"
 {
@@ -36,7 +35,7 @@ extern "C"
 #ifdef TRACE
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/diag/Trace.h"
+#include <trace.h>
 #endif
 
 #ifdef TESTING
@@ -98,10 +97,9 @@ int main(void)
   HAL_Init();
 /* USER CODE BEGIN Init */
 #ifdef TESTING
-  UNITY_BEGIN();
-  puts("INIT_TESTING \n");
+  trace_initialize();
+  printf("INIT_TESTING \n");
   run_tests();
-  UNITY_END();
   puts("END_TESTING \n");
 #endif
   /* USER CODE END Init */

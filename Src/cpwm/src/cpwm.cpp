@@ -1,5 +1,11 @@
 #include "../include/cpwm.hpp"
+#ifdef TESTING
+#include <trace.h>
+#include <unity.h>
+#include <string>
+#include <stdio.h>
 
+#endif
 uint16_t CPWM::iny_time = 0;
 uint16_t CPWM::iny_pin = 0;
 
@@ -9,7 +15,7 @@ uint16_t CPWM::avc_deg = 15;
 uint16_t CPWM::avc_time = 0;
 
 uint16_t CPWM::ckp_tick = 0;
-float CPWM::ckp_deg = 0;
+float CPWM::ckp_deg = 4.56f;
 
 void CPWM::set_iny(uint16_t value)
 {
@@ -25,7 +31,27 @@ void CPWM::set_avc(uint16_t deg, uint16_t time)
 void CPWM::write_iny(uint8_t chanel, uint8_t pinState)
 {
     uint16_t ign_sec[CIL] = ING_SECUENCY;
-    // esto luego se pasa a SPI viteh'
+// esto luego se pasa a SPI viteh'
+#ifdef TESTING
+    switch (chanel)
+    {
+    case 0:
+        TEST_ASSERT_EQUAL_INT16_MESSAGE(49, CPWM::ckp_tick, "Check AVCPER / ckp_deg");
+        break;
+    case 1:
+        TEST_ASSERT_EQUAL_INT16_MESSAGE(99, CPWM::ckp_tick, "Check AVCPER / ckp_deg");
+
+        break;
+    case 2:
+        TEST_ASSERT_EQUAL_INT16_MESSAGE(149, CPWM::ckp_tick, "Check AVCPER / ckp_deg");
+        break;
+    case 3:
+        TEST_ASSERT_EQUAL_INT16_MESSAGE(199, CPWM::ckp_tick, "Check AVCPER / ckp_deg");
+        break;
+    default:
+        break;
+    }
+#else
     switch (ign_sec[chanel])
     {
     case 0:
@@ -43,12 +69,31 @@ void CPWM::write_iny(uint8_t chanel, uint8_t pinState)
     default:
         break;
     }
+#endif
 }
 
 void CPWM::write_ecn(uint8_t chanel, uint8_t pinState)
 {
-    uint16_t ecn_sec[CIL] = ING_SECUENCY;
-
+    uint16_t ecn_sec[CIL] = EGN_SECUENCY;
+#ifdef TESTING
+    switch (chanel)
+    {
+    case 0:
+        TEST_ASSERT_EQUAL_INT16_MESSAGE(56, CPWM::ckp_tick, "Check AVCPER / ckp_deg");
+        break;
+    case 1:
+        TEST_ASSERT_EQUAL_INT16_MESSAGE(115, CPWM::ckp_tick, "Check AVCPER / ckp_deg");
+        break;
+    case 2:
+        TEST_ASSERT_EQUAL_INT16_MESSAGE(173, CPWM::ckp_tick, "Check AVCPER / ckp_deg");
+        break;
+    case 3:
+        TEST_ASSERT_EQUAL_INT16_MESSAGE(232, CPWM::ckp_tick, "Check AVCPER / ckp_deg");
+        break;
+    default:
+        break;
+    }
+#else
     switch (ecn_sec[chanel])
     {
     case 0:
@@ -66,6 +111,7 @@ void CPWM::write_ecn(uint8_t chanel, uint8_t pinState)
     default:
         break;
     }
+#endif
 }
 
 void CPWM::interrupt()
@@ -74,6 +120,17 @@ void CPWM::interrupt()
 
     if (abs(CPWM::ckp_deg - (AVCPER - AVCI) * (CPWM::iny_pin + 1)) <= 5)
     {
+
+        trace_printf("------------------------------------\n");
+        trace_printf("INY on cil:%d\nDEG: %d.%d \nTICK: %d \n",
+                     CPWM::iny_pin,
+                     (int16_t)CPWM::ckp_deg,
+                     // odio formatear numeros en C
+                     ((int16_t)(CPWM::ckp_deg - (int16_t)CPWM::ckp_deg) * 100),
+                     CPWM::ckp_tick);
+        trace_printf("------------------------------------\n");
+
+        CPWM::write_iny(iny_pin, GPIO_PIN_SET);
         if (CPWM::iny_pin < L_CIL)
             CPWM::iny_pin++;
         else
@@ -82,6 +139,16 @@ void CPWM::interrupt()
 
     if (abs(CPWM::ckp_deg - (AVCPER - CPWM::avc_deg) * (CPWM::eng_pin + 1)) <= 5)
     {
+        trace_printf("------------------------------------\n");
+        trace_printf("EGN on cil:%d\nDEG: %d.%d \nTICK: %d \n",
+                     CPWM::eng_pin,
+                     (int16_t)CPWM::ckp_deg,
+                     // odio formatear numeros en C
+                     ((int16_t)(CPWM::ckp_deg - (int16_t)CPWM::ckp_deg) * 100),
+                     CPWM::ckp_tick);
+        trace_printf("------------------------------------\n");
+
+        CPWM::write_ecn(eng_pin, GPIO_PIN_SET);
         if (CPWM::eng_pin < L_CIL)
             CPWM::eng_pin++;
         else
@@ -92,5 +159,6 @@ void CPWM::interrupt()
     {
         CPWM::ckp_tick = 0;
     }
-    CPWM::ckp_tick++;
+    else
+        CPWM::ckp_tick++;
 }
