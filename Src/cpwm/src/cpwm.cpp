@@ -120,6 +120,7 @@ void CPWM::interrupt()
 
     if (abs(CPWM::ckp_deg - (AVCPER - AVCI) * (CPWM::iny_pin + 1)) <= 5)
     {
+#ifdef TESTING
 
         trace_printf("------------------------------------\n");
         trace_printf("INY on cil:%d\nDEG: %d.%d \nTICK: %d \n",
@@ -129,6 +130,7 @@ void CPWM::interrupt()
                      ((int16_t)(CPWM::ckp_deg - (int16_t)CPWM::ckp_deg) * 100),
                      CPWM::ckp_tick);
         trace_printf("------------------------------------\n");
+#endif
 
         CPWM::write_iny(iny_pin, GPIO_PIN_SET);
         if (CPWM::iny_pin < L_CIL)
@@ -139,6 +141,7 @@ void CPWM::interrupt()
 
     if (abs(CPWM::ckp_deg - (AVCPER - CPWM::avc_deg) * (CPWM::eng_pin + 1)) <= 5)
     {
+#ifdef TESTING
         trace_printf("------------------------------------\n");
         trace_printf("EGN on cil:%d\nDEG: %d.%d \nTICK: %d \n",
                      CPWM::eng_pin,
@@ -147,7 +150,7 @@ void CPWM::interrupt()
                      ((int16_t)(CPWM::ckp_deg - (int16_t)CPWM::ckp_deg) * 100),
                      CPWM::ckp_tick);
         trace_printf("------------------------------------\n");
-
+#endif
         CPWM::write_ecn(eng_pin, GPIO_PIN_SET);
         if (CPWM::eng_pin < L_CIL)
             CPWM::eng_pin++;
