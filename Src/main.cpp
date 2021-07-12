@@ -48,6 +48,7 @@ extern int run_tests(void);
 /* USER CODE BEGIN Includes */
 #include "memory/include/memory_immobilizer.hpp"
 #include "sensors/sensors.hpp"
+#include "variables.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,6 +67,7 @@ extern int run_tests(void);
 
 /* Private variables ---------------------------------------------------------*/
 bool MOTOR_ENABLE;
+bool SINC;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -122,16 +124,19 @@ int main(void)
   MX_TIM9_Init();
   MX_ADC2_Init();
 
-  // MX_USB_DEVICE_Init();
+// MX_USB_DEVICE_Init();
 
-  /* USER CODE BEGIN 2 */
+/* USER CODE BEGIN 2 */
 
-  // Send a message to the standard output.
-  // puts("Standard output message.");
-  // Send a message to the standard error.
-  // fprintf(stderr, "Standard error message.\n");
-
+// Send a message to the standard output.
+// puts("Standard output message.");
+// Send a message to the standard error.
+// fprintf(stderr, "Standard error message.\n");
+#if Alpha == 1
+  MOTOR_ENABLE = true;
+#else
   MOTOR_ENABLE = can_turn_on();
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */

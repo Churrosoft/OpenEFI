@@ -1,36 +1,40 @@
 #include "../include/cpwm.hpp"
+
 #ifdef TESTING
 #include <trace.h>
 #include <unity.h>
 #include <string>
 #include <stdio.h>
-
 #endif
-uint16_t CPWM::iny_time = 0;
+
+uint16_t CPWM::iny_time = 15;
 uint16_t CPWM::iny_pin = 0;
 
 uint16_t CPWM::eng_pin = 0;
 
-uint16_t CPWM::avc_deg = 15;
+uint_fast16_t CPWM::avc_deg = 15;
 uint16_t CPWM::avc_time = 0;
 
 uint16_t CPWM::ckp_tick = 0;
 float CPWM::ckp_deg = 4.56f;
+
+TIM_HandleTypeDef CPWM::c_tim3;
+TIM_HandleTypeDef CPWM::c_tim4;
 
 void CPWM::set_iny(uint16_t value)
 {
     iny_time = value;
 }
 
-void CPWM::set_avc(uint16_t deg, uint16_t time)
+void CPWM::set_avc(float deg, uint16_t time)
 {
-    CPWM::avc_deg = deg;
+    CPWM::avc_deg = grad_to_dnt(deg);
     CPWM::avc_time = time;
 }
 
 void CPWM::write_iny(uint8_t chanel, uint8_t pinState)
 {
-    uint16_t ign_sec[CIL] = ING_SECUENCY;
+    uint16_t iny_sec[CIL] = INY_SECUENCY;
 // esto luego se pasa a SPI viteh'
 #ifdef TESTING
     switch (chanel)
@@ -52,7 +56,7 @@ void CPWM::write_iny(uint8_t chanel, uint8_t pinState)
         break;
     }
 #else
-    switch (ign_sec[chanel])
+    switch (iny_sec[chanel])
     {
     case 0:
         HAL_GPIO_WritePin(INY1_GPIO_Port, INY1_Pin, (GPIO_PinState)pinState);
@@ -74,7 +78,7 @@ void CPWM::write_iny(uint8_t chanel, uint8_t pinState)
 
 void CPWM::write_ecn(uint8_t chanel, uint8_t pinState)
 {
-    uint16_t ecn_sec[CIL] = EGN_SECUENCY;
+    uint16_t ecn_sec[CIL] = ING_SECUENCY;
 #ifdef TESTING
     switch (chanel)
     {
@@ -130,9 +134,22 @@ void CPWM::interrupt()
                      ((int16_t)(CPWM::ckp_deg - (int16_t)CPWM::ckp_deg) * 100),
                      CPWM::ckp_tick);
         trace_printf("------------------------------------\n");
-#endif
 
-        CPWM::write_iny(iny_pin, GPIO_PIN_SET);
+        CPWM::write_iny(CPWM::iny_pin, GPIO_PIN_SET);
+#else
+
+        CPWM::write_iny(CPWM::iny_pin, GPIO_PIN_SET);
+
+        CPWM::c_tim3.Instance = TIM3;
+        CPWM::c_tim3.Init.Prescaler = 1200;
+        CPWM::c_tim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+        CPWM::c_tim3.Init.Period = CPWM::iny_time;
+        CPWM::c_tim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+        CPWM::c_tim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+        if (HAL_TIM_Base_Start_IT(&CPWM::c_tim3) != HAL_OK)
+            Error_Handler();
+#endif
         if (CPWM::iny_pin < L_CIL)
             CPWM::iny_pin++;
         else
@@ -150,8 +167,19 @@ void CPWM::interrupt()
                      ((int16_t)(CPWM::ckp_deg - (int16_t)CPWM::ckp_deg) * 100),
                      CPWM::ckp_tick);
         trace_printf("------------------------------------\n");
+        CPWM::write_ecn(CPWM::eng_pin, GPIO_PIN_SET);
+#else
+        CPWM::write_ecn(CPWM::eng_pin, GPIO_PIN_SET);
+        htim4.Instance = TIM4;
+        CPWM::c_tim4.Init.Prescaler = 6000;
+        CPWM::c_tim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+        CPWM::c_tim4.Init.Period = ECNT;
+        CPWM::c_tim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+        CPWM::c_tim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+        if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+            Error_Handler();
 #endif
-        CPWM::write_ecn(eng_pin, GPIO_PIN_SET);
         if (CPWM::eng_pin < L_CIL)
             CPWM::eng_pin++;
         else
@@ -159,9 +187,19 @@ void CPWM::interrupt()
     }
 
     if (CPWM::ckp_tick >= LOGIC_DNT * 2)
-    {
         CPWM::ckp_tick = 0;
-    }
     else
         CPWM::ckp_tick++;
+}
+
+void CPWM::tim3_irq()
+{
+    CPWM::write_iny(CPWM::iny_pin, GPIO_PIN_RESET);
+    HAL_TIM_Base_Stop_IT(&CPWM::c_tim3);
+}
+
+void CPWM::tim4_irq()
+{
+    CPWM::write_ecn(CPWM::eng_pin, GPIO_PIN_RESET);
+    HAL_TIM_Base_Stop_IT(&CPWM::c_tim4);
 }

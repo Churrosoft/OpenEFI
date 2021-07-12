@@ -22,8 +22,8 @@
 #define LOGIC_DNT ((DNT - DNT_MISSING ) * DNT_DOUBLE_SCAN )
 #define Alpha 1 //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 #define ED 1600 //!< cilindrada en CC del motor
-#define EGN_SECUENCY { 1, 3, 4, 2 }; // secuencia encendido
-#define ING_SECUENCY { 3, 4, 1, 2 }; // secuencia inyeccion
+#define ING_SECUENCY { 1, 3, 4, 2 }; // secuencia encendido
+#define INY_SECUENCY { 3, 4, 1, 2 }; // secuencia inyeccion
 /*-----( RPM )-----*/
 
 #define RPM_per 500 //periodo en ms en el que se actualizan las rpm ( si lo cambias , o arreglas el calculo para las rpm,o se rompe todo maquinola)
