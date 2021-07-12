@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['usagefault_5fhandler',['UsageFault_Handler',['../stm32f4xx__it_8c.html#a1d98923de2ed6b7309b66f9ba2971647',1,'UsageFault_Handler(void):&#160;stm32f4xx_it.c'],['../stm32f4xx__it_8h.html#a1d98923de2ed6b7309b66f9ba2971647',1,'UsageFault_Handler(void):&#160;stm32f4xx_it.c']]],
+  ['usagefault_5fhandler',['UsageFault_Handler',['../stm32f4xx__it_8h.html#a1d98923de2ed6b7309b66f9ba2971647',1,'stm32f4xx_it.cpp']]],
   ['usb_5fdevice_2ec',['usb_device.c',['../usb__device_8c.html',1,'']]],
   ['usb_5fdevice_2eh',['usb_device.h',['../usb__device_8h.html',1,'']]],
   ['usbd_5fconf',['USBD_CONF',['../group__USBD__CONF.html',1,'']]],

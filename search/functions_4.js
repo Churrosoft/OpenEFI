@@ -13,5 +13,5 @@ var searchData=
   ['hal_5fpcd_5fsetupstagecallback',['HAL_PCD_SetupStageCallback',['../usbd__conf_8c.html#a9d72aa4d3d984b164047b081d4566f6d',1,'usbd_conf.c']]],
   ['hal_5fpcd_5fsofcallback',['HAL_PCD_SOFCallback',['../usbd__conf_8c.html#a85c99eeb4aa17d8ff5298efff92ac28e',1,'usbd_conf.c']]],
   ['hal_5fpcd_5fsuspendcallback',['HAL_PCD_SuspendCallback',['../usbd__conf_8c.html#a0e14acd4564979743bc0a89aa5f15428',1,'usbd_conf.c']]],
-  ['hardfault_5fhandler',['HardFault_Handler',['../stm32f4xx__it_8c.html#a2bffc10d5bd4106753b7c30e86903bea',1,'HardFault_Handler(void):&#160;stm32f4xx_it.c'],['../stm32f4xx__it_8h.html#a2bffc10d5bd4106753b7c30e86903bea',1,'HardFault_Handler(void):&#160;stm32f4xx_it.c']]]
+  ['hardfault_5fhandler',['HardFault_Handler',['../stm32f4xx__it_8h.html#a2bffc10d5bd4106753b7c30e86903bea',1,'stm32f4xx_it.cpp']]]
 ];
