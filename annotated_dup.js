@@ -5,5 +5,6 @@ var annotated_dup =
     ] ],
     [ "EMAHighPass", "structEMAHighPass.html", "structEMAHighPass" ],
     [ "EMALowPass", "structEMALowPass.html", "structEMALowPass" ],
-    [ "input_handler", "structinput__handler.html", "structinput__handler" ]
+    [ "input_handler", "structinput__handler.html", "structinput__handler" ],
+    [ "table_ref", "structtable__ref.html", "structtable__ref" ]
 ];
