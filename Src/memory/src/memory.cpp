@@ -35,11 +35,12 @@ uint8_t memory::get_id() {
   uint8_t data = 0xFF;
   if (!memory::is_busy()) {
     memory::CS(true);
-    HAL_SPI_Transmit(&hspi2, (uint8_t *)GET_ID, 1, 50);
 
-    HAL_SPI_Transmit(&hspi2, (uint8_t *)GET_ID, 1, 50);
-    HAL_SPI_Transmit(&hspi2, (uint8_t *)GET_ID, 1, 50);
-    HAL_SPI_Transmit(&hspi2, (uint8_t *)GET_ID, 1, 50);
+    // en teoria se pueden mandar de estar forma los mensajes por spi
+    // TODO: implementar No-Blocking con DMA
+    uint8_t data[] = { GET_ID, GET_ID, GET_ID, GET_ID };
+
+    HAL_SPI_Transmit(&hspi2, data, sizeof(data), 50);
     // primer byte descartado, trae el ID del fabricante, en este caso es
     // siempre 0xEF
     HAL_SPI_Receive(&hspi2, (uint8_t *)data, 1, 50);
@@ -66,7 +67,7 @@ uint16_t memory::read_single(uint8_t a, uint8_t b, uint8_t c) {
 }
 
 void memory::read_multiple(uint8_t a, uint8_t b, uint8_t c, uint8_t *buffer,
-                           uint8_t size) {
+                           uint16_t size) {
   if (!memory::is_busy()) {
     memory::CS(true);
     HAL_SPI_Transmit(&hspi2, (uint8_t *)READ_DATA, 1, 50);
