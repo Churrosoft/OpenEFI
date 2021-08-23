@@ -23,10 +23,16 @@ uint32_t IAT::get_calibrate_value(uint16_t filt_input)
 uint8_t *IAT::dtc()
 {
     if (IAT::last_value > IAT_MAX)
+    {
         return NEW_DTC DTC_IAT_SENSOR_HIGH;
+    }
     if (IAT::last_value < IAT_MIN && IAT::last_value > IAT_OPEN)
+    {
         return NEW_DTC DTC_IAT_SENSOR_LOW;
-    else
+    }
+    else if (IAT::last_value > IAT_OPEN)
+    {
         return NEW_DTC DTC_IAT_SENSOR_OPEN;
+    }
     return 0;
 }
