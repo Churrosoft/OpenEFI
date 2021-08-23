@@ -34,7 +34,7 @@ namespace tables
     int32_t get_long_value(table_ref, uint16_t, uint16_t);
     void set_long_value(table_ref, uint16_t, uint16_t, int32_t);
     // operaciones sobre varios campos a la vez:
-    std::vector<std::vector<int16_t>> read_all(table_ref);
+    TABLEDATA read_all(table_ref);
 } // namespace tables
 
 #endif

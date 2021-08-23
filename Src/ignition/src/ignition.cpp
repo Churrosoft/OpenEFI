@@ -8,3 +8,13 @@ sin ninguna correccion por sensores ni lambda
 usando sensors => map y rpm nomas
 
 */
+
+#include "../include/ignition.hpp"
+
+void ignition::interrupt(){
+
+}
+
+void ignition::setup(){
+
+}

@@ -10,17 +10,23 @@
  * memory end addr:  0x1FFF
  */
 #include <stdint.h>
+#include <initializer_list>
 #include "memory.hpp"
 #include "dtc_codes.h"
 
 uint16_t get_all_dtc();
-void write_dtc(char *);
-uint8_t * read_dtc(uint8_t);
+// void write_dtc(std::initializer_list<uint8_t *>, uint8_t);
+
+void write_dtc(uint8_t *);
+void read_dtc(uint8_t, uint8_t *);
+void write_dtc(uint8_t *,uint8_t);
+void read_dtc(uint8_t, uint8_t *);
 
 #define DTC_FLAG_ADDR 0x1000
 
-#define DTC_INIT_ADDR 0x1001
-#define DTC_END_ADDR  0x1FFF
-#define DTC_EMPTY 0xFFFF
+#define DTC_INIT_ADDR 0xAFF
+#define DTC_END_ADDR 0x1FFF
+#define DTC_EMPTY 0xFE
+#define DTC_EMPTY_ALT 0xFF
 
 #endif

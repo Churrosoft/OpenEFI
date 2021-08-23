@@ -46,7 +46,7 @@ extern int run_tests(void);
 #endif
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "memory/include/memory_immobilizer.hpp"
+#include "aliases/memory.hpp"
 #include "sensors/sensors.hpp"
 #include "variables.h"
 /* USER CODE END Includes */
@@ -128,10 +128,6 @@ int main(void)
 
 /* USER CODE BEGIN 2 */
 
-// Send a message to the standard output.
-// puts("Standard output message.");
-// Send a message to the standard error.
-// fprintf(stderr, "Standard error message.\n");
 #if Alpha == 1
   MOTOR_ENABLE = true;
 #else

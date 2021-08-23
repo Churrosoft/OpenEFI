@@ -28,7 +28,8 @@
  */
 #define GET_ID 0x90
 
-#define WRITE_ENABLE 0x6
+#define WRITE_ENABLE  0b00000110
+// #define WRITE_ENABLE  0b00000101
 #define WRITE_DISABLE 0x4
 
 /**

@@ -2,50 +2,60 @@
 
 uint16_t get_all_dtc()
 {
-    /*  // lee la memoria buscando la cantidad de dtc's existentes
+    // lee la memoria buscando la cantidad de dtc's existentes
     uint16_t dtc_cant = 0;
-    for (uint16_t i = DTC_INIT_ADDR; i < DTC_END_ADDR; i += 5)
+
+    for (uint16_t addr = 0; addr < 50; addr++)
     {
-        uint8_t *dtc = 0;
-        memory::read_multiple(i >> 24, i >> 16, i >> 8, dtc, 4);
-        if ((uint32_t)dtc != DTC_EMPTY)
+        uint8_t dtc_readed[5];
+        read_dtc(addr, dtc_readed);
+
+        volatile uint8_t dtc = dtc_readed[0];
+
+        if (dtc != DTC_EMPTY && dtc != DTC_EMPTY_ALT)
             dtc_cant += 1;
+        else
+            break;
     }
-    return dtc_cant; */
-    return memory::read_single(DTC_FLAG_ADDR >> 24, DTC_FLAG_ADDR >> 16, DTC_FLAG_ADDR >> 8);
+    return dtc_cant;
 }
 
-bool is_dtc(){
+bool is_dtc()
+{
     // devuelve true en caso de que exista un dtc;
-    uint16_t data = memory::read_single(DTC_FLAG_ADDR >> 24, DTC_FLAG_ADDR >> 16, DTC_FLAG_ADDR >> 8);
-    return data == 0xFF;
+    uint16_t data = memory::read_single(DTC_FLAG_ADDR);
+    return data != 0xFE;
 }
 
 void write_dtc(uint8_t *dtc_code)
 {
-    uint16_t dtc = get_all_dtc();
-    if (is_dtc())
+    uint16_t dtc_number = get_all_dtc();
+    if (dtc_number && dtc_number < 5)
     {
-        uint32_t ptr = (DTC_FLAG_ADDR + dtc);
-        memory::write_multiple(ptr >> 24, ptr >> 16, ptr >> 8, dtc_code, 5);
-        memory::write_single(DTC_FLAG_ADDR >> 24, DTC_FLAG_ADDR >> 16, DTC_FLAG_ADDR >> 8, dtc + 1);
+        memory::write_multiple(DTC_INIT_ADDR + ((dtc_number + 1) * 5), dtc_code, 5);
+        //  memory::write_single(DTC_FLAG_ADDR, 0);
     }
     else
     {
-        memory::write_multiple(DTC_INIT_ADDR >> 24, DTC_INIT_ADDR >> 16, DTC_INIT_ADDR >> 8, dtc_code, 5);
-        memory::write_single(DTC_FLAG_ADDR >> 24, DTC_FLAG_ADDR >> 16, DTC_FLAG_ADDR >> 8, 0);
+        memory::write_multiple(DTC_INIT_ADDR, dtc_code, 5);
+        // memory::write_single(DTC_FLAG_ADDR, 0);
     }
 }
 
-// busca un codigo en la memoria para ver si ya existe, (no vamo a grabar las cosas dos veces vite')
-bool search_dtc(uint8_t *dtc_code){
-return false;
+void write_dtc(uint8_t *dtc_code, uint8_t dtc_number)
+{
+    memory::write_multiple(DTC_INIT_ADDR + (dtc_number * 5), dtc_code, 5);
 }
 
-uint8_t *read_dtc(uint8_t dtc_number)
+// busca un codigo en la memoria para ver si ya existe, (no vamo a grabar las cosas dos veces vite')
+bool search_dtc(uint8_t *dtc_code)
 {
-    uint8_t *data = 0;
-    uint32_t ptr = (DTC_FLAG_ADDR + dtc_number);
-    memory::read_multiple(ptr >> 24, ptr >> 16, ptr >> 8, data, 5);
-    return data;
+    return false;
+}
+
+void read_dtc(uint8_t dtc_number, uint8_t *data)
+{
+    uint32_t ptr = (DTC_INIT_ADDR + (dtc_number * 5));
+    memory::read_multiple(ptr, data, 5);
+    data[5] = '\0';
 }
