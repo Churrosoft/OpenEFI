@@ -1,6 +1,8 @@
 var searchData=
 [
   ['table_5fref',['table_ref',['../structtable__ref.html',1,'']]],
+  ['tim3_5firqhandler',['TIM3_IRQHandler',['../stm32f4xx__it_8h.html#ac8e51d2183b5230cbd5481f8867adce9',1,'stm32f4xx_it.cpp']]],
+  ['tim4_5firqhandler',['TIM4_IRQHandler',['../stm32f4xx__it_8h.html#a7133f3f78767503641d307386e68bd28',1,'stm32f4xx_it.cpp']]],
   ['tim8_5ftrg_5fcom_5ftim14_5firqhandler',['TIM8_TRG_COM_TIM14_IRQHandler',['../stm32f4xx__it_8h.html#a4c8359a023f7ede4a9d9f94ea6fb92da',1,'stm32f4xx_it.cpp']]],
   ['tps_5fcalc_5fa',['TPS_CALC_A',['../defines_8h.html#ad52b4f48f8cce28e36d77d1ced7e8dd9',1,'defines.h']]],
   ['tps_5fdual',['TPS_DUAL',['../defines_8h.html#a6ece768bdf35a4e819ddc495181392b5',1,'defines.h']]],
