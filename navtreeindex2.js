@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"usbd__conf_8c.html#a71e72e29fe464c7f3be4edf36806355e":[2,0,1,7,15],
+"usbd__conf_8c.html#a85c99eeb4aa17d8ff5298efff92ac28e":[2,0,1,7,12],
 "usbd__conf_8c.html#a8f4041d553ef2fb326c6e483797f99a8":[2,0,1,7,5],
 "usbd__conf_8c.html#a9d72aa4d3d984b164047b081d4566f6d":[2,0,1,7,11],
 "usbd__conf_8c.html#aae9bfb6a27b11f232fc55a1d1b28be24":[2,0,1,7,18],
@@ -12,13 +14,13 @@ var NAVTREEINDEX2 =
 "usbd__conf_8c.html#ae12e7de3c398d5663976bf11faa63572":[2,0,1,7,17],
 "usbd__conf_8c.html#aeb80f50482e04c046ba41f5ea58a1b2b":[2,0,1,7,21],
 "usbd__conf_8c.html#af4fbef977092aa525c6b1668ffbec77b":[2,0,1,7,9],
-"usbd__conf_8h.html":[2,0,0,14],
-"usbd__conf_8h_source.html":[2,0,0,14],
+"usbd__conf_8h.html":[2,0,0,15],
+"usbd__conf_8h_source.html":[2,0,0,15],
 "usbd__desc_8c.html":[2,0,1,8],
-"usbd__desc_8h_source.html":[2,0,0,15],
+"usbd__desc_8h_source.html":[2,0,0,16],
 "usbd__dfu__if_8c.html":[2,0,1,9],
-"usbd__dfu__if_8h.html":[2,0,0,16],
-"usbd__dfu__if_8h_source.html":[2,0,0,16],
-"user__defines_8h_source.html":[2,0,0,17],
-"variables_8h_source.html":[2,0,0,18]
+"usbd__dfu__if_8h.html":[2,0,0,17],
+"usbd__dfu__if_8h_source.html":[2,0,0,17],
+"user__defines_8h_source.html":[2,0,0,18],
+"variables_8h_source.html":[2,0,0,19]
 };
