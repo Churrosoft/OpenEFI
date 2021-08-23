@@ -27,11 +27,11 @@ void memory::CS(bool set)
 {
   if (set)
     HAL_GPIO_WritePin(
-        SPI_CS_0_GPIO_Port, SPI_CS_0_Pin,
+        MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
         GPIO_PinState::GPIO_PIN_SET);
   else
     HAL_GPIO_WritePin(
-        SPI_CS_0_GPIO_Port, SPI_CS_0_Pin,
+        MEMORY_CS_GPIO_Port, MEMORY_CS_Pin,
         GPIO_PinState::GPIO_PIN_RESET);
 }
 
