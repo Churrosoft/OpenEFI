@@ -17,5 +17,5 @@
 // Ejemplo de modificacion:
 #undef AVCI
 #define AVCI 24
-
+// {{USER_DEFINES_END}}
 #endif
