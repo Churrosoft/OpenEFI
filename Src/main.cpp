@@ -29,7 +29,6 @@ extern "C"
 #include "tim.h"
 #include "usb_device.h"
 #include "gpio.h"
-  void initialise_monitor_handles(void);
 }
 
 #ifdef TRACE

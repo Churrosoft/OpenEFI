@@ -329,7 +329,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
     CPWM::interrupt();
   }
-  if (!SINC)
+  if (GPIO_Pin == GPIO_PIN_6 && !SINC)
   {
     SINC = sinc();
   }

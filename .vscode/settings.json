@@ -20,7 +20,8 @@
     "reent.h": "c",
     "unistd.h": "c",
     "stdio.h": "c",
-    "tim.h": "c"
+    "tim.h": "c",
+    "variables.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",

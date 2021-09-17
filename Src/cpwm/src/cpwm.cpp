@@ -7,6 +7,9 @@
 #include <stdio.h>
 #endif
 
+uint32_t _POS;
+uint32_t _RPM;
+
 uint16_t CPWM::iny_time = 15;
 uint16_t CPWM::iny_pin = 0;
 
@@ -202,4 +205,10 @@ void CPWM::tim4_irq()
 {
     CPWM::write_ecn(CPWM::eng_pin, GPIO_PIN_RESET);
     HAL_TIM_Base_Stop_IT(&CPWM::c_tim4);
+}
+
+void CPWM::calc_rpm()
+{
+    _RPM = (_POS / DNT) * 90; // calculo para obtener las rpm
+    _POS = 0;
 }
