@@ -153,10 +153,13 @@ void CPWM::interrupt()
         if (HAL_TIM_Base_Start_IT(&CPWM::c_tim3) != HAL_OK)
             Error_Handler();
 #endif
+#ifdef TESTING
+// esto solo hace falta cuando estamos en el modo testing porque no disponemos del timer
         if (CPWM::iny_pin < L_CIL)
             CPWM::iny_pin++;
         else
             CPWM::iny_pin = 0;
+#endif
     }
 
     if (abs(CPWM::ckp_deg - (AVCPER - CPWM::avc_deg) * (CPWM::eng_pin + 1)) <= 5)
@@ -183,10 +186,14 @@ void CPWM::interrupt()
         if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
             Error_Handler();
 #endif
+
+#ifdef TESTING
+
         if (CPWM::eng_pin < L_CIL)
             CPWM::eng_pin++;
         else
             CPWM::eng_pin = 0;
+#endif
     }
 
     if (CPWM::ckp_tick >= LOGIC_DNT * 2)
@@ -198,12 +205,21 @@ void CPWM::interrupt()
 void CPWM::tim3_irq()
 {
     CPWM::write_iny(CPWM::iny_pin, GPIO_PIN_RESET);
+
+    if (CPWM::iny_pin < L_CIL)
+        CPWM::iny_pin++;
+    else
+        CPWM::iny_pin = 0;
     HAL_TIM_Base_Stop_IT(&CPWM::c_tim3);
 }
 
 void CPWM::tim4_irq()
 {
     CPWM::write_ecn(CPWM::eng_pin, GPIO_PIN_RESET);
+    if (CPWM::eng_pin < L_CIL)
+        CPWM::eng_pin++;
+    else
+        CPWM::eng_pin = 0;
     HAL_TIM_Base_Stop_IT(&CPWM::c_tim4);
 }
 
