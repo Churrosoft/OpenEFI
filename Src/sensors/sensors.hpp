@@ -25,7 +25,7 @@ namespace sensors
   /** @brief Loop secundario, corre cada 250mS */
   void loop_low_priority(void);
 
-  //Struct con info de todos los sensores
+  // Struct con info de todos los sensores
   struct SensorValues
   {
     uint8_t _TPS;

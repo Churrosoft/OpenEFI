@@ -31,6 +31,7 @@ namespace memory
  * BLOCK 0: 
  *  Sector 0 [0x0000;0x0FFF]
  *  Sector 1 [0x1000;0x1FFF] DTC codes
+ *  Sector 2 [0x2000;0x2FFF] Ignition Table
  * 
  * BLOCK 1:
  *  Sector 0 []

@@ -14,6 +14,7 @@
 
 #include "memory.hpp"
 #include <limits.h>
+#include <math.h>
 #include <vector>
 
 #define TABLEDATA std::vector<std::vector<int16_t>>
@@ -35,6 +36,8 @@ namespace tables
     void set_long_value(table_ref, uint16_t, uint16_t, int32_t);
     // operaciones sobre varios campos a la vez:
     TABLEDATA read_all(table_ref);
+    // utils para manejar data de las tablas:
+    int16_t find_nearest_neighbor(int16_t (&)[MAX_ROW_SIZE],uint16_t, int16_t);
 } // namespace tables
 
 #endif
