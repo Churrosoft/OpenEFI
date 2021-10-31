@@ -11,11 +11,13 @@
 extern uint32_t _RPM, //	las rpm :V
 	_POS,			  //	posicion del cigueñal (en dientes) (el contador de rpm la resetea a cada rato)
 	_POS_AE,		  //	posicion arbol de levas
+	_TEMP,			  // 	Temperatura
+	_V00,			  // 	voltaje
 	_AE;			  //	avance de encendido
 
 extern bool
-	MOTOR_ENABLE,     //	cache de "can_turn_on"
-	SINC; //	indica si se sincronizo el PMS
+	MOTOR_ENABLE, //	cache de "can_turn_on"
+	SINC;		  //	indica si se sincronizo el PMS
 
 /*-----( Variables RPM )-----*/
 
