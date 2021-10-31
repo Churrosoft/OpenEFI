@@ -145,7 +145,13 @@
 \chapter{File Index}
 \input{files}
 \chapter{Module Documentation}
-\input{group__USBD__DESC__Private__TypesDefinitions}
+\input{group__USBD__CDC__IF__Private__TypesDefinitions}
+\include{group__USBD__CDC__IF__Private__Defines}
+\include{group__USBD__CDC__IF__Private__Macros}
+\include{group__USBD__CDC__IF__Private__Variables}
+\include{group__USBD__CDC__IF__Exported__Variables}
+\include{group__USBD__CDC__IF__Private__FunctionPrototypes}
+\include{group__USBD__DESC__Private__TypesDefinitions}
 \include{group__USBD__DESC__Private__Defines}
 \include{group__USBD__DESC__Private__Macros}
 \include{group__USBD__DESC__Private__FunctionPrototypes}
@@ -161,6 +167,11 @@
 \include{group__USBD__DEVICE}
 \include{group__USBD__DEVICE__Exported__Variables}
 \include{group__USBD__DEVICE__Exported__FunctionsPrototype}
+\include{group__USBD__CDC__IF}
+\include{group__USBD__CDC__IF__Exported__Defines}
+\include{group__USBD__CDC__IF__Exported__Types}
+\include{group__USBD__CDC__IF__Exported__Macros}
+\include{group__USBD__CDC__IF__Exported__FunctionsPrototype}
 \include{group__USBD__CONF}
 \include{group__USBD__CONF__Exported__Variables}
 \include{group__USBD__CONF__Exported__Defines}
@@ -193,10 +204,13 @@
 \include{group__USBD__OTG__DRIVER}
 \include{group__STM32__USB__DEVICE__LIBRARY}
 \chapter{Data Structure Documentation}
+\input{structdataBuffer}
 \input{structEMAHighPass}
 \input{structEMALowPass}
 \input{structinput__handler}
 \input{structsensors_1_1SensorValues}
+\input{structSerialMessage}
+\input{structStatus}
 \input{structtable__ref}
 \chapter{File Documentation}
 \input{defines_8h}
@@ -205,13 +219,14 @@
 \input{stm32f4xx__it_8h}
 \input{CHT__1__6___8h}
 \input{usb__device_8h}
+\input{usbd__cdc__if_8h}
 \input{usbd__conf_8h}
 \input{usbd__dfu__if_8h}
 \input{ema_8h}
 \input{sinc_8h}
 \input{system__stm32f4xx_8c}
 \input{usb__device_8c}
-\input{usbd__conf_8c}
+\input{usbd__cdc__if_8c}
 \input{usbd__desc_8c}
 \input{usbd__dfu__if_8c}
 %--- End generated contents ---
