@@ -40,7 +40,7 @@
 #define AVCI 30 //avance de inyeccion (si queres quemar las valvulas dejalo en 0)
 
 // Encendido:
-#define ECNT 7 //tiempo en ms que se prende la bobina (cambie a su riesgo)
+#define ECNT 20 //tiempo en ms que se prende la bobina (cambie a su riesgo)
 
 /*-----( I_TIME )-----*/
 /* n = PV / RT

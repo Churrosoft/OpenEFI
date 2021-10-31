@@ -29,6 +29,7 @@ extern "C"
 #include "tim.h"
 #include "usb_device.h"
 #include "gpio.h"
+#include "ll_spi.h"
 }
 
 #ifdef TRACE
@@ -48,6 +49,7 @@ extern int run_tests(void);
 #include "aliases/memory.hpp"
 #include "sensors/sensors.hpp"
 #include "variables.h"
+#include "pmic/pmic.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,6 +116,10 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+
+  // disable PMIC until setup
+  PMIC::init();
+  // Initialize rest of peripherals
   MX_DMA_Init();
   MX_ADC1_Init();
   MX_CAN1_Init();
@@ -134,14 +140,54 @@ int main(void)
   MOTOR_ENABLE = can_turn_on();
 #endif
   /* USER CODE END 2 */
+  PMIC::enable();
+  PMIC::setup_spark();
+  HAL_Delay(100);
 
   /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+
+  // habilitamos el pmic:
+  /*   HAL_GPIO_WritePin(INY1_GPIO_Port, INY1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(ECN1_GPIO_Port, ECN1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(PMIC_ENABLE_GPIO_Port, PMIC_ENABLE_Pin, GPIO_PIN_RESET);
+  HAL_Delay(100);
+
+
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
+  spi_send_byte(0b01001011);
+  spi_send_byte(0b00111101);
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
+
+  // a seguro se lo levaron preso asi que:
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
+  spi_read_byte();
+  spi_read_byte();
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
+
+  HAL_Delay(100);
+
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
+  PMIC::dtc_check();
+  // 0x6A84 = 0110 1100 1000 0100
+  //0110 (DAC cmd)
+  //1100 (Max current = 19A )
+  //100 (overlap setting: 50% )
+  //00100 (Nominal current = 4A)
+
+  spi_send_byte(0b01101100);
+  spi_send_byte(0b10000100);
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
+
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
+  spi_read_byte();
+  spi_read_byte();
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
+ */
 
   while (1)
   {
     /* USER CODE END WHILE */
-
+    PMIC::demo_spark();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
