@@ -184,6 +184,11 @@ int main(void)
   spi_read_byte();
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
  */
+    HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+
+    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
 
   while (1)
   {
@@ -191,7 +196,7 @@ int main(void)
     // PMIC::demo_spark();
 
     uint8_t buffer[] = "Gueeeenaaass\n";
-    CDC_Transmit_FS(buffer, sizeof(buffer));
+    // CDC_Transmit_FS(buffer, sizeof(buffer));
     HAL_Delay(2000);
     
     /* USER CODE BEGIN 3 */

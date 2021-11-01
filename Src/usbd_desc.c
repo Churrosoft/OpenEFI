@@ -162,7 +162,7 @@ USBD_DescriptorsTypeDef FS_Desc =
     {
         USBD_FS_DeviceDescriptor, USBD_FS_LangIDStrDescriptor, USBD_FS_ManufacturerStrDescriptor,
         USBD_FS_ProductStrDescriptor, USBD_FS_SerialStrDescriptor, USBD_FS_ConfigStrDescriptor,
-        USBD_FS_InterfaceStrDescriptor, USBD_FS_WebUSB_URL
+        USBD_FS_InterfaceStrDescriptor
 #if (USBD_LPM_ENABLED == 1)
         ,
         USBD_FS_USR_BOSDescriptor
