@@ -1,5 +1,9 @@
 var usbd__desc_8c =
 [
+    [ "LANDING_PAGE_DESCRIPTOR_SIZE", "group__USBD__DESC__Private__Defines.html#ga8c8ac3888448b0213e7c92be3e4f4fba", null ],
+    [ "LANDING_PAGE_URL", "group__USBD__DESC__Private__Defines.html#ga48d99bb33605116f4971c2f148b4c304", null ],
+    [ "USB_DC_PLATFORM", "group__USBD__DESC__Private__Defines.html#ga2bca652ad7ac5a5ac965963d5037b0b3", null ],
+    [ "USB_DT_DEVICE_CAPABILITY", "group__USBD__DESC__Private__Defines.html#gae7f500790475fbda52712ebd4e6c1524", null ],
     [ "USB_SIZ_BOS_DESC", "group__USBD__DESC__Private__Defines.html#ga3d6767367e9b15bae8d264a78102aba8", null ],
     [ "USBD_CONFIGURATION_STRING_FS", "group__USBD__DESC__Private__Defines.html#gaca5e66e8b6c89a896f6ad16f9a68128f", null ],
     [ "USBD_INTERFACE_STRING_FS", "group__USBD__DESC__Private__Defines.html#ga2562ccc9162020b79f07d813eba10ddb", null ],
@@ -8,6 +12,14 @@ var usbd__desc_8c =
     [ "USBD_PID_FS", "group__USBD__DESC__Private__Defines.html#gaa6f9e36da39c9881963cabf42df4d216", null ],
     [ "USBD_PRODUCT_STRING_FS", "group__USBD__DESC__Private__Defines.html#gaa11017e20e3a2f1ef891b86212c4b730", null ],
     [ "USBD_VID", "group__USBD__DESC__Private__Defines.html#gac5251397ce2246b546b472cd802e6d62", null ],
+    [ "WEBUSB_DT_URL", "group__USBD__DESC__Private__Defines.html#gacbdd07c92938ce03cac9077a301e9576", null ],
+    [ "WEBUSB_DT_URL_DESCRIPTOR_SIZE", "group__USBD__DESC__Private__Defines.html#ga4b50bc9e52236cce43d2216e52db5e0a", null ],
+    [ "WEBUSB_REQ_GET_URL", "group__USBD__DESC__Private__Defines.html#gafdcb8c4a80557270c1d1524c738a4851", null ],
+    [ "WEBUSB_URL_SCHEME_HTTP", "group__USBD__DESC__Private__Defines.html#gab2dc8df6d3e16498852b472cfe762e12", null ],
+    [ "WEBUSB_URL_SCHEME_HTTPS", "group__USBD__DESC__Private__Defines.html#gafb81c0458a68a4d404d4503cdb5f30bf", null ],
+    [ "WEBUSB_UUID", "group__USBD__DESC__Private__Defines.html#ga1f629ef661d7de6ab22e6c4817fa28f2", null ],
+    [ "WEBUSB_VENDOR_CODE", "group__USBD__DESC__Private__Defines.html#gaae3cc523c6ba8ce319290e37dbfbf768", null ],
+    [ "_Static_assert", "group__USBD__DESC__Private__Defines.html#ga65272ce36accff718bb8dea97f69f46c", null ],
     [ "USBD_FS_ConfigStrDescriptor", "group__USBD__DESC__Private__Functions.html#ga40ed2a0fb60c50a285983a09ba6921d6", null ],
     [ "USBD_FS_DeviceDescriptor", "group__USBD__DESC__Private__Functions.html#ga14798be38c08a37163e53167032485ff", null ],
     [ "USBD_FS_InterfaceStrDescriptor", "group__USBD__DESC__Private__Functions.html#gab248f43276f92d982ab5853111e4fb10", null ],
@@ -15,6 +27,7 @@ var usbd__desc_8c =
     [ "USBD_FS_ManufacturerStrDescriptor", "group__USBD__DESC__Private__Functions.html#ga6427a671827813efe1a46c3dfcb05683", null ],
     [ "USBD_FS_ProductStrDescriptor", "group__USBD__DESC__Private__Functions.html#ga0ec558c0303daabb851d584109a56514", null ],
     [ "USBD_FS_SerialStrDescriptor", "group__USBD__DESC__Private__Functions.html#gaad2a1d1451821845eda602a82b1cd213", null ],
-    [ "__ALIGN_END", "group__USBD__DESC__Private__Variables.html#ga542bfea0b6dcf06e06a505bdc49c7e04", null ],
+    [ "USBD_FS_WebUSB_URL", "group__USBD__DESC__Private__FunctionPrototypes.html#gad334d4b5b50ba752155c58632363409d", null ],
+    [ "__ALIGN_END", "group__USBD__DESC__Private__Variables.html#ga9a2d4ba633eb986ecaf920508c0a83b5", null ],
     [ "FS_Desc", "group__USBD__DESC__Private__Variables.html#gae36d67393118d9d8531a8d633e23a797", null ]
 ];

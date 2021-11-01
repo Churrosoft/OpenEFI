@@ -121,9 +121,44 @@ Macros</h2></td></tr>
 <tr class="memitem:ga3d6767367e9b15bae8d264a78102aba8"><td class="memItemLeft" align="right" valign="top">
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>USB_SIZ_BOS_DESC</b>&#160;&#160;&#160;0x0C</td></tr>
 <tr class="separator:ga3d6767367e9b15bae8d264a78102aba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafdcb8c4a80557270c1d1524c738a4851"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>WEBUSB_REQ_GET_URL</b>&#160;&#160;&#160;0x02</td></tr>
+<tr class="separator:gafdcb8c4a80557270c1d1524c738a4851"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacbdd07c92938ce03cac9077a301e9576"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>WEBUSB_DT_URL</b>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:gacbdd07c92938ce03cac9077a301e9576"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab2dc8df6d3e16498852b472cfe762e12"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>WEBUSB_URL_SCHEME_HTTP</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:gab2dc8df6d3e16498852b472cfe762e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafb81c0458a68a4d404d4503cdb5f30bf"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>WEBUSB_URL_SCHEME_HTTPS</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:gafb81c0458a68a4d404d4503cdb5f30bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1f629ef661d7de6ab22e6c4817fa28f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>WEBUSB_UUID</b></td></tr>
+<tr class="separator:ga1f629ef661d7de6ab22e6c4817fa28f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaae3cc523c6ba8ce319290e37dbfbf768"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>WEBUSB_VENDOR_CODE</b>&#160;&#160;&#160;0x01</td></tr>
+<tr class="separator:gaae3cc523c6ba8ce319290e37dbfbf768"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b50bc9e52236cce43d2216e52db5e0a"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>WEBUSB_DT_URL_DESCRIPTOR_SIZE</b>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:ga4b50bc9e52236cce43d2216e52db5e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48d99bb33605116f4971c2f148b4c304"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LANDING_PAGE_URL</b>&#160;&#160;&#160;&quot;tuner.openefi.tech/&quot;</td></tr>
+<tr class="separator:ga48d99bb33605116f4971c2f148b4c304"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7f500790475fbda52712ebd4e6c1524"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>USB_DT_DEVICE_CAPABILITY</b>&#160;&#160;&#160;16</td></tr>
+<tr class="separator:gae7f500790475fbda52712ebd4e6c1524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2bca652ad7ac5a5ac965963d5037b0b3"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>USB_DC_PLATFORM</b>&#160;&#160;&#160;5</td></tr>
+<tr class="separator:ga2bca652ad7ac5a5ac965963d5037b0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c8ac3888448b0213e7c92be3e4f4fba"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LANDING_PAGE_DESCRIPTOR_SIZE</b>&#160;&#160;&#160;(WEBUSB_DT_URL_DESCRIPTOR_SIZE + sizeof(LANDING_PAGE_URL) - 1)</td></tr>
+<tr class="separator:ga8c8ac3888448b0213e7c92be3e4f4fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga65272ce36accff718bb8dea97f69f46c"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>_Static_assert</b> ((LANDING_PAGE_DESCRIPTOR_SIZE&lt; 256), &quot;Landing page URL is too long&quot;)</td></tr>
+<tr class="separator:ga65272ce36accff718bb8dea97f69f46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga14798be38c08a37163e53167032485ff"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__USBD__DESC__Private__Functions.html#ga14798be38c08a37163e53167032485ff">USBD_FS_DeviceDescriptor</a> (USBD_SpeedTypeDef speed, uint16_t *length)</td></tr>
 <tr class="memdesc:ga14798be38c08a37163e53167032485ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the device descriptor.  <a href="group__USBD__DESC__Private__Functions.html#ga14798be38c08a37163e53167032485ff">More...</a><br /></td></tr>
 <tr class="separator:ga14798be38c08a37163e53167032485ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,13 +180,16 @@ Functions</h2></td></tr>
 <tr class="memitem:gab248f43276f92d982ab5853111e4fb10"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__USBD__DESC__Private__Functions.html#gab248f43276f92d982ab5853111e4fb10">USBD_FS_InterfaceStrDescriptor</a> (USBD_SpeedTypeDef speed, uint16_t *length)</td></tr>
 <tr class="memdesc:gab248f43276f92d982ab5853111e4fb10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the interface string descriptor.  <a href="group__USBD__DESC__Private__Functions.html#gab248f43276f92d982ab5853111e4fb10">More...</a><br /></td></tr>
 <tr class="separator:gab248f43276f92d982ab5853111e4fb10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad334d4b5b50ba752155c58632363409d"><td class="memItemLeft" align="right" valign="top">
+uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><b>USBD_FS_WebUSB_URL</b> (USBD_SpeedTypeDef speed, uint16_t *length)</td></tr>
+<tr class="separator:gad334d4b5b50ba752155c58632363409d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:gae36d67393118d9d8531a8d633e23a797"><td class="memItemLeft" align="right" valign="top">USBD_DescriptorsTypeDef&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__USBD__DESC__Private__Variables.html#gae36d67393118d9d8531a8d633e23a797">FS_Desc</a></td></tr>
 <tr class="separator:gae36d67393118d9d8531a8d633e23a797"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga542bfea0b6dcf06e06a505bdc49c7e04"><td class="memItemLeft" align="right" valign="top">__ALIGN_BEGIN uint8_t USBD_FS_DeviceDesc [USB_LEN_DEV_DESC]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__USBD__DESC__Private__Variables.html#ga542bfea0b6dcf06e06a505bdc49c7e04">__ALIGN_END</a></td></tr>
-<tr class="separator:ga542bfea0b6dcf06e06a505bdc49c7e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9a2d4ba633eb986ecaf920508c0a83b5"><td class="memItemLeft" align="right" valign="top">__ALIGN_BEGIN uint8_t USBD_FS_DeviceDesc [USB_LEN_DEV_DESC]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__USBD__DESC__Private__Variables.html#ga9a2d4ba633eb986ecaf920508c0a83b5">__ALIGN_END</a></td></tr>
+<tr class="separator:ga9a2d4ba633eb986ecaf920508c0a83b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>: Header for usbd_conf.c file. </p>

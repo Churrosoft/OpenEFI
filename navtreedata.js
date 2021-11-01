@@ -22,7 +22,7 @@ var NAVTREEINDEX =
 [
 ".html",
 "group__USBD__CONF__Exported__Macros.html#ga78993b66136329032c26d0c13a78e963",
-"structStatus.html#abb4de386a3cea528524287d78e55184d"
+"structEMALowPass.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

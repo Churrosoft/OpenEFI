@@ -1,5 +1,18 @@
 var NAVTREEINDEX2 =
 {
+"structEMALowPass.html":[1,0,3],
+"structEMALowPass.html#a73f50a2d936f1cb4f1fbdd7e71fce863":[1,0,3,1],
+"structEMALowPass.html#a7747b0ecc32c8720e49bb2ca9247735b":[1,0,3,0],
+"structSerialMessage.html":[1,0,5],
+"structSerialMessage.html#a14f2756e0f5ed02b81b3c6efd55b579e":[1,0,5,2],
+"structSerialMessage.html#a5417ab8ac06f6d763b4c3edf398e8319":[1,0,5,4],
+"structSerialMessage.html#a71592aeef849dda1b4e5fddbb739607b":[1,0,5,1],
+"structSerialMessage.html#aa41cdf6c9d8001119b5be27070271b98":[1,0,5,3],
+"structSerialMessage.html#aaa01e1797fe94805deb1cc04dc2a7c6a":[1,0,5,0],
+"structStatus.html":[1,0,6],
+"structStatus.html#a2efbdecd27aed3ea6740b71d9a24952b":[1,0,6,0],
+"structStatus.html#a6dae3728c5396095da6c2c170708a741":[1,0,6,3],
+"structStatus.html#aa99fe6e7f4743cf3579c28864e7ccc3d":[1,0,6,1],
 "structStatus.html#abb4de386a3cea528524287d78e55184d":[1,0,6,2],
 "structdataBuffer.html":[1,0,1],
 "structdataBuffer.html#a1521e8a16f2ef1af5dbb35c6d3d8f0c0":[1,0,1,0],

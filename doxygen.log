@@ -208,9 +208,10 @@ Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usb_device.h...
 /home/runner/work/OpenEFI/OpenEFI/Inc/control_interface.h:5: warning: Compound SerialMessage is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:30: warning: Compound sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:10: warning: Compound EMAHighPass is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:216: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_LangIDDesc' was not declared or defined.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:227: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StrDesc' was not declared or defined.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:232: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StringSerial' was not declared or defined.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:241: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_LangIDDesc' was not declared or defined.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:252: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StrDesc' was not declared or defined.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:257: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StringSerial' was not declared or defined.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:387: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_WebUSB' was not declared or defined.
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/usb_otg.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usb_otg.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h...
@@ -497,6 +498,19 @@ Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:71: warning: Member USBD_CONFIGURATION_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:72: warning: Member USBD_INTERFACE_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:74: warning: Member USB_SIZ_BOS_DESC (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:77: warning: Member WEBUSB_REQ_GET_URL (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:79: warning: Member WEBUSB_DT_URL (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:80: warning: Member WEBUSB_URL_SCHEME_HTTP (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:81: warning: Member WEBUSB_URL_SCHEME_HTTPS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:83: warning: Member WEBUSB_UUID (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:87: warning: Member WEBUSB_VENDOR_CODE (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:88: warning: Member WEBUSB_DT_URL_DESCRIPTOR_SIZE (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:91: warning: Member LANDING_PAGE_URL (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:92: warning: Member USB_DT_DEVICE_CAPABILITY (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:93: warning: Member USB_DC_PLATFORM (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:96: warning: Member LANDING_PAGE_DESCRIPTOR_SIZE (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:98: warning: Member _Static_assert((LANDING_PAGE_DESCRIPTOR_SIZE< 256), "Landing page URL is too long") (function) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:147: warning: Member USBD_FS_WebUSB_URL(USBD_SpeedTypeDef speed, uint16_t *length) (function) of group USBD_DESC_Private_FunctionPrototypes is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:61: warning: Member FLASH_DESC_STR (macro definition) of group USBD_DFU_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:102: warning: Member hUsbDeviceFS (variable) of group USBD_DFU_Exported_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:135: warning: Member __ALIGN_END (variable) of group USBD_DFU is not documented.
@@ -511,6 +525,19 @@ Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:71: warning: Member USBD_CONFIGURATION_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:72: warning: Member USBD_INTERFACE_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:74: warning: Member USB_SIZ_BOS_DESC (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:77: warning: Member WEBUSB_REQ_GET_URL (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:79: warning: Member WEBUSB_DT_URL (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:80: warning: Member WEBUSB_URL_SCHEME_HTTP (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:81: warning: Member WEBUSB_URL_SCHEME_HTTPS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:83: warning: Member WEBUSB_UUID (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:87: warning: Member WEBUSB_VENDOR_CODE (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:88: warning: Member WEBUSB_DT_URL_DESCRIPTOR_SIZE (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:91: warning: Member LANDING_PAGE_URL (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:92: warning: Member USB_DT_DEVICE_CAPABILITY (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:93: warning: Member USB_DC_PLATFORM (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:96: warning: Member LANDING_PAGE_DESCRIPTOR_SIZE (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:98: warning: Member _Static_assert((LANDING_PAGE_DESCRIPTOR_SIZE< 256), "Landing page URL is too long") (function) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:147: warning: Member USBD_FS_WebUSB_URL(USBD_SpeedTypeDef speed, uint16_t *length) (function) of group USBD_DESC_Private_FunctionPrototypes is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:135: warning: Member __ALIGN_END (variable) of group USBD_DFU is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:61: warning: Member FLASH_DESC_STR (macro definition) of group USBD_DFU_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:102: warning: Member hUsbDeviceFS (variable) of group USBD_DFU_Exported_Variables is not documented.
@@ -630,5 +657,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 226/65536 hits=378 misses=229
+lookup cache used 230/65536 hits=386 misses=233
 finished...
