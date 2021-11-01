@@ -202,7 +202,7 @@ Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usb_device.h...
 /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h:3: warning: the name `stm32f4xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Src/webusb/status.h:4: warning: Compound Status is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:18: warning: Compound input_handler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/webusb/control_interface.c:12: warning: Compound dataBuffer is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webusb/control_interface.c:13: warning: Compound dataBuffer is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:24: warning: Compound table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:16: warning: Compound EMALowPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/control_interface.h:5: warning: Compound SerialMessage is not documented.
@@ -487,9 +487,9 @@ Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:122: warning: Member AHBPrescTable[16] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:123: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usb_device.c:45: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:68: warning: Member APP_RX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:69: warning: Member APP_TX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:114: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:70: warning: Member APP_RX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:71: warning: Member APP_TX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:116: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:66: warning: Member USBD_VID (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:67: warning: Member USBD_LANGID_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:68: warning: Member USBD_MANUFACTURER_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
@@ -514,9 +514,9 @@ Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:61: warning: Member FLASH_DESC_STR (macro definition) of group USBD_DFU_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:102: warning: Member hUsbDeviceFS (variable) of group USBD_DFU_Exported_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:135: warning: Member __ALIGN_END (variable) of group USBD_DFU is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:68: warning: Member APP_RX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:69: warning: Member APP_TX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:114: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:70: warning: Member APP_RX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:71: warning: Member APP_TX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.c:116: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:66: warning: Member USBD_VID (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:67: warning: Member USBD_LANGID_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:68: warning: Member USBD_MANUFACTURER_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
@@ -561,8 +561,8 @@ Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:123: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:171: warning: argument 'None' of command @param is not found in the argument list of SystemCoreClockUpdate(void)
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:145: warning: argument 'None' of command @param is not found in the argument list of SystemInit(void)
-/home/runner/work/OpenEFI/OpenEFI/Src/webusb/control_interface.c:13: warning: Member buffer[128] (variable) of class dataBuffer is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/webusb/control_interface.c:14: warning: Member dataSize (variable) of class dataBuffer is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webusb/control_interface.c:14: warning: Member buffer[128] (variable) of class dataBuffer is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webusb/control_interface.c:15: warning: Member dataSize (variable) of class dataBuffer is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:11: warning: Member lastValue (variable) of class EMAHighPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:12: warning: Member actualValue (variable) of class EMAHighPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:13: warning: Member lastLP (variable) of class EMAHighPass is not documented.
@@ -657,5 +657,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 230/65536 hits=386 misses=233
+lookup cache used 229/65536 hits=385 misses=232
 finished...
