@@ -74,7 +74,29 @@
 #define USB_SIZ_BOS_DESC 0x0C
 
 /* USER CODE BEGIN PRIVATE_DEFINES */
+#define WEBUSB_REQ_GET_URL 0x02
 
+#define WEBUSB_DT_URL 3
+#define WEBUSB_URL_SCHEME_HTTP 0
+#define WEBUSB_URL_SCHEME_HTTPS 1
+
+#define WEBUSB_UUID                                                                                \
+  {                                                                                                \
+    0x38, 0xB6, 0x08, 0x34, 0xA9, 0x09, 0xA0, 0x47, 0x8B, 0xFD, 0xA0, 0x76, 0x88, 0x15, 0xB6, 0x65 \
+  }
+#define WEBUSB_VENDOR_CODE 0x01
+#define WEBUSB_DT_URL_DESCRIPTOR_SIZE 3
+
+#ifndef LANDING_PAGE_URL
+#define LANDING_PAGE_URL "tuner.openefi.tech/"
+#define USB_DT_DEVICE_CAPABILITY 16
+#define USB_DC_PLATFORM 5
+#endif
+
+#define LANDING_PAGE_DESCRIPTOR_SIZE (WEBUSB_DT_URL_DESCRIPTOR_SIZE + sizeof(LANDING_PAGE_URL) - 1)
+
+_Static_assert((LANDING_PAGE_DESCRIPTOR_SIZE < 256),
+               "Landing page URL is too long");
 /* USER CODE END PRIVATE_DEFINES */
 
 /**
@@ -122,6 +144,7 @@ uint8_t *USBD_FS_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
 uint8_t *USBD_FS_SerialStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
 uint8_t *USBD_FS_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
 uint8_t *USBD_FS_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
+uint8_t *USBD_FS_WebUSB_URL(USBD_SpeedTypeDef speed, uint16_t *length);
 #if (USBD_LPM_ENABLED == 1)
 uint8_t *USBD_FS_USR_BOSDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
 #endif /* (USBD_LPM_ENABLED == 1) */
@@ -137,7 +160,9 @@ uint8_t *USBD_FS_USR_BOSDescriptor(USBD_SpeedTypeDef speed, uint16_t *length);
 
 USBD_DescriptorsTypeDef FS_Desc =
     {
-        USBD_FS_DeviceDescriptor, USBD_FS_LangIDStrDescriptor, USBD_FS_ManufacturerStrDescriptor, USBD_FS_ProductStrDescriptor, USBD_FS_SerialStrDescriptor, USBD_FS_ConfigStrDescriptor, USBD_FS_InterfaceStrDescriptor
+        USBD_FS_DeviceDescriptor, USBD_FS_LangIDStrDescriptor, USBD_FS_ManufacturerStrDescriptor,
+        USBD_FS_ProductStrDescriptor, USBD_FS_SerialStrDescriptor, USBD_FS_ConfigStrDescriptor,
+        USBD_FS_InterfaceStrDescriptor, USBD_FS_WebUSB_URL
 #if (USBD_LPM_ENABLED == 1)
         ,
         USBD_FS_USR_BOSDescriptor
@@ -357,6 +382,21 @@ uint8_t *USBD_FS_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *lengt
     USBD_GetString((uint8_t *)USBD_INTERFACE_STRING_FS, USBD_StrDesc, length);
   }
   return USBD_StrDesc;
+}
+
+__ALIGN_BEGIN uint8_t USBD_WebUSB[LANDING_PAGE_DESCRIPTOR_SIZE + 2] __ALIGN_END =
+    {
+        LANDING_PAGE_DESCRIPTOR_SIZE,
+        WEBUSB_VENDOR_CODE
+    };
+
+uint8_t *USBD_FS_WebUSB_URL(USBD_SpeedTypeDef speed, uint16_t *length)
+{
+  UNUSED(speed);
+  memcpy(USBD_WebUSB, (uint8_t *)LANDING_PAGE_URL, sizeof(LANDING_PAGE_URL) - 1);
+
+  *length = sizeof(USBD_WebUSB);
+  return USBD_WebUSB;
 }
 
 #if (USBD_LPM_ENABLED == 1)

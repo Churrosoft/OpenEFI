@@ -30,6 +30,7 @@ extern "C"
 #include "usb_device.h"
 #include "gpio.h"
 #include "ll_spi.h"
+#include "usbd_cdc_if.h"
 }
 
 #ifdef TRACE
@@ -130,7 +131,7 @@ int main(void)
   MX_ADC2_Init();
   MX_TIM1_Init();
 
-  // MX_USB_DEVICE_Init();
+  MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -187,7 +188,12 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    PMIC::demo_spark();
+    // PMIC::demo_spark();
+
+    uint8_t buffer[] = "Gueeeenaaass\n";
+    CDC_Transmit_FS(buffer, sizeof(buffer));
+    HAL_Delay(2000);
+    
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
