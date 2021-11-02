@@ -51,10 +51,14 @@ void process_frame(/* usbd_device* usbd_dev, */ SerialMessage *message)
         switch (message->command)
         {
         case COMMAND_PING:
+            trace_printf("command ping \n");
+
             memcpy(response.payload, message->payload, sizeof(response.payload));
             break;
         case COMMAND_HELLO:
             // XXX: los datos deberian ir al final del payload y no al comienzo...
+            trace_printf("command hello \n");
+
             response.payload[0] = OPENEFI_VER_MAJOR;
             response.payload[1] = OPENEFI_VER_MINOR;
             response.payload[2] = OPENEFI_VER_REV;
@@ -62,6 +66,8 @@ void process_frame(/* usbd_device* usbd_dev, */ SerialMessage *message)
         case COMMAND_STATUS:
             //switch (message->subcommand){
             //case STATUS_TMP:
+            trace_printf("command status \n");
+
             _status.RPM = _RPM;
             _status.TEMP = 420;
             _status.V00 = 69;
@@ -94,6 +100,7 @@ void process_frame(/* usbd_device* usbd_dev, */ SerialMessage *message)
         response.subcommand = ERROR_INVALID_PROTOCOL;
     }
 
+    trace_printf("respone payload: %d %d %d \n", response.payload[0],response.payload[1],response.payload[2]);
     send_message(&response);
     send_message(&response);
 
