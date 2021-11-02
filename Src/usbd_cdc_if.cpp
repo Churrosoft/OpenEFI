@@ -20,10 +20,15 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_cdc_if.h"
+extern "C"
+{
 
 /* USER CODE BEGIN INCLUDE */
 #include "stdbool.h"
+}
+#include "trace.h"
+#include "usbd_cdc_if.h"
+
 #include "control_interface.h"
 
 /* USER CODE END INCLUDE */
@@ -271,12 +276,18 @@ static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len)
 
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
-  
+
   uint8_t buffer[64];
   memset(buffer, '\0', 64); // clear the buffer
   uint8_t len = (uint8_t)*Len;
   memcpy(buffer, Buf, len); // copy the data to the buffer
   memset(Buf, '\0', len);   // clear the Buf also
+                            /*   for (uint8_t i = 0; i < len; i++)
+  {
+    char hex[5];
+    hexStr(buffer[i], hex);
+    trace_printf("Data: %s , index: %d  \n", hex, i);
+  } */
 
   if (get_frame(buffer, len))
   {

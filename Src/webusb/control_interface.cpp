@@ -1,17 +1,23 @@
 /* USB Control Interface command processing. */
+extern "C"
+{
+
 #include <string.h>
 #include "webusb_commands.h"
 #include "defines.h"
 #include "variables.h"
 //Structs para formatear data:
 #include "status.h"
-// #include "../helpers/bootloader.c"
-#include "control_interface.h"
+    // #include "../helpers/bootloader.c"
+}
 #include "usbd_cdc_if.h"
+#include "control_interface.h"
+#include "trace.h"
+
 //Variables de todo el socotroco:
 struct dataBuffer
 {
-    char buffer[128];
+    uint8_t buffer[128];
     int dataSize;
 } buffer = {
     {}, 0};
@@ -27,14 +33,17 @@ void process_frame(/* usbd_device* usbd_dev, */ SerialMessage *message)
     SerialMessage response = {PROTOCOL_VERSION_1, 0, 0, {}, 0};
     response.protocolVersion = PROTOCOL_VERSION_1;
     response.command = message->command;
-    uint16_t localCRC = crc16((unsigned char *)message, 126);
-    if (localCRC != message->checksum)
+    uint16_t localCRC = crc16((uint8_t *)message, 126);
+    /*     if (localCRC != message->checksum)
     {
         response.command = COMMAND_ERR;
         response.subcommand = ERROR_INVALID_CHECKSUM;
         send_message(&response);
         return;
-    }
+    } */
+
+    trace_printf("command: %d \n", message->command);
+
     Status _status = {{}, 0, 0, 0};
     switch (message->protocolVersion)
     {
@@ -71,6 +80,7 @@ void process_frame(/* usbd_device* usbd_dev, */ SerialMessage *message)
             //scb_reset_system();
             return;
         default:
+            trace_printf("ERR: invalid command, command: %d \n", message->command);
             response.command = COMMAND_ERR;
             response.subcommand = ERROR_INVALID_COMMAND;
         }
@@ -78,12 +88,15 @@ void process_frame(/* usbd_device* usbd_dev, */ SerialMessage *message)
 
     default:
         // Protocolo invalido.
+        trace_printf("ERR: invalid protocol, command: %d \n", message->command);
+
         response.command = COMMAND_ERR;
         response.subcommand = ERROR_INVALID_PROTOCOL;
     }
 
     send_message(&response);
-    HAL_Delay(50);
+    send_message(&response);
+
     HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
 }
 /** envia mensajes
@@ -93,9 +106,18 @@ void process_frame(/* usbd_device* usbd_dev, */ SerialMessage *message)
 void send_message(/* usbd_device *usbd_dev,  */ SerialMessage *message)
 {
     HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
-    message->checksum = crc16((unsigned char *)message, 126);
+    trace_printf("init crc16 \n");
+    message->checksum = crc16((uint8_t *)message, 126);
     uint8_t *msg = (uint8_t *)message;
-    CDC_Transmit_FS(msg, sizeof(msg));
+    trace_printf("end crc16 \n");
+
+    CDC_Transmit_FS(msg, sizeof(msg) - 1);
+    trace_printf("end CDC Transmit \n");
+
+    /*     CDC_Transmit_FS(msg, 64);
+    for (int i = 0; i < 0x8000; i++)
+        __asm__("nop");
+    CDC_Transmit_FS((msg + 64), 64); */
     HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 
     /*  usbd_ep_write_packet(usbd_dev, 0x82, msg, 64);
@@ -103,8 +125,9 @@ void send_message(/* usbd_device *usbd_dev,  */ SerialMessage *message)
     usbd_ep_write_packet(usbd_dev, 0x82, (msg + 64), 64); */
 }
 
-bool get_frame(char *tempbuf, int len)
+bool get_frame(uint8_t *tempbuf, int len)
 {
+
     if ((buffer.dataSize + len) <= 128)
     {
         memcpy(buffer.buffer + buffer.dataSize, tempbuf, len);
@@ -117,7 +140,7 @@ bool get_frame(char *tempbuf, int len)
     return false;
 }
 
-char *get_msg()
+uint8_t *get_msg()
 {
     return buffer.buffer;
 }
@@ -128,7 +151,7 @@ void clear_msg()
     buffer.dataSize = 0;
 }
 
-uint16_t crc16(const unsigned char *data_p, uint8_t length)
+uint16_t crc16(uint8_t *data_p, uint8_t length)
 {
     uint8_t x;
     uint16_t crc = 0xFFFF;
