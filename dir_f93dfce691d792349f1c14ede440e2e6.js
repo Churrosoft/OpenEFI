@@ -14,6 +14,8 @@ var dir_f93dfce691d792349f1c14ede440e2e6 =
     [ "stm32f4xx_hal_conf.h", "stm32f4xx__hal__conf_8h_source.html", null ],
     [ "stm32f4xx_it.h", "stm32f4xx__it_8h.html", "stm32f4xx__it_8h" ],
     [ "tim.h", "tim_8h_source.html", null ],
+    [ "tusb_config.h", "tusb__config_8h_source.html", null ],
+    [ "usb_descriptors.h", "usb__descriptors_8h_source.html", null ],
     [ "usb_device.h", "usb__device_8h.html", "usb__device_8h" ],
     [ "usb_otg.h", "usb__otg_8h_source.html", null ],
     [ "usbd_cdc_if.h", "usbd__cdc__if_8h.html", "usbd__cdc__if_8h" ],
@@ -22,5 +24,6 @@ var dir_f93dfce691d792349f1c14ede440e2e6 =
     [ "usbd_dfu_if.h", "usbd__dfu__if_8h.html", "usbd__dfu__if_8h" ],
     [ "user_defines.h", "user__defines_8h_source.html", null ],
     [ "variables.h", "variables_8h_source.html", null ],
+    [ "webusb.h", "webusb_8h_source.html", null ],
     [ "webusb_commands.h", "webusb__commands_8h_source.html", null ]
 ];
