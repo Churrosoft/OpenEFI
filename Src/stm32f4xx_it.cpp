@@ -54,7 +54,8 @@ extern "C"
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+#include "../lib/tinyusb/hw/bsp/board.h"
+#include "../lib/tinyusb/hw/bsp/board_mcu.h"
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -315,7 +316,9 @@ void OTG_FS_IRQHandler(void)
   /* USER CODE BEGIN OTG_FS_IRQn 0 */
 
   /* USER CODE END OTG_FS_IRQn 0 */
-  HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);
+ // HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);
+   tud_int_handler(0);
+
   /* USER CODE BEGIN OTG_FS_IRQn 1 */
 
   /* USER CODE END OTG_FS_IRQn 1 */

@@ -7,3 +7,6 @@
 [submodule "lib/spi_ll"]
 	path = lib/spi_ll
 	url = https://github.com/Churrosoft/STM32_LL_SPI.git
+[submodule "lib/tinyusb"]
+	path = lib/tinyusb
+	url = https://github.com/hathach/tinyusb

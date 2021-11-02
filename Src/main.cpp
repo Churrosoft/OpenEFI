@@ -18,6 +18,8 @@
  */
 /* USER CODE END Header */
 #define DEBUG
+#define CFG_TUSB_MCU 304
+#define FAMILY stm32f4
 /* Includes ------------------------------------------------------------------*/
 extern "C"
 {
@@ -31,7 +33,11 @@ extern "C"
 #include "gpio.h"
 #include "ll_spi.h"
 #include "usbd_cdc_if.h"
+#include "webusb.h"
+#include "tusb.h"
+// #include "../lib/tinyusb/hw/bsp/stm32f4/family.c"
 }
+
 
 #ifdef TRACE
 #include <stdio.h>
@@ -55,11 +61,13 @@ extern int run_tests(void);
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+#include "usb_descriptors.h"
 
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -131,7 +139,7 @@ int main(void)
   MX_ADC2_Init();
   MX_TIM1_Init();
 
-  MX_USB_DEVICE_Init();
+  // MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -141,9 +149,9 @@ int main(void)
   MOTOR_ENABLE = can_turn_on();
 #endif
   /* USER CODE END 2 */
-  PMIC::enable();
+  /*   PMIC::enable();
   PMIC::setup_spark();
-  HAL_Delay(100);
+  HAL_Delay(100); */
 
   /* Infinite loop */
 
@@ -184,25 +192,45 @@ int main(void)
   spi_read_byte();
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
  */
-    HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
 
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 
-    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
+  uint8_t buffer[64];      // buffer to catch spuriously received data
+  unsigned int offset = 0; // buffer writing offset
+  uint8_t data = 0xf1;     // data for TX
 
+  board_init();
+  tusb_init();
   while (1)
   {
     /* USER CODE END WHILE */
     // PMIC::demo_spark();
-
+    tud_task();
+    cdc_task();
+    webserial_task();
     uint8_t buffer[] = "Gueeeenaaass\n";
     // CDC_Transmit_FS(buffer, sizeof(buffer));
-    HAL_Delay(2000);
-    
+  /*   if (tud_cdc_available())
+    {
+      // capture all received data
+      // assert(offset < sizeof(buffer) - 1);
+      offset += tud_cdc_read(&buffer[offset], sizeof(buffer) - offset);
+      tud_cdc_write(&data, 1); // TX one byte
+      tud_cdc_write_flush();
+      data++; // increment data value for each transmission
+      // __BKPT(0);
+    } */
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
+
+
+
+
+
 
 /**
   * @brief System Clock Configuration
