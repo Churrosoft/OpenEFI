@@ -4,7 +4,6 @@ var searchData=
   ['usb_5fdevice_2ec',['usb_device.c',['../usb__device_8c.html',1,'']]],
   ['usb_5fdevice_2eh',['usb_device.h',['../usb__device_8h.html',1,'']]],
   ['usbd_5fcdc_5fif',['USBD_CDC_IF',['../group__USBD__CDC__IF.html',1,'']]],
-  ['usbd_5fcdc_5fif_2ec',['usbd_cdc_if.c',['../usbd__cdc__if_8c.html',1,'']]],
   ['usbd_5fcdc_5fif_2eh',['usbd_cdc_if.h',['../usbd__cdc__if_8h.html',1,'']]],
   ['usbd_5fcdc_5fif_5fexported_5fdefines',['USBD_CDC_IF_Exported_Defines',['../group__USBD__CDC__IF__Exported__Defines.html',1,'']]],
   ['usbd_5fcdc_5fif_5fexported_5ffunctionsprototype',['USBD_CDC_IF_Exported_FunctionsPrototype',['../group__USBD__CDC__IF__Exported__FunctionsPrototype.html',1,'']]],
@@ -59,7 +58,7 @@ var searchData=
   ['usbd_5ffs_5fmanufacturerstrdescriptor',['USBD_FS_ManufacturerStrDescriptor',['../group__USBD__DESC__Private__Functions.html#ga6427a671827813efe1a46c3dfcb05683',1,'usbd_desc.c']]],
   ['usbd_5ffs_5fproductstrdescriptor',['USBD_FS_ProductStrDescriptor',['../group__USBD__DESC__Private__Functions.html#ga0ec558c0303daabb851d584109a56514',1,'usbd_desc.c']]],
   ['usbd_5ffs_5fserialstrdescriptor',['USBD_FS_SerialStrDescriptor',['../group__USBD__DESC__Private__Functions.html#gaad2a1d1451821845eda602a82b1cd213',1,'usbd_desc.c']]],
-  ['usbd_5finterface_5ffops_5ffs',['USBD_Interface_fops_FS',['../group__USBD__CDC__IF.html#ga99394ed19b774f171df96c2848c411ed',1,'USBD_Interface_fops_FS():&#160;usbd_cdc_if.c'],['../group__USBD__CDC__IF__Exported__Variables.html#ga99394ed19b774f171df96c2848c411ed',1,'USBD_Interface_fops_FS():&#160;usbd_cdc_if.c']]],
+  ['usbd_5finterface_5ffops_5ffs',['USBD_Interface_fops_FS',['../group__USBD__CDC__IF.html#ga99394ed19b774f171df96c2848c411ed',1,'USBD_Interface_fops_FS():&#160;usbd_cdc_if.cpp'],['../group__USBD__CDC__IF__Exported__Variables.html#ga99394ed19b774f171df96c2848c411ed',1,'USBD_Interface_fops_FS():&#160;usbd_cdc_if.cpp']]],
   ['usbd_5fmalloc',['USBD_malloc',['../group__USBD__CONF__Exported__Macros.html#ga35ff353194f56823357f503e546ccf4b',1,'usbd_conf.h']]],
   ['usbd_5fmedia',['USBD_MEDIA',['../group__USBD__MEDIA.html',1,'']]],
   ['usbd_5fmedia_5fexported_5fdefines',['USBD_MEDIA_Exported_Defines',['../group__USBD__MEDIA__Exported__Defines.html',1,'']]],
@@ -70,6 +69,6 @@ var searchData=
   ['usbd_5fmemcpy',['USBD_memcpy',['../group__USBD__CONF__Exported__Macros.html#ga18d9c17ef2afe7244b559ed428ca1e81',1,'usbd_conf.h']]],
   ['usbd_5fmemset',['USBD_memset',['../group__USBD__CONF__Exported__Macros.html#gaf7b31857d15ef0abbd84e0e70a2b903f',1,'usbd_conf.h']]],
   ['usbd_5fotg_5fdriver',['USBD_OTG_DRIVER',['../group__USBD__OTG__DRIVER.html',1,'']]],
-  ['userrxbufferfs',['UserRxBufferFS',['../group__USBD__CDC__IF__Private__Variables.html#ga1e37e6616e6affe5acf9c0befd063f6a',1,'usbd_cdc_if.c']]],
-  ['usertxbufferfs',['UserTxBufferFS',['../group__USBD__CDC__IF__Private__Variables.html#gad48fea85cdb7aed49bf62140a52f23e0',1,'usbd_cdc_if.c']]]
+  ['userrxbufferfs',['UserRxBufferFS',['../group__USBD__CDC__IF__Private__Variables.html#ga1e37e6616e6affe5acf9c0befd063f6a',1,'usbd_cdc_if.cpp']]],
+  ['usertxbufferfs',['UserTxBufferFS',['../group__USBD__CDC__IF__Private__Variables.html#gad48fea85cdb7aed49bf62140a52f23e0',1,'usbd_cdc_if.cpp']]]
 ];

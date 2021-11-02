@@ -9,7 +9,6 @@ var dir_413f4e031a85da0d68269c6fd2f76e1c =
     [ "webusb", "dir_3840dec9773a6d5980d61be711badc96.html", "dir_3840dec9773a6d5980d61be711badc96" ],
     [ "system_stm32f4xx.c", "system__stm32f4xx_8c.html", "system__stm32f4xx_8c" ],
     [ "usb_device.c", "usb__device_8c.html", "usb__device_8c" ],
-    [ "usbd_cdc_if.c", "usbd__cdc__if_8c.html", "usbd__cdc__if_8c" ],
     [ "usbd_desc.c", "usbd__desc_8c.html", "usbd__desc_8c" ],
     [ "usbd_dfu_if.c", "usbd__dfu__if_8c.html", "usbd__dfu__if_8c" ]
 ];
