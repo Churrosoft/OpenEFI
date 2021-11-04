@@ -127,7 +127,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:a47467f21cf6f32b35425e9a5f97f2d89"><td class="mdescLeft">&#160;</td><td class="mdescRight">1 == interrupcion por diente <br /></td></tr>
 <tr class="separator:a47467f21cf6f32b35425e9a5f97f2d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05e541f32be39b569799db0ef38e9168"><td class="memItemLeft" align="right" valign="top"><a id="a05e541f32be39b569799db0ef38e9168"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOGIC_DNT</b>&#160;&#160;&#160;((<a class="el" href="CHT__1__6___8h.html#a6b476c09f52c46c89cca6a640c6a8efa">DNT</a> - <a class="el" href="CHT__1__6___8h.html#a4c86bd837e15883adc26d5f67e78b673">DNT_MISSING</a> ) * <a class="el" href="defines_8h.html#a47467f21cf6f32b35425e9a5f97f2d89">DNT_DOUBLE_SCAN</a> )</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOGIC_DNT</b>&#160;&#160;&#160;((<a class="el" href="CHT__1__6___8h.html#a6b476c09f52c46c89cca6a640c6a8efa">DNT</a> - <a class="el" href="CHT__1__6___8h.html#a4c86bd837e15883adc26d5f67e78b673">DNT_MISSING</a>) * <a class="el" href="defines_8h.html#a47467f21cf6f32b35425e9a5f97f2d89">DNT_DOUBLE_SCAN</a>)</td></tr>
 <tr class="separator:a05e541f32be39b569799db0ef38e9168"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9146e8f480ce926f45e4ef151653b9f"><td class="memItemLeft" align="right" valign="top"><a id="ad9146e8f480ce926f45e4ef151653b9f"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ad9146e8f480ce926f45e4ef151653b9f">Alpha</a>&#160;&#160;&#160;1</td></tr>
@@ -138,10 +138,10 @@ Macros</h2></td></tr>
 <tr class="memdesc:a0e557f1d3a1e9da3ef071cee0dbe7c8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">cilindrada en CC del motor <br /></td></tr>
 <tr class="separator:a0e557f1d3a1e9da3ef071cee0dbe7c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a267514d4f83c7a3ce49e997386ef97ef"><td class="memItemLeft" align="right" valign="top"><a id="a267514d4f83c7a3ce49e997386ef97ef"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ING_SECUENCY</b>&#160;&#160;&#160;{ 1, 3, 4, 2 };</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ING_SECUENCY</b>&#160;&#160;&#160;{1, 3, 4, 2};</td></tr>
 <tr class="separator:a267514d4f83c7a3ce49e997386ef97ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f2c85322a7483badca2baf565e80d55"><td class="memItemLeft" align="right" valign="top"><a id="a3f2c85322a7483badca2baf565e80d55"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>INY_SECUENCY</b>&#160;&#160;&#160;{ 3, 4, 1, 2 };</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>INY_SECUENCY</b>&#160;&#160;&#160;{3, 4, 1, 2};</td></tr>
 <tr class="separator:a3f2c85322a7483badca2baf565e80d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe4d4f0baa8393107c2882b58e411fef"><td class="memItemLeft" align="right" valign="top"><a id="abe4d4f0baa8393107c2882b58e411fef"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>RPM_per</b>&#160;&#160;&#160;500</td></tr>
@@ -308,6 +308,9 @@ Macros</h2></td></tr>
 <tr class="memitem:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memItemLeft" align="right" valign="top"><a id="a3af919d5aad2d3fd16052cb3d57824bd"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ROUND_32</b>(NUMBER)&#160;&#160;&#160;((float)((uint32_t)NUMBER * 100 + .5) / 100)</td></tr>
 <tr class="separator:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5b4886c16d10e05be7be46d8bb7e73"><td class="memItemLeft" align="right" valign="top"><a id="a6f5b4886c16d10e05be7be46d8bb7e73"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_BIT</b>(VAR,  BIT_NEEDED)&#160;&#160;&#160;(VAR &amp; (1 &lt;&lt; BIT_NEEDED))</td></tr>
+<tr class="separator:a6f5b4886c16d10e05be7be46d8bb7e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a554504c04c7fffd2f498665cc34610c6"><td class="memItemLeft" align="right" valign="top"><a id="a554504c04c7fffd2f498665cc34610c6"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CPWM_DEBUG</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a554504c04c7fffd2f498665cc34610c6"><td class="memSeparator" colspan="2">&#160;</td></tr>

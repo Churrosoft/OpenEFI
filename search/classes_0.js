@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['databuffer',['dataBuffer',['../structdataBuffer.html',1,'']]]
+  ['emahighpass',['EMAHighPass',['../structEMAHighPass.html',1,'']]],
+  ['emalowpass',['EMALowPass',['../structEMALowPass.html',1,'']]]
 ];

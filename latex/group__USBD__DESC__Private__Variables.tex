@@ -10,7 +10,7 @@ Private variables.
 \item 
 U\+S\+B\+D\+\_\+\+Descriptors\+Type\+Def \hyperlink{group__USBD__DESC__Private__Variables_gae36d67393118d9d8531a8d633e23a797}{F\+S\+\_\+\+Desc}
 \item 
-\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+B\+E\+G\+IN uint8\+\_\+t U\+S\+B\+D\+\_\+\+F\+S\+\_\+\+Device\+Desc \mbox{[}U\+S\+B\+\_\+\+L\+E\+N\+\_\+\+D\+E\+V\+\_\+\+D\+E\+SC\mbox{]} \hyperlink{group__USBD__DESC__Private__Variables_ga9a2d4ba633eb986ecaf920508c0a83b5}{\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND}
+\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+B\+E\+G\+IN uint8\+\_\+t U\+S\+B\+D\+\_\+\+F\+S\+\_\+\+Device\+Desc \mbox{[}U\+S\+B\+\_\+\+L\+E\+N\+\_\+\+D\+E\+V\+\_\+\+D\+E\+SC\mbox{]} \hyperlink{group__USBD__DESC__Private__Variables_ga542bfea0b6dcf06e06a505bdc49c7e04}{\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND}
 \end{DoxyCompactItemize}
 
 
@@ -20,40 +20,40 @@ Private variables.
 
 
 \subsection{Variable Documentation}
-\mbox{\Hypertarget{group__USBD__DESC__Private__Variables_ga9a2d4ba633eb986ecaf920508c0a83b5}\label{group__USBD__DESC__Private__Variables_ga9a2d4ba633eb986ecaf920508c0a83b5}} 
+\mbox{\Hypertarget{group__USBD__DESC__Private__Variables_ga542bfea0b6dcf06e06a505bdc49c7e04}\label{group__USBD__DESC__Private__Variables_ga542bfea0b6dcf06e06a505bdc49c7e04}} 
 \index{U\+S\+B\+D\+\_\+\+D\+E\+S\+C\+\_\+\+Private\+\_\+\+Variables@{U\+S\+B\+D\+\_\+\+D\+E\+S\+C\+\_\+\+Private\+\_\+\+Variables}!\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND@{\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND}}
 \index{\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND@{\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND}!U\+S\+B\+D\+\_\+\+D\+E\+S\+C\+\_\+\+Private\+\_\+\+Variables@{U\+S\+B\+D\+\_\+\+D\+E\+S\+C\+\_\+\+Private\+\_\+\+Variables}}
 \subsubsection{\texorpdfstring{\+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND}{\_\_ALIGN\_END}}
-{\footnotesize\ttfamily \+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+B\+E\+G\+IN uint8\+\_\+t U\+S\+B\+D\+\_\+\+Web\+U\+SB \mbox{[}L\+A\+N\+D\+I\+N\+G\+\_\+\+P\+A\+G\+E\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+O\+R\+\_\+\+S\+I\+ZE + 2\mbox{]} \+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND}
+{\footnotesize\ttfamily \+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+B\+E\+G\+IN uint8\+\_\+t U\+S\+B\+D\+\_\+\+String\+Serial \mbox{[}U\+S\+B\+\_\+\+S\+I\+Z\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+S\+E\+R\+I\+AL\mbox{]} \+\_\+\+\_\+\+A\+L\+I\+G\+N\+\_\+\+E\+ND}
 
 {\bfseries Initial value\+:}
 \begin{DoxyCode}
 =
-    \{
-        0x12,                 
-        USB\_DESC\_TYPE\_DEVICE, 
+\{
+  0x12,                       
+  USB\_DESC\_TYPE\_DEVICE,       
 
 
 
 
 
-        0x00, 
+  0x00,                       
 
-        0x02,
-        0x02,                
-        0x02,                
-        0x00,                
-        USB\_MAX\_EP0\_SIZE,    
-        LOBYTE(USBD\_VID),    
-        HIBYTE(USBD\_VID),    
-        LOBYTE(USBD\_PID\_FS), 
-        HIBYTE(USBD\_PID\_FS), 
-        0x00,                
-        0x02,
-        USBD\_IDX\_MFC\_STR,          
-        USBD\_IDX\_PRODUCT\_STR,      
-        USBD\_IDX\_SERIAL\_STR,       
-        USBD\_MAX\_NUM\_CONFIGURATION 
+  0x02,
+  0x00,                       
+  0x00,                       
+  0x00,                       
+  USB\_MAX\_EP0\_SIZE,           
+  LOBYTE(USBD\_VID),           
+  HIBYTE(USBD\_VID),           
+  LOBYTE(USBD\_PID\_FS),        
+  HIBYTE(USBD\_PID\_FS),        
+  0x00,                       
+  0x02,
+  USBD\_IDX\_MFC\_STR,           
+  USBD\_IDX\_PRODUCT\_STR,       
+  USBD\_IDX\_SERIAL\_STR,        
+  USBD\_MAX\_NUM\_CONFIGURATION  
 \}
 \end{DoxyCode}
 U\+SB standard device descriptor.
@@ -69,15 +69,14 @@ I\+AR Compiler \mbox{\Hypertarget{group__USBD__DESC__Private__Variables_gae36d67
 {\bfseries Initial value\+:}
 \begin{DoxyCode}
 =
-    \{
-        \hyperlink{group__USBD__DESC__Private__Functions_ga14798be38c08a37163e53167032485ff}{USBD\_FS\_DeviceDescriptor}, 
-      \hyperlink{group__USBD__DESC__Private__Functions_gac02628ceb6a6a071e192dcb85063c0cc}{USBD\_FS\_LangIDStrDescriptor}, 
-      \hyperlink{group__USBD__DESC__Private__Functions_ga6427a671827813efe1a46c3dfcb05683}{USBD\_FS\_ManufacturerStrDescriptor},
-        \hyperlink{group__USBD__DESC__Private__Functions_ga0ec558c0303daabb851d584109a56514}{USBD\_FS\_ProductStrDescriptor}, 
-      \hyperlink{group__USBD__DESC__Private__Functions_gaad2a1d1451821845eda602a82b1cd213}{USBD\_FS\_SerialStrDescriptor}, 
-      \hyperlink{group__USBD__DESC__Private__Functions_ga40ed2a0fb60c50a285983a09ba6921d6}{USBD\_FS\_ConfigStrDescriptor},
-        \hyperlink{group__USBD__DESC__Private__Functions_gab248f43276f92d982ab5853111e4fb10}{USBD\_FS\_InterfaceStrDescriptor}
-
+\{
+  \hyperlink{group__USBD__DESC__Private__Functions_ga14798be38c08a37163e53167032485ff}{USBD\_FS\_DeviceDescriptor}
+, \hyperlink{group__USBD__DESC__Private__Functions_gac02628ceb6a6a071e192dcb85063c0cc}{USBD\_FS\_LangIDStrDescriptor}
+, \hyperlink{group__USBD__DESC__Private__Functions_ga6427a671827813efe1a46c3dfcb05683}{USBD\_FS\_ManufacturerStrDescriptor}
+, \hyperlink{group__USBD__DESC__Private__Functions_ga0ec558c0303daabb851d584109a56514}{USBD\_FS\_ProductStrDescriptor}
+, \hyperlink{group__USBD__DESC__Private__Functions_gaad2a1d1451821845eda602a82b1cd213}{USBD\_FS\_SerialStrDescriptor}
+, \hyperlink{group__USBD__DESC__Private__Functions_ga40ed2a0fb60c50a285983a09ba6921d6}{USBD\_FS\_ConfigStrDescriptor}
+, \hyperlink{group__USBD__DESC__Private__Functions_gab248f43276f92d982ab5853111e4fb10}{USBD\_FS\_InterfaceStrDescriptor}
 
 
  

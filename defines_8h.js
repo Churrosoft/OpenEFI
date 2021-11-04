@@ -25,6 +25,7 @@ var defines_8h =
     [ "ED", "defines_8h.html#a0e557f1d3a1e9da3ef071cee0dbe7c8e", null ],
     [ "FLMBA", "defines_8h.html#a98548d2493312beb76c6c64acd2cd6e8", null ],
     [ "FLMBB", "defines_8h.html#acae08bccfc59b5844f006ffa825215f0", null ],
+    [ "GET_BIT", "defines_8h.html#a6f5b4886c16d10e05be7be46d8bb7e73", null ],
     [ "IAT_CAL", "defines_8h.html#a01c4802e2190570f07ac7950ab28c263", null ],
     [ "IAT_MAX", "defines_8h.html#a2ad1b8e80aaf47cb69cb75f9e4d3f97e", null ],
     [ "IAT_MIN", "defines_8h.html#ae08546e74f01c11cddeee4736793de41", null ],

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['memmanage_5fhandler',['MemManage_Handler',['../stm32f4xx__it_8h.html#a3150f74512510287a942624aa9b44cc5',1,'stm32f4xx_it.cpp']]],
-  ['mx_5fusb_5fdevice_5finit',['MX_USB_DEVICE_Init',['../group__USBD__DEVICE__Exported__FunctionsPrototype.html#gadab4f7fc1db4ce2be073d3913209d2af',1,'MX_USB_DEVICE_Init(void):&#160;usb_device.c'],['../group__USBD__DEVICE__Exported__FunctionsPrototype.html#gadab4f7fc1db4ce2be073d3913209d2af',1,'MX_USB_DEVICE_Init(void):&#160;usb_device.c']]]
+  ['nmi_5fhandler',['NMI_Handler',['../stm32f4xx__it_8h.html#a6ad7a5e3ee69cb6db6a6b9111ba898bc',1,'stm32f4xx_it.cpp']]]
 ];
