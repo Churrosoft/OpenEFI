@@ -19,11 +19,11 @@
 #define DNT 60            //!< cantidad de dientes del sensor CKP
 #define DNT_MISSING 0     //!< cantidad de dientes faltantes en PMS
 #define DNT_DOUBLE_SCAN 2 //!< 1 == interrupcion por diente
-#define LOGIC_DNT ((DNT - DNT_MISSING ) * DNT_DOUBLE_SCAN )
-#define Alpha 1 //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
-#define ED 1600 //!< cilindrada en CC del motor
-#define ING_SECUENCY { 1, 3, 4, 2 }; // secuencia encendido
-#define INY_SECUENCY { 3, 4, 1, 2 }; // secuencia inyeccion
+#define LOGIC_DNT ((DNT - DNT_MISSING) * DNT_DOUBLE_SCAN)
+#define Alpha 1                    //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
+#define ED 1600                    //!< cilindrada en CC del motor
+#define ING_SECUENCY {1, 3, 4, 2}; // secuencia encendido
+#define INY_SECUENCY {3, 4, 1, 2}; // secuencia inyeccion
 /*-----( RPM )-----*/
 
 #define RPM_per 500 //periodo en ms en el que se actualizan las rpm ( si lo cambias , o arreglas el calculo para las rpm,o se rompe todo maquinola)
@@ -133,8 +133,11 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define ROUND_16(NUMBER) ((float)((uint16_t)NUMBER * 100 + .5) / 100)
 #define ROUND_32(NUMBER) ((float)((uint32_t)NUMBER * 100 + .5) / 100)
 
+// GET_BIT only for uint8_t
+#define GET_BIT(VAR, BIT_NEEDED) (VAR & (1 << BIT_NEEDED)) // another way: ((VAR >> BIT_NEEDED) & 1)
+
 /*-----( pa' el debug )-----*/
 
 #define CPWM_DEBUG 1
 
-#endif
+#endif 

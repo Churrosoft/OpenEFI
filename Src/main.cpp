@@ -187,7 +187,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    PMIC::demo_spark();
+    //PMIC::demo_spark();
+    PMIC::dtc_check();
+    HAL_Delay(2000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

@@ -1,4 +1,6 @@
 #include "./pmic.hpp"
+#include "trace.h"
+
 
 void PMIC::init()
 {
@@ -17,6 +19,15 @@ void PMIC::dtc_check()
     *   # revisar inyectores 1/4, revisar estado (open/corto/vcc)
     *   # revisar encendido 1/4
     */
+    empty_pmic_buffer();
+    pmic_send(0x0A40);
+    volatile uint8_t A = spi_read_byte();
+    volatile uint8_t B = spi_read_byte();
+    volatile uint16_t pmic_errors = pmic_receive();
+    // si el canal 0 de inyeccion tiene falla, esto tendria que tener 1
+    uint8_t iny_err = GET_BIT(pmic_errors, 0);
+
+    trace_printf("Error on INY0: %d, INY1 %d, all: %d \n", iny_err,GET_BIT(pmic_errors, 0),pmic_errors);
 }
 
 // from: https://github.com/ECUality/ECUality/blob/master/core/SPICommands.h#L39
@@ -49,7 +60,6 @@ void PMIC::setup_spark()
 
     empty_pmic_buffer();
 }
-
 
 // demo pequeña sobre la bobina 1-2
 void PMIC::demo_spark()
