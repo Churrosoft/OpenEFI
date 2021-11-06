@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"group__USBD__DESC__Private__Defines.html#gac5251397ce2246b546b472cd802e6d62":[2,0,1,9,7],
 "group__USBD__DESC__Private__Defines.html#gaca5e66e8b6c89a896f6ad16f9a68128f":[2,0,1,9,1],
 "group__USBD__DESC__Private__Defines.html#gaee0c9fd7e8265b90126028919cd863a6":[2,0,1,9,4],
 "group__USBD__DESC__Private__FunctionPrototypes.html":[0,1,1,3],
@@ -10,21 +11,21 @@ var NAVTREEINDEX1 =
 "group__USBD__DESC__Private__Functions.html#ga14798be38c08a37163e53167032485ff":[0,1,1,5,1],
 "group__USBD__DESC__Private__Functions.html#ga40ed2a0fb60c50a285983a09ba6921d6":[0,1,1,5,0],
 "group__USBD__DESC__Private__Functions.html#ga40ed2a0fb60c50a285983a09ba6921d6":[2,0,1,9,8],
-"group__USBD__DESC__Private__Functions.html#ga6427a671827813efe1a46c3dfcb05683":[0,1,1,5,4],
 "group__USBD__DESC__Private__Functions.html#ga6427a671827813efe1a46c3dfcb05683":[2,0,1,9,12],
+"group__USBD__DESC__Private__Functions.html#ga6427a671827813efe1a46c3dfcb05683":[0,1,1,5,4],
 "group__USBD__DESC__Private__Functions.html#gaad2a1d1451821845eda602a82b1cd213":[2,0,1,9,14],
 "group__USBD__DESC__Private__Functions.html#gaad2a1d1451821845eda602a82b1cd213":[0,1,1,5,6],
-"group__USBD__DESC__Private__Functions.html#gab248f43276f92d982ab5853111e4fb10":[2,0,1,9,10],
 "group__USBD__DESC__Private__Functions.html#gab248f43276f92d982ab5853111e4fb10":[0,1,1,5,2],
+"group__USBD__DESC__Private__Functions.html#gab248f43276f92d982ab5853111e4fb10":[2,0,1,9,10],
 "group__USBD__DESC__Private__Functions.html#gac02628ceb6a6a071e192dcb85063c0cc":[0,1,1,5,3],
 "group__USBD__DESC__Private__Functions.html#gac02628ceb6a6a071e192dcb85063c0cc":[2,0,1,9,11],
 "group__USBD__DESC__Private__Macros.html":[0,1,1,2],
 "group__USBD__DESC__Private__TypesDefinitions.html":[0,1,1,0],
 "group__USBD__DESC__Private__Variables.html":[0,1,1,4],
-"group__USBD__DESC__Private__Variables.html#ga542bfea0b6dcf06e06a505bdc49c7e04":[0,1,1,4,0],
 "group__USBD__DESC__Private__Variables.html#ga542bfea0b6dcf06e06a505bdc49c7e04":[2,0,1,9,15],
-"group__USBD__DESC__Private__Variables.html#gae36d67393118d9d8531a8d633e23a797":[2,0,1,9,16],
+"group__USBD__DESC__Private__Variables.html#ga542bfea0b6dcf06e06a505bdc49c7e04":[0,1,1,4,0],
 "group__USBD__DESC__Private__Variables.html#gae36d67393118d9d8531a8d633e23a797":[0,1,1,4,1],
+"group__USBD__DESC__Private__Variables.html#gae36d67393118d9d8531a8d633e23a797":[2,0,1,9,16],
 "group__USBD__DEVICE.html":[0,2,0],
 "group__USBD__DEVICE__Exported__FunctionsPrototype.html":[0,2,0,1],
 "group__USBD__DEVICE__Exported__FunctionsPrototype.html#gadab4f7fc1db4ce2be073d3913209d2af":[2,0,1,7,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "usbd__conf_8c.html#a1679f5c50539a3dfca1391557e7a757b":[2,0,1,8,2],
 "usbd__conf_8c.html#a1730ffe1e560465665eb47d9264826f9":[2,0,1,8,0],
 "usbd__conf_8c.html#a24b61e95db7e4c7ad30a835e8d905943":[2,0,1,8,22],
-"usbd__conf_8c.html#a25f930b5fe696224f8e71dacf5f324b4":[2,0,1,8,4],
-"usbd__conf_8c.html#a2a0f10f93cc4246272b63661051a64b7":[2,0,1,8,23]
+"usbd__conf_8c.html#a25f930b5fe696224f8e71dacf5f324b4":[2,0,1,8,4]
 };

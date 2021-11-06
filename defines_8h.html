@@ -309,11 +309,14 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ROUND_32</b>(NUMBER)&#160;&#160;&#160;((float)((uint32_t)NUMBER * 100 + .5) / 100)</td></tr>
 <tr class="separator:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f5b4886c16d10e05be7be46d8bb7e73"><td class="memItemLeft" align="right" valign="top"><a id="a6f5b4886c16d10e05be7be46d8bb7e73"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_BIT</b>(VAR,  BIT_NEEDED)&#160;&#160;&#160;(VAR &amp; (1 &lt;&lt; BIT_NEEDED))</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_BIT</b>(VAR,  BIT_NEEDED)&#160;&#160;&#160;((VAR &gt;&gt; BIT_NEEDED) &amp; 1)</td></tr>
 <tr class="separator:a6f5b4886c16d10e05be7be46d8bb7e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a554504c04c7fffd2f498665cc34610c6"><td class="memItemLeft" align="right" valign="top"><a id="a554504c04c7fffd2f498665cc34610c6"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CPWM_DEBUG</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a554504c04c7fffd2f498665cc34610c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0409e98ff9aade482fcfc9e67e762a86"><td class="memItemLeft" align="right" valign="top"><a id="a0409e98ff9aade482fcfc9e67e762a86"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>BREAKPOINT</b>&#160;&#160;&#160;void();</td></tr>
+<tr class="separator:a0409e98ff9aade482fcfc9e67e762a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

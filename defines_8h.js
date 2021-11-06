@@ -10,6 +10,7 @@ var defines_8h =
     [ "AVCPER", "defines_8h.html#a67ecea5b298afc048a0b60243bf9145c", null ],
     [ "BLM", "defines_8h.html#ad19517d5dd4d2dca3f56f31cc7608bed", null ],
     [ "BPC", "defines_8h.html#ad5200a90676d0749ce4847961dadafe1", null ],
+    [ "BREAKPOINT", "defines_8h.html#a0409e98ff9aade482fcfc9e67e762a86", null ],
     [ "BVC", "defines_8h.html#a16c71d0c91148d39a8b83d33c7cb4581", null ],
     [ "CIL", "defines_8h.html#a45f252e6f7774e84484118243dfe45b4", null ],
     [ "CPWM_DEBUG", "defines_8h.html#a554504c04c7fffd2f498665cc34610c6", null ],

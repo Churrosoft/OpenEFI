@@ -201,8 +201,11 @@
 \#define {\bfseries R\+O\+U\+N\+D\+\_\+32}(N\+U\+M\+B\+ER)~((float)((uint32\+\_\+t)N\+U\+M\+B\+ER $\ast$ 100 + .\+5) / 100)
 \item 
 \mbox{\Hypertarget{defines_8h_a6f5b4886c16d10e05be7be46d8bb7e73}\label{defines_8h_a6f5b4886c16d10e05be7be46d8bb7e73}} 
-\#define {\bfseries G\+E\+T\+\_\+\+B\+IT}(V\+AR,  B\+I\+T\+\_\+\+N\+E\+E\+D\+ED)~(V\+AR \& (1 $<$$<$ B\+I\+T\+\_\+\+N\+E\+E\+D\+ED))
+\#define {\bfseries G\+E\+T\+\_\+\+B\+IT}(V\+AR,  B\+I\+T\+\_\+\+N\+E\+E\+D\+ED)~((V\+AR $>$$>$ B\+I\+T\+\_\+\+N\+E\+E\+D\+ED) \& 1)
 \item 
 \mbox{\Hypertarget{defines_8h_a554504c04c7fffd2f498665cc34610c6}\label{defines_8h_a554504c04c7fffd2f498665cc34610c6}} 
 \#define {\bfseries C\+P\+W\+M\+\_\+\+D\+E\+B\+UG}~1
+\item 
+\mbox{\Hypertarget{defines_8h_a0409e98ff9aade482fcfc9e67e762a86}\label{defines_8h_a0409e98ff9aade482fcfc9e67e762a86}} 
+\#define {\bfseries B\+R\+E\+A\+K\+P\+O\+I\+NT}~void();
 \end{DoxyCompactItemize}
