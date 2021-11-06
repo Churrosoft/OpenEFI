@@ -134,10 +134,11 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define ROUND_32(NUMBER) ((float)((uint32_t)NUMBER * 100 + .5) / 100)
 
 // GET_BIT only for uint8_t
-#define GET_BIT(VAR, BIT_NEEDED) (VAR & (1 << BIT_NEEDED)) // another way: ((VAR >> BIT_NEEDED) & 1)
+#define GET_BIT(VAR, BIT_NEEDED) ((VAR >> BIT_NEEDED) & 1) //(VAR & (1 << BIT_NEEDED)) // another way: ((VAR >> BIT_NEEDED) & 1)
 
 /*-----( pa' el debug )-----*/
 
 #define CPWM_DEBUG 1
+#define BREAKPOINT void();
 
-#endif 
+#endif
