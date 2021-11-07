@@ -206,6 +206,34 @@
 \mbox{\Hypertarget{defines_8h_a554504c04c7fffd2f498665cc34610c6}\label{defines_8h_a554504c04c7fffd2f498665cc34610c6}} 
 \#define {\bfseries C\+P\+W\+M\+\_\+\+D\+E\+B\+UG}~1
 \item 
+\mbox{\Hypertarget{defines_8h_aa4ed6c4ffccc1bf290457855a1158d54}\label{defines_8h_aa4ed6c4ffccc1bf290457855a1158d54}} 
+\#define {\bfseries P\+M\+I\+C\+\_\+\+D\+E\+B\+UG}~1
+\item 
 \mbox{\Hypertarget{defines_8h_a0409e98ff9aade482fcfc9e67e762a86}\label{defines_8h_a0409e98ff9aade482fcfc9e67e762a86}} 
 \#define {\bfseries B\+R\+E\+A\+K\+P\+O\+I\+NT}~void();
+\item 
+\mbox{\Hypertarget{defines_8h_ae8b243fdac3715a3da7c98b9a380eaa5}\label{defines_8h_ae8b243fdac3715a3da7c98b9a380eaa5}} 
+\#define {\bfseries B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+R\+Y\+\_\+\+P\+A\+T\+T\+E\+RN}~\char`\"{}\%d\%d\%d\%d\%d\%d\%d\%d\char`\"{}
+\item 
+\#define {\bfseries B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+RY}(byte)
 \end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{defines_8h_aa28480bfa03957b4f284c13e800ca8b0}\label{defines_8h_aa28480bfa03957b4f284c13e800ca8b0}} 
+\index{defines.\+h@{defines.\+h}!B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+RY@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+RY}}
+\index{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+RY@{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+RY}!defines.\+h@{defines.\+h}}
+\subsubsection{\texorpdfstring{B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+RY}{BYTE\_TO\_BINARY}}
+{\footnotesize\ttfamily \#define B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+RY(\begin{DoxyParamCaption}\item[{}]{byte }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(byte & 0x80 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
+  (byte & 0x40 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
+  (byte & 0x20 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
+  (byte & 0x10 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
+  (byte & 0x08 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
+  (byte & 0x04 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
+  (byte & 0x02 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
+  (byte & 0x01 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'})
+\end{DoxyCode}

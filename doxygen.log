@@ -335,7 +335,10 @@ Generating code for file /home/runner/work/OpenEFI//home/runner/work/OpenEFI/Ope
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:134: warning: Member ROUND_32(NUMBER) (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:137: warning: Member GET_BIT(VAR, BIT_NEEDED) (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:141: warning: Member CPWM_DEBUG (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:142: warning: Member BREAKPOINT (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:142: warning: Member PMIC_DEBUG (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:144: warning: Member BREAKPOINT (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:146: warning: Member BYTE_TO_BINARY_PATTERN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:147: warning: Member BYTE_TO_BINARY(byte) (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:9: warning: Member NEW_DTC (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:42: warning: Member DTC_INJECTOR_PRESSURE_NOT_DETECTED (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/main.h:61: warning: Member R_ECN_INY_Pin (macro definition) of file main.h is not documented.
@@ -597,5 +600,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 223/65536 hits=354 misses=226
+lookup cache used 224/65536 hits=355 misses=227
 finished...
