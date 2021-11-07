@@ -19,28 +19,22 @@ void PMIC::dtc_check()
     *   # revisar encendido 1/4
     */
     empty_pmic_buffer();
-    pmic_send(0x0A40);
-    /* volatile uint8_t A = spi_read_byte();
-    volatile uint8_t B = spi_read_byte(); */
+    pmic_send(PMIC_READ_INJECTION_A);
     volatile uint16_t pmic_errors = pmic_receive();
-    trace_printf("Address of var2 variable: %x\n", &pmic_errors  );
+
     // si el canal 0 de inyeccion tiene falla, esto tendria que tener 1
     uint8_t iny_err = GET_BIT(pmic_errors, 0);
 
+#if PMIC_DEBUG
+
     trace_printf("Error on INY0: %d, INY1 %d, all: %d \n", iny_err, GET_BIT(pmic_errors, 0), pmic_errors);
-    //0b1111111111101111
     volatile uint8_t test = GET_BIT(0b11101111, 5);
-    // trace_printf("test GET_BIT, POS 5 : %d \n", test);
-    trace_printf("test GET_BIT, POS 0 : %d \n", GET_BIT(0b11101111, 0));
-    trace_printf("test GET_BIT, POS 1 : %d \n", GET_BIT(0b11101111, 1));
-    trace_printf("test GET_BIT, POS 2 : %d \n", GET_BIT(0b11101111, 2));
-    trace_printf("test GET_BIT, POS 3 : %d \n", GET_BIT(0b11101111, 3));
-    trace_printf("test GET_BIT, POS 4 : %d \n", GET_BIT(0b11101111, 4));
-    trace_printf("test GET_BIT, POS 5 : %d \n", GET_BIT(0b11101111, 5));
-    trace_printf("test GET_BIT, POS 6 : %d \n", GET_BIT(0b11101111, 6));
-    trace_printf("test GET_BIT, POS 7 : %d \n", GET_BIT(0b11101111, 7));
-    
+
+    trace_printf("PMIC IGNITION: " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
+                 BYTE_TO_BINARY(pmic_errors >> 8), BYTE_TO_BINARY(pmic_errors));
+
     BREAKPOINT
+#endif
 }
 
 // from: https://github.com/ECUality/ECUality/blob/master/core/SPICommands.h#L39
