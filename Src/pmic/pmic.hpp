@@ -30,6 +30,8 @@ namespace PMIC
 
         static inline uint16_t pmic_receive(void)
         {
+            HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_RESET);
             volatile uint16_t data;
             if ((SPI2->CR1 & SPI_CR1_SPE) != SPI_CR1_SPE)
             {
@@ -51,6 +53,7 @@ namespace PMIC
         static inline void pmic_send(int16_t command)
         {
             HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_RESET);
 
             if ((SPI2->CR1 & SPI_CR1_SPE) != SPI_CR1_SPE)
             {
@@ -62,6 +65,7 @@ namespace PMIC
             while (SPI2->SR & SPI_SR_BSY)
                 ;
             HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_SET);
         }
         static inline void empty_pmic_buffer(void)
         {

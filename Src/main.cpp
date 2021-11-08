@@ -119,6 +119,7 @@ int main(void)
 
   // disable PMIC until setup
   PMIC::init();
+  //HAL_SPI_MspInit(&hspi2);
   // Initialize rest of peripherals
   MX_DMA_Init();
   MX_ADC1_Init();
@@ -140,8 +141,32 @@ int main(void)
   MOTOR_ENABLE = can_turn_on();
 #endif
   /* USER CODE END 2 */
+  HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_SET);
+  // memory::write_single(0xFFF, 0xDD);
+
   PMIC::enable();
-  PMIC::setup_spark();
+  // PMIC::setup_spark();
+  HAL_Delay(100);
+/* 
+  memory::write_single(0xFFF, 0xDD);
+  memory::write_single(0xFFF, 0xDD);
+  memory::write_single(0xFFF, 0xDD);
+  memory::write_single(0xFFF, 0xDD); */
+
+  HAL_Delay(100);
+  uint8_t pData[] = {0xDF, 0xDF, 0xDF, 0xDF, 0xDF};
+  HAL_SPI_Transmit(&hspi2, pData, 4, HAL_MAX_DELAY - 1);
+  HAL_SPI_Transmit(&hspi2, pData, 4, HAL_MAX_DELAY - 1);
+
+  HAL_SPI_Transmit(&hspi2, pData, 4, HAL_MAX_DELAY - 1);
+
+  /*   for (uint8_t i = 0; i < 200; i++)
+  {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+    HAL_Delay(1);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+  } */
   HAL_Delay(100);
 
   /* Infinite loop */
@@ -183,6 +208,10 @@ int main(void)
   spi_read_byte();
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
  */
+  volatile uint8_t data;
+  memory::write_single(0xFFF, 0xDD);
+  HAL_Delay(800);
+  data = memory::read_single(0xFF);
 
   while (1)
   {
@@ -295,6 +324,7 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* User can add his own implementation to report the file name and line
      number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  trace_printf("Wrong parameters value: file %s on line %d\r\n", file, line);
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

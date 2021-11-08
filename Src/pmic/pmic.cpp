@@ -4,6 +4,7 @@
 void PMIC::init()
 {
     // disable PMIC until setup
+    HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(PMIC_ENABLE_GPIO_Port, PMIC_ENABLE_Pin, GPIO_PIN_SET);
 }
 
@@ -21,15 +22,17 @@ void PMIC::dtc_check()
     empty_pmic_buffer();
     pmic_send(PMIC_READ_INJECTION_A);
     volatile uint16_t pmic_injection_a = pmic_receive();
+    // pmic_injection_a = pmic_receive();
 
     empty_pmic_buffer();
     pmic_send(PMIC_READ_INJECTION_B);
     volatile uint16_t pmic_injection_b = pmic_receive();
-
+    pmic_injection_b = pmic_receive();
     empty_pmic_buffer();
+
     pmic_send(PMIC_READ_IGNITION);
     volatile uint16_t pmic_ignition = pmic_receive();
-
+    pmic_ignition = pmic_receive();
     // si el canal 0 de inyeccion tiene falla, esto tendria que tener 1
     uint8_t iny_err = GET_BIT(pmic_injection_a, 0);
 
@@ -44,7 +47,7 @@ void PMIC::dtc_check()
     trace_printf("PMIC INJECTION B: " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
                  BYTE_TO_BINARY(pmic_injection_b >> 8), BYTE_TO_BINARY(pmic_injection_b));
 
-    trace_printf("PMIC IGNITION: " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
+    trace_printf("PMIC IGNITION:    " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
                  BYTE_TO_BINARY(pmic_ignition >> 8), BYTE_TO_BINARY(pmic_ignition));
 
     BREAKPOINT

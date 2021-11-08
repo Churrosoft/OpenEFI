@@ -143,7 +143,7 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 
 #define BREAKPOINT void();
 
-#define BYTE_TO_BINARY_PATTERN "%d%d%d%d%d%d%d%d"
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
   (byte & 0x80 ? '1' : '0'), \
   (byte & 0x40 ? '1' : '0'), \
@@ -153,5 +153,5 @@ T is the temperature of the gas in the cylinder immediately after the intake val
   (byte & 0x04 ? '1' : '0'), \
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0') 
-
+  
 #endif
