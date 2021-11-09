@@ -22,7 +22,7 @@ var NAVTREEINDEX =
 [
 ".html",
 "group__USBD__DESC__Private__Defines.html#ga3d6767367e9b15bae8d264a78102aba8",
-"usbd__conf_8c.html#a1730ffe1e560465665eb47d9264826f9"
+"usbd__conf_8c.html#a0e14acd4564979743bc0a89aa5f15428"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -10,6 +10,7 @@ var dir_f93dfce691d792349f1c14ede440e2e6 =
     [ "gpio.h", "gpio_8h_source.html", null ],
     [ "main.h", "main_8h.html", "main_8h" ],
     [ "spi.h", "spi_8h_source.html", null ],
+    [ "stm32_assert.h", "stm32__assert_8h.html", "stm32__assert_8h" ],
     [ "stm32f4xx_hal_conf.h", "stm32f4xx__hal__conf_8h_source.html", null ],
     [ "stm32f4xx_it.h", "stm32f4xx__it_8h.html", "stm32f4xx__it_8h" ],
     [ "tim.h", "tim_8h_source.html", null ],
