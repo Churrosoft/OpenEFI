@@ -49,6 +49,8 @@ namespace PMIC
             while (SPI2->SR & SPI_SR_BSY)
                 ;
             return data;
+            HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_SET);
         }
         static inline void pmic_send(int16_t command)
         {
@@ -71,8 +73,11 @@ namespace PMIC
         {
             // a seguro se lo llevaron preso asi que:
             HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
+
             pmic_receive();
             HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_SET);
         }
     }
 

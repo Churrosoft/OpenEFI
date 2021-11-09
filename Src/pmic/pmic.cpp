@@ -19,16 +19,19 @@ void PMIC::dtc_check()
     *   # revisar inyectores 1/4, revisar estado (open/corto/vcc)
     *   # revisar encendido 1/4
     */
-    empty_pmic_buffer();
+    pmic_receive();
+    HAL_Delay(5);
+
     pmic_send(PMIC_READ_INJECTION_A);
     volatile uint16_t pmic_injection_a = pmic_receive();
     // pmic_injection_a = pmic_receive();
 
-    empty_pmic_buffer();
+    HAL_Delay(5);
+
     pmic_send(PMIC_READ_INJECTION_B);
     volatile uint16_t pmic_injection_b = pmic_receive();
-    pmic_injection_b = pmic_receive();
-    empty_pmic_buffer();
+
+    HAL_Delay(5);
 
     pmic_send(PMIC_READ_IGNITION);
     volatile uint16_t pmic_ignition = pmic_receive();
@@ -88,7 +91,7 @@ void PMIC::setup_spark()
 // demo pequeña sobre la bobina 1-2
 void PMIC::demo_spark()
 {
-    for (uint8_t i = 0; i < 50; i++)
+    for (uint8_t i = 0; i < 10; i++)
     {
         HAL_Delay(50);
 
