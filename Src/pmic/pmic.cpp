@@ -1,5 +1,7 @@
 #include "./pmic.hpp"
+extern "C"{
 #include "trace.h"
+}
 
 void PMIC::init()
 {
@@ -20,25 +22,36 @@ void PMIC::dtc_check()
     *   # revisar encendido 1/4
     */
     pmic_receive();
-    HAL_Delay(5);
+    HAL_Delay(10);
 
     pmic_send(PMIC_READ_INJECTION_A);
     volatile uint16_t pmic_injection_a = pmic_receive();
     // pmic_injection_a = pmic_receive();
 
-    HAL_Delay(5);
+    HAL_Delay(10);
 
     pmic_send(PMIC_READ_INJECTION_B);
     volatile uint16_t pmic_injection_b = pmic_receive();
 
-    HAL_Delay(5);
+    HAL_Delay(10);
 
     pmic_send(PMIC_READ_IGNITION);
     volatile uint16_t pmic_ignition = pmic_receive();
-    pmic_ignition = pmic_receive();
+    // pmic_ignition = pmic_receive();
+
+      HAL_Delay(10);
+
+    pmic_send(PMIC_READ_ALL);
+    volatile uint16_t all_status = pmic_receive();
+    //pmic_ignition = pmic_receive();
     // si el canal 0 de inyeccion tiene falla, esto tendria que tener 1
     uint8_t iny_err = GET_BIT(pmic_injection_a, 0);
-
+/* 
+PMIC INJECTION A:   01000000 01101110
+PMIC INJECTION B:   01000000 01101110
+PMIC IGNITION:      01000000 01101110
+ALLLLLL:            01000000 01101110
+ */
 #if PMIC_DEBUG
 
     trace_printf("Error on INY0: %d, INY1 %d, all: %d \n", iny_err, GET_BIT(pmic_injection_a, 0), pmic_injection_a);
@@ -53,6 +66,8 @@ void PMIC::dtc_check()
     trace_printf("PMIC IGNITION:    " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
                  BYTE_TO_BINARY(pmic_ignition >> 8), BYTE_TO_BINARY(pmic_ignition));
 
+    trace_printf("ALLLLLL:    " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
+                 BYTE_TO_BINARY(all_status >> 8), BYTE_TO_BINARY(all_status));
     BREAKPOINT
 #endif
 }

@@ -18,6 +18,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+// #define _W25QXX_DEBUG 1
 /* Includes ------------------------------------------------------------------*/
 extern "C"
 {
@@ -25,15 +26,17 @@ extern "C"
 // #include "spi.h"
 #include "gpio.h"
 #include "ll_spi.h"
-}
-
 #ifdef TRACE
 #include <stdio.h>
 #include <stdlib.h>
 #include <trace.h>
 #endif
+}
 
+
+// #include "aliases/memory.hpp"
 #include "pmic/pmic.hpp"
+#include "w25qxx.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -103,21 +106,28 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin, GPIO_PIN_SET);
+
+  MX_SPI2_Init();
 
   HAL_Delay(100);
-  PMIC::enable();
-  PMIC::demo_spark();
+  //PMIC::setup_spark();
+  W25qxx_Init();
+  HAL_Delay(100);
+  // PMIC::enable();
+  // PMIC::demo_spark();
   //HAL_Delay(100);
   uint8_t pData[] = {0xAD, 0xDF, 0xDF, 0xDF};
   /* USER CODE END 2 */
   trace_printf("Init SPI \r\n");
-  PMIC::dtc_check();
-  /*   spi_send_byte(0xFD);
-  HAL_SPI_Transmit(&hspi2, pData, 3, 1000); */
+  // memory::write_single(0xFDD, 0xFA);
+  /*     spi_send_byte(0xFD);
+ */
+  /*   HAL_SPI_Transmit(&hspi2, pData, 3, 1000);
+ */
   /* Infinite loop */
   trace_printf("end SPI \r\n");
   //HAL_Delay(100);
@@ -125,7 +135,13 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+    /* PMIC::demo_spark();
+    HAL_Delay(100);
 
+    PMIC::dtc_check();
+     */
+    //memory::read_single(0xFDD);
+    HAL_Delay(2000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -191,33 +207,27 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 15;
-  RCC_OscInitStruct.PLL.PLLN = 144;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 5;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
   }
   /** Initializes the CPU, AHB and APB buses clocks
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
 }
-
 /**
   * @brief SPI2 Initialization Function
   * @param None
@@ -237,8 +247,8 @@ void MX_SPI2_Init(void)
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  //hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi2.Init.DataSize = SPI_DATASIZE_16BIT;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  //hspi2.Init.DataSize = SPI_DATASIZE_16BIT;
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_SOFT;
@@ -303,7 +313,6 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *spiHandle)
   }
 }
 /* USER CODE END 4 */
-
 
 /**
   * @brief  This function is executed in case of error occurrence.
