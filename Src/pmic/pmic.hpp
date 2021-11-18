@@ -3,7 +3,10 @@
 
 #include "ll_spi.h"
 #include "defines.h"
-
+/* extern "C"
+{
+#include "w25qxx.h"
+} */
 // de a poco el codigo de CPWM va a caer aca
 // para poder manejar todo por SPI, y agregar compatibilidad con el PMIC mas grande
 // https://www.nxp.com/docs/en/data-sheet/MC33800.pdf
@@ -52,12 +55,22 @@ namespace PMIC
             HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
             HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_SET);
         }
+        static inline uint8_t spI_send(uint8_t Data)
+        {
+            uint8_t ret;
+            HAL_SPI_TransmitReceive(&hspi2, &Data, &ret, 1, 100);
+            return ret;
+        }
         static inline void pmic_send(int16_t command)
         {
+
             HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_RESET);
             HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_RESET);
 
-            if ((SPI2->CR1 & SPI_CR1_SPE) != SPI_CR1_SPE)
+            spI_send((command & 0xFF00) >> 8);
+            spI_send(command & 0xFF);
+
+            /*  if ((SPI2->CR1 & SPI_CR1_SPE) != SPI_CR1_SPE)
             {
                 SET_BIT(SPI2->CR1, SPI_CR1_SPE);
             }
@@ -65,7 +78,7 @@ namespace PMIC
                 ;
             LL_SPI_TransmitData16(SPI2, command);
             while (SPI2->SR & SPI_SR_BSY)
-                ;
+                ; */
             HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
             HAL_GPIO_WritePin(AUX_CS_1_GPIO_Port, AUX_CS_1_Pin, GPIO_PIN_SET);
         }
