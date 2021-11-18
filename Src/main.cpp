@@ -22,20 +22,22 @@
 /* Includes ------------------------------------------------------------------*/
 extern "C"
 {
+
 #include "main.h"
-// #include "spi.h"
 #include "gpio.h"
-#include "ll_spi.h"
+
+
 #ifdef TRACE
 #include <stdio.h>
 #include <stdlib.h>
 #include <trace.h>
+
 #endif
 }
 
-// #include "aliases/memory.hpp"
+#include "debug/debug_local.h"
+
 #include "pmic/pmic.hpp"
-#include "w25qxx.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -105,6 +107,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  on_gpio_init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
@@ -113,35 +116,15 @@ int main(void)
   MX_SPI2_Init();
 
   HAL_Delay(100);
-  //PMIC::setup_spark();
-  W25qxx_Init();
+  on_setup();
   HAL_Delay(100);
-  PMIC::enable();
-  // PMIC::demo_spark();
-  //HAL_Delay(100);
-  uint8_t pData[] = {0xAD, 0xDF, 0xDF, 0xDF};
-  /* USER CODE END 2 */
-  trace_printf("Init SPI \r\n");
-  // memory::write_single(0xFDD, 0xFA);
-  /*     spi_send_byte(0xFD);
- */
-  /*   HAL_SPI_Transmit(&hspi2, pData, 3, 1000);
- */
+
   /* Infinite loop */
-  trace_printf("end SPI \r\n");
-  //HAL_Delay(100);
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-    /* PMIC::demo_spark();
-    HAL_Delay(100);
-
-    PMIC::dtc_check();
-     */
-    //memory::read_single(0xFDD);
-   // PMIC::dtc_check();
-    HAL_Delay(5000);
+    on_loop();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
