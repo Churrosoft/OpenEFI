@@ -21,8 +21,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"group__USBD__DESC__Private__Defines.html#ga3d6767367e9b15bae8d264a78102aba8",
-"usbd__conf_8c.html#a0e14acd4564979743bc0a89aa5f15428"
+"group__USBD__DESC__Private__Defines.html#ga070dd542d4d914e86fdf103fa5fdd72f",
+"usbd__conf_8c.html#a0a53f3c7c744fcfa7bdba6e9badc70d4"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
