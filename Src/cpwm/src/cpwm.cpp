@@ -1,12 +1,13 @@
 #include "../include/cpwm.hpp"
 
+#include <string>
+#include <stdio.h>
+
 extern "C"
 {
 #ifdef TESTING
 #include <trace.h>
 #include <unity.h>
-#include <string>
-#include <stdio.h>
 #endif
 }
 
