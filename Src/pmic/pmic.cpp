@@ -1,8 +1,12 @@
 #include "./pmic.hpp"
+extern "C"{
+#include "trace.h"
+}
 
 void PMIC::init()
 {
     // disable PMIC until setup
+    HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(PMIC_ENABLE_GPIO_Port, PMIC_ENABLE_Pin, GPIO_PIN_SET);
 }
 
@@ -17,6 +21,55 @@ void PMIC::dtc_check()
     *   # revisar inyectores 1/4, revisar estado (open/corto/vcc)
     *   # revisar encendido 1/4
     */
+    pmic_receive();
+    HAL_Delay(10);
+
+    pmic_send(PMIC_READ_INJECTION_A);
+    volatile uint16_t pmic_injection_a = pmic_receive();
+    // pmic_injection_a = pmic_receive();
+
+    HAL_Delay(10);
+
+    pmic_send(PMIC_READ_INJECTION_B);
+    volatile uint16_t pmic_injection_b = pmic_receive();
+
+    HAL_Delay(10);
+
+    pmic_send(PMIC_READ_IGNITION);
+    volatile uint16_t pmic_ignition = pmic_receive();
+    // pmic_ignition = pmic_receive();
+
+      HAL_Delay(10);
+
+    pmic_send(PMIC_READ_ALL);
+    volatile uint16_t all_status = pmic_receive();
+    //pmic_ignition = pmic_receive();
+    // si el canal 0 de inyeccion tiene falla, esto tendria que tener 1
+    uint8_t iny_err = GET_BIT(pmic_injection_a, 0);
+/* 
+PMIC INJECTION A:   01000000 01101110
+PMIC INJECTION B:   01000000 01101110
+PMIC IGNITION:      01000000 01101110
+ALLLLLL:            01000000 01101110
+ */
+#if PMIC_DEBUG
+
+    trace_printf("Error on INY0: %d, INY1 %d, all: %d \n", iny_err, GET_BIT(pmic_injection_a, 0), pmic_injection_a);
+    volatile uint8_t test = GET_BIT(0b11101111, 5);
+
+    trace_printf("PMIC INJECTION A: " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
+                 BYTE_TO_BINARY(pmic_injection_a >> 8), BYTE_TO_BINARY(pmic_injection_a));
+
+    trace_printf("PMIC INJECTION B: " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
+                 BYTE_TO_BINARY(pmic_injection_b >> 8), BYTE_TO_BINARY(pmic_injection_b));
+
+    trace_printf("PMIC IGNITION:    " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
+                 BYTE_TO_BINARY(pmic_ignition >> 8), BYTE_TO_BINARY(pmic_ignition));
+
+    trace_printf("ALLLLLL:    " BYTE_TO_BINARY_PATTERN " " BYTE_TO_BINARY_PATTERN "\n",
+                 BYTE_TO_BINARY(all_status >> 8), BYTE_TO_BINARY(all_status));
+    BREAKPOINT
+#endif
 }
 
 // from: https://github.com/ECUality/ECUality/blob/master/core/SPICommands.h#L39
@@ -50,11 +103,10 @@ void PMIC::setup_spark()
     empty_pmic_buffer();
 }
 
-
 // demo pequeña sobre la bobina 1-2
 void PMIC::demo_spark()
 {
-    for (uint8_t i = 0; i < 50; i++)
+    for (uint8_t i = 0; i < 10; i++)
     {
         HAL_Delay(50);
 

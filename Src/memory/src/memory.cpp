@@ -13,9 +13,11 @@
 
 void delay_us2(uint16_t microseconds)
 {
-  __HAL_TIM_SET_COUNTER(&htim1, 0); // set the counter value a 0
+  HAL_Delay(1);
+  
+/*   __HAL_TIM_SET_COUNTER(&htim1, 0); // set the counter value a 0
   while (__HAL_TIM_GET_COUNTER(&htim1) < microseconds)
-    ; // wait for the counter to reach the us input in the parameter
+    ; // wait for the counter to reach the us input in the parameter */
 }
 
 bool memory::is_busy()

@@ -1,11 +1,14 @@
 #include "../include/cpwm.hpp"
 
+extern "C"
+{
 #ifdef TESTING
 #include <trace.h>
 #include <unity.h>
 #include <string>
 #include <stdio.h>
 #endif
+}
 
 uint32_t _POS;
 uint32_t _RPM;
@@ -154,7 +157,7 @@ void CPWM::interrupt()
             Error_Handler();
 #endif
 #ifdef TESTING
-// esto solo hace falta cuando estamos en el modo testing porque no disponemos del timer
+        // esto solo hace falta cuando estamos en el modo testing porque no disponemos del timer
         if (CPWM::iny_pin < L_CIL)
             CPWM::iny_pin++;
         else
