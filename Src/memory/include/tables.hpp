@@ -12,6 +12,10 @@
 #ifndef TABLES_HPP
 #define TABLES_HPP
 
+extern "C"{
+    #include "w25qxx.h"
+}
+
 #include "memory.hpp"
 #include <limits.h>
 #include <math.h>
