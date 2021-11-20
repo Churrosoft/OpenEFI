@@ -18,14 +18,21 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-// #define _W25QXX_DEBUG 1
-/* Includes ------------------------------------------------------------------*/
-extern "C"
-{
-
 #include "main.h"
 #include "gpio.h"
 
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+
+#ifdef TESTING
+#pragma GCC warning "TESTING ENABLED"
+#include <unity.h>
+#include "../test/cpwm_test.cpp"
+extern int run_tests(void);
+#endif
+
+extern "C"
+{
 
 #ifdef TRACE
 #include <stdio.h>
@@ -38,9 +45,6 @@ extern "C"
 #include "debug/debug_local.h"
 
 #include "pmic/pmic.hpp"
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +98,13 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+
+#ifdef TESTING
+  trace_initialize();
+  printf("INIT_TESTING \n");
+  run_tests();
+  puts("END_TESTING \n");
+#endif
 
   MOTOR_ENABLE = true;
   /* USER CODE END Init */
