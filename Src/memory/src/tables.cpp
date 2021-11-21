@@ -6,21 +6,6 @@ extern "C"
 }
 using namespace std;
 #include "defines.h"
-/***
- * @brief Retorna direccion de memoria para la posicion 2D de la tabla
- * @param x eje X de la tabla
- * @param y eje Y de la tabla
- * @param x_max configuracion de la tabla, valor maximo que toma el eje X
- * @param address direccion inicial de la tabla (x/y = 0)
- * @example  solo 2 valores en X, 2 en Y
- * address: [336] [337] # [338]  [339] | [340]  [341] #  [342] [343]
- *    X:      0     0   #  1      1    |  0       0   #    1     1
- *    Y:      0     0   #  0      0    |  1       1   #    1     1
-*/
-static inline uint32_t get_address(uint16_t x, uint16_t x_max, uint16_t y, int16_t address)
-{
-    return (x + x + 1) + (y + y * x_max) + address;
-}
 
 int16_t tables::get_value(table_ref table, uint16_t x, uint16_t y)
 {
@@ -47,11 +32,6 @@ void tables::set_value(table_ref table, uint16_t x, uint16_t y, int16_t value)
     HAL_Delay(15);
 }
 
-/**
- * @brief reads all data of the selected table
- * @param {table_ref} table - table to read
- * @return {TABLE_DATA} - vector 2D with uint16_t data
- */
 TABLEDATA tables::read_all(table_ref table)
 {
 
