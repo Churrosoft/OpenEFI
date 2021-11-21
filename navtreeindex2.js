@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"usb__device_8h_source.html":[3,0,0,14],
 "usb__otg_8h_source.html":[3,0,0,15],
 "usbd__conf_8c.html":[3,0,1,9],
 "usbd__conf_8c.html#a0386a36b921cd51dd6e50103c3cd33b1":[3,0,1,9,10],

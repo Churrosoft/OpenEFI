@@ -7,7 +7,7 @@ var indexSectionsWithContent =
   4: "bdeghmnoprstu",
   5: "_fhu",
   6: "acdelmprstv",
-  7: "csu"
+  7: "cstu"
 };
 
 var indexSectionNames =
