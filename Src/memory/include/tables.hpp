@@ -32,10 +32,9 @@ struct table_ref
     uint16_t memory_address;
 };
 
-/*!
- *  addtogroup Tables
- *  @{
- */
+/** @addtogroup Tables
+  * @{
+  */
 
 //! Implementacion de tablas 2D con vectores, valores en uint16_t
 namespace tables
