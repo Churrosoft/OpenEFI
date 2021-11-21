@@ -199,7 +199,7 @@ Preproces/home/runner/work/OpenEFI/OpenEFI/Src/main.cpp:4: warning: the name `ma
 /home/runner/work/OpenEFI/OpenEFI/Src/stm32f4xx_it.cpp:4: warning: the name `stm32f4xx_it.c' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h:3: warning: the name `stm32f4xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:18: warning: Compound input_handler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:28: warning: Compound table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:29: warning: Compound table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:16: warning: Compound EMALowPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:30: warning: Compound sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:10: warning: Compound EMAHighPass is not documented.
@@ -541,9 +541,9 @@ Generating code for file /home/runner/work/OpenEFI/Ope/home/runner/work/OpenEFI/
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:17: warning: Member lastValue (variable) of class EMALowPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:18: warning: Member actualValue (variable) of class EMALowPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:36: warning: Member values[16] (variable) of class input_handler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:29: warning: Member y_max (variable) of class table_ref is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:30: warning: Member x_max (variable) of class table_ref is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:31: warning: Member memory_address (variable) of class table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:30: warning: Member y_max (variable) of class table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:31: warning: Member x_max (variable) of class table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:32: warning: Member memory_address (variable) of class table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:31: warning: Member _TPS (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:32: warning: Member _MAP (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:33: warning: Member TEMP (variable) of class sensors::SensorValues is not documented.
@@ -609,5 +609,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 229/65536 hits=375 misses=232
+lookup cache used 230/65536 hits=380 misses=233
 finished...
