@@ -5,7 +5,7 @@ extern "C"
 #include "trace.h"
 }
 using namespace std;
-
+#include "defines.h"
 /***
  * @brief Retorna direccion de memoria para la posicion 2D de la tabla
  * @param x eje X de la tabla
@@ -19,7 +19,7 @@ using namespace std;
 */
 static inline uint32_t get_address(uint16_t x, uint16_t x_max, uint16_t y, int16_t address)
 {
-    return (x + x + 1) + (y * x_max) + address;
+    return (x + x + 1) + (y + y * x_max) + address;
 }
 
 int16_t tables::get_value(table_ref table, uint16_t x, uint16_t y)
@@ -47,41 +47,36 @@ void tables::set_value(table_ref table, uint16_t x, uint16_t y, int16_t value)
     HAL_Delay(15);
 }
 
+/**
+ * @brief reads all data of the selected table
+ * @param {table_ref} table - table to read
+ * @return {TABLE_DATA} - vector 2D with uint16_t data
+ */
 TABLEDATA tables::read_all(table_ref table)
 {
 
     TABLEDATA matrix(table.y_max, vector<int16_t>(table.x_max, 0xff));
 
-    int row = 0;
-    int datarow = 0;
-    int column = 0;
-
-    int rows = sizeof matrix / sizeof matrix[0]; // 2 rows
-
-    int cols = sizeof matrix[0] / sizeof(int16_t); // 5 cols
+    uint32_t datarow = 0;
 
     for (int16_t matrix_y = 0; matrix_y < table.y_max; matrix_y++)
     {
-        uint32_t address = (column * table.x_max) + table.memory_address;
+
+        uint32_t address = ((matrix_y + matrix_y) * table.x_max) + table.memory_address + (matrix_y == 0 ? 1 : (matrix_y + matrix_y));
         uint8_t table_row[MAX_ROW_SIZE * 2];
 
-        // W25qxx_ReadBytes(table_row, address, table.x_max * 2);
+        W25qxx_ReadBytes(table_row, address, table.x_max * 2);
 
         for (int16_t matrix_x = 0; matrix_x < table.x_max; matrix_x++)
         {
 
-            int16_t value = ((int16_t)table_row[datarow + 1] << 8) + table_row[datarow];
-            value = tables::get_value(table, matrix_x, matrix_y);
-            matrix[column][row] = value;
+            volatile int16_t value = ((int16_t)table_row[datarow] << 8) + table_row[datarow + 1];
+            matrix[matrix_y][matrix_x] = value;
 
-            auto volatile storageValue = matrix[column][row]; // DEBUG
-
-            row += 1;
+            auto volatile storageValue = matrix[matrix_y][matrix_x]; // DEBUG
+            BREAKPOINT
             datarow += 2;
         }
-
-        column++;
-        row = 0;
     }
 
     return matrix;
