@@ -32,6 +32,12 @@ struct table_ref
     uint16_t memory_address;
 };
 
+/*!
+ *  addtogroup Tables
+ *  @{
+ */
+
+//! Implementacion de tablas 2D con vectores, valores en uint16_t
 namespace tables
 {
     // operaciones simples sobre un campo:
@@ -71,5 +77,8 @@ namespace tables
         }
     }
 } // namespace tables
+
+/*! @} End of Doxygen Tables*/
+
 
 #endif
