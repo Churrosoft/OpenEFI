@@ -1,0 +1,53 @@
+\hypertarget{namespacetables}{}\section{tables Namespace Reference}
+\label{namespacetables}\index{tables@{tables}}
+
+
+Implementacion de tablas 2D con vectores, valores en uint16\+\_\+t.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacetables_ad6abd6279ebdfd1813de8dee11e8d06c}\label{namespacetables_ad6abd6279ebdfd1813de8dee11e8d06c}} 
+int16\+\_\+t {\bfseries get\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint16\+\_\+t, uint16\+\_\+t)
+\item 
+\mbox{\Hypertarget{namespacetables_afdeac8e88a25e9a65a4afd6a6f881f20}\label{namespacetables_afdeac8e88a25e9a65a4afd6a6f881f20}} 
+void {\bfseries set\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint16\+\_\+t, uint16\+\_\+t, int16\+\_\+t)
+\item 
+\mbox{\Hypertarget{namespacetables_a8bb312dd55d1189bd4ceb6847087f9f5}\label{namespacetables_a8bb312dd55d1189bd4ceb6847087f9f5}} 
+int32\+\_\+t {\bfseries get\+\_\+long\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint16\+\_\+t, uint16\+\_\+t)
+\item 
+\mbox{\Hypertarget{namespacetables_a55cb401646e4582c598f0ed53f4bcfd7}\label{namespacetables_a55cb401646e4582c598f0ed53f4bcfd7}} 
+void {\bfseries set\+\_\+long\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint16\+\_\+t, uint16\+\_\+t, int32\+\_\+t)
+\item 
+T\+A\+B\+L\+E\+D\+A\+TA \hyperlink{namespacetables_a8a1bab94b65aabe4f2b226cdac58b41f}{read\+\_\+all} (\hyperlink{structtable__ref}{table\+\_\+ref})
+\begin{DoxyCompactList}\small\item\em reads all data of the selected table \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacetables_a43fad35b2a42224031f3dc66799e7cc6}\label{namespacetables_a43fad35b2a42224031f3dc66799e7cc6}} 
+int16\+\_\+t {\bfseries find\+\_\+nearest\+\_\+neighbor} (int16\+\_\+t(\&)\mbox{[}M\+A\+X\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE\mbox{]}, uint16\+\_\+t, int16\+\_\+t)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementacion de tablas 2D con vectores, valores en uint16\+\_\+t. 
+
+addtogroup Tables 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacetables_a8a1bab94b65aabe4f2b226cdac58b41f}\label{namespacetables_a8a1bab94b65aabe4f2b226cdac58b41f}} 
+\index{tables@{tables}!read\+\_\+all@{read\+\_\+all}}
+\index{read\+\_\+all@{read\+\_\+all}!tables@{tables}}
+\subsubsection{\texorpdfstring{read\+\_\+all()}{read\_all()}}
+{\footnotesize\ttfamily T\+A\+B\+L\+E\+D\+A\+TA tables\+::read\+\_\+all (\begin{DoxyParamCaption}\item[{\hyperlink{structtable__ref}{table\+\_\+ref}}]{table }\end{DoxyParamCaption})}
+
+
+
+reads all data of the selected table 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \{table\+\_\+ref\}} & table -\/ table to read \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\{T\+A\+B\+L\+E\+\_\+\+D\+A\+TA\} -\/ vector 2D with uint16\+\_\+t data 
+\end{DoxyReturn}
