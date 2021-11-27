@@ -14,7 +14,6 @@ int16_t tables::get_value(table_ref table, uint16_t x, uint16_t y)
 
     W25qxx_ReadBytes(data, address, 2);
 
-    // memory::read_multiple(address, data, 2);
     return ((int16_t)data[0] << 8) + data[1];
 }
 
@@ -27,8 +26,12 @@ void tables::set_value(table_ref table, uint16_t x, uint16_t y, int16_t value)
     data[0] = (value >> 8) & 0xFF;
     data[1] = value & 0xFF;
 
+    /* trace_printf("w25qxx WriteByte 0x%02X at address %d begin...\n", data[0], address);
+    trace_printf("w25qxx WriteByte 0x%02X at address %d begin...\n", data[1], address + 1);
+ */
     W25qxx_WriteByte(data[0], address);
     W25qxx_WriteByte(data[1], address + 1);
+
     HAL_Delay(15);
 }
 
@@ -42,8 +45,11 @@ TABLEDATA tables::read_all(table_ref table)
     for (int16_t matrix_y = 0; matrix_y < table.y_max; matrix_y++)
     {
 
-        uint32_t address = ((matrix_y + matrix_y) * table.x_max) + table.memory_address + (matrix_y == 0 ? 1 : (matrix_y + matrix_y));
+
+        uint32_t address = (2 * matrix_y * table.x_max) + table.memory_address;
+
         uint8_t table_row[MAX_ROW_SIZE * 2];
+        /*  trace_printf("w25qxx ReadBytes at Address:%d, %d Bytes  begin...\r\n", address, table.x_max * 2); */
 
         W25qxx_ReadBytes(table_row, address, table.x_max * 2);
 
@@ -57,9 +63,28 @@ TABLEDATA tables::read_all(table_ref table)
             BREAKPOINT
             datarow += 2;
         }
+        datarow = 0;
     }
 
     return matrix;
+}
+
+void tables::update_table(TABLEDATA data, table_ref table)
+{
+    uint8_t size = table.x_max * 2 * table.y_max;
+    uint8_t *buffer = (uint8_t *)malloc(size);
+    dump_table(data, buffer);
+
+    W25qxx_EraseSector(table.memory_address);
+
+    for (uint16_t i = 0; i < size; i += 2)
+    {
+        W25qxx_WriteByte(buffer[i], table.memory_address + i);
+        W25qxx_WriteByte(buffer[i + 1], table.memory_address + i + 1);
+    }
+
+    BREAKPOINT
+    free(buffer);
 }
 
 int16_t tables::find_nearest_neighbor(
@@ -89,4 +114,19 @@ int16_t tables::find_nearest_neighbor(
         return data[min_distance_index];
     }
     return -1;
+}
+
+void tables::plot_table(TABLEDATA table)
+{
+    for (auto table_y : table)
+    {
+        char row[200];
+
+        for (auto table_x : table_y)
+        {
+            sprintf(row, "%s [%4d]", row, table_x);
+        }
+        trace_printf("%s\n", row);
+        row[0] = 0;
+    }
 }

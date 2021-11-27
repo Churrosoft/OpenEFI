@@ -5,7 +5,7 @@
  * todos los valores que se graban en la memoria son int16
  * el "TABLE_REF" va a ser un struct con el tamaño en X/Y, y el address de inicio en la memoria
  * /
- * 
+ *
  */
 #include <stdint.h>
 
@@ -33,8 +33,12 @@ struct table_ref
 };
 
 /** @addtogroup Tables
-  * @{
-  */
+ * @{
+ */
+
+#define MEMORY_SECTOR_SIZE 4096
+#define MEMORY_SECTOR_COUNT 4096
+#define SECTOR_TO_ADDRES(sector) (sector * 4096)
 
 //! Implementacion de tablas 2D con vectores, valores en uint16_t
 namespace tables
@@ -48,36 +52,64 @@ namespace tables
     // operaciones sobre varios campos a la vez:
 
     /**
-    * @brief reads all data of the selected table
-    * @param {table_ref} table - table to read
-    * @return {TABLE_DATA} - vector 2D with uint16_t data
-    */
+     * @brief reads all data of the selected table
+     * @param {table_ref} table - table to read
+     * @return {TABLE_DATA} - vector 2D with uint16_t data
+     */
     TABLEDATA read_all(table_ref);
+
+    // TABLEDATA alter_table(TABLEDATA, uint16_t, uint16_t, uint16_t);
 
     // utils para manejar data de las tablas:
     int16_t find_nearest_neighbor(int16_t (&)[MAX_ROW_SIZE], uint16_t, int16_t);
 
+    /**
+     * @brief erases page on memory and record new data of table
+     */
+    void update_table(TABLEDATA, table_ref);
+
+    // debug:
+    void plot_table(TABLEDATA);
     namespace
     {
         /***
-        * @brief Retorna direccion de memoria para la posicion 2D de la tabla
-        * @param x eje X de la tabla
-        * @param y eje Y de la tabla
-        * @param x_max configuracion de la tabla, valor maximo que toma el eje X
-        * @param address direccion inicial de la tabla (x/y = 0)
-        * @example  solo 2 valores en X, 2 en Y
-        * address: [336] [337] # [338]  [339] | [340]  [341] #  [342] [343]
-        *    X:      0     0   #  1      1    |  0       0   #    1     1
-        *    Y:      0     0   #  0      0    |  1       1   #    1     1
-        */
+         * @brief Retorna direccion de memoria para la posicion 2D de la tabla
+         * @param x eje X de la tabla
+         * @param y eje Y de la tabla
+         * @param x_max configuracion de la tabla, valor maximo que toma el eje X
+         * @param address direccion inicial de la tabla (x/y = 0)
+         * @example  solo 2 valores en X, 2 en Y
+         * address: [336] [337] # [338]  [339] | [340]  [341] #  [342] [343]
+         *    X:      0     0   #  1      1    |  0       0   #    1     1
+         *    Y:      0     0   #  0      0    |  1       1   #    1     1
+         */
         static inline uint32_t get_address(uint16_t x, uint16_t x_max, uint16_t y, int16_t address)
         {
-            return (x + x + 1) + (y + y * x_max) + address;
+            return 2 * x + (2 * y * x_max) + address;
+        }
+
+        /**
+         * @brief dump all data to uint8_t array
+         * @param {TABLE_DATA} - table to dump
+         * @param {uint8_t *} - destination array
+         */
+        static inline void dump_table(TABLEDATA table, uint8_t *dest_arr)
+        {
+            uint16_t index = 0;
+            for (auto table_y : table)
+            {
+
+                for (uint16_t table_x : table_y)
+                {
+                    dest_arr[index] = (table_x >> 8) & 0xFF;
+                    dest_arr[index + 1] = table_x & 0xFF;
+                    index += 2;
+                }
+            }
         }
     }
 } // namespace tables
 
 /*! @} End of Doxygen Tables*/
-
 
 #endif
