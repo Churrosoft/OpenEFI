@@ -26,9 +26,6 @@ void tables::set_value(table_ref table, uint16_t x, uint16_t y, int16_t value)
     data[0] = (value >> 8) & 0xFF;
     data[1] = value & 0xFF;
 
-    /* trace_printf("w25qxx WriteByte 0x%02X at address %d begin...\n", data[0], address);
-    trace_printf("w25qxx WriteByte 0x%02X at address %d begin...\n", data[1], address + 1);
- */
     W25qxx_WriteByte(data[0], address);
     W25qxx_WriteByte(data[1], address + 1);
 
@@ -45,11 +42,9 @@ TABLEDATA tables::read_all(table_ref table)
     for (int16_t matrix_y = 0; matrix_y < table.y_max; matrix_y++)
     {
 
-
-        uint32_t address = (2 * matrix_y * table.x_max) + table.memory_address;
+        uint32_t address = (2 * matrix_y * table.x_max) + (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize);
 
         uint8_t table_row[MAX_ROW_SIZE * 2];
-        /*  trace_printf("w25qxx ReadBytes at Address:%d, %d Bytes  begin...\r\n", address, table.x_max * 2); */
 
         W25qxx_ReadBytes(table_row, address, table.x_max * 2);
 
@@ -71,49 +66,29 @@ TABLEDATA tables::read_all(table_ref table)
 
 void tables::update_table(TABLEDATA data, table_ref table)
 {
-    uint8_t size = table.x_max * 2 * table.y_max;
+    int32_t size = table.x_max * 2 * table.y_max;
     uint8_t *buffer = (uint8_t *)malloc(size);
     dump_table(data, buffer);
 
     W25qxx_EraseSector(table.memory_address);
 
-    for (uint16_t i = 0; i < size; i += 2)
-    {
-        W25qxx_WriteByte(buffer[i], table.memory_address + i);
-        W25qxx_WriteByte(buffer[i + 1], table.memory_address + i + 1);
-    }
+    W25qxx_WriteSector(buffer, table.memory_address, 0, size);
 
     BREAKPOINT
     free(buffer);
 }
 
 int16_t tables::find_nearest_neighbor(
-    int16_t (&data)[MAX_ROW_SIZE], uint16_t data_size,
+    std::vector<int16_t> vec,
     int16_t search)
 {
-    double min_distance = 0xFFFF;
-    int16_t min_distance_index = -1;
 
-    for (uint16_t arr_index = 0; arr_index < data_size; arr_index++)
+    auto const search_result = std::upper_bound(vec.begin(), vec.end(), search);
+    if (search_result == vec.end())
     {
-        // Euclidean distance
-        int16_t point = data[arr_index];
-        double volatile distance = 0; // DEBUG
-        distance = std::sqrt(std::exp2((double)point - search));
-
-        // kNN 1D a lo pobre:
-        if ((distance < min_distance && distance > 1) || (distance > min_distance && distance < 1))
-        {
-            min_distance = distance;
-            min_distance_index = arr_index;
-        }
+        return -1;
     }
-
-    if (min_distance_index > -1)
-    {
-        return data[min_distance_index];
-    }
-    return -1;
+    return *search_result;
 }
 
 void tables::plot_table(TABLEDATA table)

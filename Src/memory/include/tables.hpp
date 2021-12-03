@@ -21,6 +21,7 @@ extern "C"
 #include <limits.h>
 #include <math.h>
 #include <vector>
+#include <algorithm>
 
 #define TABLEDATA std::vector<std::vector<int16_t>>
 #define MAX_ROW_SIZE 30
@@ -38,7 +39,8 @@ struct table_ref
 
 #define MEMORY_SECTOR_SIZE 4096
 #define MEMORY_SECTOR_COUNT 4096
-#define SECTOR_TO_ADDRES(sector) (sector * 4096)
+#define MEMORY_PAGE_SIZE 256
+#define SECTOR_TO_ADDRES(sector) (sector * 16 * MEMORY_PAGE_SIZE - 1)
 
 //! Implementacion de tablas 2D con vectores, valores en uint16_t
 namespace tables
@@ -61,7 +63,7 @@ namespace tables
     // TABLEDATA alter_table(TABLEDATA, uint16_t, uint16_t, uint16_t);
 
     // utils para manejar data de las tablas:
-    int16_t find_nearest_neighbor(int16_t (&)[MAX_ROW_SIZE], uint16_t, int16_t);
+    int16_t find_nearest_neighbor(std::vector<int16_t>, int16_t);
 
     /**
      * @brief erases page on memory and record new data of table
@@ -98,7 +100,7 @@ namespace tables
             uint16_t index = 0;
             for (auto table_y : table)
             {
-
+                // 312
                 for (uint16_t table_x : table_y)
                 {
                     dest_arr[index] = (table_x >> 8) & 0xFF;
