@@ -102,8 +102,11 @@ Macros</h2></td></tr>
 <tr class="memitem:ga9544ad8232a908fb374ab10dc85044ea"><td class="memItemLeft" align="right" valign="top"><a id="ga9544ad8232a908fb374ab10dc85044ea"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MEMORY_SECTOR_COUNT</b>&#160;&#160;&#160;4096</td></tr>
 <tr class="separator:ga9544ad8232a908fb374ab10dc85044ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacec51ea00872290be9953f8a76ba1e2b"><td class="memItemLeft" align="right" valign="top"><a id="gacec51ea00872290be9953f8a76ba1e2b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MEMORY_PAGE_SIZE</b>&#160;&#160;&#160;256</td></tr>
+<tr class="separator:gacec51ea00872290be9953f8a76ba1e2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga79ab0f4b5245b5d5450e444591d470b2"><td class="memItemLeft" align="right" valign="top"><a id="ga79ab0f4b5245b5d5450e444591d470b2"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>SECTOR_TO_ADDRES</b>(sector)&#160;&#160;&#160;(sector * 4096)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SECTOR_TO_ADDRES</b>(sector)&#160;&#160;&#160;(sector * 16 * MEMORY_PAGE_SIZE - 1)</td></tr>
 <tr class="separator:ga79ab0f4b5245b5d5450e444591d470b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
