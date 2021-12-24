@@ -556,7 +556,7 @@ Generating code for file /home/runner/work/OpenEFI/Ope/home/runner/work/OpenEFI/
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:50: warning: Member set_value(table_ref, uint16_t, uint16_t, int16_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:51: warning: Member get_long_value(table_ref, uint16_t, uint16_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:52: warning: Member set_long_value(table_ref, uint16_t, uint16_t, int32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:66: warning: Member find_nearest_neighbor(std::vector< int32_t >, int32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:66: warning: Member find_nearest_neighbor(std::vector< int16_t >, int16_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:74: warning: Member plot_table(TABLEDATA) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:57: warning: argument 'table_ref' of command @param is not found in the argument list of tables::read_all(table_ref table)
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:61: warning: The following parameters of tables::read_all(table_ref table) are not documented:
