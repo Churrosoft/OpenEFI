@@ -23,14 +23,14 @@ extern "C"
 #include <vector>
 #include <algorithm>
 
-#define TABLEDATA std::vector<std::vector<int16_t>>
+#define TABLEDATA std::vector<std::vector<int32_t>>
 #define MAX_ROW_SIZE 30
 
 struct table_ref
 {
     uint16_t y_max;
     uint16_t x_max;
-    uint16_t memory_address;
+    int32_t memory_address;
 };
 
 /** @addtogroup Tables
@@ -46,7 +46,7 @@ struct table_ref
 namespace tables
 {
     // operaciones simples sobre un campo:
-    int16_t get_value(table_ref, uint16_t, uint16_t);
+    int32_t get_value(table_ref, uint16_t, uint16_t);
     void set_value(table_ref, uint16_t, uint16_t, int16_t);
     int32_t get_long_value(table_ref, uint16_t, uint16_t);
     void set_long_value(table_ref, uint16_t, uint16_t, int32_t);
@@ -63,7 +63,7 @@ namespace tables
     // TABLEDATA alter_table(TABLEDATA, uint16_t, uint16_t, uint16_t);
 
     // utils para manejar data de las tablas:
-    int16_t find_nearest_neighbor(std::vector<int16_t>, int16_t);
+    int32_t find_nearest_neighbor(std::vector<int32_t>, int32_t);
 
     /**
      * @brief erases page on memory and record new data of table
@@ -85,9 +85,9 @@ namespace tables
          *    X:      0     0   #  1      1    |  0       0   #    1     1
          *    Y:      0     0   #  0      0    |  1       1   #    1     1
          */
-        static inline uint32_t get_address(uint16_t x, uint16_t x_max, uint16_t y, int16_t address)
+        static inline uint32_t get_address(uint16_t x, uint16_t x_max, uint16_t y, int32_t address)
         {
-            return 2 * x + (2 * y * x_max) + address;
+            return 4 * x + (4 * y * x_max) + address;
         }
 
         /**
@@ -101,11 +101,16 @@ namespace tables
             for (auto table_y : table)
             {
                 // 312
-                for (uint16_t table_x : table_y)
+                for (int32_t table_x : table_y)
                 {
-                    dest_arr[index] = (table_x >> 8) & 0xFF;
-                    dest_arr[index + 1] = table_x & 0xFF;
-                    index += 2;
+                    dest_arr[index] = (uint8_t)table_x;
+                    dest_arr[index + 1] = (uint8_t)(table_x >> 8) & 0xFF;
+                    dest_arr[index + 2] = (uint8_t)(table_x >> 16) & 0xFF;
+                    dest_arr[index + 3] = (uint8_t)(table_x >> 24) & 0xFF;
+
+                    /*                     dest_arr[index] = (table_x >> 8) & 0xFF;
+                    dest_arr[index + 1] = table_x & 0xFF; */
+                    index += 4;
                 }
             }
         }
