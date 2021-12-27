@@ -45,7 +45,6 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   uint32_t              uwTimclock = 0;
   uint32_t              uwPrescalerValue = 0;
   uint32_t              pFLatency;
-
   /*Configure the TIM14 IRQ priority */
   HAL_NVIC_SetPriority(TIM8_TRG_COM_TIM14_IRQn, TickPriority ,0);
 
@@ -60,9 +59,8 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 
   /* Compute TIM14 clock */
   uwTimclock = 2*HAL_RCC_GetPCLK1Freq();
-
   /* Compute the prescaler value to have TIM14 counter clock equal to 1MHz */
-  uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000) - 1);
+  uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000U) - 1U);
 
   /* Initialize TIM14 */
   htim14.Instance = TIM14;
@@ -73,10 +71,11 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   + ClockDivision = 0
   + Counter direction = Up
   */
-  htim14.Init.Period = (1000000 / 1000) - 1;
+  htim14.Init.Period = (1000000U / 1000U) - 1U;
   htim14.Init.Prescaler = uwPrescalerValue;
   htim14.Init.ClockDivision = 0;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
+
   if(HAL_TIM_Base_Init(&htim14) == HAL_OK)
   {
     /* Start the TIM time Base generation in interrupt mode */

@@ -38,6 +38,7 @@ extern "C"
 #include <stdio.h>
 #include <stdlib.h>
 #include <trace.h>
+#include "usb_device.h"
 
 #endif
 }
@@ -129,6 +130,7 @@ int main(void)
   HAL_Delay(100);
   on_setup();
   HAL_Delay(100);
+  MX_USB_DEVICE_Init();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
