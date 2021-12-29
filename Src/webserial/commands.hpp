@@ -1,5 +1,12 @@
 #include "defines.h"
+#include "usbd_cdc_if.h"
 #include <algorithm>
+
+extern "C"
+{
+#include "trace.h"
+}
+
 
 #ifndef WEBSERIAL_COMMANDS_HPP
 #define WEBSERIAL_COMMANDS_HPP
@@ -15,17 +22,17 @@ namespace web_serial
     } serial_command;
 
     serial_command create_command(uint16_t input_command, uint8_t payload[]);
+    void export_command(serial_command command, uint8_t (&buffer)[128]);
+    void queue_command(serial_command command);
 
     bool check_crc(serial_command input_command);
 
-    void export_command(serial_command command, uint8_t (&buffer)[128]);
-    void import_command(uint8_t (&buffer)[128], serial_command command);
-
-    void command_handler();
-    void queue_command(serial_command command);
+    void loop(void);        // called on main, for read on RX buff
+    void command_handler(); // called timered on main, output commands
 
     namespace
     {
+
         static inline uint16_t crc16(const unsigned char *data_p, uint8_t length)
         {
             uint8_t x;

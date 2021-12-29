@@ -49,6 +49,7 @@ extern "C"
 #include "debug/debug_local.h"
 #include "webserial/commands.hpp"
 #include "pmic/pmic.hpp"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -140,20 +141,11 @@ int main(void)
   {
     /* USER CODE END WHILE */
     on_loop();
+
+    web_serial::loop();
+
     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
     HAL_Delay(1500);
-
-    /*     uint8_t buff[] = "puto el que lee\n";
-    uint8_t command[123];
-    std::fill_n(command, 128, 0xAA);
-
-    command[0] = 1;                  // Protocol / efi ver
-    command[1] = (0xFA >> 8) & 0xFF; // command (16b)
-    command[2] = 0xFA & 0xFF;
-    command[126] = 0xFD; // CRC
-    command[127] = 0xFD; // CRC
-
-    CDC_Transmit_FS(command, 128); */
 
     // webserial demo:
     /*     web_serial::serial_command test_command;

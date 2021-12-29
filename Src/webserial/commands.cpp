@@ -1,6 +1,7 @@
 #include "commands.hpp"
 
 using namespace web_serial;
+uint8_t serial_cache[128];
 
 serial_command web_serial::create_command(uint16_t input_command, uint8_t *payload)
 {
@@ -29,13 +30,20 @@ void web_serial::export_command(serial_command command, uint8_t (&buffer)[128])
     buffer[127] = command.crc[1];
 }
 
-void web_serial::import_command(uint8_t (&buffer)[128], serial_command command)
+void web_serial::loop()
 {
+    if (CDC_ReadRxBuffer_FS(serial_cache, 128) == USB_CDC_RX_BUFFER_OK)
+    {
+        trace_printf("Event: <USB> New command ready\n");
+        web_serial::serial_command usb_command;
+        usb_command.command = ((int16_t)serial_cache[0] << 8) + serial_cache[1];
 
-    command.command = ((int16_t)buffer[0] << 8) + buffer[1];
+        usb_command.crc[0] = serial_cache[126];
+        usb_command.crc[1] = serial_cache[127];
 
-    command.crc[0] = buffer[126];
-    command.crc[1] = buffer[127];
+        std::copy(serial_cache, serial_cache + 123, usb_command.payload);
 
-    std::copy(buffer, buffer + 123, command.payload);
+        // web_serial::import_command(serial_cache, usb_command);
+        web_serial::queue_command(usb_command);
+    }
 }

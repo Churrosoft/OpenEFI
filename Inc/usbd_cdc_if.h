@@ -65,7 +65,11 @@
   */
 
 /* USER CODE BEGIN EXPORTED_TYPES */
-
+typedef enum
+{
+  USB_CDC_RX_BUFFER_OK   = 0U,
+  USB_CDC_RX_BUFFER_NO_DATA
+} USB_CDC_RX_BUFFER_StatusTypeDef;
 /* USER CODE END EXPORTED_TYPES */
 
 /**
@@ -109,7 +113,10 @@ extern USBD_CDC_ItfTypeDef USBD_Interface_fops_FS;
 uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 
 /* USER CODE BEGIN EXPORTED_FUNCTIONS */
-
+uint8_t CDC_ReadRxBuffer_FS(uint8_t* Buf, uint16_t Len);
+uint8_t CDC_PeekRxBuffer_FS(uint8_t* Buf, uint16_t Len);
+uint16_t CDC_GetRxBufferBytesAvailable_FS();
+void CDC_FlushRxBuffer_FS();
 /* USER CODE END EXPORTED_FUNCTIONS */
 
 /**
