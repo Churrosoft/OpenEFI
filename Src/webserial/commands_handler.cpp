@@ -24,7 +24,7 @@ void web_serial::command_handler() {
     switch (command.command) {
     case TABLES_GET_METADATA: {
       // esto tiene que devolver el X/Y maximo de la tabla seleccionada
-      selected_table = ((int16_t)command.payload[0] << 8) + command.payload[1];
+      selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
 
       bool errored = false;
 
@@ -60,7 +60,7 @@ void web_serial::command_handler() {
 
     case TABLES_GET: {
       // el manejo de tabla es cuasi el mismo que en get_metadata
-      selected_table = ((int16_t)command.payload[0] << 8) + command.payload[1];
+      selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
 
       switch (selected_table) {
       case TABLES_IGNITION_TPS: {
@@ -68,16 +68,23 @@ void web_serial::command_handler() {
 
         out_table = tables::read_all(table);
 
+        tables::plot_table(out_table);
+
         for (auto table_row : out_table) {
 
           tables::dump_row(table_row, payload);
           out_comm = create_command(TABLES_DATA_CHUNK, payload);
           export_command(out_comm, serialized_command);
           CDC_Transmit_FS(serialized_command, 128);
+          HAL_Delay(50);
         }
         break;
       }
       }
+      out_comm = create_command(TABLES_DATA_END_CHUNK, payload);
+      export_command(out_comm, serialized_command);
+      CDC_Transmit_FS(serialized_command, 128);
+
       break;
     }
 

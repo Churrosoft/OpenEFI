@@ -33,7 +33,7 @@ extern "C"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define HL_RX_BUFFER_SIZE 384 // Can be larger if desired
+#define HL_RX_BUFFER_SIZE 640 // Can be larger if desired
 
 /* Private macro -------------------------------------------------------------*/
 
