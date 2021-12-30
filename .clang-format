@@ -1,0 +1,4 @@
+AlignTrailingComments: 'true'
+AllowShortLambdasOnASingleLine: Inline
+AllowShortLoopsOnASingleLine: 'true'
+NamespaceIndentation: Inner

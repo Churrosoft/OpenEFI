@@ -145,7 +145,7 @@ int main(void)
     web_serial::loop();
 
     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
-    HAL_Delay(1500);
+    HAL_Delay(100);
 
     // webserial demo:
     /*     web_serial::serial_command test_command;
@@ -162,7 +162,7 @@ int main(void)
     CDC_Transmit_FS(serialized_command, 128); */
     web_serial::command_handler();
     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
-    HAL_Delay(1500);
+    HAL_Delay(100);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
