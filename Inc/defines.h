@@ -128,6 +128,10 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 
 #define IAT_CAL(mV) ((3800 - mV) / 35)
 
+/*-----( Tables )-----*/
+
+#define TABLES_IGNITION_TPS_SETTINGS { 13, 13, 0x2000 }
+
 /*-----( Helpers )-----*/
 
 #define ROUND_16(NUMBER) ((float)((uint16_t)NUMBER * 100 + .5) / 100)

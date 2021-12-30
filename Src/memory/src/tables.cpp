@@ -73,6 +73,20 @@ TABLEDATA tables::read_all(table_ref table)
     return matrix;
 }
 
+void tables::dump_row(std::vector<int32_t> table_row, uint8_t *dest_buff)
+{
+    uint32_t index = 0;
+    for (int32_t table_x : table_row)
+    {
+        dest_buff[index] = (uint8_t)table_x;
+        dest_buff[index + 1] = (uint8_t)(table_x >> 8) & 0xFF;
+        dest_buff[index + 2] = (uint8_t)(table_x >> 16) & 0xFF;
+        dest_buff[index + 3] = (uint8_t)(table_x >> 24) & 0xFF;
+
+        index += 4;
+    }
+}
+
 void tables::update_table(TABLEDATA data, table_ref table)
 {
     int32_t size = table.x_max * 4 * table.y_max;
