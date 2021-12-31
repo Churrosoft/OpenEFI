@@ -3,9 +3,9 @@ var indexSectionsWithContent =
   0: "_abcdefghilmnoprstuv",
   1: "eist",
   2: "t",
-  3: "cdemsu",
-  4: "bdeghmnoprstu",
-  5: "_fhu",
+  3: "cdegmsu",
+  4: "bcdeghmnoprstu",
+  5: "_fu",
   6: "acdelmprstv",
   7: "cstu"
 };

@@ -7,7 +7,7 @@ var dir_f93dfce691d792349f1c14ede440e2e6 =
     [ "defines.h", "defines_8h.html", "defines_8h" ],
     [ "dma.h", "dma_8h_source.html", null ],
     [ "dtc_codes.h", "dtc__codes_8h.html", "dtc__codes_8h" ],
-    [ "gpio.h", "gpio_8h_source.html", null ],
+    [ "gpio.h", "gpio_8h.html", "gpio_8h" ],
     [ "main.h", "main_8h.html", "main_8h" ],
     [ "spi.h", "spi_8h_source.html", null ],
     [ "stm32_assert.h", "stm32__assert_8h.html", "stm32__assert_8h" ],
@@ -15,10 +15,9 @@ var dir_f93dfce691d792349f1c14ede440e2e6 =
     [ "stm32f4xx_it.h", "stm32f4xx__it_8h.html", "stm32f4xx__it_8h" ],
     [ "tim.h", "tim_8h_source.html", null ],
     [ "usb_device.h", "usb__device_8h.html", "usb__device_8h" ],
-    [ "usb_otg.h", "usb__otg_8h_source.html", null ],
+    [ "usbd_cdc_if.h", "usbd__cdc__if_8h.html", "usbd__cdc__if_8h" ],
     [ "usbd_conf.h", "usbd__conf_8h.html", "usbd__conf_8h" ],
     [ "usbd_desc.h", "usbd__desc_8h_source.html", null ],
-    [ "usbd_dfu_if.h", "usbd__dfu__if_8h.html", "usbd__dfu__if_8h" ],
     [ "user_defines.h", "user__defines_8h_source.html", null ],
     [ "variables.h", "variables_8h_source.html", null ]
 ];

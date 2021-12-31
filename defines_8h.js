@@ -57,6 +57,7 @@ var defines_8h =
     [ "RPM_per", "defines_8h.html#abe4d4f0baa8393107c2882b58e411fef", null ],
     [ "SINC_ENABLE", "defines_8h.html#a1941541eecb2be882abc1a4f0291771b", null ],
     [ "T_LMB", "defines_8h.html#a3240310639e90209a91279703fe9c580", null ],
+    [ "TABLES_IGNITION_TPS_SETTINGS", "defines_8h.html#a311fa17483e633a6b1cf6d75d41be1ef", null ],
     [ "TARR", "defines_8h.html#a698407f02f93ff281de909fce7c8eddd", null ],
     [ "TARR2", "defines_8h.html#a1f5d37e3ac0b2274dde5dc11dd123224", null ],
     [ "TBM", "defines_8h.html#a8da074f500518e5192b018532a679406", null ],

@@ -40,6 +40,7 @@ Searching for files in directory /home/runner/work/OpenEFI/OpenEFI/Src/sensors
 Searching for files in directory /home/runner/work/OpenEFI/OpenEFI/Src/sensors/include
 Searching for files in directory /home/runner/work/OpenEFI/OpenEFI/Src/sensors/src
 Searching for files in directory /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils
+Searching for files in directory /home/runner/work/OpenEFI/OpenEFI/Src/webserial
 Searching for files in directory /home/runner/work/OpenEFI/OpenEFI/Inc
 Searching for files in directory /home/runner/work/OpenEFI/OpenEFI/Inc/aliases
 Searching for files in directory /home/runner/work/OpenEFI/OpenEFI/Inc/templates
@@ -127,14 +128,7 @@ Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.c...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.c...
-Preprocessing /home/runne/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:38: warning: missing title after \defgroup USBD_DFU
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:43: warning: missing title after \defgroup USBD_DFU_Private_TypesDefinitions
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:56: warning: missing title after \defgroup USBD_DFU_Private_Defines
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:71: warning: missing title after \defgroup USBD_DFU_Private_Macros
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:84: warning: missing title after \defgroup USBD_DFU_Private_Variables
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:97: warning: missing title after \defgroup USBD_DFU_Exported_Variables
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:112: warning: missing title after \defgroup USBD_DFU_Private_FunctionPrototypes
-r/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/timmer.c...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/timmer.c...
@@ -152,12 +146,20 @@ Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/tim.c...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/tim.c...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/usb_device.c...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/usb_device.c...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp...
+Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/usbd_conf.c...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/usbd_conf.c...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c...
-Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c...
-Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.cpp...
+Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.cpp...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp...
+Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands_definition.hpp...
+Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands_definition.hpp...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands_handler.cpp...
+Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands_handler.cpp...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/adc.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/adc.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/aliases/memory.hpp...
@@ -183,33 +185,40 @@ Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/stm32_assert.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_it.h...
-Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_it.h...
+Pars/home/runner/work/OpenEFI/OpenEFI/Src/main.cpp:4: warning: the name `main.c' supplied as the second argument in the \file statement is not an input file
+/home/runner/work/OpenEFI/OpenEFI/Src/stm32f4xx_hal_timebase_tim.c:4: warning: the name `stm32f4xx_hal_timebase_TIM.c' supplied as the second argument in the \file statement is not an input file
+/home/runner/work/OpenEFI/OpenEFI/Src/stm32f4xx_it.cpp:4: warning: the name `stm32f4xx_it.c' supplied as the second argument in the \file statement is not an input file
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp:4: warning: the name `usbd_cdc_if.c' supplied as the second argument in the \file statement is not an input file
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_conf.c:4: warning: the name `Target/usbd_conf.c' supplied as the second argument in the \file statement is not an input file
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:4: warning: the name `App/usbd_desc.c' supplied as the second argument in the \file statement is not an input file
+/home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h:3: warning: the name `stm32f4xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
+/home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:18: warning: Compound input_handler is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:14: warning: Compound web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:30: warning: Compound table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:16: warning: Compound EMALowPass is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:30: warning: Compound sensors::SensorValues is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:10: warning: Compound EMAHighPass is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:222: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_LangIDDesc' was not declared or defined.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:234: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StrDesc' was not declared or defined.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:239: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StringSerial' was not declared or defined.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.cpp:6: warning: no matching file member found for 
+serial_command web_serial::create_command(uint16_t input_command, uint8_t *payload)
+Possible candidates:
+ 'serial_command create_command(uint16_t input_command, uint8_t payload[])' at line 21 of file/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp
+
+ing file /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_it.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/usb_device.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usb_device.h...
-Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/usb_otg.h...
-Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usb_otg.h...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h...
+Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
-Preproces/home/runner/work/OpenEFI/OpenEFI/Src/main.cpp:4: warning: the name `main.c' supplied as the second argument in the \file statement is not an input file
-/home/runner/work/OpenEFI/OpenEFI/Src/stm32f4xx_hal_timebase_tim.c:4: warning: the name `stm32f4xx_hal_timebase_TIM.c' supplied as the second argument in the \file statement is not an input file
-/home/runner/work/OpenEFI/OpenEFI/Src/stm32f4xx_it.cpp:4: warning: the name `stm32f4xx_it.c' supplied as the second argument in the \file statement is not an input file
-/home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h:3: warning: the name `stm32f4xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
-/home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:18: warning: Compound input_handler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:30: warning: Compound table_ref is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:16: warning: Compound EMALowPass is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:30: warning: Compound sensors::SensorValues is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:10: warning: Compound EMAHighPass is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:218: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_LangIDDesc' was not declared or defined.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:230: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StrDesc' was not declared or defined.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:235: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StringSerial' was not declared or defined.
-sing /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h...
-Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_dfu_if.h...
-Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_dfu_if.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/user_defines.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/user_defines.h...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Inc/variables.h...
@@ -280,16 +289,9 @@ Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_it.h...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usb_device.h...
-Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usb_otg.h...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
-Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h...
-Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_dfu_if.h...
-Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/user_defines.h...
-Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/variables.h...
-Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/cpwm/include/cpwm.hpp...
-Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/debug/debug_local.h...
-Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/helpers/timer_schedule.hpp...
-Generating code for file /home/runner/work/OpenEFI/Ope/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:10: warning: Member OPENEFI_VER_MAJOR (macro definition) of file defines.h is not documented.
+Generating code for /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:10: warning: Member OPENEFI_VER_MAJOR (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:11: warning: Member OPENEFI_VER_MINOR (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:12: warning: Member OPENEFI_VER_REV (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:22: warning: Member LOGIC_DNT (macro definition) of file defines.h is not documented.
@@ -332,154 +334,158 @@ Generating code for file /home/runner/work/OpenEFI/Ope/home/runner/work/OpenEFI/
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:126: warning: Member IAT_MAX (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:127: warning: Member IAT_OPEN (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:129: warning: Member IAT_CAL(mV) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:133: warning: Member ROUND_16(NUMBER) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:134: warning: Member ROUND_32(NUMBER) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:137: warning: Member GET_BIT(VAR, BIT_NEEDED) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:141: warning: Member CPWM_DEBUG (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:142: warning: Member PMIC_DEBUG (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:144: warning: Member BREAKPOINT (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:146: warning: Member BYTE_TO_BINARY_PATTERN (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:147: warning: Member BYTE_TO_BINARY(byte) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:133: warning: Member TABLES_IGNITION_TPS_SETTINGS (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:137: warning: Member ROUND_16(NUMBER) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:138: warning: Member ROUND_32(NUMBER) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:141: warning: Member GET_BIT(VAR, BIT_NEEDED) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:145: warning: Member CPWM_DEBUG (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:146: warning: Member PMIC_DEBUG (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:148: warning: Member BREAKPOINT (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:150: warning: Member BYTE_TO_BINARY_PATTERN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:151: warning: Member BYTE_TO_BINARY(byte) (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:9: warning: Member NEW_DTC (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:42: warning: Member DTC_INJECTOR_PRESSURE_NOT_DETECTED (macro definition) of file dtc_codes.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:61: warning: Member R_ECN_INY_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:62: warning: Member R_ECN_INY_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:63: warning: Member R_GNC_GLP_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:64: warning: Member R_GNC_GLP_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:65: warning: Member R_AAC_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:66: warning: Member R_AAC_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:67: warning: Member LED0_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:68: warning: Member LED0_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:69: warning: Member LED1_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:70: warning: Member LED1_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:71: warning: Member LED2_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:72: warning: Member LED2_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:73: warning: Member ADC_B5_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:74: warning: Member ADC_B5_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:75: warning: Member ENABLE_5V_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:76: warning: Member ENABLE_5V_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:77: warning: Member ADC_B7_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:78: warning: Member ADC_B7_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:79: warning: Member ADC_B8_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:80: warning: Member ADC_B8_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:81: warning: Member ADC_A1_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:82: warning: Member ADC_A1_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:83: warning: Member ADC_A2_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:84: warning: Member ADC_A2_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:85: warning: Member ADC_A3_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:86: warning: Member ADC_A3_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:87: warning: Member ADC_A4_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:88: warning: Member ADC_A4_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:89: warning: Member ADC_A5_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:90: warning: Member ADC_A5_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:91: warning: Member ADC_A6_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:92: warning: Member ADC_A6_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:93: warning: Member ADC_B1_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:94: warning: Member ADC_B1_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:95: warning: Member ADC_B2_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:96: warning: Member ADC_B2_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:97: warning: Member ADC_B9_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:98: warning: Member ADC_B9_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:99: warning: Member ADC_B10_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:100: warning: Member ADC_B10_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:101: warning: Member ADC_B3_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:102: warning: Member ADC_B3_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:103: warning: Member ADC_B4_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:104: warning: Member ADC_B4_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:105: warning: Member TP2_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:106: warning: Member TP2_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:107: warning: Member MTR_STEP_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:108: warning: Member MTR_STEP_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:109: warning: Member MTR_DIR_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:110: warning: Member MTR_DIR_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:111: warning: Member MTR_FAULT_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:112: warning: Member MTR_FAULT_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:113: warning: Member MTR_ENABLE_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:114: warning: Member MTR_ENABLE_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:115: warning: Member RPM_OUT_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:116: warning: Member RPM_OUT_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:117: warning: Member PMIC_CS_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:118: warning: Member PMIC_CS_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:119: warning: Member MEMORY_CS_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:120: warning: Member MEMORY_CS_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:121: warning: Member AUX_CS_1_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:122: warning: Member AUX_CS_1_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:123: warning: Member AUX_CS_2_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:124: warning: Member AUX_CS_2_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:125: warning: Member GNC_GLP_IN_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:126: warning: Member GNC_GLP_IN_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:127: warning: Member PMIC_ENABLE_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:128: warning: Member PMIC_ENABLE_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:129: warning: Member PMIC_SPARK_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:130: warning: Member PMIC_SPARK_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:131: warning: Member INY1_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:132: warning: Member INY1_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:133: warning: Member INY2_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:134: warning: Member INY2_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:135: warning: Member INY3_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:136: warning: Member INY3_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:137: warning: Member INY4_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:138: warning: Member INY4_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:139: warning: Member ECN1_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:140: warning: Member ECN1_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:141: warning: Member ECN1_EXTI_IRQn (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:142: warning: Member ECN2_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:143: warning: Member ECN2_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:144: warning: Member ECN3_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:145: warning: Member ECN3_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:146: warning: Member ECN4_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:147: warning: Member ECN4_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:148: warning: Member CKP_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:149: warning: Member CKP_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:150: warning: Member CKP_EXTI_IRQn (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:151: warning: Member CMP_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:152: warning: Member CMP_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:153: warning: Member CMP_EXTI_IRQn (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:154: warning: Member MIL_OUT_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:155: warning: Member MIL_OUT_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:156: warning: Member CHK_OUT_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:157: warning: Member CHK_OUT_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:158: warning: Member GNC_GLP_OUT_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:159: warning: Member GNC_GLP_OUT_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:160: warning: Member AUX_OUT_4_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:161: warning: Member AUX_OUT_4_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:162: warning: Member PMIC_NOMI_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:163: warning: Member PMIC_NOMI_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:164: warning: Member PMIC_MAXI_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:165: warning: Member PMIC_MAXI_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:166: warning: Member AUX_IN1_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:167: warning: Member AUX_IN1_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:168: warning: Member AUX_IN2_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:169: warning: Member AUX_IN2_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:170: warning: Member AUX_IN3_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:171: warning: Member AUX_IN3_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:172: warning: Member AUX_IN4_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:173: warning: Member AUX_IN4_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:174: warning: Member LED_CAN_RX_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:175: warning: Member LED_CAN_RX_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:176: warning: Member LED_CAN_TX_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:177: warning: Member LED_CAN_TX_GPIO_Port (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:178: warning: Member R_LMB_Pin (macro definition) of file main.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:179: warning: Member R_LMB_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:73: warning: Member R_ECN_INY_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:74: warning: Member R_ECN_INY_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:75: warning: Member R_GNC_GLP_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:76: warning: Member R_GNC_GLP_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:77: warning: Member R_AAC_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:78: warning: Member R_AAC_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:79: warning: Member LED0_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:80: warning: Member LED0_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:81: warning: Member LED1_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:82: warning: Member LED1_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:83: warning: Member LED2_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:84: warning: Member LED2_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:85: warning: Member ADC_B5_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:86: warning: Member ADC_B5_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:87: warning: Member ENABLE_5V_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:88: warning: Member ENABLE_5V_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:89: warning: Member ADC_B7_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:90: warning: Member ADC_B7_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:91: warning: Member ADC_B8_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:92: warning: Member ADC_B8_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:93: warning: Member ADC_A1_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:94: warning: Member ADC_A1_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:95: warning: Member ADC_A2_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:96: warning: Member ADC_A2_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:97: warning: Member ADC_A3_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:98: warning: Member ADC_A3_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:99: warning: Member ADC_A4_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:100: warning: Member ADC_A4_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:101: warning: Member ADC_A5_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:102: warning: Member ADC_A5_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:103: warning: Member ADC_A6_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:104: warning: Member ADC_A6_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:105: warning: Member ADC_B1_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:106: warning: Member ADC_B1_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:107: warning: Member ADC_B2_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:108: warning: Member ADC_B2_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:109: warning: Member ADC_B9_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:110: warning: Member ADC_B9_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:111: warning: Member ADC_B10_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:112: warning: Member ADC_B10_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:113: warning: Member ADC_B3_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:114: warning: Member ADC_B3_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:115: warning: Member ADC_B4_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:116: warning: Member ADC_B4_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:117: warning: Member TP2_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:118: warning: Member TP2_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:119: warning: Member MTR_STEP_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:120: warning: Member MTR_STEP_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:121: warning: Member MTR_DIR_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:122: warning: Member MTR_DIR_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:123: warning: Member MTR_FAULT_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:124: warning: Member MTR_FAULT_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:125: warning: Member MTR_ENABLE_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:126: warning: Member MTR_ENABLE_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:127: warning: Member RPM_OUT_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:128: warning: Member RPM_OUT_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:129: warning: Member PMIC_CS_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:130: warning: Member PMIC_CS_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:131: warning: Member MEMORY_CS_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:132: warning: Member MEMORY_CS_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:133: warning: Member AUX_CS_1_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:134: warning: Member AUX_CS_1_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:135: warning: Member AUX_CS_2_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:136: warning: Member AUX_CS_2_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:137: warning: Member GNC_GLP_IN_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:138: warning: Member GNC_GLP_IN_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:139: warning: Member PMIC_ENABLE_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:140: warning: Member PMIC_ENABLE_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:141: warning: Member PMIC_SPARK_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:142: warning: Member PMIC_SPARK_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:143: warning: Member INY1_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:144: warning: Member INY1_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:145: warning: Member INY2_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:146: warning: Member INY2_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:147: warning: Member INY3_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:148: warning: Member INY3_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:149: warning: Member INY4_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:150: warning: Member INY4_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:151: warning: Member ECN1_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:152: warning: Member ECN1_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:153: warning: Member ECN1_EXTI_IRQn (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:154: warning: Member ECN2_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:155: warning: Member ECN2_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:156: warning: Member ECN3_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:157: warning: Member ECN3_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:158: warning: Member ECN4_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:159: warning: Member ECN4_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:160: warning: Member CKP_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:161: warning: Member CKP_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:162: warning: Member CKP_EXTI_IRQn (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:163: warning: Member CMP_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:164: warning: Member CMP_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:165: warning: Member CMP_EXTI_IRQn (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:166: warning: Member MIL_OUT_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:167: warning: Member MIL_OUT_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:168: warning: Member CHK_OUT_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:169: warning: Member CHK_OUT_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:170: warning: Member GNC_GLP_OUT_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:171: warning: Member GNC_GLP_OUT_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:172: warning: Member AUX_OUT_4_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:173: warning: Member AUX_OUT_4_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:174: warning: Member PMIC_NOMI_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:175: warning: Member PMIC_NOMI_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:176: warning: Member PMIC_MAXI_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:177: warning: Member PMIC_MAXI_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:178: warning: Member AUX_IN1_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:179: warning: Member AUX_IN1_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:180: warning: Member AUX_IN2_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:181: warning: Member AUX_IN2_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:182: warning: Member AUX_IN3_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:183: warning: Member AUX_IN3_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:184: warning: Member AUX_IN4_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:185: warning: Member AUX_IN4_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:186: warning: Member LED_CAN_RX_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:187: warning: Member LED_CAN_RX_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:188: warning: Member LED_CAN_TX_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:189: warning: Member LED_CAN_TX_GPIO_Port (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:190: warning: Member R_LMB_Pin (macro definition) of file main.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/main.h:191: warning: Member R_LMB_GPIO_Port (macro definition) of file main.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/stm32_assert.h:47: warning: Member assert_param(expr) (macro definition) of file stm32_assert.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:26: warning: Member LOGIC_DNT (macro definition) of file CHT_1_6_.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:35: warning: Member AVCI (macro definition) of file CHT_1_6_.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:38: warning: Member ECNT (macro definition) of file CHT_1_6_.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:52: warning: Member APP_RX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:53: warning: Member APP_TX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:69: warning: Member USB_CDC_RX_BUFFER_StatusTypeDef (enumeration) of group USBD_CDC_IF_Exported_Types is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:116: warning: Member CDC_ReadRxBuffer_FS(uint8_t *Buf, uint16_t Len) (function) of group USBD_CDC_IF_Exported_FunctionsPrototype is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:117: warning: Member CDC_PeekRxBuffer_FS(uint8_t *Buf, uint16_t Len) (function) of group USBD_CDC_IF_Exported_FunctionsPrototype is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:118: warning: Member CDC_GetRxBufferBytesAvailable_FS() (function) of group USBD_CDC_IF_Exported_FunctionsPrototype is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:119: warning: Member CDC_FlushRxBuffer_FS() (function) of group USBD_CDC_IF_Exported_FunctionsPrototype is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:67: warning: Member USBD_MAX_NUM_INTERFACES (macro definition) of group USBD_CONF_Exported_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:69: warning: Member USBD_MAX_NUM_CONFIGURATION (macro definition) of group USBD_CONF_Exported_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:71: warning: Member USBD_MAX_STR_DESC_SIZ (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:73: warning: Member USBD_SUPPORT_USER_STRING (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:75: warning: Member USBD_DEBUG_LEVEL (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:77: warning: Member USBD_LPM_ENABLED (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:79: warning: Member USBD_SELF_POWERED (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:81: warning: Member USBD_DFU_MAX_ITF_NUM (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:83: warning: Member USBD_DFU_XFER_SIZE (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:85: warning: Member USBD_DFU_APP_DEFAULT_ADD (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:89: warning: Member DEVICE_FS (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:90: warning: Member DEVICE_HS (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:124: warning: Member USBD_UsrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:133: warning: Member USBD_ErrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:141: warning: Member USBD_DbgLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:73: warning: Member USBD_DEBUG_LEVEL (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:75: warning: Member USBD_LPM_ENABLED (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:77: warning: Member USBD_SELF_POWERED (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:81: warning: Member DEVICE_FS (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:82: warning: Member DEVICE_HS (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:115: warning: Member USBD_UsrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:124: warning: Member USBD_ErrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:132: warning: Member USBD_DbgLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:7: warning: Member EMA_ALPHA (macro definition) of file ema.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:8: warning: Member EMA_LOW_ALPHA (macro definition) of file ema.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:17: warning: Member ema_high_pass_filter(struct EMAHighPass) (function) of file ema.h is not documented.
@@ -488,44 +494,46 @@ Generating code for file /home/runner/work/OpenEFI/Ope/home/runner/work/OpenEFI/
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:121: warning: Member SystemCoreClock (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:122: warning: Member AHBPrescTable[16] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:123: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usb_device.c:41: warning: Member hUsbDeviceFS (variable) of group USBD_DFU_Exported_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:62: warning: Member USBD_VID (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:63: warning: Member USBD_LANGID_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:64: warning: Member USBD_MANUFACTURER_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:65: warning: Member USBD_PID_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:66: warning: Member USBD_PRODUCT_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:67: warning: Member USBD_CONFIGURATION_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:68: warning: Member USBD_INTERFACE_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:70: warning: Member USB_SIZ_BOS_DESC (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:61: warning: Member FLASH_DESC_STR (macro definition) of group USBD_DFU_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:102: warning: Member hUsbDeviceFS (variable) of group USBD_DFU_Exported_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:135: warning: Member __ALIGN_END (variable) of group USBD_DFU is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:62: warning: Member USBD_VID (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:63: warning: Member USBD_LANGID_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:64: warning: Member USBD_MANUFACTURER_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:65: warning: Member USBD_PID_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:66: warning: Member USBD_PRODUCT_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:67: warning: Member USBD_CONFIGURATION_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:68: warning: Member USBD_INTERFACE_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:70: warning: Member USB_SIZ_BOS_DESC (macro definition) of group USBD_DESC_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:135: warning: Member __ALIGN_END (variable) of group USBD_DFU is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:61: warning: Member FLASH_DESC_STR (macro definition) of group USBD_DFU_Private_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c:102: warning: Member hUsbDeviceFS (variable) of group USBD_DFU_Exported_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usb_device.c:45: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:66: warning: Member USBD_VID (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:67: warning: Member USBD_LANGID_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:68: warning: Member USBD_MANUFACTURER_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:69: warning: Member USBD_PID_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:70: warning: Member USBD_PRODUCT_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:71: warning: Member USBD_CONFIGURATION_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:72: warning: Member USBD_INTERFACE_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:74: warning: Member USB_SIZ_BOS_DESC (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp:121: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:66: warning: Member USBD_VID (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:67: warning: Member USBD_LANGID_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:68: warning: Member USBD_MANUFACTURER_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:69: warning: Member USBD_PID_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:70: warning: Member USBD_PRODUCT_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:71: warning: Member USBD_CONFIGURATION_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:72: warning: Member USBD_INTERFACE_STRING_FS (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:74: warning: Member USB_SIZ_BOS_DESC (macro definition) of group USBD_DESC_Private_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp:360: warning: Member CDC_ReadRxBuffer_FS(uint8_t *Buf, uint16_t Len) (function) of group USBD_CDC_IF is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp:380: warning: Member CDC_PeekRxBuffer_FS(uint8_t *Buf, uint16_t Len) (function) of group USBD_CDC_IF is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp:393: warning: Member CDC_GetRxBufferBytesAvailable_FS() (function) of group USBD_CDC_IF is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp:413: warning: Member CDC_FlushRxBuffer_FS() (function) of group USBD_CDC_IF is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:52: warning: Member APP_RX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:53: warning: Member APP_TX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:69: warning: Member USB_CDC_RX_BUFFER_StatusTypeDef (enumeration) of group USBD_CDC_IF_Exported_Types is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:116: warning: Member CDC_ReadRxBuffer_FS(uint8_t *Buf, uint16_t Len) (function) of group USBD_CDC_IF_Exported_FunctionsPrototype is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:117: warning: Member CDC_PeekRxBuffer_FS(uint8_t *Buf, uint16_t Len) (function) of group USBD_CDC_IF_Exported_FunctionsPrototype is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:118: warning: Member CDC_GetRxBufferBytesAvailable_FS() (function) of group USBD_CDC_IF_Exported_FunctionsPrototype is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:119: warning: Member CDC_FlushRxBuffer_FS() (function) of group USBD_CDC_IF_Exported_FunctionsPrototype is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:67: warning: Member USBD_MAX_NUM_INTERFACES (macro definition) of group USBD_CONF_Exported_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:69: warning: Member USBD_MAX_NUM_CONFIGURATION (macro definition) of group USBD_CONF_Exported_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:71: warning: Member USBD_MAX_STR_DESC_SIZ (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:73: warning: Member USBD_SUPPORT_USER_STRING (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:75: warning: Member USBD_DEBUG_LEVEL (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:77: warning: Member USBD_LPM_ENABLED (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:79: warning: Member USBD_SELF_POWERED (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:81: warning: Member USBD_DFU_MAX_ITF_NUM (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:83: warning: Member USBD_DFU_XFER_SIZE (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:85: warning: Member USBD_DFU_APP_DEFAULT_ADD (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:89: warning: Member DEVICE_FS (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:90: warning: Member DEVICE_HS (macro definition) of group USBD_CONF_Exported_Defines is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:124: warning: Member USBD_UsrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:133: warning: Member USBD_ErrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:141: warning: Member USBD_DbgLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:73: warning: Member USBD_DEBUG_LEVEL (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:75: warning: Member USBD_LPM_ENABLED (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:77: warning: Member USBD_SELF_POWERED (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:81: warning: Member DEVICE_FS (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:82: warning: Member DEVICE_HS (macro definition) of group USBD_CONF_Exported_Defines is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:115: warning: Member USBD_UsrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:124: warning: Member USBD_ErrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:132: warning: Member USBD_DbgLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h:49: warning: Member DEVICE_ID1 (macro definition) of group USBD_DESC_Exported_Constants is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h:50: warning: Member DEVICE_ID2 (macro definition) of group USBD_DESC_Exported_Constants is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h:51: warning: Member DEVICE_ID3 (macro definition) of group USBD_DESC_Exported_Constants is not documented.
@@ -548,21 +556,15 @@ Generating code for file /home/runner/work/OpenEFI/Ope/home/runner/work/OpenEFI/
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:31: warning: Member y_max (variable) of class table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:32: warning: Member x_max (variable) of class table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:33: warning: Member memory_address (variable) of class table_ref is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:31: warning: Member _TPS (variable) of class sensors::SensorValues is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:32: warning: Member _MAP (variable) of class sensors::SensorValues is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:33: warning: Member TEMP (variable) of class sensors::SensorValues is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:34: warning: Member IAT (variable) of class sensors::SensorValues is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:49: warning: Member get_value(table_ref, uint16_t, uint16_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:50: warning: Member set_value(table_ref, uint16_t, uint16_t, int16_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:51: warning: Member get_long_value(table_ref, uint16_t, uint16_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:52: warning: Member set_long_value(table_ref, uint16_t, uint16_t, int32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:66: warning: Member find_nearest_neighbor(std::vector< int32_t >, int32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:74: warning: Member plot_table(TABLEDATA) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:57: warning: argument 'table_ref' of command @param is not found in the argument list of tables::read_all(table_ref table)
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:61: warning: The following parameters of tables::read_all(table_ref table) are not documented:
-  parameter 'table'
-nEFI/Src/ignition/include/ignition.hpp...
+file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/user_defines.h...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/variables.h...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/cpwm/include/cpwm.hpp...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/debug/debug_local.h...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/helpers/timer_schedule.hpp...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/ignition/include/ignition.hpp...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/commands.hpp...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory.hpp...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/aliases/memory.hpp...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp...
@@ -580,23 +582,25 @@ Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/bas
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h...
 Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/timmer.h...
+Generating code for file /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands_definition.hpp...
 Generating file documentation...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h...
+Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/gpio.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/main.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/stm32_assert.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_it.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/usb_device.h...
+Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
-Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_dfu_if.h...
+Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/dma.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h...
+Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/stm32f4xx_hal_msp.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/usb_device.c...
-Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/usbd_conf.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c...
-Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/usbd_dfu_if.c...
 Generating page documentation...
 Generating group documentation...
 Generating class documentation...
@@ -604,9 +608,28 @@ Generating docs for compound EMAHighPass...
 Generating docs for compound EMALowPass...
 Generating docs for compound input_handler...
 Generating docs for compound table_ref...
-Generating namespace index...
+Generating namespace index.../home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:31: warning: Member _TPS (variable) of class sensors::SensorValues is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:32: warning: Member _MAP (variable) of class sensors::SensorValues is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:33: warning: Member TEMP (variable) of class sensors::SensorValues is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:34: warning: Member IAT (variable) of class sensors::SensorValues is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:49: warning: Member get_value(table_ref, uint16_t, uint16_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:50: warning: Member set_value(table_ref, uint16_t, uint16_t, int16_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:51: warning: Member get_long_value(table_ref, uint16_t, uint16_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:52: warning: Member set_long_value(table_ref, uint16_t, uint16_t, int32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:66: warning: Member find_nearest_neighbor(std::vector< int32_t >, int32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:73: warning: Member dump_row(std::vector< int32_t >, uint8_t *) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:75: warning: Member plot_table(TABLEDATA) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:57: warning: argument 'table_ref' of command @param is not found in the argument list of tables::read_all(table_ref table)
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:61: warning: The following parameters of tables::read_all(table_ref table) are not documented:
+  parameter 'table'
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:15: warning: Member protocol (variable) of class web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:16: warning: Member command (variable) of class web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:17: warning: Member payload[123] (variable) of class web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:18: warning: Member crc[2] (variable) of class web_serial::serial_command is not documented.
+
 Generating docs for compound sensors::SensorValues...
 Generating docs for namespace tables
+Generating docs for compound web_serial::serial_command...
 Generating graph info page...
 Generating directory documentation...
 Generating index page...
@@ -623,5 +646,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 232/65536 hits=403 misses=235
+lookup cache used 232/65536 hits=442 misses=236
 finished...

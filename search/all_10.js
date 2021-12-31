@@ -1,11 +1,12 @@
 var searchData=
 [
   ['sensorvalues',['SensorValues',['../structsensors_1_1SensorValues.html',1,'sensors']]],
+  ['serial_5fcommand',['serial_command',['../structweb__serial_1_1serial__command.html',1,'web_serial']]],
   ['sinc_2eh',['sinc.h',['../sinc_8h.html',1,'']]],
   ['sinc_5fenable',['SINC_ENABLE',['../defines_8h.html#a1941541eecb2be882abc1a4f0291771b',1,'defines.h']]],
   ['stm32_5fassert_2eh',['stm32_assert.h',['../stm32__assert_8h.html',1,'']]],
-  ['stm32_5fusb_5fdevice_5flibrary',['STM32_USB_DEVICE_LIBRARY',['../group__STM32__USB__DEVICE__LIBRARY.html',1,'']]],
   ['stm32_5fusb_5fotg_5fdevice_5flibrary',['STM32_USB_OTG_DEVICE_LIBRARY',['../group__STM32__USB__OTG__DEVICE__LIBRARY.html',1,'']]],
+  ['stm32f4xx_5fhal_5fmsp_2ec',['stm32f4xx_hal_msp.c',['../stm32f4xx__hal__msp_8c.html',1,'']]],
   ['stm32f4xx_5fit_2eh',['stm32f4xx_it.h',['../stm32f4xx__it_8h.html',1,'']]],
   ['stm32f4xx_5fsystem',['Stm32f4xx_system',['../group__stm32f4xx__system.html',1,'']]],
   ['stm32f4xx_5fsystem_5fprivate_5fdefines',['STM32F4xx_System_Private_Defines',['../group__STM32F4xx__System__Private__Defines.html',1,'']]],
@@ -17,7 +18,6 @@ var searchData=
   ['stm32f4xx_5fsystem_5fprivate_5fvariables',['STM32F4xx_System_Private_Variables',['../group__STM32F4xx__System__Private__Variables.html',1,'']]],
   ['svc_5fhandler',['SVC_Handler',['../stm32f4xx__it_8h.html#a3e5ddb3df0d62f2dc357e64a3f04a6ce',1,'stm32f4xx_it.cpp']]],
   ['system_5fstm32f4xx_2ec',['system_stm32f4xx.c',['../system__stm32f4xx_8c.html',1,'']]],
-  ['systemclock_5fconfig',['SystemClock_Config',['../usbd__conf_8c.html#a70af21c671abfcc773614a9a4f63d920',1,'main.cpp']]],
   ['systemcoreclockupdate',['SystemCoreClockUpdate',['../group__STM32F4xx__System__Private__Functions.html#gae0c36a9591fe6e9c45ecb21a794f0f0f',1,'system_stm32f4xx.c']]],
   ['systeminit',['SystemInit',['../group__STM32F4xx__System__Private__Functions.html#ga93f514700ccf00d08dbdcff7f1224eb2',1,'system_stm32f4xx.c']]],
   ['systick_5fhandler',['SysTick_Handler',['../stm32f4xx__it_8h.html#ab5e09814056d617c521549e542639b7e',1,'stm32f4xx_it.cpp']]]
