@@ -18,7 +18,7 @@ void ignition::interrupt()
 
 void ignition::setup()
 {
-    table_ref ignition_table = {13, 13, 0x2000};
+    table_ref ignition_table = TABLES_IGNITION_TPS_SETTINGS;
     avc_tps_rpm = tables::read_all(ignition_table);
 }
 

@@ -70,19 +70,11 @@
 /*---------- -----------*/
 #define USBD_MAX_STR_DESC_SIZ     512U
 /*---------- -----------*/
-#define USBD_SUPPORT_USER_STRING     1U
-/*---------- -----------*/
 #define USBD_DEBUG_LEVEL     0U
 /*---------- -----------*/
 #define USBD_LPM_ENABLED     0U
 /*---------- -----------*/
 #define USBD_SELF_POWERED     1U
-/*---------- -----------*/
-#define USBD_DFU_MAX_ITF_NUM     1U
-/*---------- -----------*/
-#define USBD_DFU_XFER_SIZE     1024U
-/*---------- -----------*/
-#define USBD_DFU_APP_DEFAULT_ADD     0x08000000U
 
 /****************************************/
 /* #define for FS and HS identification */
@@ -97,14 +89,13 @@
   * @brief Aliases.
   * @{
   */
-
-/* Memory management macros */
-
+/* Memory management macros make sure to use static memory allocation */
 /** Alias for memory allocation. */
-#define USBD_malloc         malloc
+
+#define USBD_malloc         (void *)USBD_static_malloc
 
 /** Alias for memory release. */
-#define USBD_free           free
+#define USBD_free           USBD_static_free
 
 /** Alias for memory set. */
 #define USBD_memset         memset
@@ -160,6 +151,8 @@
   */
 
 /* Exported functions -------------------------------------------------------*/
+void *USBD_static_malloc(uint32_t size);
+void USBD_static_free(void *p);
 
 /**
   * @}

@@ -1,7 +1,7 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file           : usbd_desc.c
+  * @file           : App/usbd_desc.c
   * @version        : v1.0_Cube
   * @brief          : This file implements the USB device descriptors.
   ******************************************************************************
@@ -10,6 +10,10 @@
   * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
@@ -61,11 +65,11 @@
 
 #define USBD_VID     0x1209
 #define USBD_LANGID_STRING     1033
-#define USBD_MANUFACTURER_STRING     "Pid.codes"
-#define USBD_PID_FS     0xEEF1
-#define USBD_PRODUCT_STRING_FS     "OpenEFI v2.x"
-#define USBD_CONFIGURATION_STRING_FS     "DFU Config"
-#define USBD_INTERFACE_STRING_FS     "DFU Interface"
+#define USBD_MANUFACTURER_STRING     "Churrosoft"
+#define USBD_PID_FS     0xeef1
+#define USBD_PRODUCT_STRING_FS     "OpenEFI | uEFI v2"
+#define USBD_CONFIGURATION_STRING_FS     "CDC Config"
+#define USBD_INTERFACE_STRING_FS     "CDC Interface"
 
 #define USB_SIZ_BOS_DESC            0x0C
 
@@ -161,8 +165,8 @@ __ALIGN_BEGIN uint8_t USBD_FS_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END =
   0x00,                       /*bcdUSB */
 #endif /* (USBD_LPM_ENABLED == 1) */
   0x02,
-  0x00,                       /*bDeviceClass*/
-  0x00,                       /*bDeviceSubClass*/
+  0x02,                       /*bDeviceClass*/
+  0x02,                       /*bDeviceSubClass*/
   0x00,                       /*bDeviceProtocol*/
   USB_MAX_EP0_SIZE,           /*bMaxPacketSize*/
   LOBYTE(USBD_VID),           /*idVendor*/
@@ -214,7 +218,7 @@ __ALIGN_BEGIN uint8_t USBD_FS_BOSDesc[USB_SIZ_BOS_DESC] __ALIGN_END =
   #pragma data_alignment=4
 #endif /* defined ( __ICCARM__ ) */
 
-/** USB lang indentifier descriptor. */
+/** USB lang identifier descriptor. */
 __ALIGN_BEGIN uint8_t USBD_LangIDDesc[USB_LEN_LANGID_STR_DESC] __ALIGN_END =
 {
      USB_LEN_LANGID_STR_DESC,

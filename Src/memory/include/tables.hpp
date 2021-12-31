@@ -18,10 +18,10 @@ extern "C"
 }
 
 #include "memory.hpp"
+#include <algorithm>
 #include <limits.h>
 #include <math.h>
 #include <vector>
-#include <algorithm>
 
 #define TABLEDATA std::vector<std::vector<int32_t>>
 #define MAX_ROW_SIZE 30
@@ -70,6 +70,7 @@ namespace tables
      */
     void update_table(TABLEDATA, table_ref);
 
+    void dump_row(std::vector<int32_t>, uint8_t *);
     // debug:
     void plot_table(TABLEDATA);
     namespace
