@@ -3,6 +3,10 @@
 #ifndef WEBSERIAL_COMMANDS_DEFINITION_HPP
 #define WEBSERIAL_COMMANDS_DEFINITION_HPP
 
+#define CORE_PING 1
+#define CORE_PONG 2
+#define CORE_HELLO 10
+
 // 20 => get table metadata, 21 => get X table, 22 => response get X table,
 // 23 => reset X table, 24 => write X table , 25 => response write x table
 // 26 => begin data chunck , 27 => end data chunck (podrian ser un solo comando?)

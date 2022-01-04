@@ -22,6 +22,25 @@ void web_serial::command_handler() {
     std::fill_n(payload, 123, 0x0);
 
     switch (command.command) {
+
+    case CORE_PING: {
+      payload[0] = OPENEFI_BOARD_TYPE;
+
+      payload[1] = (OPENEFI_VER_MAJOR >> 8) & 0xFF;
+      payload[2] = OPENEFI_VER_MAJOR & 0xFF;
+
+      payload[3] = (OPENEFI_VER_MINOR >> 8) & 0xFF;
+      payload[4] = OPENEFI_VER_MINOR & 0xFF;
+
+      payload[5] = (OPENEFI_VER_REV >> 8) & 0xFF;
+      payload[6] = OPENEFI_VER_REV & 0xFF;
+
+      out_comm = create_command(CORE_PONG, payload);
+      export_command(out_comm, serialized_command);
+      CDC_Transmit_FS(serialized_command, 128);
+      break;
+    }
+
     case TABLES_GET_METADATA: {
       // esto tiene que devolver el X/Y maximo de la tabla seleccionada
       selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];

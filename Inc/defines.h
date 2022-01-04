@@ -7,9 +7,10 @@
 #define DEFINES_H
 
 // Version de firmware
+#define OPENEFI_BOARD_TYPE 1 // 0 OpenEFI; 1 uEFI, 2 DashDash
 #define OPENEFI_VER_MAJOR 2
-#define OPENEFI_VER_MINOR 0
-#define OPENEFI_VER_REV 3
+#define OPENEFI_VER_MINOR 1
+#define OPENEFI_VER_REV 0
 
 /*-----( Globales )-----*/
 
@@ -130,7 +131,7 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 
 /*-----( Tables )-----*/
 
-#define TABLES_IGNITION_TPS_SETTINGS { 13, 13, 0x2000 }
+#define TABLES_IGNITION_TPS_SETTINGS { 17, 17, 0x2 }
 
 /*-----( Helpers )-----*/
 
