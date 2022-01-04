@@ -45,6 +45,7 @@ var defines_8h =
     [ "MAP_MAX", "defines_8h.html#a50a7429b3040b309e4f9b2bfc41fdf3f", null ],
     [ "MAP_MIN", "defines_8h.html#a62f8e261c267be877be0eb5cf5f60848", null ],
     [ "mtr", "defines_8h.html#aa2c7aad26910626ab51d4a915b4f3160", null ],
+    [ "OPENEFI_BOARD_TYPE", "defines_8h.html#a26abc5e4f99b9b7f3fbfca100ecc88be", null ],
     [ "OPENEFI_VER_MAJOR", "defines_8h.html#a4032dc4fa482ab21b6d0c42a9cc646e6", null ],
     [ "OPENEFI_VER_MINOR", "defines_8h.html#a417cf7fea45c1dbe5083f080f964d088", null ],
     [ "OPENEFI_VER_REV", "defines_8h.html#aa5cfe4cbcbf7cc6d9b2c6fd64c69cc03", null ],

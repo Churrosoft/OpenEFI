@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"structinput__handler.html":[2,0,4],
 "structinput__handler.html#a76a0e5349d8566a86ac7efa33c36c076":[2,0,4,0],
 "structsensors_1_1SensorValues.html":[2,0,0,0],
 "structsensors_1_1SensorValues.html#a0fd3e8c256509f2f6d717035cdd7d36f":[2,0,0,0,3],
