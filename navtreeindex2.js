@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"structEMALowPass.html#a73f50a2d936f1cb4f1fbdd7e71fce863":[2,0,3,1],
+"structEMALowPass.html#a7747b0ecc32c8720e49bb2ca9247735b":[2,0,3,0],
 "structinput__handler.html":[2,0,4],
 "structinput__handler.html#a76a0e5349d8566a86ac7efa33c36c076":[2,0,4,0],
 "structsensors_1_1SensorValues.html":[2,0,0,0],
