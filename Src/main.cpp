@@ -45,6 +45,7 @@ extern "C" {
 #include "usbd_cdc.h"
 }
 #include "aliases/memory.hpp"
+#include <cstdlib>
 
 #include "debug/debug_local.h"
 #include "pmic/pmic.hpp"
@@ -137,6 +138,8 @@ int main(void) {
   HAL_Delay(100);
   MX_USB_DEVICE_Init();
   W25qxx_Init();
+  srand(HAL_GetTick());
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {

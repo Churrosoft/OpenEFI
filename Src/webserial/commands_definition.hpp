@@ -6,6 +6,8 @@
 #define CORE_PING 1
 #define CORE_PONG 2
 #define CORE_HELLO 10
+#define CORE_STATUS 5 // RPM/Temp/Voltaje Bateria / avance / carga / MAP
+#define CORE_STATUS_METADA 4 // devuelve max rpm / max avance
 
 // 20 => get table metadata, 21 => get X table, 22 => response get X table,
 // 23 => reset X table, 24 => write X table , 25 => response write x table

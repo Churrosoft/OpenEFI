@@ -3,15 +3,17 @@
 #include "commands_definition.hpp"
 #include "defines.h"
 
-#include <vector>
+#include <deque>
 
 using namespace web_serial;
 
-std::vector<serial_command> pending_commands;
+std::deque<serial_command> pending_commands;
+TABLEDATA in_table;
+bool table_lock;
 
 void web_serial::command_handler() {
   if (pending_commands.size()) {
-    serial_command command = pending_commands.back();
+    serial_command command = pending_commands.front();
     serial_command out_comm;
     uint8_t payload[123];
     uint8_t serialized_command[128];
@@ -36,6 +38,45 @@ void web_serial::command_handler() {
       payload[6] = OPENEFI_VER_REV & 0xFF;
 
       out_comm = create_command(CORE_PONG, payload);
+      export_command(out_comm, serialized_command);
+      CDC_Transmit_FS(serialized_command, 128);
+      break;
+    }
+
+    case CORE_STATUS_METADA: {
+
+      payload[0] = (MAX_RPM >> 8) & 0xFF;
+      payload[1] = MAX_RPM & 0xFF;
+
+      payload[2] = (TEMP_MAX_VALUE >> 8) & 0xFF;
+      payload[3] = TEMP_MAX_VALUE & 0xFF;
+
+      out_comm = create_command(CORE_STATUS_METADA, payload);
+      export_command(out_comm, serialized_command);
+      CDC_Transmit_FS(serialized_command, 128);
+      break;
+    }
+
+    case CORE_STATUS: {
+
+      int mockrpm = 750 + (rand() % 6000);
+      int mocktemp = 1 + (rand() % 130);
+      int mockload = 1 + (rand() % 100);
+      int mockbattery = 1 + (rand() % 1500);
+
+      payload[0] = (mockrpm >> 8) & 0xFF;
+      payload[1] = mockrpm & 0xFF;
+
+      payload[2] = (mocktemp >> 8) & 0xFF;
+      payload[3] = mocktemp & 0xFF;
+
+      payload[4] = (mockload >> 8) & 0xFF;
+      payload[5] = mockload & 0xFF;
+
+      payload[6] = (mockbattery >> 8) & 0xFF;
+      payload[7] = mockbattery & 0xFF;
+
+      out_comm = create_command(CORE_STATUS, payload);
       export_command(out_comm, serialized_command);
       CDC_Transmit_FS(serialized_command, 128);
       break;
@@ -115,7 +156,7 @@ void web_serial::command_handler() {
     }
     trace_printf("CRC 0: %d \n", command.crc[0]);
     trace_printf("CRC 1: %d \n", command.crc[1]);
-    pending_commands.pop_back();
+    pending_commands.pop_front();
   }
 }
 

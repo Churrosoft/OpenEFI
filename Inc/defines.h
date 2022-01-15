@@ -10,7 +10,7 @@
 #define OPENEFI_BOARD_TYPE 1 // 0 OpenEFI; 1 uEFI, 2 DashDash
 #define OPENEFI_VER_MAJOR 2
 #define OPENEFI_VER_MINOR 1
-#define OPENEFI_VER_REV 0
+#define OPENEFI_VER_REV 1
 
 /*-----( Globales )-----*/
 
@@ -25,6 +25,8 @@
 #define ED 1600                    //!< cilindrada en CC del motor
 #define ING_SECUENCY {1, 3, 4, 2}; // secuencia encendido
 #define INY_SECUENCY {3, 4, 1, 2}; // secuencia inyeccion
+#define MAX_RPM 4500 //!< valor maximo de rpm, valores superiores activan cutoff de encendido/combustible
+
 /*-----( RPM )-----*/
 
 #define RPM_per 500 //periodo en ms en el que se actualizan las rpm ( si lo cambias , o arreglas el calculo para las rpm,o se rompe todo maquinola)
@@ -112,6 +114,7 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define TEMP_MIN 800
 #define TEMP_MAX 4800
 #define TEMP_OPEN 600
+#define TEMP_MAX_VALUE 13000 // 130.00°C
 
 //float C = 2.019202697e-07; // Modelo B de NTC
 #define TEMP_K 2.5 //factor de disipacion en mW/C
