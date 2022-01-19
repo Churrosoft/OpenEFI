@@ -22,7 +22,7 @@
 #define TABLES_WRITE 24
 
 // response:
-#define TABLES_PUT 22
+#define TABLES_PUT 22 // esto tambien se usa para ir agregando data al array', primer byte el n°
 #define TABLES_WRITE_OK 25
 #define TABLES_DATA_CHUNK 26
 #define TABLES_DATA_END_CHUNK 27

@@ -26,7 +26,7 @@
 #define LOGIC_DNT (DNT - DNT_MISSING)
 #define Alpha 1         //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 #define ED 1600         //!< cilindrada en CC del motor
-
+#define MAX_RPM 6500
 /*-----( C_PWM )-----*/
 
 #define PMSI 5 //!< Cantidad de dientes entre PMS

@@ -81,6 +81,16 @@ void tables::dump_row(std::vector<int32_t> table_row, uint8_t *dest_buff) {
     index += 4;
   }
 }
+std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
+  std::vector<int32_t> data_out;
+
+  for (uint32_t index = 2; index < buff_size; index += 4) {
+    data_out.push_back((int32_t)(data[index + 1] << 8) +
+                       (data[index + 2] << 16) + (data[index + 3] << 24) +
+                       data[index]);
+  }
+  return data_out;
+}
 
 void tables::update_table(TABLEDATA data, table_ref table) {
   int32_t size = table.x_max * 4 * table.y_max;

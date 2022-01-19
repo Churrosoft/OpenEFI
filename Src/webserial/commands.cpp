@@ -45,14 +45,13 @@ void web_serial::loop() {
     std::copy(serial_cache + 3, serial_cache + 123, usb_command.payload);
 
     // web_serial::import_command(serial_cache, usb_command);
-    trace_printf("------------------------------\n");
+    web_serial::queue_command(usb_command);
+    CDC_FlushRxBuffer_FS();
+
+/*     trace_printf("------------------------------\n");
     trace_printf("Event: <USB> New command ready\n");
     trace_printf("Payload; %d;%d;%d;%d;", usb_command.payload[0],
                  usb_command.payload[1], usb_command.payload[2],
-                 usb_command.payload[3]);
-    trace_printf("------------------------------\n");
-
-    web_serial::queue_command(usb_command);
-    CDC_FlushRxBuffer_FS();
+                 usb_command.payload[3]); */
   }
 }

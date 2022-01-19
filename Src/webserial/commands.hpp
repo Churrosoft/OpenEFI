@@ -24,6 +24,7 @@ void queue_command(serial_command command);
 
 bool check_crc(serial_command input_command);
 
+void setup(void);
 void loop(void);        // called on main, for read on RX buff
 void command_handler(); // called timered on main, output commands
 

@@ -11,6 +11,8 @@ std::deque<serial_command> pending_commands;
 TABLEDATA in_table;
 bool table_lock;
 
+void web_serial::setup() { in_table.reserve(17); }
+
 void web_serial::command_handler() {
   if (pending_commands.size()) {
     serial_command command = pending_commands.front();
@@ -59,7 +61,7 @@ void web_serial::command_handler() {
 
     case CORE_STATUS: {
 
-      int mockrpm = 750 + (rand() % 6000);
+      int mockrpm = 750 + (rand() % 5750);
       int mocktemp = 1 + (rand() % 130);
       int mockload = 1 + (rand() % 100);
       int mockbattery = 1 + (rand() % 1500);
@@ -148,14 +150,47 @@ void web_serial::command_handler() {
       break;
     }
 
+    case TABLES_PUT: {
+      uint8_t table_index = command.payload[0];
+      uint8_t table_row_size = command.payload[1];
+
+      std::vector<int32_t> row =
+          tables::put_row(command.payload, table_row_size);
+
+      in_table.insert(in_table.begin() + table_index, row);
+
+      break;
+    }
+
+    case TABLES_WRITE: {
+      tables::plot_table(in_table);
+
+      // TODO: CRC check, move switch to func, write only changed rows
+
+      selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
+
+      switch (selected_table) {
+      case TABLES_IGNITION_TPS:
+        table = TABLES_IGNITION_TPS_SETTINGS;
+        break;
+      }
+      tables::update_table(in_table, table);
+
+      in_table.clear();
+
+      out_comm = create_command(TABLES_WRITE_OK, payload);
+      export_command(out_comm, serialized_command);
+      CDC_Transmit_FS(serialized_command, 128);
+      BREAKPOINT;
+      break;
+    }
+
     default:
       out_comm = create_command(EFI_INVALID_CODE, payload);
       export_command(out_comm, serialized_command);
       CDC_Transmit_FS(serialized_command, 128);
       break;
     }
-    trace_printf("CRC 0: %d \n", command.crc[0]);
-    trace_printf("CRC 1: %d \n", command.crc[1]);
     pending_commands.pop_front();
   }
 }
