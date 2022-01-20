@@ -1,21 +1,20 @@
 /*-----( Variables Globales )-----*/
 //	estas variables las puede usar cualquieeer funcion
-#include <stdlib.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
+#include <stdlib.h>
 
 #ifndef VARIABLES
 #define VARIABLES
 
 extern uint32_t _RPM, //	las rpm :V
-	_POS,			  //	posicion del cigueñal (en dientes) (el contador de rpm la resetea a cada rato)
-	_POS_AE,		  //	posicion arbol de levas
-	_AE;			  //	avance de encendido
+    _POS,    //	posicion del cigueñal (en dientes) (el contador de rpm la resetea a cada rato)
+    _POS_AE; //	posicion arbol de levas
+extern int32_t _AE; //	avance de encendido
 
-extern bool
-	MOTOR_ENABLE,     //	cache de "can_turn_on"
-	SINC; //	indica si se sincronizo el PMS
+extern bool MOTOR_ENABLE, //	cache de "can_turn_on"
+    SINC;                 //	indica si se sincronizo el PMS
 
 /*-----( Variables RPM )-----*/
 

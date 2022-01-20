@@ -61,8 +61,8 @@ TABLEDATA read_all(table_ref);
 // TABLEDATA alter_table(TABLEDATA, uint16_t, uint16_t, uint16_t);
 
 // utils para manejar data de las tablas:
-int32_t find_nearest_neighbor(std::vector<int32_t>, int32_t);
-
+int16_t find_nearest_neighbor(std::vector<int32_t>, int32_t);
+std::vector<int32_t> col_to_row(TABLEDATA, uint16_t);
 /**
  * @brief erases page on memory and record new data of table
  */

@@ -15,6 +15,7 @@
 #undef PMSI
 #undef AVCI
 #undef ECNT
+#undef MAX_RPM
 
 /*-----( Globales )-----*/
 

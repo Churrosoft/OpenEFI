@@ -51,7 +51,7 @@ extern "C" {
 #include "pmic/pmic.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
-
+#include "ignition/include/ignition.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -140,7 +140,7 @@ int main(void) {
   W25qxx_Init();
   srand(HAL_GetTick());
   web_serial::setup();
-
+  ignition::setup();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
