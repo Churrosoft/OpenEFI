@@ -8,6 +8,8 @@
 using namespace web_serial;
 
 std::deque<serial_command> pending_commands;
+std::deque<serial_command> output_commands;
+
 TABLEDATA in_table;
 bool table_lock;
 
@@ -136,16 +138,14 @@ void web_serial::command_handler() {
 
           tables::dump_row(table_row, payload);
           out_comm = create_command(TABLES_DATA_CHUNK, payload);
-          export_command(out_comm, serialized_command);
-          CDC_Transmit_FS(serialized_command, 128);
-          HAL_Delay(50);
+
+          output_commands.push_back(out_comm);
         }
         break;
       }
       }
       out_comm = create_command(TABLES_DATA_END_CHUNK, payload);
-      export_command(out_comm, serialized_command);
-      CDC_Transmit_FS(serialized_command, 128);
+      output_commands.push_back(out_comm);
 
       break;
     }
@@ -192,6 +192,17 @@ void web_serial::command_handler() {
       break;
     }
     pending_commands.pop_front();
+  }
+}
+
+void web_serial::send_deque() {
+  if (output_commands.size()) {
+    serial_command out_comm = output_commands.front();
+    output_commands.pop_front();
+    uint8_t serialized_command[128];
+    export_command(out_comm, serialized_command);
+    CDC_Transmit_FS(serialized_command, 128);
+    HAL_Delay(10);
   }
 }
 

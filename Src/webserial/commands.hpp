@@ -26,6 +26,7 @@ bool check_crc(serial_command input_command);
 
 void setup(void);
 void loop(void);        // called on main, for read on RX buff
+void send_deque(void);  // called on main, for write to TX buff
 void command_handler(); // called timered on main, output commands
 
 namespace {

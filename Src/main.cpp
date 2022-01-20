@@ -153,6 +153,7 @@ int main(void) {
         HAL_Delay(50); */
 
     web_serial::command_handler();
+    web_serial::send_deque();
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
         HAL_Delay(50); */
     /* USER CODE BEGIN 3 */
