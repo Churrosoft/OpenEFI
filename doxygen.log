@@ -467,10 +467,10 @@ Generating code for /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:10: warning:
 /home/runner/work/OpenEFI/OpenEFI/Inc/main.h:190: warning: Member R_LMB_Pin (macro definition) of file main.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/main.h:191: warning: Member R_LMB_GPIO_Port (macro definition) of file main.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/stm32_assert.h:47: warning: Member assert_param(expr) (macro definition) of file stm32_assert.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:26: warning: Member LOGIC_DNT (macro definition) of file CHT_1_6_.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:29: warning: Member MAX_RPM (macro definition) of file CHT_1_6_.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:35: warning: Member AVCI (macro definition) of file CHT_1_6_.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:38: warning: Member ECNT (macro definition) of file CHT_1_6_.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:27: warning: Member LOGIC_DNT (macro definition) of file CHT_1_6_.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:30: warning: Member MAX_RPM (macro definition) of file CHT_1_6_.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:36: warning: Member AVCI (macro definition) of file CHT_1_6_.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:39: warning: Member ECNT (macro definition) of file CHT_1_6_.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:52: warning: Member APP_RX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Exported_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:53: warning: Member APP_TX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Exported_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:69: warning: Member USB_CDC_RX_BUFFER_StatusTypeDef (enumeration) of group USBD_CDC_IF_Exported_Types is not documented.
@@ -620,6 +620,7 @@ Generating namespace index.../home/runner/work/OpenEFI/OpenEFI/Src/sensors/senso
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:49: warning: Member get_long_value(table_ref, uint16_t, uint16_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:50: warning: Member set_long_value(table_ref, uint16_t, uint16_t, int32_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:64: warning: Member find_nearest_neighbor(std::vector< int32_t >, int32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:65: warning: Member col_to_row(TABLEDATA, uint16_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:71: warning: Member dump_row(std::vector< int32_t >, uint8_t *) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:73: warning: Member put_row(uint8_t *, uint32_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:76: warning: Member plot_table(TABLEDATA) (function) of namespace tables is not documented.
@@ -650,5 +651,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 235/65536 hits=445 misses=239
+lookup cache used 237/65536 hits=451 misses=241
 finished...
