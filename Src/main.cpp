@@ -41,6 +41,9 @@ extern "C" {
 #include <trace.h>
 #endif
 
+#include "adc.h"
+#include "can.h"
+#include "dma.h"
 #include "tim.h"
 #include "usb_device.h"
 #include "usbd_cdc.h"
@@ -51,6 +54,7 @@ extern "C" {
 #include "debug/debug_local.h"
 #include "ignition/include/ignition.hpp"
 #include "pmic/pmic.hpp"
+#include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
 /* USER CODE END Includes */
@@ -74,7 +78,6 @@ bool SINC;
 SPI_HandleTypeDef hspi2;
 
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -119,21 +122,23 @@ int main(void) {
 
   /* Configure the system clock */
   SystemClock_Config();
-
+  uint32_t StartTime = HAL_GetTick();
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
 
-  /*   MX_DMA_Init();
-    MX_ADC1_Init();
-    MX_CAN1_Init(); */
-  /*   MX_SPI2_Init();
-    MX_TIM3_Init();
-    MX_TIM4_Init();
-    MX_TIM9_Init(); */
+  MX_DMA_Init();
+  MX_CAN1_Init();
+  MX_SPI2_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
+  MX_TIM9_Init();
+  MX_TIM10_Init();
 
   on_gpio_init();
   /* USER CODE BEGIN 2 */
@@ -141,21 +146,25 @@ int main(void) {
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
-  MX_SPI2_Init();
+
   MX_USB_DEVICE_Init();
-  /*   MX_TIM1_Init(); */
-  MX_TIM10_Init();
+
   HAL_TIM_Base_Start_IT(&htim10);
 
-  HAL_Delay(100);
+  // SPI Memory:
   on_setup();
-  HAL_Delay(100);
-
   W25qxx_Init();
+  // SRAND Init:
   srand(HAL_GetTick());
+  // Core inits:
   web_serial::setup();
   ignition::setup();
+  sensors::setup();
+  trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
+
   /* Infinite loop */
+  HAL_ADC_MspInit(&hadc1);
+
   /* USER CODE BEGIN WHILE */
   while (1) {
     /* USER CODE END WHILE */
@@ -165,6 +174,8 @@ int main(void) {
     web_serial::send_deque();
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
         HAL_Delay(50); */
+    ignition::interrupt();
+    adc_loop();
 
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
         HAL_Delay(50); */

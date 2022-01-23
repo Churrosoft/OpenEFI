@@ -9,6 +9,8 @@
 #include "../include/iat.hpp"
 #include "../utils/basic_electronics.c"
 
+uint16_t IAT::last_value = 0;
+
 uint16_t IAT::get_value(uint16_t filt_input)
 {
     IAT::last_value = (uint16_t)IAT_CAL(filt_input);

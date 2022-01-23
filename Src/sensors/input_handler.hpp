@@ -31,6 +31,7 @@ uint16_t get_adc_data(uint8_t);
 */
 void input_setup(void);
 void adc_setup(); //static?
+void adc_loop();
 // var interna:
 extern uint32_t ADC_A_RAW_DATA[5];
 extern uint32_t ADC_B_RAW_DATA[10];

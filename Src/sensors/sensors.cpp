@@ -2,26 +2,23 @@
 
 using namespace sensors;
 
-SensorValues values = {0, 0, 0, 0};
+SensorValues sensors::values = {0, 0, 0, 0};
 
-void sensors::loop()
-{
+void sensors::loop() {
 #if TPS_DUAL
 #error Function not yet implemented.
 #else
-  values._TPS = TPS::get_value(get_input(7));
+  sensors::values._TPS = TPS::get_value(get_input(7));
 #endif
-  values.IAT = IAT::get_value(get_input(5));
-  values._MAP = MAP::get_value(get_input(4));
+  sensors::values.IAT = IAT::get_value(get_input(5));
+  sensors::values._MAP = MAP::get_value(get_input(4));
 };
 
-void sensors::loop_low_priority()
-{
-  values.TEMP = TEMP::get_value(get_input(6));
+void sensors::loop_low_priority() {
+  sensors::values.TEMP = TEMP::get_value(get_input(6));
 }
 
-void sensors::setup()
-{
+void sensors::setup() {
   input_setup();
   adc_setup();
 }

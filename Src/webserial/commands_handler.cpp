@@ -2,7 +2,7 @@
 #include "commands.hpp"
 #include "commands_definition.hpp"
 #include "defines.h"
-
+#include "variables.h"
 #include <deque>
 
 using namespace web_serial;
@@ -77,8 +77,8 @@ void web_serial::command_handler() {
       payload[4] = (mockload >> 8) & 0xFF;
       payload[5] = mockload & 0xFF;
 
-      payload[6] = (mockbattery >> 8) & 0xFF;
-      payload[7] = mockbattery & 0xFF;
+      payload[6] = (_AE >> 8) & 0xFF;
+      payload[7] = _AE & 0xFF;
 
       out_comm = create_command(CORE_STATUS, payload);
       export_command(out_comm, serialized_command);

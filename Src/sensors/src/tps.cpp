@@ -1,6 +1,8 @@
 #include "../include/tps.hpp"
 #include "dtc_codes.h"
 
+uint16_t TPS::last_value = 0;
+
 uint8_t TPS::get_value(uint16_t filt_input)
 {
     uint16_t _t = convert_to_volt(filt_input) * 1334;

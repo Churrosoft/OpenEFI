@@ -27,9 +27,10 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "cpwm/include/cpwm.hpp"
+#include "ignition/include/ignition.hpp"
+#include "sensors/sensors.hpp"
 #include "variables.h"
 #include "webserial/commands.hpp"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -303,8 +304,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     // WEBSerial:
     web_serial::loop();
     // Sensors:
-
+    sensors::loop();
     // INJECTION/IGNITION ALGORITHMS
+
     led_checked = !led_checked;
   }
   /* USER CODE END Callback 1 */
