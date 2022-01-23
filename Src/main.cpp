@@ -41,6 +41,7 @@ extern "C" {
 #include <trace.h>
 #endif
 
+#include "tim.h"
 #include "usb_device.h"
 #include "usbd_cdc.h"
 }
@@ -48,10 +49,10 @@ extern "C" {
 #include <cstdlib>
 
 #include "debug/debug_local.h"
+#include "ignition/include/ignition.hpp"
 #include "pmic/pmic.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
-#include "ignition/include/ignition.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -125,18 +126,31 @@ int main(void) {
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+
+  /*   MX_DMA_Init();
+    MX_ADC1_Init();
+    MX_CAN1_Init(); */
+  /*   MX_SPI2_Init();
+    MX_TIM3_Init();
+    MX_TIM4_Init();
+    MX_TIM9_Init(); */
+
   on_gpio_init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin, GPIO_PIN_SET);
-
+  HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
   MX_SPI2_Init();
+  MX_USB_DEVICE_Init();
+  /*   MX_TIM1_Init(); */
+  MX_TIM10_Init();
+  HAL_TIM_Base_Start_IT(&htim10);
 
   HAL_Delay(100);
   on_setup();
   HAL_Delay(100);
-  MX_USB_DEVICE_Init();
+
   W25qxx_Init();
   srand(HAL_GetTick());
   web_serial::setup();
@@ -147,13 +161,11 @@ int main(void) {
     /* USER CODE END WHILE */
     on_loop();
 
-    web_serial::loop();
-
+    web_serial::command_handler();
+    web_serial::send_deque();
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
         HAL_Delay(50); */
 
-    web_serial::command_handler();
-    web_serial::send_deque();
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
         HAL_Delay(50); */
     /* USER CODE BEGIN 3 */
@@ -282,25 +294,25 @@ void Error_Handler(void) {
   /* USER CODE END Error_Handler_Debug */
 }
 
-/**
- * @brief  Period elapsed callback in non blocking mode
- * @note   This function is called  when TIM14 interrupt took place, inside
- * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
- * a global variable "uwTick" used as application time base.
- * @param  htim : TIM handle
- * @retval None
- */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  /* USER CODE BEGIN Callback 0 */
+// /**
+//  * @brief  Period elapsed callback in non blocking mode
+//  * @note   This function is called  when TIM14 interrupt took place, inside
+//  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+//  * a global variable "uwTick" used as application time base.
+//  * @param  htim : TIM handle
+//  * @retval None
+//  */
+// void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+//   /* USER CODE BEGIN Callback 0 */
 
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM14) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
+//   /* USER CODE END Callback 0 */
+//   if (htim->Instance == TIM14) {
+//     HAL_IncTick();
+//   }
+//   /* USER CODE BEGIN Callback 1 */
 
-  /* USER CODE END Callback 1 */
-}
+//   /* USER CODE END Callback 1 */
+// }
 
 #ifdef USE_FULL_ASSERT
 /**

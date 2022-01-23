@@ -31,6 +31,7 @@ void ignition::interrupt() {
 void ignition::setup() {
   table_ref ignition_table = TABLES_IGNITION_TPS_SETTINGS;
   ignition::avc_tps_rpm = tables::read_all(ignition_table);
+  ignition::loaded = true;
 }
 
 /** Ejemplo tablita:
