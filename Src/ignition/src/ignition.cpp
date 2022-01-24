@@ -11,6 +11,10 @@ usando sensors => map y rpm nomas
 
 #include "../include/ignition.hpp"
 
+extern "C" {
+#include "trace.h"
+}
+
 TABLEDATA ignition::avc_tps_rpm;
 bool ignition::loaded = false;
 int32_t _AE = 0;
@@ -18,7 +22,7 @@ int32_t _AE = 0;
 void ignition::interrupt() {
   if (!ignition::loaded)
     return;
-  int32_t load = sensors::values._MAP;
+  int32_t load = (int32_t)sensors::values._MAP;
 
   int16_t load_value = tables::find_nearest_neighbor(
       tables::col_to_row(ignition::avc_tps_rpm, 0), load);
@@ -26,7 +30,9 @@ void ignition::interrupt() {
   int16_t rpm_value =
       tables::find_nearest_neighbor(ignition::avc_tps_rpm[0], load);
 
-  _AE = avc_tps_rpm[load_value][rpm_value];
+  if (load_value < 17 && rpm_value < 17) {
+    _AE = avc_tps_rpm.at(load_value).at(rpm_value);
+  }
 }
 
 void ignition::setup() {

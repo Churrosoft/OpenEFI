@@ -4,14 +4,14 @@ ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 
 struct input_handler inputs;
-uint32_t ADC_A_RAW_DATA[5] = {0, 0, 0, 0, 0};
+uint32_t ADC_A_RAW_DATA[6] = {0, 0, 0, 0, 0,0};
 uint32_t ADC_B_RAW_DATA[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 uint16_t get_input(uint8_t pin) {
-  inputs.values[pin].actualValue = ADC_A_RAW_DATA[0];
+/*   inputs.values[pin].actualValue = ADC_A_RAW_DATA[0];
   inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
   return inputs.values[pin].actualValue;
-
+ */
   if (pin < 15) {
     for (uint8_t i = 0; i < 5; i++) {
       if (pin < 5) {
@@ -35,7 +35,7 @@ void input_setup() {
 }
 
 void adc_setup() {
-  if (HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 5) != HAL_OK)
+  if (HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 6) != HAL_OK)
     Error_Handler();
   if (HAL_ADC_Start_DMA(&hadc2, ADC_B_RAW_DATA, 10) != HAL_OK)
     Error_Handler();
@@ -45,6 +45,7 @@ void adc_loop() {
   // FIXME: solo ADC_A_RAW_DATA[0-1] tiene data, el resto llega en 0
   // EDIT: ADC_B funciona ok, ADC_A no funca en modo circular
   /*  HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 5); */
+  HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 6) ;
   HAL_Delay(15);
   /*   HAL_ADC_Stop(&hadc1); */
 
