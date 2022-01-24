@@ -43,13 +43,14 @@ void adc_setup() {
 
 void adc_loop() {
   // FIXME: solo ADC_A_RAW_DATA[0-1] tiene data, el resto llega en 0
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADC_A_RAW_DATA, 5);
+  // EDIT: ADC_B funciona ok, ADC_A no funca en modo circular
+  /*  HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 5); */
   HAL_Delay(15);
-/*   HAL_ADC_Stop(&hadc1); */
+  /*   HAL_ADC_Stop(&hadc1); */
 
-  HAL_ADC_Start_DMA(&hadc2, (uint32_t *)ADC_B_RAW_DATA, 10);
-  HAL_Delay(15);
-/*   HAL_ADC_Stop(&hadc2); */
+  /*  HAL_ADC_Start_DMA(&hadc2, ADC_B_RAW_DATA, 10);
+   HAL_Delay(15); */
+  /*   HAL_ADC_Stop(&hadc2); */
 }
 
 uint16_t get_adc_data(uint8_t channel) {
