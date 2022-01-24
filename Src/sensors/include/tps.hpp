@@ -17,21 +17,21 @@ namespace TPS
      * -doble medicion con otra entrada analogica
      * @return escala de 0 a 100
      */
-    uint8_t get_value(uint16_t);
-    uint8_t get_value(uint16_t, uint16_t);
+    int32_t get_value(int32_t);
+    int32_t get_value(int32_t, int32_t);
 
     /** @brief devuelve valor mas exacto para calibracion inicial de la mariposa
      * incluye overload en caso de sensor de TPS doble
      * @return escala de 0 a 100 con 3 digitos de precision
      */
-    uint32_t get_calibrate_value(uint16_t);
-    uint32_t get_calibrate_value(uint16_t, uint16_t);
+    int32_t get_calibrate_value(int32_t);
+    int32_t get_calibrate_value(int32_t, int32_t);
 
     /** @brief revisa el estado del sensor para disparar un DTC en caso que sea necesario
      */
     uint8_t* dtc(void);
-    uint8_t dtc(uint16_t, uint16_t);
-    extern uint16_t last_value;
+    uint8_t dtc(int32_t, int32_t);
+    extern int32_t last_value;
 } // namespace TPS
 
 #endif

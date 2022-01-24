@@ -22,10 +22,10 @@ extern struct input_handler inputs;
 /** devuelve input selecionada pasada por filtro EMA Low Pass
   * @param pin entrada analogica a leer
 */
-uint16_t get_input(uint8_t);
+int32_t get_input(uint8_t);
 /** @return ADC register data
 */
-uint16_t get_adc_data(uint8_t);
+int32_t get_adc_data(uint8_t);
 
 /** @brief inicia el ADC y los trigers por tiempo
 */

@@ -9,17 +9,17 @@
 #include "../include/iat.hpp"
 #include "../utils/basic_electronics.c"
 
-uint16_t IAT::last_value = 0;
+int32_t IAT::last_value = 0;
 
-uint16_t IAT::get_value(uint16_t filt_input)
+int32_t IAT::get_value(int32_t filt_input)
 {
-    IAT::last_value = (uint16_t)IAT_CAL(filt_input);
+    IAT::last_value = (int32_t)IAT_CAL(filt_input);
     return last_value;
 }
 
-uint32_t IAT::get_calibrate_value(uint16_t filt_input)
+int32_t IAT::get_calibrate_value(int32_t filt_input)
 {
-    return (uint32_t)IAT_CAL(filt_input) * 100;
+    return (int32_t)IAT_CAL(filt_input) * 100;
 }
 
 uint8_t *IAT::dtc()

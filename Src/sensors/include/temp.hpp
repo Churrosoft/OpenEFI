@@ -18,14 +18,14 @@ namespace TEMP
      * -healt check
      * @return valores de -15 a 120
      */
-    uint16_t get_value(uint16_t);
+    int32_t get_value(int32_t);
 
     /** @brief revisa el estado del sensor para disparar un DTC en caso que sea necesario
      * @param in valor en Volt del sensor
      */
     uint8_t* dtc(void);
 
-    extern uint16_t last_value;
+    extern int32_t last_value;
 } // namespace TEMP
 
 #endif

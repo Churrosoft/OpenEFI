@@ -28,10 +28,10 @@ namespace sensors
   // Struct con info de todos los sensores
   typedef struct 
   {
-    uint8_t _TPS;
-    uint16_t _MAP;
-    uint16_t TEMP;
-    uint16_t IAT;
+    int32_t _TPS;
+    int32_t _MAP;
+    int32_t TEMP;
+    int32_t IAT;
   }SensorValues;
   // typedef struct SensorValues SensorValues;
 

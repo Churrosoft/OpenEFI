@@ -2,16 +2,16 @@
 #include "defines.h"
 #include "user_defines.h"
 
-uint16_t convert_to_resistance(uint16_t adcval)
+int32_t convert_to_resistance(int32_t adcval)
 {
 #if defined(INPUT_PULL_UP)
 	return (uint16_t)((R1 * ADC_MAX_VALUE) / adcval) / R1; //para resistencia pullUp dividir R1
 #else
-	return (uint16_t)((R1 * ADC_MAX_VALUE) / adcval) - R1; //para resistencia pullDown multiplicar R1
+	return (int32_t)((R1 * ADC_MAX_VALUE) / adcval) - R1; //para resistencia pullDown multiplicar R1
 #endif
 }
 
-uint16_t convert_to_volt(uint16_t in)
+int32_t convert_to_volt(int32_t in)
 {
-	return (uint16_t)(in * Vref / ADC_MAX_VALUE);
+	return (int32_t)(in * Vref / ADC_MAX_VALUE);
 }

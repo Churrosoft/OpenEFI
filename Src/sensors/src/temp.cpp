@@ -6,7 +6,7 @@ const uint32_t A = 1.12492089e-3;
 const uint32_t B = 2.372075385e-4;
 const uint32_t C = 6.954079529e-8;
 
-uint16_t TEMP::get_value(uint16_t filt_input)
+int32_t TEMP::get_value(int32_t filt_input)
 {
   // http://en.wikipedia.org/wiki/Steinhart–Hart_equation
   // C standard equivalent:
@@ -24,7 +24,7 @@ uint16_t TEMP::get_value(uint16_t filt_input)
   float V = convert_to_volt(adcval);
   kelvin -= V * V / (K * R) * 1000; // auto calibracion (a implementar)
 #endif
-  last_value = (uint16_t)(kelvin - 273.15) * 100;
+  last_value = (int32_t)(kelvin - 273.15) * 100;
   return last_value;
 }
 

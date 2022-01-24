@@ -7,7 +7,7 @@ struct input_handler inputs;
 uint32_t ADC_A_RAW_DATA[6] = {0, 0, 0, 0, 0,0};
 uint32_t ADC_B_RAW_DATA[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-uint16_t get_input(uint8_t pin) {
+int32_t get_input(uint8_t pin) {
 /*   inputs.values[pin].actualValue = ADC_A_RAW_DATA[0];
   inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
   return inputs.values[pin].actualValue;
@@ -15,7 +15,7 @@ uint16_t get_input(uint8_t pin) {
   if (pin < 15) {
     for (uint8_t i = 0; i < 5; i++) {
       if (pin < 5) {
-        inputs.values[pin].actualValue = ADC_A_RAW_DATA[pin];
+        inputs.values[pin].actualValue = (int32_t)ADC_A_RAW_DATA[pin];
         volatile auto debug = ADC_A_RAW_DATA[pin];
         debug = debug;
       } else {
@@ -54,6 +54,6 @@ void adc_loop() {
   /*   HAL_ADC_Stop(&hadc2); */
 }
 
-uint16_t get_adc_data(uint8_t channel) {
+int32_t get_adc_data(uint8_t channel) {
 #pragma GCC warning "Function decreapated"
 }
