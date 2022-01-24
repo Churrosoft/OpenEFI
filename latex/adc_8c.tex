@@ -52,7 +52,11 @@ This software component is licensed by ST under Ultimate Liberty license S\+L\+A
 
 A\+D\+C1 G\+P\+IO Configuration P\+A0-\/\+W\+K\+UP ------$>$ A\+D\+C1\+\_\+\+I\+N0 P\+A1 ------$>$ A\+D\+C1\+\_\+\+I\+N1 P\+A2 ------$>$ A\+D\+C1\+\_\+\+I\+N2 P\+A3 ------$>$ A\+D\+C1\+\_\+\+I\+N3 P\+A4 ------$>$ A\+D\+C1\+\_\+\+I\+N4 P\+A5 ------$>$ A\+D\+C1\+\_\+\+I\+N5
 
-A\+D\+C2 G\+P\+IO Configuration P\+C0 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N10 P\+C2 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N12 P\+C3 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N13 P\+A6 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N6 P\+A7 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N7 P\+C4 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N14 P\+C5 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N15 P\+B0 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N8 P\+B1 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N9\mbox{\Hypertarget{adc_8c_ac3139540667c403c5dfd37a99c610b1c}\label{adc_8c_ac3139540667c403c5dfd37a99c610b1c}} 
+Uncomment the line below to disable the \char`\"{}\+A\+D\+C\+\_\+\+I\+R\+Qn\char`\"{} interrupt Be aware, disabling shared interrupt may affect other I\+Ps
+
+A\+D\+C2 G\+P\+IO Configuration P\+C0 ------$>$ A\+D\+C2\+\_\+\+I\+N10 P\+C2 ------$>$ A\+D\+C2\+\_\+\+I\+N12 P\+C3 ------$>$ A\+D\+C2\+\_\+\+I\+N13 P\+A6 ------$>$ A\+D\+C2\+\_\+\+I\+N6 P\+A7 ------$>$ A\+D\+C2\+\_\+\+I\+N7 P\+C4 ------$>$ A\+D\+C2\+\_\+\+I\+N14 P\+C5 ------$>$ A\+D\+C2\+\_\+\+I\+N15 P\+B0 ------$>$ A\+D\+C2\+\_\+\+I\+N8 P\+B1 ------$>$ A\+D\+C2\+\_\+\+I\+N9
+
+Uncomment the line below to disable the \char`\"{}\+A\+D\+C\+\_\+\+I\+R\+Qn\char`\"{} interrupt Be aware, disabling shared interrupt may affect other I\+Ps\mbox{\Hypertarget{adc_8c_ac3139540667c403c5dfd37a99c610b1c}\label{adc_8c_ac3139540667c403c5dfd37a99c610b1c}} 
 \index{adc.\+c@{adc.\+c}!H\+A\+L\+\_\+\+A\+D\+C\+\_\+\+Msp\+Init@{H\+A\+L\+\_\+\+A\+D\+C\+\_\+\+Msp\+Init}}
 \index{H\+A\+L\+\_\+\+A\+D\+C\+\_\+\+Msp\+Init@{H\+A\+L\+\_\+\+A\+D\+C\+\_\+\+Msp\+Init}!adc.\+c@{adc.\+c}}
 \subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+A\+D\+C\+\_\+\+Msp\+Init()}{HAL\_ADC\_MspInit()}}
@@ -67,6 +71,8 @@ A\+D\+C2 G\+P\+IO Configuration P\+C0 -\/-\/-\/---$>$ A\+D\+C2\+\_\+\+I\+N10 P\+
 {\footnotesize\ttfamily void M\+X\+\_\+\+A\+D\+C1\+\_\+\+Init (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
 
 Configure the global features of the A\+DC (Clock, Resolution, Data Alignment and number of conversion)
+
+Configure for the selected A\+DC regular channel its corresponding rank in the sequencer and its sample time.
 
 Configure for the selected A\+DC regular channel its corresponding rank in the sequencer and its sample time.
 

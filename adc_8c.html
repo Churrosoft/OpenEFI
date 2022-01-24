@@ -139,7 +139,9 @@ DMA_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><b>hdma_adc
       </table>
 </div><div class="memdoc">
 <p>ADC1 GPIO Configuration PA0-WKUP &mdash;&mdash;&gt; ADC1_IN0 PA1 &mdash;&mdash;&gt; ADC1_IN1 PA2 &mdash;&mdash;&gt; ADC1_IN2 PA3 &mdash;&mdash;&gt; ADC1_IN3 PA4 &mdash;&mdash;&gt; ADC1_IN4 PA5 &mdash;&mdash;&gt; ADC1_IN5</p>
-<p>ADC2 GPIO Configuration PC0 ---&mdash;&gt; ADC2_IN10 PC2 ---&mdash;&gt; ADC2_IN12 PC3 ---&mdash;&gt; ADC2_IN13 PA6 ---&mdash;&gt; ADC2_IN6 PA7 ---&mdash;&gt; ADC2_IN7 PC4 ---&mdash;&gt; ADC2_IN14 PC5 ---&mdash;&gt; ADC2_IN15 PB0 ---&mdash;&gt; ADC2_IN8 PB1 ---&mdash;&gt; ADC2_IN9</p>
+<p>Uncomment the line below to disable the "ADC_IRQn" interrupt Be aware, disabling shared interrupt may affect other IPs</p>
+<p>ADC2 GPIO Configuration PC0 &mdash;&mdash;&gt; ADC2_IN10 PC2 &mdash;&mdash;&gt; ADC2_IN12 PC3 &mdash;&mdash;&gt; ADC2_IN13 PA6 &mdash;&mdash;&gt; ADC2_IN6 PA7 &mdash;&mdash;&gt; ADC2_IN7 PC4 &mdash;&mdash;&gt; ADC2_IN14 PC5 &mdash;&mdash;&gt; ADC2_IN15 PB0 &mdash;&mdash;&gt; ADC2_IN8 PB1 &mdash;&mdash;&gt; ADC2_IN9</p>
+<p>Uncomment the line below to disable the "ADC_IRQn" interrupt Be aware, disabling shared interrupt may affect other IPs</p>
 
 </div>
 </div>
@@ -179,6 +181,7 @@ DMA_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><b>hdma_adc
       </table>
 </div><div class="memdoc">
 <p>Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)</p>
+<p>Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.</p>
 <p>Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.</p>
 <p>Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.</p>
 <p>Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.</p>
