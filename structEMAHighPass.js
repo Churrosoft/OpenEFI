@@ -1,6 +1,6 @@
 var structEMAHighPass =
 [
-    [ "actualValue", "structEMAHighPass.html#a405250df44c61a455d676a0f13bfe32b", null ],
-    [ "lastLP", "structEMAHighPass.html#a38075a21f728f8d39f150825dbc45ef5", null ],
-    [ "lastValue", "structEMAHighPass.html#a53df4bb1628740263789e44d94d75b26", null ]
+    [ "actualValue", "structEMAHighPass.html#ac64287f46ee2c919fef1cc8a6e3eb211", null ],
+    [ "lastLP", "structEMAHighPass.html#ab1a60ca7e3ed25924075e628fcd63c59", null ],
+    [ "lastValue", "structEMAHighPass.html#ae362411224fe2cfcded4e1c3ebcc2fa9", null ]
 ];

@@ -1,5 +1,5 @@
 var structEMALowPass =
 [
-    [ "actualValue", "structEMALowPass.html#a7747b0ecc32c8720e49bb2ca9247735b", null ],
-    [ "lastValue", "structEMALowPass.html#a73f50a2d936f1cb4f1fbdd7e71fce863", null ]
+    [ "actualValue", "structEMALowPass.html#a1b434a1ef92e2eca5ec9b13180168a13", null ],
+    [ "lastValue", "structEMALowPass.html#a0d097234ce8f61b4c23f790816199833", null ]
 ];
