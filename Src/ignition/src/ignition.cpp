@@ -12,23 +12,31 @@ usando sensors => map y rpm nomas
 #include "../include/ignition.hpp"
 
 extern "C" {
+#include "../../sensors/utils/basic_electronics.h"
 #include "trace.h"
 }
 
 TABLEDATA ignition::avc_tps_rpm;
 bool ignition::loaded = false;
+
 int32_t _AE = 0;
 
 void ignition::interrupt() {
-  if (!ignition::loaded)
+  if (!ignition::loaded || sensors::values._MAP <= 0)
     return;
-  int32_t load = (int32_t)sensors::values._MAP;
 
-  int16_t load_value = tables::find_nearest_neighbor(
-      tables::col_to_row(ignition::avc_tps_rpm, 0), load);
+  int32_t map_voltage = (sensors::values._MAP * 0.805860805861);
+  int32_t calc_map = map_voltage * 16.66 + 167;
+  int32_t load = (int32_t)(calc_map / 100) * 10;
+  auto s_result = tables::col_to_row(ignition::avc_tps_rpm, 0);
+  s_result.at(0) = 1;
+ /*  for (auto row_value : s_result) {
+    trace_printf("COL: %ld", row_value);
+  } */
+  int16_t load_value = tables::find_nearest_neighbor(s_result, 710);
 
   int16_t rpm_value =
-      tables::find_nearest_neighbor(ignition::avc_tps_rpm[0], load);
+      tables::find_nearest_neighbor(ignition::avc_tps_rpm.at(0), load * 5);
 
   if (load_value < 17 && rpm_value < 17) {
     _AE = avc_tps_rpm.at(load_value).at(rpm_value);

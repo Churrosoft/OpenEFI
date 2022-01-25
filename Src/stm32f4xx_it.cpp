@@ -335,6 +335,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     // Sensors:
     sensors::loop();
     // INJECTION/IGNITION ALGORITHMS
+    adc_loop();
 
     led_checked = !led_checked;
   }

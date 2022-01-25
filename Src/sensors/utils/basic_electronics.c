@@ -13,5 +13,5 @@ int32_t convert_to_resistance(int32_t adcval)
 
 int32_t convert_to_volt(int32_t in)
 {
-	return (int32_t)(in * Vref / ADC_MAX_VALUE);
+	return (int32_t)(in * 0.805860805861);
 }

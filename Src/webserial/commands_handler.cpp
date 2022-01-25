@@ -163,8 +163,8 @@ void web_serial::command_handler() {
     }
 
     case TABLES_WRITE: {
-      tables::plot_table(in_table);
-
+/*       tables::plot_table(in_table);
+ */
       // TODO: CRC check, move switch to func, write only changed rows
 
       selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];

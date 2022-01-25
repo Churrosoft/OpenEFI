@@ -46,7 +46,6 @@ void adc_loop() {
   // EDIT: ADC_B funciona ok, ADC_A no funca en modo circular
   /*  HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 5); */
   HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 6) ;
-  HAL_Delay(15);
   /*   HAL_ADC_Stop(&hadc1); */
 
   /*  HAL_ADC_Start_DMA(&hadc2, ADC_B_RAW_DATA, 10);

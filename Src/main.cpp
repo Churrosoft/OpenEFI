@@ -119,7 +119,7 @@ int main(void) {
 
   MOTOR_ENABLE = true;
   /* USER CODE END Init */
-
+ 
   /* Configure the system clock */
   SystemClock_Config();
   uint32_t StartTime = HAL_GetTick();
@@ -176,8 +176,8 @@ int main(void) {
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
         HAL_Delay(50); */
     ignition::interrupt();
-    adc_loop();
-
+    // WEBSerial:
+    web_serial::loop();
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
         HAL_Delay(50); */
     /* USER CODE BEGIN 3 */
