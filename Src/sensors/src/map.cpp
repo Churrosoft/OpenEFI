@@ -7,10 +7,10 @@
 #include "dtc_codes.h"
 
 int32_t MAP::get_value(int32_t filt_input) {
-  return filt_input;
-  int32_t volatile debug_a = convert_to_volt(filt_input);
-  debug_a = debug_a;
-  return (int32_t)MAP_CAL(convert_to_volt(filt_input));
+
+  int32_t volatile sensor_volt = convert_to_volt(filt_input);
+
+  return (int32_t)MAP_CAL(sensor_volt) / 1000;
 }
 
 int32_t MAP::get_calibrate_value(int32_t filt_input) {

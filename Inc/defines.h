@@ -123,7 +123,13 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define MAP_MIN 800
 #define MAP_MAX 4800
 
-#define MAP_CAL(mV) (mV * 16.66 + 167)
+// Sensor GM:
+// V * 18.987 + 10.1515 => kPa
+// V * 20 => Load
+
+#define MAP_CAL(V) (V * 18.987 + 10.1515)
+#define MAP_LOAD_CAL(V) (V * 20)
+
 
 //  IAT:
 #define IAT_MIN 200

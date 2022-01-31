@@ -25,18 +25,20 @@ void ignition::interrupt() {
   if (!ignition::loaded || sensors::values._MAP <= 0)
     return;
 
-  int32_t map_voltage = (sensors::values._MAP * 0.805860805861);
-  int32_t calc_map = map_voltage * 16.66 + 167;
-  int32_t load = (int32_t)(calc_map / 100) * 10;
+  /*   int32_t map_voltage = (sensors::values._MAP * 0.805860805861);
+    int32_t calc_map = map_voltage * 16.66 + 167;
+    int32_t load = (int32_t)(calc_map / 100) * 10; */
+  int32_t dbg_map = sensors::values._MAP;
+  dbg_map = dbg_map;
   auto s_result = tables::col_to_row(ignition::avc_tps_rpm, 0);
   s_result.at(0) = 1;
- /*  for (auto row_value : s_result) {
-    trace_printf("COL: %ld", row_value);
-  } */
+  /*  for (auto row_value : s_result) {
+     trace_printf("COL: %ld", row_value);
+   } */
   int16_t load_value = tables::find_nearest_neighbor(s_result, 710);
 
-  int16_t rpm_value =
-      tables::find_nearest_neighbor(ignition::avc_tps_rpm.at(0), load * 5);
+  int16_t rpm_value = tables::find_nearest_neighbor(ignition::avc_tps_rpm.at(0),
+                                                    sensors::values._MAP);
 
   if (load_value < 17 && rpm_value < 17) {
     _AE = avc_tps_rpm.at(load_value).at(rpm_value);
