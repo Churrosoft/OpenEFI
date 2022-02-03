@@ -61,8 +61,9 @@ TABLEDATA read_all(table_ref);
 // TABLEDATA alter_table(TABLEDATA, uint16_t, uint16_t, uint16_t);
 
 // utils para manejar data de las tablas:
-int16_t find_nearest_neighbor(std::vector<int32_t>, int32_t);
+int32_t find_nearest_neighbor(std::vector<int32_t>, int32_t);
 std::vector<int32_t> col_to_row(TABLEDATA, uint16_t);
+
 /**
  * @brief erases page on memory and record new data of table
  */
@@ -71,6 +72,11 @@ void update_table(TABLEDATA, table_ref);
 void dump_row(std::vector<int32_t>, uint8_t *);
 
 std::vector<int32_t> put_row(uint8_t *, uint32_t);
+
+/**
+ * @brief return true if input X/Y is on the table
+ */
+bool on_bounds(table_ref, int32_t, int32_t);
 
 // debug:
 void plot_table(TABLEDATA);

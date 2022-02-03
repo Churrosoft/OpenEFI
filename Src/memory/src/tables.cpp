@@ -109,16 +109,13 @@ void tables::update_table(TABLEDATA data, table_ref table) {
   free(buffer);
 }
 
-int16_t tables::find_nearest_neighbor(std::vector<int32_t> vec,
+int32_t tables::find_nearest_neighbor(std::vector<int32_t> vec,
                                       int32_t search) {
 
-  int16_t search_result = std::abs(std::distance(
-      vec.begin(), std::upper_bound(vec.begin(), vec.end(), search)));
+  auto upper_bound = std::upper_bound(vec.begin(), vec.end(), search);
+  auto search_result = std::distance(vec.begin(), upper_bound);
 
-  if (search_result == *vec.end()) {
-    return -1;
-  }
-  return search_result;
+  return (int32_t)std::abs(search_result);
 }
 
 void tables::plot_table(TABLEDATA table) {
@@ -140,4 +137,15 @@ std::vector<int32_t> tables::col_to_row(TABLEDATA table, uint16_t table_index) {
     out_vec.push_back(table_y[table_index]);
   }
   return out_vec;
+}
+
+bool tables::on_bounds(table_ref table, int32_t x, int32_t y) {
+
+  if (x > table.x_max || y > table.y_max)
+    return false;
+  
+  if (x < 0 || y < 0)
+    return false;
+
+  return true;
 }
