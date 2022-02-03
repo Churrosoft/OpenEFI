@@ -632,9 +632,9 @@ Generating class docu/home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:1
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:50: warning: Member set_long_value(table_ref, uint16_t, uint16_t, int32_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:64: warning: Member find_nearest_neighbor(std::vector< int32_t >, int32_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:65: warning: Member col_to_row(TABLEDATA, uint16_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:71: warning: Member dump_row(std::vector< int32_t >, uint8_t *) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:73: warning: Member put_row(uint8_t *, uint32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:76: warning: Member plot_table(TABLEDATA) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:72: warning: Member dump_row(std::vector< int32_t >, uint8_t *) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:74: warning: Member put_row(uint8_t *, uint32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:82: warning: Member plot_table(TABLEDATA) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:55: warning: argument 'table_ref' of command @param is not found in the argument list of tables::read_all(table_ref table)
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:59: warning: The following parameters of tables::read_all(table_ref table) are not documented:
   parameter 'table'
@@ -667,5 +667,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 237/65536 hits=446 misses=241
+lookup cache used 238/65536 hits=451 misses=242
 finished...
