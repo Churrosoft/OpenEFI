@@ -77,8 +77,11 @@ void web_serial::command_handler() {
       payload[4] = (mockload >> 8) & 0xFF;
       payload[5] = mockload & 0xFF;
 
-      payload[6] = (_AE >> 8) & 0xFF;
-      payload[7] = _AE & 0xFF;
+      payload[6] = (mockbattery >> 8) & 0xFF;
+      payload[7] = mockbattery & 0xFF;
+
+      payload[8] = (_AE >> 8) & 0xFF;
+      payload[9] = _AE & 0xFF;
 
       out_comm = create_command(CORE_STATUS, payload);
       export_command(out_comm, serialized_command);
@@ -163,8 +166,6 @@ void web_serial::command_handler() {
     }
 
     case TABLES_WRITE: {
-/*       tables::plot_table(in_table);
- */
       // TODO: CRC check, move switch to func, write only changed rows
 
       selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
@@ -202,7 +203,7 @@ void web_serial::send_deque() {
     uint8_t serialized_command[128];
     export_command(out_comm, serialized_command);
     CDC_Transmit_FS(serialized_command, 128);
-    HAL_Delay(10);
+    // HAL_Delay(10);
   }
 }
 

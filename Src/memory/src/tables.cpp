@@ -60,8 +60,6 @@ TABLEDATA tables::read_all(table_ref table) {
 
       matrix[matrix_y][matrix_x] = value;
 
-      auto volatile storageValue = matrix[matrix_y][matrix_x]; // DEBUG
-      BREAKPOINT
       datarow += 4;
     }
     datarow = 0;
@@ -85,9 +83,12 @@ std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
   std::vector<int32_t> data_out;
 
   for (uint32_t index = 2; index < buff_size; index += 4) {
-    data_out.push_back((int32_t)(data[index + 1] << 8) +
-                       (data[index + 2] << 16) + (data[index + 3] << 24) +
-                       data[index]);
+    
+    int32_t row_value = (int32_t)(data[index + 1] << 8) +
+                        (data[index + 2] << 16) + (data[index + 3] << 24) +
+                        data[index];
+
+    data_out.push_back(row_value);
   }
   return data_out;
 }
@@ -97,15 +98,11 @@ void tables::update_table(TABLEDATA data, table_ref table) {
   uint8_t *buffer = (uint8_t *)malloc(size);
 
   dump_table(data, buffer);
-  uint8_t a = buffer[0];
-  uint8_t b = buffer[1];
-  uint8_t c = buffer[2];
-  uint8_t d = buffer[3];
+
   W25qxx_EraseSector(table.memory_address);
 
   W25qxx_WriteSector(buffer, table.memory_address, 0, size);
 
-  BREAKPOINT
   free(buffer);
 }
 
@@ -143,7 +140,7 @@ bool tables::on_bounds(table_ref table, int32_t x, int32_t y) {
 
   if (x > table.x_max || y > table.y_max)
     return false;
-  
+
   if (x < 0 || y < 0)
     return false;
 

@@ -33,10 +33,11 @@ void ignition::interrupt() {
     dbg_map_v = dbg_map_v;
     dbg_map = dbg_map; */
 
-  auto s_result = tables::col_to_row(ignition::avc_tps_rpm, 0);
-  s_result.at(0) = 1;
+  auto kpa_row = tables::col_to_row(ignition::avc_tps_rpm, 0);
+  kpa_row.at(0) = 1;
 
-  int32_t load_value = tables::find_nearest_neighbor(s_result, sensors::values._MAP);
+  int32_t load_value =
+      tables::find_nearest_neighbor(kpa_row, sensors::values._MAP);
 
   int32_t rpm_value =
       tables::find_nearest_neighbor(ignition::avc_tps_rpm.at(0), _RPM);
