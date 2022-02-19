@@ -19,11 +19,9 @@ int32_t get_input(uint8_t pin) {
         volatile auto debug = ADC_A_RAW_DATA[pin];
         debug = debug;
       } else {
-        inputs.values[pin].actualValue = ADC_B_RAW_DATA[pin];
-        volatile auto debug2 = ADC_A_RAW_DATA[pin];
-        debug2 = debug2;
+        inputs.values[pin].actualValue = ADC_B_RAW_DATA[pin-5];
       }
-      inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
+    //  inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
     }
     return inputs.values[pin].lastValue;
   }
