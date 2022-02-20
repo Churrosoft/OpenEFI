@@ -1,31 +1,50 @@
 
 #include "input_handler.hpp"
-ADC_HandleTypeDef hadc1;
-ADC_HandleTypeDef hadc2;
+#include "spi.h"
 
 struct input_handler inputs;
-uint32_t ADC_A_RAW_DATA[6] = {0, 0, 0, 0, 0,0};
-uint32_t ADC_B_RAW_DATA[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-int32_t get_input(uint8_t pin) {
-/*   inputs.values[pin].actualValue = ADC_A_RAW_DATA[0];
-  inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
-  return inputs.values[pin].actualValue;
- */
-  if (pin < 15) {
-    for (uint8_t i = 0; i < 5; i++) {
-      if (pin < 5) {
-        inputs.values[pin].actualValue = (int32_t)ADC_A_RAW_DATA[pin];
-        volatile auto debug = ADC_A_RAW_DATA[pin];
-        debug = debug;
-      } else {
-        inputs.values[pin].actualValue = ADC_B_RAW_DATA[pin-5];
-      }
-    //  inputs.values[pin] = EMALowPassFilter(inputs.values[pin]);
-    }
-    return inputs.values[pin].lastValue;
-  }
-  return 0;
+/*
+http://ww1.microchip.com/downloads/en/DeviceDoc/21298e.pdf
+Channel selection:
+  TX only:       |        TX/RX
+0 0 0 0 0 1 1 0  | 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 single-ended CH0
+0 0 0 0 0 1 1 0  | 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 single-ended CH1
+0 0 0 0 0 1 1 0  | 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 single-ended CH2
+0 0 0 0 0 1 1 0  | 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 single-ended CH3
+
+0 0 0 0 0 1 1 1  | 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 single-ended CH4
+0 0 0 0 0 1 1 1  | 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 single-ended CH5
+0 0 0 0 0 1 1 1  | 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 single-ended CH6
+0 0 0 0 0 1 1 1  | 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 single-ended CH7
+*/
+
+int32_t get_input(uint8_t channel) {
+  uint8_t out_data[2] = {0xff, 0xff};
+  uint8_t main_addr = 0b00000110;
+  uint16_t sec_addr = 0b0; // ch0 || ch4;
+
+  if (channel > 3)
+    main_addr = 0b00000111;
+
+  if (channel == 1 || channel == 5)
+    sec_addr = 0b0100000000000000;
+
+  if (channel == 2 || channel == 6)
+    sec_addr = 0b1000000000000000;
+
+  if (channel == 3 || channel == 7)
+    sec_addr = 0b1100000000000000;
+
+  HAL_SPI_Transmit(&hspi2, (uint8_t *)main_addr, 1, 50);
+
+  HAL_SPI_TransmitReceive(&hspi2, (uint8_t *)sec_addr, out_data, 2, 50);
+
+  inputs.values[channel].actualValue =
+      (int32_t)((uint16_t)out_data[0] << 8) + out_data[1];
+
+  inputs.values[channel] = EMALowPassFilter(inputs.values[channel]);
+  return inputs.values[channel].actualValue;
 }
 
 void input_setup() {
@@ -33,22 +52,11 @@ void input_setup() {
 }
 
 void adc_setup() {
-  if (HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 6) != HAL_OK)
-    Error_Handler();
-  if (HAL_ADC_Start_DMA(&hadc2, ADC_B_RAW_DATA, 10) != HAL_OK)
-    Error_Handler();
+#pragma GCC warning "Function decreapated"
 }
 
-void adc_loop() {
-  // FIXME: solo ADC_A_RAW_DATA[0-1] tiene data, el resto llega en 0
-  // EDIT: ADC_B funciona ok, ADC_A no funca en modo circular
-  /*  HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 5); */
-  HAL_ADC_Start_DMA(&hadc1, ADC_A_RAW_DATA, 6) ;
-  /*   HAL_ADC_Stop(&hadc1); */
-
-  /*  HAL_ADC_Start_DMA(&hadc2, ADC_B_RAW_DATA, 10);
-   HAL_Delay(15); */
-  /*   HAL_ADC_Stop(&hadc2); */
+void adc_loop(){
+#pragma GCC warning "Function decreapated"
 }
 
 int32_t get_adc_data(uint8_t channel) {
