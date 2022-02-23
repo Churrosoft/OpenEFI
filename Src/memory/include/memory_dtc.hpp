@@ -11,7 +11,6 @@
  */
 #include <stdint.h>
 #include <initializer_list>
-#include "memory.hpp"
 #include "dtc_codes.h"
 
 uint16_t get_all_dtc();

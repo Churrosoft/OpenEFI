@@ -12,7 +12,6 @@
  */
 
 #include <stdint.h>
-#include "memory.hpp"
 
 bool can_turn_on();
 void write_emergency_stop(uint8_t *);

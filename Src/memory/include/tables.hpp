@@ -17,7 +17,6 @@ extern "C" {
 #include "w25qxx.h"
 }
 
-#include "memory.hpp"
 #include <algorithm>
 #include <limits.h>
 #include <math.h>

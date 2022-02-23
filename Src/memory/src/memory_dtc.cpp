@@ -23,12 +23,12 @@ uint16_t get_all_dtc()
 bool is_dtc()
 {
     // devuelve true en caso de que exista un dtc;
-    uint16_t data = memory::read_single(DTC_FLAG_ADDR);
-    return data != 0xFE;
+/*     uint16_t data = memory::read_single(DTC_FLAG_ADDR);
+    return data != 0xFE; */
 }
 
 void write_dtc(uint8_t *dtc_code)
-{
+{/* 
     uint16_t dtc_number = get_all_dtc();
     if (dtc_number && dtc_number < 5)
     {
@@ -39,12 +39,12 @@ void write_dtc(uint8_t *dtc_code)
     {
         memory::write_multiple(DTC_INIT_ADDR, dtc_code, 5);
         // memory::write_single(DTC_FLAG_ADDR, 0);
-    }
+    } */
 }
 
 void write_dtc(uint8_t *dtc_code, uint8_t dtc_number)
 {
-    memory::write_multiple(DTC_INIT_ADDR + (dtc_number * 5), dtc_code, 5);
+   /*  memory::write_multiple(DTC_INIT_ADDR + (dtc_number * 5), dtc_code, 5); */
 }
 
 // busca un codigo en la memoria para ver si ya existe, (no vamo a grabar las cosas dos veces vite')
@@ -55,7 +55,7 @@ bool search_dtc(uint8_t *dtc_code)
 
 void read_dtc(uint8_t dtc_number, uint8_t *data)
 {
-    uint32_t ptr = (DTC_INIT_ADDR + (dtc_number * 5));
+/*     uint32_t ptr = (DTC_INIT_ADDR + (dtc_number * 5));
     memory::read_multiple(ptr, data, 5);
-    data[5] = '\0';
+    data[5] = '\0'; */
 }

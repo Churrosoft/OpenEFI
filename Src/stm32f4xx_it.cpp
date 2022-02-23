@@ -333,7 +333,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     // WEBSerial:
     web_serial::loop();
     // Sensors:
-    sensors::loop();
+    // sensors::loop();
     // INJECTION/IGNITION ALGORITHMS
     adc_loop();
 

@@ -1,4 +1,5 @@
 #include "../include/tables.hpp"
+#include <stdio.h>
 
 extern "C" {
 #include "trace.h"
