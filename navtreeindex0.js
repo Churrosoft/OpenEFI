@@ -16,9 +16,7 @@ var NAVTREEINDEX0 =
 "CHT__1__6___8h.html#aaeb2f99c34c54e97fc729bf4fee024ad":[3,0,0,1,0,1],
 "CHT__1__6___8h.html#ad9146e8f480ce926f45e4ef151653b9f":[3,0,0,1,0,0],
 "CHT__1__6___8h_source.html":[3,0,0,1,0],
-"Inc_2aliases_2memory_8hpp_source.html":[3,0,0,0,0],
 "Inc_2aliases_2sensors_8hpp_source.html":[3,0,0,0,1],
-"Src_2memory_2include_2memory_8hpp_source.html":[3,0,1,4,0,1],
 "Src_2sensors_2sensors_8hpp_source.html":[3,0,1,6,3],
 "adc_8c.html":[3,0,1,8],
 "adc_8c.html#a101e2e3433dfe72bbbd0ae3a84489263":[3,0,1,8,3],
@@ -216,8 +214,8 @@ var NAVTREEINDEX0 =
 "group__STM32F4xx__System__Private__Defines.html#ga40e1495541cbb4acbe3f1819bd87a9fe":[0,1,0,2,0],
 "group__STM32F4xx__System__Private__FunctionPrototypes.html":[0,1,0,5],
 "group__STM32F4xx__System__Private__Functions.html":[0,1,0,6],
-"group__STM32F4xx__System__Private__Functions.html#ga93f514700ccf00d08dbdcff7f1224eb2":[3,0,1,12,4],
 "group__STM32F4xx__System__Private__Functions.html#ga93f514700ccf00d08dbdcff7f1224eb2":[0,1,0,6,1],
+"group__STM32F4xx__System__Private__Functions.html#ga93f514700ccf00d08dbdcff7f1224eb2":[3,0,1,12,4],
 "group__STM32F4xx__System__Private__Functions.html#gae0c36a9591fe6e9c45ecb21a794f0f0f":[3,0,1,12,3],
 "group__STM32F4xx__System__Private__Functions.html#gae0c36a9591fe6e9c45ecb21a794f0f0f":[0,1,0,6,0],
 "group__STM32F4xx__System__Private__Includes.html":[0,1,0,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "group__USBD__CDC__IF__Exported__Macros.html":[0,2,0,8],
 "group__USBD__CDC__IF__Exported__Types.html":[0,2,0,7],
 "group__USBD__CDC__IF__Exported__Types.html#gaaaac7e9bffb7ad4440ceda540759d08d":[3,0,0,15,2],
-"group__USBD__CDC__IF__Exported__Types.html#ggaaaac7e9bffb7ad4440ceda540759d08da105d04a7f62e2183de36572da37ed87e":[3,0,0,15,2,0]
+"group__USBD__CDC__IF__Exported__Types.html#ggaaaac7e9bffb7ad4440ceda540759d08da105d04a7f62e2183de36572da37ed87e":[3,0,0,15,2,0],
+"group__USBD__CDC__IF__Exported__Types.html#ggaaaac7e9bffb7ad4440ceda540759d08dad203379a9d4cde4ff177ce0208bf5dcf":[3,0,0,15,2,1],
+"group__USBD__CDC__IF__Exported__Variables.html":[0,2,0,4]
 };
