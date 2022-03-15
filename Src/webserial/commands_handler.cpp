@@ -83,6 +83,9 @@ void web_serial::command_handler() {
       payload[8] = (_AE >> 8) & 0xFF;
       payload[9] = _AE & 0xFF;
 
+      // efi status
+      payload[10] = 1;
+
       out_comm = create_command(CORE_STATUS, payload);
       export_command(out_comm, serialized_command);
       CDC_Transmit_FS(serialized_command, 128);
