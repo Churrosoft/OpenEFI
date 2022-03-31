@@ -63,7 +63,8 @@ void web_serial::command_handler() {
 
     case CORE_STATUS: {
 
-      int mockrpm = 750 + (rand() % 5750);
+      //int mockrpm = 750 + (rand() % 5750);
+      int mockrpm = _RPM;
       int mocktemp = 1 + (rand() % 130);
       int mockload = 1 + (rand() % 100);
       int mockbattery = 1 + (rand() % 1500);

@@ -76,6 +76,8 @@ extern TIM_HandleTypeDef htim10;
 extern TIM_HandleTypeDef htim14;
 /* USER CODE BEGIN EV */
 bool led_checked = false;
+bool led_checked2 = false;
+
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -246,7 +248,10 @@ void TIM4_IRQHandler(void) {
  */
 void EXTI9_5_IRQHandler(void) {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
-
+     HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
+                      led_checked2 ? GPIO_PIN_RESET : GPIO_PIN_SET);
+                          led_checked2 = !led_checked2;
+_POS++;
   /* USER CODE END EXTI9_5_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_7);
@@ -389,7 +394,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     CPWM::interrupt();
   }
   if (GPIO_Pin == GPIO_PIN_6 && !SINC) {
-    SINC = sinc();
+     HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
+                      led_checked2 ? GPIO_PIN_RESET : GPIO_PIN_SET);
+                          led_checked2 = !led_checked2;
+
+    // SINC = sinc();
   }
 }
 

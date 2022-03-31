@@ -57,6 +57,7 @@ extern "C" {
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
+#include "cpwm/include/cpwm.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -166,6 +167,8 @@ int main(void) {
   /* Infinite loop */
   HAL_ADC_MspInit(&hadc1);
 
+  uint64_t last_rpm = 0;
+
   /* USER CODE BEGIN WHILE */
   while (1) {
     /* USER CODE END WHILE */
@@ -178,6 +181,11 @@ int main(void) {
     ignition::interrupt();
     // WEBSerial:
     web_serial::loop();
+      if (HAL_GetTick() - last_rpm >= 500) {
+    // save the last time you blinked the LED
+    last_rpm = HAL_GetTick() ;
+        CPWM::calc_rpm();
+      }
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
         HAL_Delay(50); */
     /* USER CODE BEGIN 3 */
