@@ -1,9 +1,11 @@
 #include <stdint.h>
+#include <math.h>
 #include "defines.h"
 #include "user_defines.h"
 
+#include "dtc_codes.h"
+
 #include "../utils/basic_electronics.h"
-#include <math.h>
 
 #ifndef TEMP_CPP
 #define TEMP_CPP
@@ -23,7 +25,7 @@ namespace TEMP
     /** @brief revisa el estado del sensor para disparar un DTC en caso que sea necesario
      * @param in valor en Volt del sensor
      */
-    uint8_t* dtc(void);
+   NEW_DTC dtc(void);
 
     extern int32_t last_value;
 } // namespace TEMP

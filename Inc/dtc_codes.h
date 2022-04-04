@@ -4,10 +4,10 @@
 #define DTC_CODES_H
 
 // All DTC's codes used by OpenEFI
-
+#include <vector>
 // DTC init:
-#define NEW_DTC new uint8_t[5]
-
+#define NEW_DTC std::vector<uint8_t>
+#define EMPTY_DTC  { 0x0 }
 // System:
 
 #define DTC_SYSTEM_VOLTAGE_MALFUNCTION      { 0x50, 0x30, 0x35, 0x36, 0x30 } //!< or P0560
