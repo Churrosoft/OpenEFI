@@ -56,5 +56,6 @@ var dtc__codes_8h =
     [ "DTC_TPS_SENSOR_INTERMITTENT", "dtc__codes_8h.html#a3f5e6d5b289eb3cb9d78b3cc41682033", null ],
     [ "DTC_TURBO_NO_PRESSURE", "dtc__codes_8h.html#a3158ed67ba6120bbf8a3e3658ea38fb3", null ],
     [ "DTC_TURBO_PRESSURE_LOW", "dtc__codes_8h.html#af44289051f9e235d09089b2193e3a05f", null ],
+    [ "EMPTY_DTC", "dtc__codes_8h.html#a251129b3aace19562ce2c5d736f57299", null ],
     [ "NEW_DTC", "dtc__codes_8h.html#afe4c6d4587dc82be24fe89575fd095a1", null ]
 ];
