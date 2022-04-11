@@ -2,6 +2,12 @@
 #define IAT_HPP
 
 #include <stdint.h>
+#include "defines.h"
+#include "user_defines.h"
+
+#include "dtc_codes.h"
+
+#include "../utils/basic_electronics.h"
 
 namespace IAT
 {
@@ -22,7 +28,7 @@ namespace IAT
     /** @brief revisa el estado del sensor para disparar un DTC en caso que sea necesario
      * @param in valor en Volt del sensor
      */
-    uint8_t* dtc(void);
+    NEW_DTC dtc(void);
 
     extern int32_t last_value;
 } // namespace IAT
