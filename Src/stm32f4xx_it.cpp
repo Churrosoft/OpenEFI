@@ -248,10 +248,11 @@ void TIM4_IRQHandler(void) {
  */
 void EXTI9_5_IRQHandler(void) {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
-     HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
-                      led_checked2 ? GPIO_PIN_RESET : GPIO_PIN_SET);
-                          led_checked2 = !led_checked2;
-_POS++;
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
+                    led_checked2 ? GPIO_PIN_RESET : GPIO_PIN_SET);
+  led_checked2 = !led_checked2;
+  _POS++;
+  _rpm_time += HAL_GetTick();
   /* USER CODE END EXTI9_5_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_7);
@@ -394,9 +395,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     CPWM::interrupt();
   }
   if (GPIO_Pin == GPIO_PIN_6 && !SINC) {
-     HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
                       led_checked2 ? GPIO_PIN_RESET : GPIO_PIN_SET);
-                          led_checked2 = !led_checked2;
+    led_checked2 = !led_checked2;
 
     // SINC = sinc();
   }

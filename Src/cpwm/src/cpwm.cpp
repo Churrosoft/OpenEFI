@@ -11,8 +11,11 @@ extern "C"
 #endif
 }
 
+#define USE_NEW_RPM_CALC
+
 uint32_t _POS;
 uint32_t _RPM;
+uint32_t _rpm_time = 0;
 
 uint16_t CPWM::iny_time = 15;
 uint16_t CPWM::iny_pin = 0;
@@ -229,6 +232,12 @@ void CPWM::tim4_irq()
 
 void CPWM::calc_rpm()
 {
-    _RPM = (_POS / DNT) * 90; // calculo para obtener las rpm
+    #ifdef USE_NEW_RPM_CALC
+    _RPM = (_rpm_time / _POS) * DNT * 2 * 60;
+    #endif
+
+    #ifndef USE_NEW_RPM_CALC
+    _RPM = (_POS / DNT) * 120; // calculo para obtener las rpm
     _POS = 0;
+    #endif
 }
