@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenEFI: /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h File Reference</title>
+<title>OpenEFI: /home/runner/work/OpenEFI/OpenEFI/Src/tim.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('tim_8h.html','');});
+$(document).ready(function(){initNavTree('tim_8c.html','');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -84,16 +84,15 @@ $(document).ready(function(){initNavTree('tim_8h.html','');});
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">tim.h File Reference</div>  </div>
+<div class="title">tim.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This file contains all the function prototypes for the <a class="el" href="tim_8c.html" title="This file provides code for the configuration of the TIM instances. ">tim.c</a> file.  
+<p>This file provides code for the configuration of the TIM instances.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
-</div>
-<p><a href="tim_8h_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="tim_8h_source.html">tim.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="defines_8h_source.html">defines.h</a>&quot;</code><br />
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ad1f9d42690163f73f73e5b820c81ca14"><td class="memItemLeft" align="right" valign="top"><a id="ad1f9d42690163f73f73e5b820c81ca14"></a>
@@ -111,8 +110,22 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>MX_TIM9_Init</b> (voi
 <tr class="memitem:a897293ac5474c491773ec7404c531c3b"><td class="memItemLeft" align="right" valign="top"><a id="a897293ac5474c491773ec7404c531c3b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>MX_TIM10_Init</b> (void)</td></tr>
 <tr class="separator:a897293ac5474c491773ec7404c531c3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae70bce6c39d0b570a7523b86738cec4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tim_8h.html#ae70bce6c39d0b570a7523b86738cec4b">HAL_TIM_MspPostInit</a> (TIM_HandleTypeDef *htim)</td></tr>
-<tr class="separator:ae70bce6c39d0b570a7523b86738cec4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b1802cec6c627135b6c10a1ab67f7f3"><td class="memItemLeft" align="right" valign="top"><a id="a0b1802cec6c627135b6c10a1ab67f7f3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>MX_TIM11_Init</b> (void)</td></tr>
+<tr class="separator:a0b1802cec6c627135b6c10a1ab67f7f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59716af159bfbbb6023b31354fb23af8"><td class="memItemLeft" align="right" valign="top"><a id="a59716af159bfbbb6023b31354fb23af8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>HAL_TIM_Base_MspInit</b> (TIM_HandleTypeDef *tim_baseHandle)</td></tr>
+<tr class="separator:a59716af159bfbbb6023b31354fb23af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc04a9bb2813334b6e3585d1f16e5199"><td class="memItemLeft" align="right" valign="top"><a id="acc04a9bb2813334b6e3585d1f16e5199"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>HAL_TIM_PWM_MspInit</b> (TIM_HandleTypeDef *tim_pwmHandle)</td></tr>
+<tr class="separator:acc04a9bb2813334b6e3585d1f16e5199"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a708f19bbc41b292fccf38f2d9796c46a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tim_8c.html#a708f19bbc41b292fccf38f2d9796c46a">HAL_TIM_MspPostInit</a> (TIM_HandleTypeDef *timHandle)</td></tr>
+<tr class="separator:a708f19bbc41b292fccf38f2d9796c46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adee8ed7d3ebb3a217c27ac10af86ce2f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tim_8c.html#adee8ed7d3ebb3a217c27ac10af86ce2f">HAL_TIM_Base_MspDeInit</a> (TIM_HandleTypeDef *tim_baseHandle)</td></tr>
+<tr class="separator:adee8ed7d3ebb3a217c27ac10af86ce2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab862d9bf6ab68a9201719c992c3f4b43"><td class="memItemLeft" align="right" valign="top"><a id="ab862d9bf6ab68a9201719c992c3f4b43"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>HAL_TIM_PWM_MspDeInit</b> (TIM_HandleTypeDef *tim_pwmHandle)</td></tr>
+<tr class="separator:ab862d9bf6ab68a9201719c992c3f4b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -131,15 +144,40 @@ TIM_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><b>htim9</b
 <tr class="memitem:a3c386e4f1937c518c1beccddef92045e"><td class="memItemLeft" align="right" valign="top"><a id="a3c386e4f1937c518c1beccddef92045e"></a>
 TIM_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><b>htim10</b></td></tr>
 <tr class="separator:a3c386e4f1937c518c1beccddef92045e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f22f985c4f33318fdcd4cc996623bf4"><td class="memItemLeft" align="right" valign="top"><a id="a2f22f985c4f33318fdcd4cc996623bf4"></a>
+TIM_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><b>htim11</b></td></tr>
+<tr class="separator:a2f22f985c4f33318fdcd4cc996623bf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file contains all the function prototypes for the <a class="el" href="tim_8c.html" title="This file provides code for the configuration of the TIM instances. ">tim.c</a> file. </p>
+<div class="textblock"><p>This file provides code for the configuration of the TIM instances. </p>
 <dl class="section attention"><dt>Attention</dt><dd></dd></dl>
-<h2><center>&copy; Copyright (c) 2022 STMicroelectronics. All rights reserved.</center></h2>
-<p>This software component is licensed by ST under Ultimate Liberty license SLA0044, the "License"; You may not use this file except in compliance with the License. You may obtain a copy of the License at: www.st.com/SLA0044 </p>
+<p>Copyright (c) 2022 STMicroelectronics. All rights reserved.</p>
+<p>This software is licensed under terms that can be found in the LICENSE file in the root directory of this software component. If no LICENSE file comes with this software, it is provided AS-IS. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="ae70bce6c39d0b570a7523b86738cec4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae70bce6c39d0b570a7523b86738cec4b">&#9670;&nbsp;</a></span>HAL_TIM_MspPostInit()</h2>
+<a id="adee8ed7d3ebb3a217c27ac10af86ce2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adee8ed7d3ebb3a217c27ac10af86ce2f">&#9670;&nbsp;</a></span>HAL_TIM_Base_MspDeInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HAL_TIM_Base_MspDeInit </td>
+          <td>(</td>
+          <td class="paramtype">TIM_HandleTypeDef *&#160;</td>
+          <td class="paramname"><em>tim_baseHandle</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Uncomment the line below to disable the "TIM1_UP_TIM10_IRQn" interrupt Be aware, disabling shared interrupt may affect other IPs</p>
+<p>Uncomment the line below to disable the "TIM1_TRG_COM_TIM11_IRQn" interrupt Be aware, disabling shared interrupt may affect other IPs</p>
+<p>Uncomment the line below to disable the "TIM1_UP_TIM10_IRQn" interrupt Be aware, disabling shared interrupt may affect other IPs</p>
+<p>Uncomment the line below to disable the "TIM1_TRG_COM_TIM11_IRQn" interrupt Be aware, disabling shared interrupt may affect other IPs</p>
+
+</div>
+</div>
+<a id="a708f19bbc41b292fccf38f2d9796c46a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a708f19bbc41b292fccf38f2d9796c46a">&#9670;&nbsp;</a></span>HAL_TIM_MspPostInit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -148,7 +186,7 @@ TIM_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><b>htim10</
           <td class="memname">void HAL_TIM_MspPostInit </td>
           <td>(</td>
           <td class="paramtype">TIM_HandleTypeDef *&#160;</td>
-          <td class="paramname"><em>htim</em></td><td>)</td>
+          <td class="paramname"><em>timHandle</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -162,7 +200,7 @@ TIM_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><b>htim10</
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_f93dfce691d792349f1c14ede440e2e6.html">Inc</a></li><li class="navelem"><a class="el" href="tim_8h.html">tim.h</a></li>
+    <li class="navelem"><a class="el" href="dir_413f4e031a85da0d68269c6fd2f76e1c.html">Src</a></li><li class="navelem"><a class="el" href="tim_8c.html">tim.c</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>

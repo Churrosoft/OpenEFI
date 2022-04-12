@@ -477,6 +477,7 @@ Generating code for file /home/runner/work/OpenEFI/Open/home/runner/work/OpenEFI
 /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:46: warning: Member MX_TIM4_Init(void) (function) of file tim.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:47: warning: Member MX_TIM9_Init(void) (function) of file tim.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:48: warning: Member MX_TIM10_Init(void) (function) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:34: warning: Member htim1 (variable) of file tim.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:35: warning: Member htim3 (variable) of file tim.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:36: warning: Member htim4 (variable) of file tim.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:37: warning: Member htim9 (variable) of file tim.h is not documented.
@@ -510,6 +511,21 @@ Generating code for file /home/runner/work/OpenEFI/Open/home/runner/work/OpenEFI
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:121: warning: Member SystemCoreClock (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:122: warning: Member AHBPrescTable[16] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:123: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:35: warning: Member MX_TIM1_Init(void) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:95: warning: Member MX_TIM3_Init(void) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:131: warning: Member MX_TIM4_Init(void) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:160: warning: Member MX_TIM9_Init(void) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:201: warning: Member MX_TIM10_Init(void) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:227: warning: Member MX_TIM11_Init(void) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:253: warning: Member HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:335: warning: Member HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *tim_pwmHandle) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:483: warning: Member HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef *tim_pwmHandle) (function) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:27: warning: Member htim1 (variable) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:28: warning: Member htim3 (variable) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:29: warning: Member htim4 (variable) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:30: warning: Member htim9 (variable) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:31: warning: Member htim10 (variable) of file tim.c is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/tim.c:32: warning: Member htim11 (variable) of file tim.c is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usb_device.c:45: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:66: warning: Member USBD_VID (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:67: warning: Member USBD_LANGID_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
@@ -629,6 +645,7 @@ Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/stm32f4xx_hal_msp.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c...
+Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/tim.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/usb_device.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c...
 Generating page documentation...
@@ -658,5 +675,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 238/65536 hits=467 misses=245
+lookup cache used 239/65536 hits=469 misses=246
 finished...
