@@ -193,6 +193,7 @@ int main(void) {
   /* USER CODE END 3 */
 }
 
+//https://riunet.upv.es/bitstream/handle/10251/39538/ArticuloTimers.pdf?sequence=1
 /**
  * @brief System Clock Configuration
  * @retval None
