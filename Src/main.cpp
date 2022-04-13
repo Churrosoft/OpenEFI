@@ -51,13 +51,13 @@ extern "C" {
 #include "aliases/memory.hpp"
 #include <cstdlib>
 
+#include "cpwm/include/cpwm.hpp"
 #include "debug/debug_local.h"
 #include "ignition/include/ignition.hpp"
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
-#include "cpwm/include/cpwm.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -120,7 +120,7 @@ int main(void) {
 
   MOTOR_ENABLE = true;
   /* USER CODE END Init */
- 
+
   /* Configure the system clock */
   SystemClock_Config();
   uint32_t StartTime = HAL_GetTick();
@@ -131,7 +131,7 @@ int main(void) {
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  
+
   MX_ADC1_Init();
   MX_ADC2_Init();
 
@@ -181,11 +181,11 @@ int main(void) {
     ignition::interrupt();
     // WEBSerial:
     web_serial::loop();
-      if (HAL_GetTick() - last_rpm >= 500) {
-    // save the last time you blinked the LED
-    last_rpm = HAL_GetTick() ;
-        CPWM::calc_rpm();
-      }
+    if (HAL_GetTick() - last_rpm >= 500) {
+      // save the last time you blinked the LED
+      last_rpm = HAL_GetTick();
+      trace_printf("Event: <RPM; POS> %d ; %d \r\n", _RPM, _POS);
+    }
     /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
         HAL_Delay(50); */
     /* USER CODE BEGIN 3 */
@@ -193,7 +193,7 @@ int main(void) {
   /* USER CODE END 3 */
 }
 
-//https://riunet.upv.es/bitstream/handle/10251/39538/ArticuloTimers.pdf?sequence=1
+// https://riunet.upv.es/bitstream/handle/10251/39538/ArticuloTimers.pdf?sequence=1
 /**
  * @brief System Clock Configuration
  * @retval None

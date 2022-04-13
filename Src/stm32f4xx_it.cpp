@@ -73,6 +73,7 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim10;
+extern TIM_HandleTypeDef htim11;
 extern TIM_HandleTypeDef htim14;
 /* USER CODE BEGIN EV */
 bool led_checked = false;
@@ -344,6 +345,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     adc_loop();
 
     led_checked = !led_checked;
+  }
+  // Timer 500mS RPM:
+  if (htim->Instance == TIM11) {
+    CPWM::calc_rpm();
   }
   /* USER CODE END Callback 1 */
 }
