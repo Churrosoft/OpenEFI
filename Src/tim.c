@@ -72,7 +72,7 @@ void MX_TIM1_Init(void)
   /* USER CODE END TIM1_Init 2 */
 
 }
-/* TIM3 init function */
+
 /*
   Teniendo en cuenta que:
   SYSCLK: 168Mhz
