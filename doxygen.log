@@ -192,7 +192,7 @@ Preprocessing //home/runner/work/OpenEFI/OpenEFI/Src/main.cpp:4: warning: the na
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_cdc_if.cpp:4: warning: the name `usbd_cdc_if.c' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_conf.c:4: warning: the name `Target/usbd_conf.c' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Src/usbd_desc.c:4: warning: the name `App/usbd_desc.c' supplied as the second argument in the \file statement is not an input file
-/home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h:3: warning: the name `stm32f4xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
+/home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h:4: warning: the name `stm32f4xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:18: warning: Compound input_handler is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:14: warning: Compound web_serial::serial_command is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:28: warning: Compound table_ref is not documented.
@@ -472,16 +472,18 @@ Generating code for file /home/runner/work/OpenEFI/Open/home/runner/work/OpenEFI
 /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:30: warning: Member MAX_RPM (macro definition) of file CHT_1_6_.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:36: warning: Member AVCI (macro definition) of file CHT_1_6_.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/templates/CHT_1_6_.h:39: warning: Member ECNT (macro definition) of file CHT_1_6_.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:44: warning: Member MX_TIM1_Init(void) (function) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:45: warning: Member MX_TIM3_Init(void) (function) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:46: warning: Member MX_TIM4_Init(void) (function) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:47: warning: Member MX_TIM9_Init(void) (function) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:48: warning: Member MX_TIM10_Init(void) (function) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:34: warning: Member htim1 (variable) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:35: warning: Member htim3 (variable) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:36: warning: Member htim4 (variable) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:37: warning: Member htim9 (variable) of file tim.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:38: warning: Member htim10 (variable) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:51: warning: Member MX_TIM1_Init(void) (function) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:52: warning: Member MX_TIM3_Init(void) (function) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:53: warning: Member MX_TIM4_Init(void) (function) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:54: warning: Member MX_TIM9_Init(void) (function) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:55: warning: Member MX_TIM10_Init(void) (function) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:56: warning: Member MX_TIM11_Init(void) (function) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:35: warning: Member htim1 (variable) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:37: warning: Member htim3 (variable) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:39: warning: Member htim4 (variable) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:41: warning: Member htim9 (variable) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:43: warning: Member htim10 (variable) of file tim.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/tim.h:45: warning: Member htim11 (variable) of file tim.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:52: warning: Member APP_RX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Exported_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:53: warning: Member APP_TX_DATA_SIZE (macro definition) of group USBD_CDC_IF_Exported_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h:69: warning: Member USB_CDC_RX_BUFFER_StatusTypeDef (enumeration) of group USBD_CDC_IF_Exported_Types is not documented.
@@ -508,9 +510,9 @@ Generating code for file /home/runner/work/OpenEFI/Open/home/runner/work/OpenEFI
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:17: warning: Member ema_high_pass_filter(struct EMAHighPass) (function) of file ema.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:21: warning: argument 'in' of command @param is not found in the argument list of EMALowPassFilter(struct EMALowPass)
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h:15: warning: Member sinc() (function) of file sinc.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:121: warning: Member SystemCoreClock (variable) of group STM32F4xx_System_Private_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:122: warning: Member AHBPrescTable[16] (variable) of group STM32F4xx_System_Private_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:123: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:137: warning: Member SystemCoreClock (variable) of group STM32F4xx_System_Private_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:138: warning: Member AHBPrescTable[16] (variable) of group STM32F4xx_System_Private_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:139: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/tim.c:35: warning: Member MX_TIM1_Init(void) (function) of file tim.c is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/tim.c:95: warning: Member MX_TIM3_Init(void) (function) of file tim.c is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/tim.c:131: warning: Member MX_TIM4_Init(void) (function) of file tim.c is not documented.
@@ -574,11 +576,11 @@ Generating code for file /home/runner/work/OpenEFI/Open/home/runner/work/OpenEFI
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:39: warning: Member MEMORY_SECTOR_COUNT (macro definition) of group Tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:40: warning: Member MEMORY_PAGE_SIZE (macro definition) of group Tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:41: warning: Member SECTOR_TO_ADDRES(sector) (macro definition) of group Tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:121: warning: Member SystemCoreClock (variable) of group STM32F4xx_System_Private_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:122: warning: Member AHBPrescTable[16] (variable) of group STM32F4xx_System_Private_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:123: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:171: warning: argument 'None' of command @param is not found in the argument list of SystemCoreClockUpdate(void)
-/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:145: warning: argument 'None' of command @param is not found in the argument list of SystemInit(void)
+/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:137: warning: Member SystemCoreClock (variable) of group STM32F4xx_System_Private_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:138: warning: Member AHBPrescTable[16] (variable) of group STM32F4xx_System_Private_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:139: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:185: warning: argument 'None' of command @param is not found in the argument list of SystemCoreClockUpdate(void)
+/home/runner/work/OpenEFI/OpenEFI/Src/system_stm32f4xx.c:161: warning: argument 'None' of command @param is not found in the argument list of SystemInit(void)
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:11: warning: Member lastValue (variable) of class EMAHighPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:12: warning: Member actualValue (variable) of class EMAHighPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:13: warning: Member lastLP (variable) of class EMAHighPass is not documented.
@@ -675,5 +677,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 239/65536 hits=469 misses=246
+lookup cache used 240/65536 hits=470 misses=247
 finished...

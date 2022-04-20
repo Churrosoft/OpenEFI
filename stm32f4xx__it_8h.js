@@ -1,10 +1,7 @@
 var stm32f4xx__it_8h =
 [
-    [ "ADC_IRQHandler", "stm32f4xx__it_8h.html#a06406eadf297fa89a6eaf9586b227a69", null ],
     [ "BusFault_Handler", "stm32f4xx__it_8h.html#a850cefb17a977292ae5eb4cafa9976c3", null ],
     [ "DebugMon_Handler", "stm32f4xx__it_8h.html#adbdfb05858cc36fc520974df37ec3cb0", null ],
-    [ "DMA2_Stream0_IRQHandler", "stm32f4xx__it_8h.html#aaf6ce196dde98712e1223b99766e06c0", null ],
-    [ "DMA2_Stream2_IRQHandler", "stm32f4xx__it_8h.html#a7e367d7c7b74485c4c75cdef30ad01e1", null ],
     [ "EXTI15_10_IRQHandler", "stm32f4xx__it_8h.html#a738473a5b43f6c92b80ce1d3d6f77ed9", null ],
     [ "EXTI9_5_IRQHandler", "stm32f4xx__it_8h.html#a7b2096b8b2643286dc3a7e5110e5ae85", null ],
     [ "HardFault_Handler", "stm32f4xx__it_8h.html#a2bffc10d5bd4106753b7c30e86903bea", null ],
