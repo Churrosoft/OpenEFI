@@ -29,7 +29,7 @@ var NAVTREEINDEX =
 [
 ".html",
 "group__USBD__CDC__IF__Exported__Variables.html#ga99394ed19b774f171df96c2848c411ed",
-"stm32f4xx__it_8h.html#a850cefb17a977292ae5eb4cafa9976c3"
+"structtable__ref.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

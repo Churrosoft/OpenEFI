@@ -215,8 +215,8 @@ var NAVTREEINDEX0 =
 "group__STM32F4xx__System__Private__Functions.html":[0,1,0,6],
 "group__STM32F4xx__System__Private__Functions.html#ga93f514700ccf00d08dbdcff7f1224eb2":[3,0,1,12,3],
 "group__STM32F4xx__System__Private__Functions.html#ga93f514700ccf00d08dbdcff7f1224eb2":[0,1,0,6,1],
-"group__STM32F4xx__System__Private__Functions.html#gae0c36a9591fe6e9c45ecb21a794f0f0f":[3,0,1,12,2],
 "group__STM32F4xx__System__Private__Functions.html#gae0c36a9591fe6e9c45ecb21a794f0f0f":[0,1,0,6,0],
+"group__STM32F4xx__System__Private__Functions.html#gae0c36a9591fe6e9c45ecb21a794f0f0f":[3,0,1,12,2],
 "group__STM32F4xx__System__Private__Includes.html":[0,1,0,0],
 "group__STM32F4xx__System__Private__Includes.html#gaaa8c76e274d0f6dd2cefb5d0b17fbc37":[0,1,0,0,1],
 "group__STM32F4xx__System__Private__Includes.html#gaaa8c76e274d0f6dd2cefb5d0b17fbc37":[3,0,1,12,1],
@@ -249,5 +249,5 @@ var NAVTREEINDEX0 =
 "group__USBD__CDC__IF__Exported__Types.html#ggaaaac7e9bffb7ad4440ceda540759d08da105d04a7f62e2183de36572da37ed87e":[3,0,0,15,2,0],
 "group__USBD__CDC__IF__Exported__Types.html#ggaaaac7e9bffb7ad4440ceda540759d08dad203379a9d4cde4ff177ce0208bf5dcf":[3,0,0,15,2,1],
 "group__USBD__CDC__IF__Exported__Variables.html":[0,2,0,4],
-"group__USBD__CDC__IF__Exported__Variables.html#ga99394ed19b774f171df96c2848c411ed":[0,2,0,4,0]
+"group__USBD__CDC__IF__Exported__Variables.html#ga99394ed19b774f171df96c2848c411ed":[3,0,0,15,8]
 };
