@@ -41,7 +41,7 @@ extern "C" {
 #include <trace.h>
 #endif
 
-#include "adc.h"
+
 #include "can.h"
 #include "dma.h"
 #include "tim.h"
@@ -132,9 +132,6 @@ int main(void) {
   MX_GPIO_Init();
   MX_DMA_Init();
 
-  MX_ADC1_Init();
-  MX_ADC2_Init();
-
   MX_CAN1_Init();
   MX_SPI2_Init();
   MX_TIM3_Init();
@@ -165,8 +162,6 @@ int main(void) {
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
 
   /* Infinite loop */
-  HAL_ADC_MspInit(&hadc1);
-
   uint64_t last_rpm = 0;
 
   /* USER CODE BEGIN WHILE */
