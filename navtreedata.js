@@ -28,8 +28,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"group__USBD__CDC__IF__Exported__Variables.html#ga99394ed19b774f171df96c2848c411ed",
-"structtable__ref.html"
+"group__USBD__CONF__Exported__Defines.html",
+"tables_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

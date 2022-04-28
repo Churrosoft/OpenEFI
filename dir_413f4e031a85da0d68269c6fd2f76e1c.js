@@ -8,7 +8,6 @@ var dir_413f4e031a85da0d68269c6fd2f76e1c =
     [ "pmic", "dir_03b13c2bc0ab9fd3eb4c252f652aba1a.html", "dir_03b13c2bc0ab9fd3eb4c252f652aba1a" ],
     [ "sensors", "dir_ab0f930cc41d266bfc4af172da27d0e8.html", "dir_ab0f930cc41d266bfc4af172da27d0e8" ],
     [ "webserial", "dir_c2912778dae3a674238753aece717981.html", "dir_c2912778dae3a674238753aece717981" ],
-    [ "adc.c", "adc_8c.html", "adc_8c" ],
     [ "dma.c", "dma_8c.html", "dma_8c" ],
     [ "gpio.c", "gpio_8c.html", "gpio_8c" ],
     [ "stm32f4xx_hal_msp.c", "stm32f4xx__hal__msp_8c.html", "stm32f4xx__hal__msp_8c" ],
