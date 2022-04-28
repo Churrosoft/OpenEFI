@@ -4,6 +4,7 @@
     "PLATFORMIO_CALLER": "vscode"
   },
   "files.associations": {
+    "html": "html",
     "defines.h": "c",
     "iostream": "cpp",
     "usbd_core.h": "c",
@@ -23,7 +24,9 @@
     "tim.h": "c",
     "variables.h": "c",
     "usbd_cdc_if.h": "c",
-    "stm32f4xx_it.h": "c"
+    "stm32f4xx_it.h": "c",
+    "main.h": "c",
+    "basic_electronics.c": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",

@@ -6,8 +6,8 @@
     <WorkspacePath>/home/fdsoftware/repos/churrosoft/openefi/OpenEFI/</WorkspacePath>
     <underRoot>false</underRoot>
     <TrustZone>0</TrustZone>
-    <HAL_Driver>/home/fdsoftware/STM32Cube/Repository//STM32Cube_FW_F4_V1.26.2/</HAL_Driver>
-    <CMSIS>../Drivers/CMSIS</CMSIS>
+    <HAL_Driver>/home/fdsoftware/STM32Cube/Repository//STM32Cube_FW_F4_V1.27.0/</HAL_Driver>
+    <CMSIS>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/CMSIS</CMSIS>
     <Toolchain>EWARM</Toolchain>
     <Toolversion>8.32</Toolversion>
     <IocFile>OpenEFI_CubeMX.ioc</IocFile>
@@ -25,11 +25,12 @@
           <cpucore/>
           <fpu>SP</fpu>
           <memories>
-            <memory access="xrw" name="RAM" size="128" start="0x20000000"/>
+            <memory access="xrw" name="RAM" size="112" start="0x20000000"/>
+            <memory access="xrw" name="RAM2" size="16" start="0x2001C000"/>
             <memory access="xrw" name="CCMRAM" size="64" start="0x10000000"/>
             <memory access="rx" name="FLASH" size="1024" start="0x8000000"/>
           </memories>
-          <startup>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.26.2/Drivers/CMSIS/Device\ST\STM32F4xx\Source\Templates\iar\startup_stm32f407xx.s</startup>
+          <startup>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/CMSIS/Device\ST\STM32F4xx\Source\Templates\iar\startup_stm32f407xx.s</startup>
           <LinkSettings>
             <icfloc>1</icfloc>
             <LinkAdditionalLibs/>
@@ -38,7 +39,7 @@
           <stackSize>0x400</stackSize>
           <cpuclock>120</cpuclock>
           <board>custom</board>
-          <debugprobe>jtag</debugprobe>
+          <debugprobe>swd</debugprobe>
           <optimization/>
           <Aincludes>
             <include/>
@@ -54,12 +55,12 @@
             <include>../Core/Inc</include>
             <include>../USB_DEVICE/App</include>
             <include>../USB_DEVICE/Target</include>
-            <include>../Drivers/STM32F4xx_HAL_Driver/Inc</include>
-            <include>../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy</include>
-            <include>../Middlewares/ST/STM32_USB_Device_Library/Core/Inc</include>
-            <include>../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc</include>
-            <include>../Drivers/CMSIS/Device/ST/STM32F4xx/Include</include>
-            <include>../Drivers/CMSIS/Include</include>
+            <include>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Inc</include>
+            <include>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy</include>
+            <include>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Middlewares/ST/STM32_USB_Device_Library/Core/Inc</include>
+            <include>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc</include>
+            <include>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include</include>
+            <include>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/CMSIS/Include</include>
           </Cincludes>
           <definestoremove>
             <Adefines/>
@@ -76,23 +77,23 @@
           </inctoremove>
         </config>
       </configs>
-      <copyAsReference>false</copyAsReference>
+      <copyAsReference>true</copyAsReference>
       <Groups>
         <group>
           <name>Middlewares</name>
           <group>
             <name>USB_Device_Library</name>
             <file>
-              <name>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</name>
             </file>
             <file>
-              <name>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</name>
             </file>
             <file>
-              <name>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</name>
             </file>
             <file>
-              <name>../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</name>
             </file>
           </group>
         </group>
@@ -101,88 +102,79 @@
           <group>
             <name>STM32F4xx_HAL_Driver</name>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_rcc.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_rcc.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_utils.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_utils.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_exti.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_exti.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_spi.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_gpio.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_dma.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_spi.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c</name>
             </file>
             <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_gpio.c</name>
-            </file>
-            <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_dma.c</name>
-            </file>
-            <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c</name>
-            </file>
-            <file>
-              <name>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c</name>
+              <name>/home/fdsoftware/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c</name>
             </file>
           </group>
           <group>
@@ -205,13 +197,7 @@
                 <name>../Core/Src/gpio.c</name>
               </file>
               <file>
-                <name>../Core/Src/adc.c</name>
-              </file>
-              <file>
                 <name>../Core/Src/can.c</name>
-              </file>
-              <file>
-                <name>../Core/Src/dma.c</name>
               </file>
               <file>
                 <name>../Core/Src/spi.c</name>

@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2022 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -82,38 +81,24 @@ void Error_Handler(void);
 #define LED1_GPIO_Port GPIOC
 #define LED2_Pin GPIO_PIN_15
 #define LED2_GPIO_Port GPIOC
-#define ADC_B5_Pin GPIO_PIN_0
-#define ADC_B5_GPIO_Port GPIOC
+#define ADC_CS_Pin GPIO_PIN_0
+#define ADC_CS_GPIO_Port GPIOC
 #define ENABLE_5V_Pin GPIO_PIN_1
 #define ENABLE_5V_GPIO_Port GPIOC
-#define ADC_B7_Pin GPIO_PIN_2
-#define ADC_B7_GPIO_Port GPIOC
-#define ADC_B8_Pin GPIO_PIN_3
-#define ADC_B8_GPIO_Port GPIOC
-#define ADC_A1_Pin GPIO_PIN_0
-#define ADC_A1_GPIO_Port GPIOA
-#define ADC_A2_Pin GPIO_PIN_1
-#define ADC_A2_GPIO_Port GPIOA
-#define ADC_A3_Pin GPIO_PIN_2
-#define ADC_A3_GPIO_Port GPIOA
-#define ADC_A4_Pin GPIO_PIN_3
-#define ADC_A4_GPIO_Port GPIOA
-#define ADC_A5_Pin GPIO_PIN_4
-#define ADC_A5_GPIO_Port GPIOA
-#define ADC_A6_Pin GPIO_PIN_5
-#define ADC_A6_GPIO_Port GPIOA
-#define ADC_B1_Pin GPIO_PIN_6
-#define ADC_B1_GPIO_Port GPIOA
-#define ADC_B2_Pin GPIO_PIN_7
-#define ADC_B2_GPIO_Port GPIOA
-#define ADC_B9_Pin GPIO_PIN_4
-#define ADC_B9_GPIO_Port GPIOC
-#define ADC_B10_Pin GPIO_PIN_5
-#define ADC_B10_GPIO_Port GPIOC
-#define ADC_B3_Pin GPIO_PIN_0
-#define ADC_B3_GPIO_Port GPIOB
-#define ADC_B4_Pin GPIO_PIN_1
-#define ADC_B4_GPIO_Port GPIOB
+#define AUX_IN_1_Pin GPIO_PIN_0
+#define AUX_IN_1_GPIO_Port GPIOA
+#define AUX_IN_2_Pin GPIO_PIN_1
+#define AUX_IN_2_GPIO_Port GPIOA
+#define AUX_IN_3_Pin GPIO_PIN_2
+#define AUX_IN_3_GPIO_Port GPIOA
+#define AUX_IN_4_Pin GPIO_PIN_3
+#define AUX_IN_4_GPIO_Port GPIOA
+#define AUX_OUT_1_Pin GPIO_PIN_4
+#define AUX_OUT_1_GPIO_Port GPIOC
+#define AUX_OUT_2_Pin GPIO_PIN_5
+#define AUX_OUT_2_GPIO_Port GPIOC
+#define AUX_OUT_3_Pin GPIO_PIN_0
+#define AUX_OUT_3_GPIO_Port GPIOB
 #define TP2_Pin GPIO_PIN_2
 #define TP2_GPIO_Port GPIOB
 #define MTR_STEP_Pin GPIO_PIN_7
@@ -126,8 +111,6 @@ void Error_Handler(void);
 #define MTR_ENABLE_GPIO_Port GPIOE
 #define RPM_OUT_Pin GPIO_PIN_11
 #define RPM_OUT_GPIO_Port GPIOE
-#define PMIC_CS_Pin GPIO_PIN_12
-#define PMIC_CS_GPIO_Port GPIOE
 #define MEMORY_CS_Pin GPIO_PIN_13
 #define MEMORY_CS_GPIO_Port GPIOE
 #define AUX_CS_1_Pin GPIO_PIN_14
@@ -171,18 +154,14 @@ void Error_Handler(void);
 #define GNC_GLP_OUT_GPIO_Port GPIOA
 #define AUX_OUT_4_Pin GPIO_PIN_10
 #define AUX_OUT_4_GPIO_Port GPIOA
+#define PMIC_CS_Pin GPIO_PIN_15
+#define PMIC_CS_GPIO_Port GPIOA
 #define PMIC_NOMI_Pin GPIO_PIN_10
 #define PMIC_NOMI_GPIO_Port GPIOC
 #define PMIC_MAXI_Pin GPIO_PIN_11
 #define PMIC_MAXI_GPIO_Port GPIOC
-#define AUX_IN1_Pin GPIO_PIN_2
-#define AUX_IN1_GPIO_Port GPIOD
-#define AUX_IN2_Pin GPIO_PIN_3
-#define AUX_IN2_GPIO_Port GPIOD
-#define AUX_IN3_Pin GPIO_PIN_4
-#define AUX_IN3_GPIO_Port GPIOD
-#define AUX_IN4_Pin GPIO_PIN_5
-#define AUX_IN4_GPIO_Port GPIOD
+#define ACC_DET_Pin GPIO_PIN_12
+#define ACC_DET_GPIO_Port GPIOC
 #define LED_CAN_RX_Pin GPIO_PIN_6
 #define LED_CAN_RX_GPIO_Port GPIOD
 #define LED_CAN_TX_Pin GPIO_PIN_7
@@ -198,5 +177,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
