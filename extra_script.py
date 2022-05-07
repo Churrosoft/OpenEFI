@@ -26,7 +26,7 @@ config_file.write("""
 #define _W25QXX_CS_GPIO               MEMORY_CS_GPIO_Port
 #define _W25QXX_CS_PIN                MEMORY_CS_Pin
 #define _W25QXX_USE_FREERTOS          0
-#define _W25QXX_DEBUG                 0
+#define _W25QXX_DEBUG                 1
 
 #endif
 

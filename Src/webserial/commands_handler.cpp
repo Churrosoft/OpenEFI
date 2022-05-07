@@ -147,6 +147,7 @@ void web_serial::command_handler() {
           out_comm = create_command(TABLES_DATA_CHUNK, payload);
 
           output_commands.push_back(out_comm);
+          web_serial::send_deque();
         }
         break;
       }

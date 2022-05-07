@@ -400,9 +400,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     CPWM::interrupt();
   }
   if (GPIO_Pin == GPIO_PIN_6 && !SINC) {
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
+    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin,
                       led_checked2 ? GPIO_PIN_RESET : GPIO_PIN_SET);
     led_checked2 = !led_checked2;
+    CPWM::interrupt();
 
     // SINC = sinc();
   }
