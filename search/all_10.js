@@ -4,6 +4,8 @@ var searchData=
   ['serial_5fcommand',['serial_command',['../structweb__serial_1_1serial__command.html',1,'web_serial']]],
   ['sinc_2eh',['sinc.h',['../sinc_8h.html',1,'']]],
   ['sinc_5fenable',['SINC_ENABLE',['../defines_8h.html#a1941541eecb2be882abc1a4f0291771b',1,'defines.h']]],
+  ['spi_2ec',['spi.c',['../spi_8c.html',1,'']]],
+  ['spi_2eh',['spi.h',['../spi_8h.html',1,'']]],
   ['stm32_5fassert_2eh',['stm32_assert.h',['../stm32__assert_8h.html',1,'']]],
   ['stm32_5fusb_5fotg_5fdevice_5flibrary',['STM32_USB_OTG_DEVICE_LIBRARY',['../group__STM32__USB__OTG__DEVICE__LIBRARY.html',1,'']]],
   ['stm32f4xx_5fhal_5fmsp_2ec',['stm32f4xx_hal_msp.c',['../stm32f4xx__hal__msp_8c.html',1,'']]],
