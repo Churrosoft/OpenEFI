@@ -3,7 +3,7 @@
 #include "user_defines.h"
 #include "variables.h"
 #include "../sensors/sensors.hpp"
-#include "../cpwm/include/cpwm.hpp"
+#include "../cpwm/cpwm.hpp"
 
 /** @brief Loop para funciones que utilizan el systick:
  */

@@ -52,7 +52,7 @@ extern "C" {
 #include "aliases/memory.hpp"
 #include <cstdlib>
 
-#include "cpwm/include/cpwm.hpp"
+#include "cpwm/cpwm.hpp"
 #include "debug/debug_local.h"
 #include "ignition/include/ignition.hpp"
 #include "pmic/pmic.hpp"
@@ -153,38 +153,27 @@ int main(void) {
 
   // SPI Memory:
   on_setup();
-  W25qxx_Init();
+  // W25qxx_Init();
   // SRAND Init:
   srand(HAL_GetTick());
   // Core inits:
-  web_serial::setup();
-  //ignition::setup();
-  //sensors::setup();
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
 
   /* Infinite loop */
   uint64_t last_rpm = 0;
- PMIC::demo_spark();
   /* USER CODE BEGIN WHILE */
   while (1) {
     /* USER CODE END WHILE */
     on_loop();
 
-    web_serial::command_handler();
-    web_serial::send_deque();
-    /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
-        HAL_Delay(50); */
-    //ignition::interrupt();
-    // WEBSerial:
+
     web_serial::loop();
     if (HAL_GetTick() - last_rpm >= 2000) {
-      // save the last time you blinked the LED
+      
       last_rpm = HAL_GetTick();
      // trace_printf("Event: <RPM; POS> %d ; %d \r\n", _RPM, _POS);
-     // PMIC::demo_spark();
     }
-    /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
-        HAL_Delay(50); */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

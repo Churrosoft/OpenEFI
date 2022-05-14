@@ -1,4 +1,4 @@
-#include "../include/cpwm.hpp"
+#include "./cpwm.hpp"
 
 #include <string>
 #include <stdio.h>

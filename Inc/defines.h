@@ -147,6 +147,20 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define ROUND_16(NUMBER) ((float)((uint16_t)NUMBER * 100 + .5) / 100)
 #define ROUND_32(NUMBER) ((float)((uint32_t)NUMBER * 100 + .5) / 100)
 
+extern volatile uint32_t UptimeMillis;
+
+static inline uint32_t GetMicrosFromISR()
+{
+    uint32_t st = SysTick->VAL;
+    uint32_t pending = SCB->ICSR & SCB_ICSR_PENDSTSET_Msk;
+    uint32_t ms = UptimeMillis;
+
+    if (pending == 0)
+        ms++;
+
+    return ms * 1000 - st / ((SysTick->LOAD + 1) / 1000);
+}
+
 // GET_BIT only for uint8_t
 #define GET_BIT(VAR, BIT_NEEDED) ((VAR >> BIT_NEEDED) & 1) //(VAR & (1 << BIT_NEEDED)) // another way: ((VAR >> BIT_NEEDED) & 1)
 

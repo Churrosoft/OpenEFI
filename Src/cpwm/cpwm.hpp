@@ -5,7 +5,7 @@
 #include "defines.h"
 #include "variables.h"
 #include <cmath>
-#include "../../sensors/utils/sinc.h"
+#include "../sensors/utils/sinc.h"
 
 namespace CPWM
 {
