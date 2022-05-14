@@ -14,7 +14,7 @@ void RPM::interrupt() {
   uint32_t rpmdiff = ((RPM::t2_rpm - RPM::t_rpm) / RPM::t_rpm) * 100;
 
   // mas de 70 => se paro el motor
-  if (rpmdiff < 5 && rpmdiff > 70) {
+  if (rpmdiff > 5 && rpmdiff < 70) {
     // ((t2 - t1) / 1000000) * DNT * 60
     RPM::_RPM = ((RPM::t2_rpm - RPM::t_rpm) / 1000000) * DNT * 60;
   }
