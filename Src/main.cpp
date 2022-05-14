@@ -53,6 +53,7 @@ extern "C" {
 #include <cstdlib>
 
 #include "cpwm/cpwm.hpp"
+#include "cpwm/rpm_calc.h"
 #include "debug/debug_local.h"
 #include "ignition/include/ignition.hpp"
 #include "pmic/pmic.hpp"
@@ -139,6 +140,8 @@ int main(void) {
   MX_TIM4_Init();
   MX_TIM9_Init();
   MX_TIM10_Init();
+  //MX_TIM11_Init();
+  //MX_TIM13_Init();
 
   on_gpio_init();
   /* USER CODE BEGIN 2 */
@@ -146,6 +149,8 @@ int main(void) {
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
 
   MX_USB_DEVICE_Init();
 
@@ -162,16 +167,22 @@ int main(void) {
   /* Infinite loop */
   uint64_t last_rpm = 0;
   /* USER CODE BEGIN WHILE */
+  //PMIC::demo_spark();
   while (1) {
     /* USER CODE END WHILE */
     on_loop();
 
 
     web_serial::loop();
-    if (HAL_GetTick() - last_rpm >= 2000) {
+    if (HAL_GetTick() - last_rpm >= 500) {
       
       last_rpm = HAL_GetTick();
-     // trace_printf("Event: <RPM; POS> %d ; %d \r\n", _RPM, _POS);
+        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, HAL_GPIO_ReadPin(LED1_GPIO_Port, LED1_Pin) == GPIO_PIN_RESET ? GPIO_PIN_SET :GPIO_PIN_RESET);
+
+
+       // HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
+
+     //trace_printf("Event: <RPM> %f <DEG> %d mic %d\r\n", RPM::_RPM, RPM::_DEG);
     }
 
     /* USER CODE BEGIN 3 */
@@ -224,7 +235,6 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
-
 
 /**
  * @brief  This function is executed in case of error occurrence.

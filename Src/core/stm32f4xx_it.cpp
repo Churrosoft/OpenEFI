@@ -27,6 +27,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "cpwm/cpwm.hpp"
+#include "cpwm/rpm_calc.h"
 #include "ignition/include/ignition.hpp"
 #include "sensors/sensors.hpp"
 #include "variables.h"
@@ -73,8 +74,8 @@ extern TIM_HandleTypeDef htim10;
 extern TIM_HandleTypeDef htim11;
 extern TIM_HandleTypeDef htim14;
 /* USER CODE BEGIN EV */
-bool led_checked = false;
-bool led_checked2 = false;
+bool led_checked = true;
+bool led_checked2 = true;
 
 /* USER CODE END EV */
 
@@ -233,8 +234,8 @@ void TIM4_IRQHandler(void) {
 void EXTI9_5_IRQHandler(void) {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
   /* USER CODE END EXTI9_5_IRQn 0 */
-  HAL_GPIO_EXTI_Callback(CKP_Pin);
-  // HAL_GPIO_EXTI_IRQHandler(CKP_Pin);
+  //HAL_GPIO_EXTI_Callback(CKP_Pin);
+   HAL_GPIO_EXTI_IRQHandler(CKP_Pin);
   HAL_GPIO_EXTI_IRQHandler(CMP_Pin);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
 
@@ -302,14 +303,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   }
   /* USER CODE BEGIN Callback 1 */
   if (htim->Instance == TIM10) {
-    HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin,
+    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin,
                       led_checked ? GPIO_PIN_RESET : GPIO_PIN_SET);
     // WEBSerial:
     web_serial::loop();
     // Sensors:
     // sensors::loop();
     // INJECTION/IGNITION ALGORITHMS
-    adc_loop();
+    
 
     led_checked = !led_checked;
   }
@@ -339,12 +340,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   if (GPIO_Pin == GPIO_PIN_6 && MOTOR_ENABLE && SINC) {
     CPWM::interrupt();
   }
-  if (GPIO_Pin == GPIO_PIN_6 && !SINC) {
-    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin,
+  if ( !SINC) {
+    HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin,
                       led_checked2 ? GPIO_PIN_RESET : GPIO_PIN_SET);
     led_checked2 = !led_checked2;
-    CPWM::interrupt();
-
+   // CPWM::interrupt();
+RPM::interrupt();
     // SINC = sinc();
   }
 }
