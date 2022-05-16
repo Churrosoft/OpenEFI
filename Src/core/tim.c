@@ -75,9 +75,9 @@ void MX_TIM1_Init(void)
 }
 /*
   Teniendo en cuenta que:
-  SYSCLK: 168Mhz
+  SYSCLK: 120Mhz
   APB1: 48MhZ (TIM3/4) / 4 => 12Mhz
-  APB2: 168Mhz (TIM9)
+  APB2: 120Mhz (TIM9)
 
   TIM 3 & 4 => INY / ECN
   TIM 9 => PWM (chanel 5 | 6)
@@ -101,7 +101,7 @@ void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 1200;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 0;
+  htim3.Init.Period = 15;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)

@@ -2,26 +2,30 @@
 #define RPM_H
 
 #include "stdint.h"
+#include <cmath>
+
 #include "defines.h"
 #include "variables.h"
-#include <cmath>
+
 #include "../sensors/utils/sinc.h"
+
+extern "C" {
+#include "trace.h"
+}
 
 namespace RPM
 {
    
     void interrupt(void);
 
-    extern uint16_t ckp_tick;
-    extern uint32_t t_rpm;
-    extern uint32_t t2_rpm;
+    extern uint16_t WheelTooth;
+    extern uint32_t lastWheelTime;
+    extern uint32_t actualWheelTime;
     extern bool tooth_status;
 
-    extern int32_t _DEG;
+    extern float _DEG;
     extern float _RPM;
 
-    // calculo de rpms
-    void calc(void);
 } // namespace RPM
 
 #endif

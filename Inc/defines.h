@@ -18,8 +18,8 @@
 #define CIL 4             //!< cantidad de cilindros o pistones, o camaras de combustion, etc ?)
 #define L_CIL (CIL - 1)   //!< cilindros logicos, para manejar arrays y demases
 #define DNT 60            //!< cantidad de dientes del sensor CKP
-#define DNT_MISSING 0     //!< cantidad de dientes faltantes en PMS
-#define DNT_DOUBLE_SCAN 2 //!< 1 == interrupcion por diente
+#define DNT_MISSING 2     //!< cantidad de dientes faltantes en PMS
+#define DNT_DOUBLE_SCAN 1 //!< 1 == interrupcion por diente
 #define LOGIC_DNT ((DNT - DNT_MISSING) * DNT_DOUBLE_SCAN)
 #define Alpha 1                    //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 #define ED 1600                    //!< cilindrada en CC del motor
@@ -29,6 +29,7 @@
 
 /*-----( RPM )-----*/
 
+#define USING_EXPERIMENTAL_RPM_CALC false
 #define RPM_per 500 //periodo en ms en el que se actualizan las rpm ( si lo cambias , o arreglas el calculo para las rpm,o se rompe todo maquinola)
 
 /*-----( C_PWM )-----*/
@@ -160,6 +161,11 @@ static inline uint32_t GetMicrosFromISR()
 
     return ms * 1000 - st / ((SysTick->LOAD + 1) / 1000);
 }
+
+#define MS_IN_MINUTE 60000
+#define US_IN_MINUTE 60000000
+
+#define GET_US_TIME (HAL_GetTick() * 1000 + TIM13->CNT)
 
 // GET_BIT only for uint8_t
 #define GET_BIT(VAR, BIT_NEEDED) ((VAR >> BIT_NEEDED) & 1) //(VAR & (1 << BIT_NEEDED)) // another way: ((VAR >> BIT_NEEDED) & 1)
