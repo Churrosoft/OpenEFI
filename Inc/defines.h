@@ -36,6 +36,7 @@
 
 #define CPWM_ENABLE //!< Habilita el control de PWM
 #define SINC_ENABLE //!< No borre este define, no sea tarado
+#define FULL_SECUENCIAL false //!< solo usar en caso de tener sensor de fase, caso contrario solo se puede realizar inyeccion/encendido semi-secuencial
 
 #define PMSI 240 //!< Cantidad de dientes entre PMS
 
