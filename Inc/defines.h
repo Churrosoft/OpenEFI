@@ -23,8 +23,10 @@
 #define LOGIC_DNT ((DNT - DNT_MISSING) * DNT_DOUBLE_SCAN)
 #define Alpha 1                    //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 #define ED 1600                    //!< cilindrada en CC del motor
-#define ING_SECUENCY {1, 3, 4, 2}; // secuencia encendido
-#define INY_SECUENCY {3, 4, 1, 2}; // secuencia inyeccion
+#define ING_SECUENCY {1, 3, 4, 2}; //!< secuencia encendido (solo en FULL_SECUENCIAL)
+#define ING_SECUENCY_ALT { 1, 4, 3, 2 }; //!< secuencia encendido semi-secuencial
+#define INY_SECUENCY {3, 4, 1, 2}; //!< secuencia inyeccion (solo en FULL_SECUENCIAL)
+#define INY_SECYENCY_ALT { 3, 1, 4, 2 } //!< secuencia inyeccion semi-secuencial
 #define MAX_RPM 4500 //!< valor maximo de rpm, valores superiores activan cutoff de encendido/combustible
 
 /*-----( RPM )-----*/
