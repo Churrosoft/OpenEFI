@@ -1,6 +1,7 @@
 /** @file */
 #include <stdint.h>
 #include "main.h"
+#include "variables.h"
 
 // Acá todos los defines
 #ifndef DEFINES_H
@@ -168,7 +169,17 @@ static inline uint32_t GetMicrosFromISR()
 #define MS_IN_MINUTE 60000
 #define US_IN_MINUTE 60000000
 
+#ifdef TESTING
+#define GET_US_TIME mockRPM()
+
+static inline uint32_t mockRPM(){
+  mocktick += 80000;
+  return mocktick;
+}
+#else
 #define GET_US_TIME (HAL_GetTick() * 1000 + TIM13->CNT)
+
+#endif
 
 // GET_BIT only for uint8_t
 #define GET_BIT(VAR, BIT_NEEDED) ((VAR >> BIT_NEEDED) & 1) //(VAR & (1 << BIT_NEEDED)) // another way: ((VAR >> BIT_NEEDED) & 1)

@@ -32,4 +32,11 @@ extern unsigned long T2;
 extern unsigned long Ta;
 extern unsigned long Tb;
 
+
+// only for testing:
+#ifdef TESTING
+extern uint32_t mocktick;
+extern uint32_t tickStep;
+#endif
+
 #endif

@@ -26,9 +26,14 @@
 
 #ifdef TESTING
 #pragma GCC warning "TESTING ENABLED"
-#include "../test/cpwm_test.cpp"
 #include <unity.h>
+
+#include "../test/cpwm_test.cpp"
+#include "../test/rpm_calc.cpp"
+
 extern int run_tests(void);
+extern int run_rpm_tests(void);
+
 #endif
 
 #include <algorithm>
@@ -94,7 +99,10 @@ void MX_SPI2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#ifdef TESTING
+uint32_t mocktick = 0;
+uint32_t tickStep = 15000; // 4k rpm // 50000 => 1200 // 80000 => 750
+#endif
 /* USER CODE END 0 */
 
 /**
@@ -118,6 +126,7 @@ int main(void) {
   trace_initialize();
   printf("INIT_TESTING \n");
   run_tests();
+  run_rpm_tests();
   puts("END_TESTING \n");
 #endif
 
