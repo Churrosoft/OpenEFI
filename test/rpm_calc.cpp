@@ -17,27 +17,30 @@
 // }
 
 void test_crank_rpm() {
+    mocktick = 80000;
+
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
-  mocktick = 80000;
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(750.0, RPM::_RPM, "Check RPM::interrupt");
 }
 
 void test_running_rpm() {
+    mocktick = 15000;
+
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
-  mocktick = 15000;
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(4000.0, RPM::_RPM, "Check RPM::interrupt");
 }
 
 void test_idle_rpm() {
+    mocktick = 50000;
+
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
-  mocktick = 50000;
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(1200.0, RPM::_RPM, "Check RPM::interrupt");
