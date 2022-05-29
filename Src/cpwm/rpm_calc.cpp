@@ -6,6 +6,7 @@
 uint16_t RPM::WheelTooth;
 uint32_t RPM::lastWheelTime;
 uint32_t RPM::actualWheelTime;
+RPM_STATUS RPM::status = RPM_STATUS::STOPPED;
 
 float RPM::_RPM;
 float RPM::_DEG;
@@ -44,6 +45,16 @@ void RPM::interrupt() {
       actualWheelTime = GET_US_TIME;
       RPM::_RPM = US_IN_MINUTE / (actualWheelTime - lastWheelTime);
       lastWheelTime = GET_US_TIME;
+
+      if (RPM::_RPM < 50) {
+        RPM::status = RPM_STATUS::STOPPED;
+      } else if (RPM::_RPM > 50 && RPM::_RPM < 400) {
+        RPM::status = RPM_STATUS::SPIN_UP;
+      } else if (RPM::_RPM > 400 && RPM::_RPM < 750) {
+        RPM::status = RPM_STATUS::CRANK;
+      } else {
+        RPM::status = RPM_STATUS::RUNNING;
+      }
     }
 
     RPM::WheelTooth = 0;

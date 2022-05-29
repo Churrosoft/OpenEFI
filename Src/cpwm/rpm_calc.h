@@ -13,6 +13,16 @@ extern "C" {
 #include "trace.h"
 }
 
+namespace rpm_status {
+enum __rpm_status {
+  STOPPED = 0, // < 50
+  SPIN_UP,     // > 50
+  CRANK,       // > 400 rpm
+  RUNNING,     // > 750
+};
+}
+typedef rpm_status::__rpm_status RPM_STATUS;
+
 namespace RPM {
 
 void interrupt(void);
@@ -25,11 +35,7 @@ extern bool tooth_status;
 extern float _DEG;
 extern float _RPM;
 
-enum RPM_STATUS {
-  CRANK, // < 400 rpm
-  RUNNING,
-  STOPED, // < 100 rpm
-};
+extern RPM_STATUS status;
 
 } // namespace RPM
 
