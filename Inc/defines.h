@@ -173,7 +173,7 @@ static inline uint32_t GetMicrosFromISR()
 #define GET_US_TIME mockRPM()
 
 static inline uint32_t mockRPM(){
-  mocktick += 80000;
+  mocktick += tickStep;
   return mocktick;
 }
 #else
