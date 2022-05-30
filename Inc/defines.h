@@ -177,7 +177,7 @@ static inline uint32_t mockRPM(){
   return mocktick;
 }
 #else
-#define GET_US_TIME (HAL_GetTick() * 1000 + TIM13->CNT)
+#define GET_US_TIME (HAL_GetTick() * 1000 /* + TIM13->CNT */)
 
 #endif
 

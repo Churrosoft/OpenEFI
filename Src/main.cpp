@@ -173,11 +173,11 @@ int main(void) {
   srand(HAL_GetTick());
   // Core inits:
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
-  Engine::onEFISetup();
+  // Engine::onEFISetup();
   /* Infinite loop */
   uint64_t last_rpm = 0;
   /* USER CODE BEGIN WHILE */
-  // PMIC::demo_spark();
+
   while (1) {
     /* USER CODE END WHILE */
     on_loop();
@@ -192,12 +192,10 @@ int main(void) {
                             ? GPIO_PIN_SET
                             : GPIO_PIN_RESET);
 
-      // HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
-
-      // trace_printf("Event: <RPM> %f <DEG> %d mic %d\r\n", RPM::_RPM,
-      // RPM::_DEG);
+      trace_printf("Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM,
+                   RPM::status);
     }
-    Engine::onEFILoop();
+    // Engine::onEFILoop();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

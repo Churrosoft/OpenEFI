@@ -50,7 +50,7 @@ void test_crank_rpm() {
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(133.0, RPM::_RPM, "Check RPM::interrupt");
   TEST_ASSERT_EQUAL_UINT8_MESSAGE(
       (uint8_t)RPM_STATUS::CRANK, RPM::status,
-      "Check RPM::interrupt, status calculation (SPIN_UP)");
+      "Check RPM::interrupt, status calculation (CRANK)");
 }
 
 void test_running_rpm() {

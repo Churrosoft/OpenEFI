@@ -298,7 +298,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM14) {
-    UptimeMillis++;
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
@@ -315,7 +314,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   }
   // Timer 500mS RPM:
   if (htim->Instance == TIM11) {
-    CPWM::calc_rpm();
+   // CPWM::calc_rpm();
   }
   /* USER CODE END Callback 1 */
 }
