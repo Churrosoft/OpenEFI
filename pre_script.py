@@ -5,4 +5,5 @@ from os import path
 
 if( path.isfile('TESTING_CI') ):
     print('-D TESTING')
+    print(' -D TRACE')
     
