@@ -44,4 +44,12 @@
 #define FRONTEND_DEBUG_MESSAGE 68
 #define FRONTEND_ERROR_MESSAGE 69
 
+// DEBUG
+#define EFI_DEBUG_LOG 80
+#define EFI_DEBUG_INFO 81
+#define EFI_DEBUG_EVENT 82
+#define EFI_DEBUG_ERROR 83
+// enviado al final de cada mensaje para poder exceder el limite de 120 caracteres
+#define EFI_DEBUG_END 89
+
 #endif

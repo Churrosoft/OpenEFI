@@ -192,6 +192,11 @@ int main(void) {
                             ? GPIO_PIN_SET
                             : GPIO_PIN_RESET);
 
+      web_serial::send_debug_message(
+        web_serial::debugMessage::LOG,
+          "Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM, RPM::status
+      );
+
       trace_printf("Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM,
                    RPM::status);
     }
