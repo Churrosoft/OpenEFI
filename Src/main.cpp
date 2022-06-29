@@ -186,11 +186,10 @@ int main(void) {
     if (HAL_GetTick() - last_rpm >= 500) {
 
       last_rpm = HAL_GetTick();
-      HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
-                        HAL_GPIO_ReadPin(LED1_GPIO_Port, LED1_Pin) ==
-                                GPIO_PIN_RESET
-                            ? GPIO_PIN_SET
-                            : GPIO_PIN_RESET);
+
+      EFI_INVERT_PIN(LED1_GPIO_Port,LED1_Pin);
+
+      EFI_LOG("Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM, RPM::status);
 
       web_serial::send_debug_message(
         web_serial::debugMessage::LOG,

@@ -1,5 +1,3 @@
-#include "defines.h"
-
 #ifndef WEBSERIAL_COMMANDS_DEFINITION_HPP
 #define WEBSERIAL_COMMANDS_DEFINITION_HPP
 

@@ -152,6 +152,17 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define ROUND_16(NUMBER) ((float)((uint16_t)NUMBER * 100 + .5) / 100)
 #define ROUND_32(NUMBER) ((float)((uint32_t)NUMBER * 100 + .5) / 100)
 
+#define EFI_INVERT_PIN(PORT, PIN)                                                  \
+  HAL_GPIO_WritePin(PORT, PIN,                                                 \
+                    HAL_GPIO_ReadPin(PORT, PIN) == GPIO_PIN_RESET              \
+                        ? GPIO_PIN_SET                                         \
+                        : GPIO_PIN_RESET)
+
+#define EFI_LOG(...) web_serial::send_debug_message(web_serial::debugMessage::LOG, __VA_ARGS__)
+#define EFI_INFO(...) web_serial::send_debug_message(web_serial::debugMessage::INFO, __VA_ARGS__)
+#define EFI_EVENT(...) web_serial::send_debug_message(web_serial::debugMessage::EVENT, __VA_ARGS__)
+#define EFI_ERROR(...) web_serial::send_debug_message(web_serial::debugMessage::ERROR, __VA_ARGS__)
+
 extern volatile uint32_t UptimeMillis;
 
 static inline uint32_t GetMicrosFromISR()
