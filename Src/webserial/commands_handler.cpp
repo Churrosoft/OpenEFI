@@ -215,3 +215,7 @@ void web_serial::send_deque() {
 void web_serial::queue_command(serial_command command) {
   pending_commands.push_back(command);
 }
+
+void web_serial::send_command(serial_command command) {
+  output_commands.push_back(command);
+}
