@@ -58,8 +58,12 @@ void web_serial::loop() {
   }
 }
 
-void web_serial::send_debug_message(debugMessage message_type,
-                                    const char *format, ...) {
+uint8_t web_serial::send_debug_message(debugMessage message_type,
+                                       const char *format, ...) {
+
+  if (!web_serial::paired)
+    return -1;
+
   int ret;
   va_list ap;
 
@@ -93,4 +97,5 @@ void web_serial::send_debug_message(debugMessage message_type,
   }
 
   va_end(ap);
+  return 1;
 }

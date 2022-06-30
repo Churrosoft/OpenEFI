@@ -151,10 +151,20 @@ int main(void) {
   MX_TIM9_Init();
   MX_TIM10_Init();
   // MX_TIM11_Init();
-  // MX_TIM13_Init();
 
-  on_gpio_init();
+#ifdef ENABLE_US_TIM
+  MX_TIM13_Init();
+  HAL_TIM_Base_Start_IT(&htim13);
+
+#endif
   /* USER CODE BEGIN 2 */
+
+#ifdef ENABLE_PMIC
+  PMIC::init();
+  PMIC::enable();
+  // PMIC::setup_spark();
+#endif
+
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin, GPIO_PIN_SET);
@@ -162,45 +172,50 @@ int main(void) {
   HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
 
-  // MX_USB_DEVICE_Init();
+#ifdef ENABLE_WEBSERIAL
+  MX_USB_DEVICE_Init();
+#endif
 
   HAL_TIM_Base_Start_IT(&htim10);
 
-  // SPI Memory:
+#ifdef ENABLE_DEBUG_SETUP
   on_setup();
-  // W25qxx_Init();
+#endif
+
+#ifdef ENABLE_MEMORY
+  // SPI Memory:
+  W25qxx_Init();
+#endif
+
   // SRAND Init:
   srand(HAL_GetTick());
+
+#ifdef ENABLE_WEBSERIAL
+  web_serial::setup();
+#endif
   // Core inits:
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
   // Engine::onEFISetup();
+
   /* Infinite loop */
-  uint64_t last_rpm = 0;
+
   /* USER CODE BEGIN WHILE */
-
   while (1) {
-    /* USER CODE END WHILE */
+
+#ifdef ENABLE_DEBUG_LOOP
     on_loop();
+#endif
 
-    /*     web_serial::loop();
-     */
-    if (HAL_GetTick() - last_rpm >= 2500) {
+#ifdef ENABLE_WEBSERIAL
+    web_serial::loop();
+#endif
 
-      last_rpm = HAL_GetTick();
-
-      EFI_INVERT_PIN(LED1_GPIO_Port, LED1_Pin);
-
-      /* EFI_LOG("Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM,
-      RPM::status);
-
-      web_serial::send_debug_message(
-        web_serial::debugMessage::LOG,
-          "Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM, RPM::status
-      ); */
-    }
-    // Engine::onEFILoop();
-    /* USER CODE BEGIN 3 */
+#ifdef ENABLE_ENGINE_FRONTEND
+    Engine::onEFILoop();
+#endif
   }
+  /* USER CODE END WHILE */
+  /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
 }
 

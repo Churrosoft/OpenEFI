@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "main.h"
 #include "variables.h"
+#include "features.h"
 
 // Acá todos los defines
 #ifndef DEFINES_H
@@ -158,10 +159,22 @@ T is the temperature of the gas in the cylinder immediately after the intake val
                         ? GPIO_PIN_SET                                         \
                         : GPIO_PIN_RESET)
 
-#define EFI_LOG(...) web_serial::send_debug_message(web_serial::debugMessage::LOG, __VA_ARGS__)
-#define EFI_INFO(...) web_serial::send_debug_message(web_serial::debugMessage::INFO, __VA_ARGS__)
+
+#ifdef ENABLE_WEBSERIAL
+
+#define EFI_LOG(...)   web_serial::send_debug_message(web_serial::debugMessage::LOG, __VA_ARGS__)
+#define EFI_INFO(...)  web_serial::send_debug_message(web_serial::debugMessage::INFO, __VA_ARGS__)
 #define EFI_EVENT(...) web_serial::send_debug_message(web_serial::debugMessage::EVENT, __VA_ARGS__)
 #define EFI_ERROR(...) web_serial::send_debug_message(web_serial::debugMessage::ERROR, __VA_ARGS__)
+
+#else
+
+#define EFI_LOG(...)   void(__VA_ARGS__)
+#define EFI_INFO(...)  void(__VA_ARGS__)
+#define EFI_EVENT(...) void(__VA_ARGS__)
+#define EFI_ERROR(...) void(__VA_ARGS__)
+
+#endif
 
 extern volatile uint32_t UptimeMillis;
 

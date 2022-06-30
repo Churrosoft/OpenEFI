@@ -12,6 +12,7 @@ std::deque<serial_command> output_commands;
 
 TABLEDATA in_table;
 bool table_lock;
+bool web_serial::paired = false;
 
 void web_serial::setup() { in_table.reserve(17); }
 
@@ -44,6 +45,7 @@ void web_serial::command_handler() {
       out_comm = create_command(CORE_PONG, payload);
       export_command(out_comm, serialized_command);
       CDC_Transmit_FS(serialized_command, 128);
+      web_serial::paired = true;
       break;
     }
 
@@ -63,7 +65,7 @@ void web_serial::command_handler() {
 
     case CORE_STATUS: {
 
-      //int mockrpm = 750 + (rand() % 5750);
+      // int mockrpm = 750 + (rand() % 5750);
       int mockrpm = _RPM;
       int mocktemp = 1 + (rand() % 130);
       int mockload = 1 + (rand() % 100);
