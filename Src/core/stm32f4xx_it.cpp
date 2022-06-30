@@ -306,6 +306,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
                       led_checked ? GPIO_PIN_RESET : GPIO_PIN_SET);
     // WEBSerial:
     web_serial::loop();
+    web_serial::send_deque();
     // Sensors:
     // sensors::loop();
     // INJECTION/IGNITION ALGORITHMS
