@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vref',['Vref',['../defines_8h.html#a7c4a8191a821caeaf796e5dbef63750d',1,'defines.h']]]
+  ['sinc_5fenable',['SINC_ENABLE',['../defines_8h.html#a1941541eecb2be882abc1a4f0291771b',1,'defines.h']]]
 ];

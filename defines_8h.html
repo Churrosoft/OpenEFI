@@ -81,18 +81,23 @@ $(document).ready(function(){initNavTree('defines_8h.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">defines.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
+<code>#include &quot;variables.h&quot;</code><br />
 </div>
 <p><a href="defines_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:aca91b9017f4698def1eae778ef480c42"><td class="memItemLeft" align="right" valign="top"><a id="aca91b9017f4698def1eae778ef480c42"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEFINES_H</b></td></tr>
+<tr class="separator:aca91b9017f4698def1eae778ef480c42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26abc5e4f99b9b7f3fbfca100ecc88be"><td class="memItemLeft" align="right" valign="top"><a id="a26abc5e4f99b9b7f3fbfca100ecc88be"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>OPENEFI_BOARD_TYPE</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a26abc5e4f99b9b7f3fbfca100ecc88be"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,11 +127,11 @@ Macros</h2></td></tr>
 <tr class="memdesc:a6b476c09f52c46c89cca6a640c6a8efa"><td class="mdescLeft">&#160;</td><td class="mdescRight">cantidad de dientes del sensor CKP <br /></td></tr>
 <tr class="separator:a6b476c09f52c46c89cca6a640c6a8efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c86bd837e15883adc26d5f67e78b673"><td class="memItemLeft" align="right" valign="top"><a id="a4c86bd837e15883adc26d5f67e78b673"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a4c86bd837e15883adc26d5f67e78b673">DNT_MISSING</a>&#160;&#160;&#160;0</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a4c86bd837e15883adc26d5f67e78b673">DNT_MISSING</a>&#160;&#160;&#160;2</td></tr>
 <tr class="memdesc:a4c86bd837e15883adc26d5f67e78b673"><td class="mdescLeft">&#160;</td><td class="mdescRight">cantidad de dientes faltantes en PMS <br /></td></tr>
 <tr class="separator:a4c86bd837e15883adc26d5f67e78b673"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47467f21cf6f32b35425e9a5f97f2d89"><td class="memItemLeft" align="right" valign="top"><a id="a47467f21cf6f32b35425e9a5f97f2d89"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a47467f21cf6f32b35425e9a5f97f2d89">DNT_DOUBLE_SCAN</a>&#160;&#160;&#160;2</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a47467f21cf6f32b35425e9a5f97f2d89">DNT_DOUBLE_SCAN</a>&#160;&#160;&#160;1</td></tr>
 <tr class="memdesc:a47467f21cf6f32b35425e9a5f97f2d89"><td class="mdescLeft">&#160;</td><td class="mdescRight">1 == interrupcion por diente <br /></td></tr>
 <tr class="separator:a47467f21cf6f32b35425e9a5f97f2d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05e541f32be39b569799db0ef38e9168"><td class="memItemLeft" align="right" valign="top"><a id="a05e541f32be39b569799db0ef38e9168"></a>
@@ -141,15 +146,28 @@ Macros</h2></td></tr>
 <tr class="memdesc:a0e557f1d3a1e9da3ef071cee0dbe7c8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">cilindrada en CC del motor <br /></td></tr>
 <tr class="separator:a0e557f1d3a1e9da3ef071cee0dbe7c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a267514d4f83c7a3ce49e997386ef97ef"><td class="memItemLeft" align="right" valign="top"><a id="a267514d4f83c7a3ce49e997386ef97ef"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ING_SECUENCY</b>&#160;&#160;&#160;{1, 3, 4, 2};</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a267514d4f83c7a3ce49e997386ef97ef">ING_SECUENCY</a>&#160;&#160;&#160;{1, 3, 4, 2};</td></tr>
+<tr class="memdesc:a267514d4f83c7a3ce49e997386ef97ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia encendido (solo en FULL_SECUENCIAL) <br /></td></tr>
 <tr class="separator:a267514d4f83c7a3ce49e997386ef97ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25b99f313e7bbad9109bae32e4d0a22b"><td class="memItemLeft" align="right" valign="top"><a id="a25b99f313e7bbad9109bae32e4d0a22b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a25b99f313e7bbad9109bae32e4d0a22b">ING_SECUENCY_ALT</a>&#160;&#160;&#160;{ 1, 4, 3, 2 };</td></tr>
+<tr class="memdesc:a25b99f313e7bbad9109bae32e4d0a22b"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia encendido semi-secuencial <br /></td></tr>
+<tr class="separator:a25b99f313e7bbad9109bae32e4d0a22b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f2c85322a7483badca2baf565e80d55"><td class="memItemLeft" align="right" valign="top"><a id="a3f2c85322a7483badca2baf565e80d55"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>INY_SECUENCY</b>&#160;&#160;&#160;{3, 4, 1, 2};</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a3f2c85322a7483badca2baf565e80d55">INY_SECUENCY</a>&#160;&#160;&#160;{3, 4, 1, 2};</td></tr>
+<tr class="memdesc:a3f2c85322a7483badca2baf565e80d55"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia inyeccion (solo en FULL_SECUENCIAL) <br /></td></tr>
 <tr class="separator:a3f2c85322a7483badca2baf565e80d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13a0b4242db0b2e9a42c52608df5cd7c"><td class="memItemLeft" align="right" valign="top"><a id="a13a0b4242db0b2e9a42c52608df5cd7c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a13a0b4242db0b2e9a42c52608df5cd7c">INY_SECYENCY_ALT</a>&#160;&#160;&#160;{ 3, 1, 4, 2 }</td></tr>
+<tr class="memdesc:a13a0b4242db0b2e9a42c52608df5cd7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia inyeccion semi-secuencial <br /></td></tr>
+<tr class="separator:a13a0b4242db0b2e9a42c52608df5cd7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d0de63cb3b2b767719451b355cb94fa"><td class="memItemLeft" align="right" valign="top"><a id="a0d0de63cb3b2b767719451b355cb94fa"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a0d0de63cb3b2b767719451b355cb94fa">MAX_RPM</a>&#160;&#160;&#160;4500</td></tr>
 <tr class="memdesc:a0d0de63cb3b2b767719451b355cb94fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">valor maximo de rpm, valores superiores activan cutoff de encendido/combustible <br /></td></tr>
 <tr class="separator:a0d0de63cb3b2b767719451b355cb94fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac97f9b31b246468fb72f139b47d6f06b"><td class="memItemLeft" align="right" valign="top"><a id="ac97f9b31b246468fb72f139b47d6f06b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>USING_EXPERIMENTAL_RPM_CALC</b>&#160;&#160;&#160;false</td></tr>
+<tr class="separator:ac97f9b31b246468fb72f139b47d6f06b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe4d4f0baa8393107c2882b58e411fef"><td class="memItemLeft" align="right" valign="top"><a id="abe4d4f0baa8393107c2882b58e411fef"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>RPM_per</b>&#160;&#160;&#160;500</td></tr>
 <tr class="separator:abe4d4f0baa8393107c2882b58e411fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,6 +179,10 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a1941541eecb2be882abc1a4f0291771b">SINC_ENABLE</a></td></tr>
 <tr class="memdesc:a1941541eecb2be882abc1a4f0291771b"><td class="mdescLeft">&#160;</td><td class="mdescRight">No borre este define, no sea tarado. <br /></td></tr>
 <tr class="separator:a1941541eecb2be882abc1a4f0291771b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9022ef0836f3d898a79d27ce45aa5bb"><td class="memItemLeft" align="right" valign="top"><a id="ab9022ef0836f3d898a79d27ce45aa5bb"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#ab9022ef0836f3d898a79d27ce45aa5bb">FULL_SECUENCIAL</a>&#160;&#160;&#160;false</td></tr>
+<tr class="memdesc:ab9022ef0836f3d898a79d27ce45aa5bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">solo usar en caso de tener sensor de fase, caso contrario solo se puede realizar inyeccion/encendido semi-secuencial <br /></td></tr>
+<tr class="separator:ab9022ef0836f3d898a79d27ce45aa5bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ea16d89c4d1fb6e827010391c1da564"><td class="memItemLeft" align="right" valign="top"><a id="a3ea16d89c4d1fb6e827010391c1da564"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="defines_8h.html#a3ea16d89c4d1fb6e827010391c1da564">PMSI</a>&#160;&#160;&#160;240</td></tr>
 <tr class="memdesc:a3ea16d89c4d1fb6e827010391c1da564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cantidad de dientes entre PMS. <br /></td></tr>
@@ -324,6 +346,15 @@ Macros</h2></td></tr>
 <tr class="memitem:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memItemLeft" align="right" valign="top"><a id="a3af919d5aad2d3fd16052cb3d57824bd"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ROUND_32</b>(NUMBER)&#160;&#160;&#160;((float)((uint32_t)NUMBER * 100 + .5) / 100)</td></tr>
 <tr class="separator:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a1bdc2263b1a4272baa3897ea6eba85"><td class="memItemLeft" align="right" valign="top"><a id="a3a1bdc2263b1a4272baa3897ea6eba85"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MS_IN_MINUTE</b>&#160;&#160;&#160;60000</td></tr>
+<tr class="separator:a3a1bdc2263b1a4272baa3897ea6eba85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b0d4589738b2ad1c84c5821bc8027e9"><td class="memItemLeft" align="right" valign="top"><a id="a0b0d4589738b2ad1c84c5821bc8027e9"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>US_IN_MINUTE</b>&#160;&#160;&#160;60000000</td></tr>
+<tr class="separator:a0b0d4589738b2ad1c84c5821bc8027e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e69f9302b527faa13fc40cc8220fde2"><td class="memItemLeft" align="right" valign="top"><a id="a4e69f9302b527faa13fc40cc8220fde2"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_US_TIME</b>&#160;&#160;&#160;(HAL_GetTick() * 1000 /* + TIM13-&gt;CNT */)</td></tr>
+<tr class="separator:a4e69f9302b527faa13fc40cc8220fde2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f5b4886c16d10e05be7be46d8bb7e73"><td class="memItemLeft" align="right" valign="top"><a id="a6f5b4886c16d10e05be7be46d8bb7e73"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_BIT</b>(VAR,  BIT_NEEDED)&#160;&#160;&#160;((VAR &gt;&gt; BIT_NEEDED) &amp; 1)</td></tr>
 <tr class="separator:a6f5b4886c16d10e05be7be46d8bb7e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -341,6 +372,12 @@ Macros</h2></td></tr>
 <tr class="separator:ae8b243fdac3715a3da7c98b9a380eaa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa28480bfa03957b4f284c13e800ca8b0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>BYTE_TO_BINARY</b>(byte)</td></tr>
 <tr class="separator:aa28480bfa03957b4f284c13e800ca8b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a2266e53ba3e0fa61056bde971ab0fb97"><td class="memItemLeft" align="right" valign="top"><a id="a2266e53ba3e0fa61056bde971ab0fb97"></a>
+volatile uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UptimeMillis</b></td></tr>
+<tr class="separator:a2266e53ba3e0fa61056bde971ab0fb97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="aa28480bfa03957b4f284c13e800ca8b0"></a>
