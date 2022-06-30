@@ -346,6 +346,20 @@ Macros</h2></td></tr>
 <tr class="memitem:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memItemLeft" align="right" valign="top"><a id="a3af919d5aad2d3fd16052cb3d57824bd"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ROUND_32</b>(NUMBER)&#160;&#160;&#160;((float)((uint32_t)NUMBER * 100 + .5) / 100)</td></tr>
 <tr class="separator:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INVERT_PIN</b>(PORT,  PIN)</td></tr>
+<tr class="separator:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adced380a3ff4f0b29c4b68111127c840"><td class="memItemLeft" align="right" valign="top"><a id="adced380a3ff4f0b29c4b68111127c840"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_LOG</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::LOG, __VA_ARGS__)</td></tr>
+<tr class="separator:adced380a3ff4f0b29c4b68111127c840"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4485e33df7103be14ac570d6329f295"><td class="memItemLeft" align="right" valign="top"><a id="ad4485e33df7103be14ac570d6329f295"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INFO</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::INFO, __VA_ARGS__)</td></tr>
+<tr class="separator:ad4485e33df7103be14ac570d6329f295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe4436f344baf72944b2e8355467a689"><td class="memItemLeft" align="right" valign="top"><a id="afe4436f344baf72944b2e8355467a689"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_EVENT</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::EVENT, __VA_ARGS__)</td></tr>
+<tr class="separator:afe4436f344baf72944b2e8355467a689"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdc29d32793749e983df2e12489bac7c"><td class="memItemLeft" align="right" valign="top"><a id="afdc29d32793749e983df2e12489bac7c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_ERROR</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::ERROR, __VA_ARGS__)</td></tr>
+<tr class="separator:afdc29d32793749e983df2e12489bac7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a1bdc2263b1a4272baa3897ea6eba85"><td class="memItemLeft" align="right" valign="top"><a id="a3a1bdc2263b1a4272baa3897ea6eba85"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MS_IN_MINUTE</b>&#160;&#160;&#160;60000</td></tr>
 <tr class="separator:a3a1bdc2263b1a4272baa3897ea6eba85"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -396,6 +410,34 @@ volatile uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UptimeMi
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">(byte &amp; 0x80 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x40 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x20 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x10 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x08 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x04 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x02 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x01 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a4101ea0e718a756439dbd3d3fb9c9c4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4101ea0e718a756439dbd3d3fb9c9c4b">&#9670;&nbsp;</a></span>EFI_INVERT_PIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EFI_INVERT_PIN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">PORT, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">PIN&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">HAL_GPIO_WritePin(PORT, PIN,                                                 \</div><div class="line">                    HAL_GPIO_ReadPin(PORT, PIN) == GPIO_PIN_RESET              \</div><div class="line">                        ? GPIO_PIN_SET                                         \</div><div class="line">                        : GPIO_PIN_RESET)</div></div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

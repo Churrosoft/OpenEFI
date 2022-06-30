@@ -192,7 +192,7 @@ Preprocessing /home/runner/work/OpenEFI/OpenEF/home/runner/work/OpenEFI/OpenEFI/
 /home/runner/work/OpenEFI/OpenEFI/Src/main.cpp:4: warning: the name `main.c' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h:4: warning: the name `stm32f4xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:18: warning: Compound input_handler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:14: warning: Compound web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:13: warning: Compound web_serial::serial_command is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:28: warning: Compound table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:16: warning: Compound EMALowPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:30: warning: Compound sensors::SensorValues is not documented.
@@ -200,10 +200,10 @@ Preprocessing /home/runner/work/OpenEFI/OpenEF/home/runner/work/OpenEFI/OpenEFI/
 /home/runner/work/OpenEFI/OpenEFI/Src/core/usbd_desc.c:222: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_LangIDDesc' was not declared or defined.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/usbd_desc.c:234: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StrDesc' was not declared or defined.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/usbd_desc.c:239: warning: documented symbol `__ALIGN_BEGIN uint8_t USBD_StringSerial' was not declared or defined.
-/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.cpp:6: warning: no matching file member found for 
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.cpp:8: warning: no matching file member found for 
 serial_command web_serial::create_command(uint16_t input_command, uint8_t *payload)
 Possible candidates:
- 'serial_command create_command(uint16_t input_command, uint8_t payload[])' at line 21 of file/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp
+ 'serial_command create_command(uint16_t input_command, uint8_t payload[])' at line 25 of file/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp
 
 I/Inc/stm32f4xx_hal_conf.h...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h...
@@ -341,16 +341,21 @@ Generating code for file /home/runner/work/OpenEFI/OpenEFI/Inc/ti/home/runner/wo
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:148: warning: Member TABLES_IGNITION_TPS_SETTINGS (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:152: warning: Member ROUND_16(NUMBER) (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:153: warning: Member ROUND_32(NUMBER) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:169: warning: Member MS_IN_MINUTE (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:170: warning: Member US_IN_MINUTE (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:180: warning: Member GET_US_TIME (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:185: warning: Member GET_BIT(VAR, BIT_NEEDED) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:189: warning: Member CPWM_DEBUG (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:190: warning: Member PMIC_DEBUG (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:192: warning: Member BREAKPOINT (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:194: warning: Member BYTE_TO_BINARY_PATTERN (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:195: warning: Member BYTE_TO_BINARY(byte) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:155: warning: Member UptimeMillis (variable) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:155: warning: Member EFI_INVERT_PIN(PORT, PIN) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:161: warning: Member EFI_LOG(...) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:162: warning: Member EFI_INFO(...) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:163: warning: Member EFI_EVENT(...) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:164: warning: Member EFI_ERROR(...) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:180: warning: Member MS_IN_MINUTE (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:181: warning: Member US_IN_MINUTE (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:191: warning: Member GET_US_TIME (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:196: warning: Member GET_BIT(VAR, BIT_NEEDED) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:200: warning: Member CPWM_DEBUG (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:201: warning: Member PMIC_DEBUG (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:203: warning: Member BREAKPOINT (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:205: warning: Member BYTE_TO_BINARY_PATTERN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:206: warning: Member BYTE_TO_BINARY(byte) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:166: warning: Member UptimeMillis (variable) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:9: warning: Member NEW_DTC (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:10: warning: Member EMPTY_DTC (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:42: warning: Member DTC_INJECTOR_PRESSURE_NOT_DETECTED (macro definition) of file dtc_codes.h is not documented.
@@ -652,10 +657,10 @@ Generating docs /home/runner/work/OpenEFI/OpenEFI/Src/core/tim.c:36: warning: Me
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:54: warning: argument 'table_ref' of command @param is not found in the argument list of tables::read_all(table_ref table)
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:58: warning: The following parameters of tables::read_all(table_ref table) are not documented:
   parameter 'table'
-/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:15: warning: Member protocol (variable) of class web_serial::serial_command is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:16: warning: Member command (variable) of class web_serial::serial_command is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:17: warning: Member payload[123] (variable) of class web_serial::serial_command is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:18: warning: Member crc[2] (variable) of class web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:14: warning: Member protocol (variable) of class web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:15: warning: Member command (variable) of class web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:16: warning: Member payload[123] (variable) of class web_serial::serial_command is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:17: warning: Member crc[2] (variable) of class web_serial::serial_command is not documented.
 for file /home/runner/work/OpenEFI/OpenEFI/Src/core/tim.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/core/usb_device.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/core/usbd_desc.c...
@@ -688,5 +693,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 290/65536 hits=547 misses=297
+lookup cache used 312/65536 hits=587 misses=319
 finished...

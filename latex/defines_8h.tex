@@ -231,6 +231,20 @@
 \mbox{\Hypertarget{defines_8h_a3af919d5aad2d3fd16052cb3d57824bd}\label{defines_8h_a3af919d5aad2d3fd16052cb3d57824bd}} 
 \#define {\bfseries R\+O\+U\+N\+D\+\_\+32}(N\+U\+M\+B\+ER)~((float)((uint32\+\_\+t)N\+U\+M\+B\+ER $\ast$ 100 + .\+5) / 100)
 \item 
+\#define {\bfseries E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}(P\+O\+RT,  P\+IN)
+\item 
+\mbox{\Hypertarget{defines_8h_adced380a3ff4f0b29c4b68111127c840}\label{defines_8h_adced380a3ff4f0b29c4b68111127c840}} 
+\#define {\bfseries E\+F\+I\+\_\+\+L\+OG}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+L\+OG, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\item 
+\mbox{\Hypertarget{defines_8h_ad4485e33df7103be14ac570d6329f295}\label{defines_8h_ad4485e33df7103be14ac570d6329f295}} 
+\#define {\bfseries E\+F\+I\+\_\+\+I\+N\+FO}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+I\+N\+FO, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\item 
+\mbox{\Hypertarget{defines_8h_afe4436f344baf72944b2e8355467a689}\label{defines_8h_afe4436f344baf72944b2e8355467a689}} 
+\#define {\bfseries E\+F\+I\+\_\+\+E\+V\+E\+NT}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+E\+V\+E\+NT, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\item 
+\mbox{\Hypertarget{defines_8h_afdc29d32793749e983df2e12489bac7c}\label{defines_8h_afdc29d32793749e983df2e12489bac7c}} 
+\#define {\bfseries E\+F\+I\+\_\+\+E\+R\+R\+OR}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+E\+R\+R\+OR, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\item 
 \mbox{\Hypertarget{defines_8h_a3a1bdc2263b1a4272baa3897ea6eba85}\label{defines_8h_a3a1bdc2263b1a4272baa3897ea6eba85}} 
 \#define {\bfseries M\+S\+\_\+\+I\+N\+\_\+\+M\+I\+N\+U\+TE}~60000
 \item 
@@ -282,4 +296,17 @@ volatile uint32\+\_\+t {\bfseries Uptime\+Millis}
   (byte & 0x04 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
   (byte & 0x02 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
   (byte & 0x01 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'})
+\end{DoxyCode}
+\mbox{\Hypertarget{defines_8h_a4101ea0e718a756439dbd3d3fb9c9c4b}\label{defines_8h_a4101ea0e718a756439dbd3d3fb9c9c4b}} 
+\index{defines.\+h@{defines.\+h}!E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN@{E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}}
+\index{E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN@{E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}!defines.\+h@{defines.\+h}}
+\subsubsection{\texorpdfstring{E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}{EFI\_INVERT\_PIN}}
+{\footnotesize\ttfamily \#define E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN(\begin{DoxyParamCaption}\item[{}]{P\+O\+RT,  }\item[{}]{P\+IN }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+HAL\_GPIO\_WritePin(PORT, PIN,                                                 \(\backslash\)
+                    HAL\_GPIO\_ReadPin(PORT, PIN) == GPIO\_PIN\_RESET              \(\backslash\)
+                        ? GPIO\_PIN\_SET                                         \(\backslash\)
+                        : GPIO\_PIN\_RESET)
 \end{DoxyCode}
