@@ -162,7 +162,7 @@ int main(void) {
   HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
 
-  MX_USB_DEVICE_Init();
+  // MX_USB_DEVICE_Init();
 
   HAL_TIM_Base_Start_IT(&htim10);
 
@@ -182,22 +182,21 @@ int main(void) {
     /* USER CODE END WHILE */
     on_loop();
 
-    web_serial::loop();
-    if (HAL_GetTick() - last_rpm >= 500) {
+    /*     web_serial::loop();
+     */
+    if (HAL_GetTick() - last_rpm >= 2500) {
 
       last_rpm = HAL_GetTick();
 
-      EFI_INVERT_PIN(LED1_GPIO_Port,LED1_Pin);
+      EFI_INVERT_PIN(LED1_GPIO_Port, LED1_Pin);
 
-      EFI_LOG("Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM, RPM::status);
+      /* EFI_LOG("Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM,
+      RPM::status);
 
       web_serial::send_debug_message(
         web_serial::debugMessage::LOG,
           "Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM, RPM::status
-      );
-
-      trace_printf("Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM,
-                   RPM::status);
+      ); */
     }
     // Engine::onEFILoop();
     /* USER CODE BEGIN 3 */
