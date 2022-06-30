@@ -7,6 +7,7 @@ var dir_f93dfce691d792349f1c14ede440e2e6 =
     [ "defines.h", "defines_8h.html", "defines_8h" ],
     [ "dma.h", "dma_8h_source.html", null ],
     [ "dtc_codes.h", "dtc__codes_8h.html", "dtc__codes_8h" ],
+    [ "features.h", "features_8h_source.html", null ],
     [ "gpio.h", "gpio_8h.html", "gpio_8h" ],
     [ "main.h", "main_8h.html", "main_8h" ],
     [ "spi.h", "spi_8h.html", "spi_8h" ],

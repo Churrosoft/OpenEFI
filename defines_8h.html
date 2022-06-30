@@ -90,6 +90,7 @@ $(document).ready(function(){initNavTree('defines_8h.html','');});
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
 <code>#include &quot;variables.h&quot;</code><br />
+<code>#include &quot;features.h&quot;</code><br />
 </div>
 <p><a href="defines_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -349,16 +350,16 @@ Macros</h2></td></tr>
 <tr class="memitem:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INVERT_PIN</b>(PORT,  PIN)</td></tr>
 <tr class="separator:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adced380a3ff4f0b29c4b68111127c840"><td class="memItemLeft" align="right" valign="top"><a id="adced380a3ff4f0b29c4b68111127c840"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_LOG</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::LOG, __VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_LOG</b>(...)&#160;&#160;&#160;void(__VA_ARGS__)</td></tr>
 <tr class="separator:adced380a3ff4f0b29c4b68111127c840"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4485e33df7103be14ac570d6329f295"><td class="memItemLeft" align="right" valign="top"><a id="ad4485e33df7103be14ac570d6329f295"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INFO</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::INFO, __VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INFO</b>(...)&#160;&#160;&#160;void(__VA_ARGS__)</td></tr>
 <tr class="separator:ad4485e33df7103be14ac570d6329f295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe4436f344baf72944b2e8355467a689"><td class="memItemLeft" align="right" valign="top"><a id="afe4436f344baf72944b2e8355467a689"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_EVENT</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::EVENT, __VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_EVENT</b>(...)&#160;&#160;&#160;void(__VA_ARGS__)</td></tr>
 <tr class="separator:afe4436f344baf72944b2e8355467a689"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdc29d32793749e983df2e12489bac7c"><td class="memItemLeft" align="right" valign="top"><a id="afdc29d32793749e983df2e12489bac7c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_ERROR</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::ERROR, __VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_ERROR</b>(...)&#160;&#160;&#160;void(__VA_ARGS__)</td></tr>
 <tr class="separator:afdc29d32793749e983df2e12489bac7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a1bdc2263b1a4272baa3897ea6eba85"><td class="memItemLeft" align="right" valign="top"><a id="a3a1bdc2263b1a4272baa3897ea6eba85"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MS_IN_MINUTE</b>&#160;&#160;&#160;60000</td></tr>
