@@ -68,8 +68,8 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, INY1_Pin|INY2_Pin|INY3_Pin|INY4_Pin
-                          |ECN2_Pin|ECN3_Pin|ECN4_Pin|LED_CAN_RX_Pin
-                          |LED_CAN_TX_Pin, GPIO_PIN_RESET);
+                          |GPIO_PIN_12|ECN2_Pin|ECN3_Pin|ECN4_Pin
+                          |LED_CAN_RX_Pin|LED_CAN_TX_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, GNC_GLP_OUT_Pin|AUX_OUT_4_Pin|PMIC_CS_Pin, GPIO_PIN_RESET);
@@ -118,25 +118,19 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PDPin PDPin PDPin PDPin
-                           PDPin PDPin PDPin PDPin
-                           PDPin */
+                           PD12 PDPin PDPin PDPin
+                           PDPin PDPin */
   GPIO_InitStruct.Pin = INY1_Pin|INY2_Pin|INY3_Pin|INY4_Pin
-                          |ECN2_Pin|ECN3_Pin|ECN4_Pin|LED_CAN_RX_Pin
-                          |LED_CAN_TX_Pin;
+                          |GPIO_PIN_12|ECN2_Pin|ECN3_Pin|ECN4_Pin
+                          |LED_CAN_RX_Pin|LED_CAN_TX_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PtPin */
-  GPIO_InitStruct.Pin = ECN1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(ECN1_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pins : PCPin PCPin */
   GPIO_InitStruct.Pin = CKP_Pin|CMP_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
@@ -156,9 +150,6 @@ void MX_GPIO_Init(void)
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 

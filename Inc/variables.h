@@ -10,7 +10,8 @@
 
 extern uint32_t _RPM, //	las rpm :V
     _POS,    //	posicion del cigueñal (en dientes) (el contador de rpm la resetea a cada rato)
-    _POS_AE; //	posicion arbol de levas
+    _POS_AE, //	posicion arbol de levas
+    _DEG;
 extern int32_t _AE; //	avance de encendido
 extern uint32_t _rpm_time;
 
@@ -30,5 +31,12 @@ extern unsigned long T1;
 extern unsigned long T2;
 extern unsigned long Ta;
 extern unsigned long Tb;
+
+
+// only for testing:
+#ifdef TESTING
+extern uint32_t mocktick;
+extern uint32_t tickStep;
+#endif
 
 #endif

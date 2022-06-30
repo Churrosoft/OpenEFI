@@ -26,9 +26,14 @@
 
 #ifdef TESTING
 #pragma GCC warning "TESTING ENABLED"
-#include "../test/cpwm_test.cpp"
 #include <unity.h>
+
+#include "../test/cpwm_test.cpp"
+#include "../test/rpm_calc.cpp"
+
 extern int run_tests(void);
+extern int run_rpm_tests(void);
+
 #endif
 
 #include <algorithm>
@@ -41,7 +46,6 @@ extern "C" {
 #include <trace.h>
 #endif
 
-
 #include "can.h"
 #include "dma.h"
 #include "spi.h"
@@ -52,13 +56,16 @@ extern "C" {
 #include "aliases/memory.hpp"
 #include <cstdlib>
 
-#include "cpwm/include/cpwm.hpp"
+#include "cpwm/cpwm.hpp"
+#include "cpwm/rpm_calc.h"
 #include "debug/debug_local.h"
 #include "ignition/include/ignition.hpp"
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
+
+#include "engine/engine.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,7 +99,10 @@ void MX_SPI2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#ifdef TESTING
+uint32_t mocktick = 0;
+uint32_t tickStep = 15000; // 4k rpm // 50000 => 1200 // 80000 => 750
+#endif
 /* USER CODE END 0 */
 
 /**
@@ -116,6 +126,7 @@ int main(void) {
   trace_initialize();
   printf("INIT_TESTING \n");
   run_tests();
+  run_rpm_tests();
   puts("END_TESTING \n");
 #endif
 
@@ -139,6 +150,8 @@ int main(void) {
   MX_TIM4_Init();
   MX_TIM9_Init();
   MX_TIM10_Init();
+  // MX_TIM11_Init();
+  // MX_TIM13_Init();
 
   on_gpio_init();
   /* USER CODE BEGIN 2 */
@@ -146,6 +159,8 @@ int main(void) {
   HAL_GPIO_WritePin(PMIC_CS_GPIO_Port, PMIC_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(MEMORY_CS_GPIO_Port, MEMORY_CS_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
 
   MX_USB_DEVICE_Init();
 
@@ -153,38 +168,34 @@ int main(void) {
 
   // SPI Memory:
   on_setup();
-  W25qxx_Init();
+  // W25qxx_Init();
   // SRAND Init:
   srand(HAL_GetTick());
   // Core inits:
-  web_serial::setup();
-  //ignition::setup();
-  //sensors::setup();
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
-
+  // Engine::onEFISetup();
   /* Infinite loop */
   uint64_t last_rpm = 0;
- PMIC::demo_spark();
   /* USER CODE BEGIN WHILE */
+
   while (1) {
     /* USER CODE END WHILE */
     on_loop();
 
-    web_serial::command_handler();
-    web_serial::send_deque();
-    /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
-        HAL_Delay(50); */
-    //ignition::interrupt();
-    // WEBSerial:
     web_serial::loop();
-    if (HAL_GetTick() - last_rpm >= 2000) {
-      // save the last time you blinked the LED
+    if (HAL_GetTick() - last_rpm >= 500) {
+
       last_rpm = HAL_GetTick();
-     // trace_printf("Event: <RPM; POS> %d ; %d \r\n", _RPM, _POS);
-     // PMIC::demo_spark();
+      HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,
+                        HAL_GPIO_ReadPin(LED1_GPIO_Port, LED1_Pin) ==
+                                GPIO_PIN_RESET
+                            ? GPIO_PIN_SET
+                            : GPIO_PIN_RESET);
+
+      trace_printf("Event: <RPM> %f <RPM Status> %d \r\n", RPM::_RPM,
+                   RPM::status);
     }
-    /*     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
-        HAL_Delay(50); */
+    // Engine::onEFILoop();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -192,22 +203,21 @@ int main(void) {
 
 // https://riunet.upv.es/bitstream/handle/10251/39538/ArticuloTimers.pdf?sequence=1
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
-  */
+   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+   * in the RCC_OscInitTypeDef structure.
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -216,26 +226,23 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLN = 144;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 5;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
     Error_Handler();
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+   */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |
+                                RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
-  {
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK) {
     Error_Handler();
   }
 }
-
 
 /**
  * @brief  This function is executed in case of error occurrence.
