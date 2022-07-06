@@ -2,19 +2,20 @@
 #define CAN_WRAPPER_H
 #include "defines.h"
 
-namespace CAN
-{
-    void send_data_to_scanner();
+#define OBD2_CAN_ADDR 0x7DF
 
-    void update_dashdash();
+namespace CAN {
+void send_data_to_scanner();
 
-    uint8_t check_crc(); // en teoriiiaa puede revisarlo por su cuenta HAL y descartar los invalidos
+void update_dashdash();
 
-    void on_setup();
-    void on_loop();
-    void on_message(); // similar a web_serial::command_handler
+uint8_t check_crc(); // en teoriiiaa puede revisarlo por su cuenta HAL y
+                     // descartar los invalidos
+
+void on_setup();
+void on_loop();
+void on_message(); // similar a web_serial::command_handler
 
 } // namespace CAN
-
 
 #endif

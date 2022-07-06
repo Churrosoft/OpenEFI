@@ -148,6 +148,14 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 
 #define TABLES_IGNITION_TPS_SETTINGS { 17, 17, 0x2 }
 
+/*-----( OBD2 )-----*/
+
+#define ENABLE_MISFIRE_MONITOR 0
+#define ENABLE_FUEL_MONITOR 1
+#define ENABLE_CATALYST_MONITOR 0
+#define ENABLE_HEATED_CATALYST_MONITOR 0
+
+
 /*-----( Helpers )-----*/
 
 #define ROUND_16(NUMBER) ((float)((uint16_t)NUMBER * 100 + .5) / 100)
