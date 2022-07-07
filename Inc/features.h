@@ -1,9 +1,10 @@
 #ifndef FEATURES_H
 #define FEATURES_H
 
-// #define ENABLE_WEBSERIAL
+#define ENABLE_WEBSERIAL
+// #define ENABLE_SYNC
 #define ENABLE_RPM_CALC
-#define ENABLE_CPWM_IT
+// #define ENABLE_CPWM_IT
 #define ENABLE_INTERRUPTS
 
 #define ENABLE_DEBUG_SETUP

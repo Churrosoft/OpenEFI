@@ -304,11 +304,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == TIM10) {
 
     EFI_INVERT_PIN(LED2_GPIO_Port, LED2_Pin);
-    // WEBSerial:
-    /*  web_serial::loop();
-     web_serial::send_deque(); */
+
+// WEBSerial:
+#ifdef ENABLE_WEBSERIAL
+    web_serial::loop();
+    web_serial::send_deque();
+#endif
+
+#ifdef ENABLE_SENSORS
     // Sensors:
-    // sensors::loop();
+    sensors::loop();
+#endif
+
     // INJECTION/IGNITION ALGORITHMS
 
     led_checked = !led_checked;
@@ -337,20 +344,22 @@ void OTG_FS_IRQHandler(void) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
-  EFI_INVERT_PIN(LED0_GPIO_Port, LED0_Pin);
+  if (GPIO_Pin == CKP_Pin) {
+#ifdef ENABLE_RPM_CALC
+    RPM::interrupt();
+#endif
 
-    // CPWM::interrupt();
+    if (!SINC) {
+#ifdef ENABLE_SYNC
+      SINC = sinc();
+#endif
+    } else {
 
-/*   if (GPIO_Pin == GPIO_PIN_6 && MOTOR_ENABLE && SINC) {
-    // CPWM::interrupt();
+#ifdef ENABLE_CPWM_IT
+      CPWM::interrupt();
+#endif
+    }
   }
-  if (!SINC) {
-    EFI_INVERT_PIN(LED0_GPIO_Port, LED0_Pin);
-
-    // CPWM::interrupt();
-    // RPM::interrupt();
-    // SINC = sinc();
-  } */
 }
 
 /* USER CODE END 1 */
