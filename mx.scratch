@@ -3,7 +3,7 @@
   <FileVersion>3.0</FileVersion>
   <Workspace>
     <WorkspaceType>Single-project</WorkspaceType>
-    <WorkspacePath>/home/fdsoftware/churrosoft/openefi/OpenEFI/</WorkspacePath>
+    <WorkspacePath>/home/fdsoftware/repos/churrosoft/openefi/OpenEFI/</WorkspacePath>
     <underRoot>false</underRoot>
     <TrustZone>0</TrustZone>
     <HAL_Driver>/home/fdsoftware/STM32Cube/Repository//STM32Cube_FW_F4_V1.27.0/</HAL_Driver>
