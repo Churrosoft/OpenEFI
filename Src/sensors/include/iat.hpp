@@ -7,7 +7,9 @@
 
 #include "dtc_codes.h"
 
+extern "C" {
 #include "../utils/basic_electronics.h"
+}
 
 namespace IAT
 {

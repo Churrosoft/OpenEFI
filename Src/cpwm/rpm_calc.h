@@ -23,6 +23,7 @@ enum __rpm_status {
 }
 typedef rpm_status::__rpm_status RPM_STATUS;
 
+/* uint32_t getCurrentMicros(void); */
 namespace RPM {
 
 void interrupt(void);
