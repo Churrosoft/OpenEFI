@@ -27,6 +27,7 @@ typedef rpm_status::__rpm_status RPM_STATUS;
 namespace RPM {
 
 void interrupt(void);
+void watch_dog(void);
 
 extern uint16_t WheelTooth;
 extern uint32_t lastWheelTime;
@@ -35,6 +36,13 @@ extern bool tooth_status;
 
 extern float _DEG;
 extern float _RPM;
+
+extern uint32_t rotation_count;
+extern uint32_t last_rotation_count;
+extern uint8_t watch_dog_count;
+
+extern uint32_t watch_dog_time;
+extern uint32_t watch_dog_period;
 
 extern RPM_STATUS status;
 

@@ -8,6 +8,13 @@ uint32_t RPM::lastWheelTime;
 uint32_t RPM::actualWheelTime;
 RPM_STATUS RPM::status = RPM_STATUS::STOPPED;
 
+uint32_t RPM::rotation_count;
+uint32_t RPM::last_rotation_count;
+uint8_t RPM::watch_dog_count;
+
+uint32_t RPM::watch_dog_time;
+uint32_t RPM::watch_dog_period = 250;
+
 float RPM::_RPM;
 float RPM::_DEG;
 
@@ -24,7 +31,6 @@ float RPM::_DEG;
   }
   return (m * 1000 + (u * 1000) / tms);
 } */
-
 
 void RPM::interrupt() {
 
@@ -75,7 +81,7 @@ void RPM::interrupt() {
     }
 
     RPM::WheelTooth = 0;
-
+    RPM::rotation_count++;
   } else {
     RPM::WheelTooth++;
   }
@@ -83,6 +89,27 @@ void RPM::interrupt() {
 #endif
 
   RPM::_DEG = ((360 / LOGIC_DNT) * (RPM::WheelTooth)) * 100;
+}
+
+void RPM::watch_dog() {
+
+  if (HAL_GetTick() - RPM::watch_dog_time >= RPM::watch_dog_period) {
+
+    RPM::watch_dog_time = HAL_GetTick();
+
+    if (RPM::rotation_count == RPM::last_rotation_count) {
+
+      if (RPM::watch_dog_count > 5) {
+        RPM::_RPM = 0;
+        RPM::rotation_count = 0;
+        RPM::last_rotation_count = 0;
+        RPM::watch_dog_count = 0;
+      }
+      RPM::watch_dog_count++;
+    }
+
+    RPM::last_rotation_count = RPM::rotation_count;
+  }
 }
 
 #pragma GCC pop_options

@@ -159,7 +159,7 @@ int main(void) {
 #endif
 
   MX_NVIC_Init();
- /*  HAL_InitTick(0); */
+  /*  HAL_InitTick(0); */
   /* USER CODE BEGIN 2 */
 
 #ifdef ENABLE_PMIC
@@ -214,12 +214,14 @@ int main(void) {
     web_serial::command_handler();
     web_serial::send_deque();
     _RPM = RPM::_RPM;
-   /*  _RPM = TIM13->CNT; */
+    /*  _RPM = TIM13->CNT; */
 #endif
 
 #ifdef ENABLE_ENGINE_FRONTEND
     Engine::onEFILoop();
 #endif
+
+    RPM::watch_dog();
   }
   /* USER CODE END WHILE */
   /* USER CODE BEGIN 3 */
