@@ -60,7 +60,7 @@
 /**
  * @brief PID $0C "Engine RPM"
  */
-#define FUEL_SYSTEM_STATUS 0x0C
+#define ENGINE_RPM 0x0C
 
 /**
  * @see page 123 Table B.13
