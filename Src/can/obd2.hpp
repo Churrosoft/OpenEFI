@@ -11,15 +11,16 @@
 #include "obd2_sid.h"
 #include "obd2_status.h"
 
-#include <deque>
 #include <cstring>
+#include <deque>
 
 typedef struct {
   uint8_t command;
+  // TODO: deque en vez de array fijo
   uint8_t payload[7];
-} can_command;
+} can_message;
 
-std::deque<can_command> pending_commands;
+std::deque<can_message> pending_can_messages;
 #define OBD2_CAN_ADDR_RESPONSE 0x7E8
 
 namespace OBD2 {

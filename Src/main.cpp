@@ -236,18 +236,28 @@ void MX_NVIC_Init(void) {
   /* EXTI9_5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
   /* TIM1_UP_TIM10_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+
   /* TIM1_TRG_COM_TIM11_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM1_TRG_COM_TIM11_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(TIM1_TRG_COM_TIM11_IRQn);
+
   /* TIM3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(TIM3_IRQn);
+
   /* TIM4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM4_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(TIM4_IRQn);
+
+  /* CAN1 interrupt Init */
+  HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
+  HAL_NVIC_SetPriority(CAN1_SCE_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(CAN1_SCE_IRQn);
 
   /* OTG_FS_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(OTG_FS_IRQn, 10, 0);

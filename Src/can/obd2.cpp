@@ -10,8 +10,8 @@ void OBD2::write_dtc_to_mem() { uint16_t example = __builtin_bswap16(34444); }
 void OBD2::queue_can_message() {}
 
 void OBD2::parse_can_message() {
-  if (pending_commands.size()) {
-    can_command command = pending_commands.front();
+  if (pending_can_messages.size()) {
+    can_message command = pending_can_messages.front();
     uint8_t txData[7];
 
     switch (command.command) {

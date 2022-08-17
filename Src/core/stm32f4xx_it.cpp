@@ -67,12 +67,14 @@ volatile uint32_t UptimeMillis;
 
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
+extern CAN_HandleTypeDef hcan1;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim10;
 extern TIM_HandleTypeDef htim11;
 extern TIM_HandleTypeDef htim14;
+
 /* USER CODE BEGIN EV */
 bool led_checked = true;
 bool led_checked2 = true;
@@ -201,6 +203,32 @@ void SysTick_Handler(void) {
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+ * @brief This function handles CAN1 RX0 interrupts.
+ */
+void CAN1_RX0_IRQHandler(void) {
+  /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
+
+  /* USER CODE END CAN1_RX0_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
+
+  /* USER CODE END CAN1_RX0_IRQn 1 */
+}
+
+/**
+ * @brief This function handles CAN1 SCE interrupt.
+ */
+void CAN1_SCE_IRQHandler(void) {
+  /* USER CODE BEGIN CAN1_SCE_IRQn 0 */
+
+  /* USER CODE END CAN1_SCE_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_SCE_IRQn 1 */
+
+  /* USER CODE END CAN1_SCE_IRQn 1 */
+}
 
 /**
  * @brief This function handles TIM3 global interrupt.
