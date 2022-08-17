@@ -5,10 +5,22 @@
 // Layer 2 ISO 15765-2:2016
 // Layer 1-2 ISO 9141-2
 
+#include "can_enviroment.h"
 #include "dtc_codes.h"
 #include "obd2_pid.h"
+#include "obd2_sid.h"
 #include "obd2_status.h"
-#include <endian.h>
+
+#include <deque>
+#include <cstring>
+
+typedef struct {
+  uint8_t command;
+  uint8_t payload[7];
+} can_command;
+
+std::deque<can_command> pending_commands;
+#define OBD2_CAN_ADDR_RESPONSE 0x7E8
 
 namespace OBD2 {
 
@@ -18,6 +30,23 @@ void queue_can_message();
 
 void loop(void);
 namespace {
-  void create_can_message();
-}
+  static inline void send_can_message(uint8_t *data, uint8_t data_size) {
+    TxHeader.StdId = OBD2_CAN_ADDR_RESPONSE;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.DLC = data_size;
+    TxHeader.TransmitGlobalTime = DISABLE;
+
+    /* Request transmission */
+    if (HAL_CAN_AddTxMessage(&CanHandle, &TxHeader, data, &TxMailbox) !=
+        HAL_OK) {
+      /* Transmission request Error */
+      Error_Handler();
+    }
+
+    /* Wait transmission complete */
+    while (HAL_CAN_GetTxMailboxesFreeLevel(&CanHandle) != 3) {
+    }
+  }
+} // namespace
 } // namespace OBD2
