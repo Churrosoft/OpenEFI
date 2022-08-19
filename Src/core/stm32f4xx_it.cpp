@@ -26,6 +26,7 @@ extern "C" {
 }
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "can/can_wrapper.h"
 #include "cpwm/cpwm.hpp"
 #include "cpwm/rpm_calc.h"
 #include "ignition/include/ignition.hpp"
@@ -213,7 +214,14 @@ void CAN1_RX0_IRQHandler(void) {
   /* USER CODE END CAN1_RX0_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan1);
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
+  uint8_t buffer[8] = {0};
 
+  if (HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) > 0) {
+    CAN_RxHeaderTypeDef CanRxHeader;
+    HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &CanRxHeader, buffer);
+    CAN::on_message(CanRxHeader.StdId, CanRxHeader.ExtId, buffer,
+                    CanRxHeader.DLC);
+  }
   /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 
