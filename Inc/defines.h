@@ -201,6 +201,14 @@ static inline uint32_t GetMicrosFromISR()
 #define MS_IN_MINUTE 60000
 #define US_IN_MINUTE 60000000
 
+union Nibbler {
+     struct { 
+        uint8_t first: 4;
+        uint8_t second: 4;
+     } nibbles;
+     unsigned char byte_value;
+};
+
 #ifdef TESTING
 #define GET_US_TIME mockRPM()
 

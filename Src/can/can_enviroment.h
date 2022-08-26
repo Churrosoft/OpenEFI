@@ -6,7 +6,7 @@
 #define CAN_ENVIROMENT_H
 
 extern CAN_HandleTypeDef CanHandle;
-extern uint32_t TxMailbox;
+extern uint32_t TxMailboxStatus;
 extern CAN_TxHeaderTypeDef TxHeader;
 
 extern bool is_iso_tp_control_flow_frame;

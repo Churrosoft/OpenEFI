@@ -39,7 +39,7 @@ namespace {
     TxHeader.TransmitGlobalTime = DISABLE;
 
     /* Request transmission */
-    if (HAL_CAN_AddTxMessage(&CanHandle, &TxHeader, data, &TxMailbox) !=
+    if (HAL_CAN_AddTxMessage(&CanHandle, &TxHeader, data, &TxMailboxStatus) !=
         HAL_OK) {
       /* Transmission request Error */
       Error_Handler();
