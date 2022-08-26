@@ -99,7 +99,6 @@ void CAN::on_loop() {
       HAL_CAN_AddTxMessage(&hcan1, &CanTxHeader, can_data, &TxMailboxStatus);
 
       std::swap(tx.frame_data, pending_frame_data);
-      pending_frame_data = tx.frame_data;
     }
   }
 }
