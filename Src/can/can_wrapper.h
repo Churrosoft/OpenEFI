@@ -1,8 +1,6 @@
 #ifndef CAN_WRAPPER_H
 #define CAN_WRAPPER_H
 
-#include <deque>
-
 #include "main.h"
 #include "can.h"
 #include "defines.h"

@@ -14,13 +14,6 @@
 #include <cstring>
 #include <deque>
 
-typedef struct {
-  uint8_t command;
-  // TODO: deque en vez de array fijo
-  uint8_t payload[7];
-} can_message;
-
-std::deque<can_message> pending_can_messages;
 #define OBD2_CAN_ADDR_RESPONSE 0x7E8
 
 namespace OBD2 {
@@ -31,6 +24,8 @@ void queue_can_message();
 
 void loop(void);
 namespace {
+  std::deque<can_message> OBD2Mailbox;
+
   static inline void send_can_message(uint8_t *data, uint8_t data_size) {
     TxHeader.StdId = OBD2_CAN_ADDR_RESPONSE;
     TxHeader.RTR = CAN_RTR_DATA;

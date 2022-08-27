@@ -13,16 +13,9 @@ CAN_TxHeaderTypeDef TxHeader;
 
 bool transmiting_frame = false;
 
-typedef struct {
-  uint32_t stdId;
-  uint32_t extId;
-  uint32_t frame_size; // unused
-  bool is_extended_frame;
-  std::deque<std::deque<uint8_t>> frame_data;
-} pending_can_message;
-
-std::deque<pending_can_message> TxMailbox;
-std::deque<pending_can_message> RxMailbox;
+std::deque<can_message> TxMailbox;
+std::deque<can_message> RxMailbox;
+can_message RxBufferMessage;
 
 // podrrrriiaaa ser un solo deque sin anidar, pero complejiza un poco el on_loop
 std::deque<std::deque<uint8_t>> pending_frame_data;
@@ -59,7 +52,7 @@ void CAN::on_loop() {
   // check transmission status, queue new frame:
   if (!transmiting_frame && TxMailbox.size() &&
       HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0) {
-    pending_can_message tx = TxMailbox.front();
+    can_message tx = TxMailbox.front();
     TxMailbox.pop_front();
 
     if (!tx.is_extended_frame) {
@@ -106,4 +99,7 @@ void CAN::on_loop() {
 void CAN::on_message(uint32_t stdId, uint32_t extId, uint8_t *payload,
                      uint8_t payload_size) {
   // TODO: garrar la pala
+  // Puede llegar el caso que llegue un frame FF/FC tengo que agregar a
+  // RxBufferMessage esa data a medida que llegan el resto de paquetes y luego
+  // moverlo al mailbox
 }
