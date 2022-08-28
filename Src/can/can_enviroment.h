@@ -19,6 +19,7 @@ typedef struct {
   uint32_t stdId;
   uint32_t extId;
   uint32_t frame_size; // unused
+  uint32_t current_transfered;
   bool is_extended_frame;
   std::deque<std::deque<uint8_t>> frame_data;
 } can_message;

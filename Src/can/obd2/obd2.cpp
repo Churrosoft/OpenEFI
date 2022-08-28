@@ -14,7 +14,7 @@ void OBD2::parse_can_message() {
     auto message = OBD2Mailbox.front();
     std::deque<uint8_t> txData;
     can_message tx;
-    
+
     auto SID = message.frame_data.at(0).at(1);
     auto PID = message.frame_data.at(0).at(2);
 
@@ -29,6 +29,7 @@ void OBD2::parse_can_message() {
       tx.stdId = OBD2_CAN_ADDR_RESPONSE;
       tx.extId = 0;
       tx.is_extended_frame = false;
+      tx.frame_data.clear();
       // segun la norma el primer byte de data multi-frame es el comando que
       // responde
       txData[0] = RESPONSE_AVAILABLE_SID;
@@ -60,16 +61,22 @@ void OBD2::parse_can_message() {
       tx.frame_data.push_back(txData);
 
       // send command:
-      TxMailbox.push_front(tx);
+      TxMailbox.push_back(tx);
       break;
     }
 
     case REQUEST_FREEZE_FRAME_SID: {
       // TODO: respuesta valida, pero por ahora la ecu no controla casos de
       // emergencia (por ej, falla en ckp impidiendo arranque)
-      /*   txData[0] = RESPONSE_FREEZE_FRAME_SID;
-        send_can_message(txData, 6);
-        memset(txData, 0x0, 7); */
+      tx.stdId = OBD2_CAN_ADDR_RESPONSE;
+      tx.extId = 0;
+      tx.is_extended_frame = false;
+      tx.frame_data.clear();
+
+      txData[0] = RESPONSE_FREEZE_FRAME_SID;
+
+      tx.frame_data.push_back(txData);
+      TxMailbox.push_back(tx);
       break;
     }
     default:
