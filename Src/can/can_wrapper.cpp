@@ -13,6 +13,7 @@ bool transmiting_frame = false;
 std::deque<can_message> TxMailbox;
 std::deque<can_message> RxMailbox;
 can_message RxBufferMessage;
+can_message TxBufferMessage;
 
 // podrrrriiaaa ser un solo deque sin anidar, pero complejiza un poco el on_loop
 std::deque<std::deque<uint8_t>> pending_frame_data;
@@ -27,9 +28,16 @@ void CAN::on_loop() {
       HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0) {
 
     std::deque<uint8_t> frame = pending_frame_data.front();
-
     uint8_t can_data[8];
-    for (uint8_t i = 0; i < frame.size(); i++) can_data[i] = frame.at(i);
+    Nibbler iso_tp_header;
+
+    // mark as Consecutive Frame:
+    iso_tp_header.nibbles.first = 2;
+    iso_tp_header.nibbles.second = TxBufferMessage.current_transfered;
+    can_data[0] = (uint8_t)__REV16((uint16_t)iso_tp_header.byte_value);
+
+    for (uint8_t i = 1; i < frame.size(); i++)
+      can_data[i] = (uint8_t)__REV16((uint16_t)frame.at(i));
 
     CAN_TxHeaderTypeDef CanTxHeader;
     CanTxHeader.DLC = frame.size();
@@ -39,6 +47,7 @@ void CAN::on_loop() {
 
     if (txResult == HAL_OK) {
       pending_frame_data.pop_front();
+      TxBufferMessage.current_transfered++;
     }
   }
 
@@ -54,6 +63,8 @@ void CAN::on_loop() {
   if (!transmiting_frame && TxMailbox.size() &&
       HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0) {
     can_message tx = TxMailbox.front();
+    // FIXME: con esto ya se copia tambien el deque?
+    TxBufferMessage = tx;
 
     if (!tx.is_extended_frame) {
       // mensaje iso tp de un unico frame:
@@ -63,7 +74,9 @@ void CAN::on_loop() {
 
       std::deque<uint8_t> frame = tx.frame_data.at(0);
       uint8_t can_data[8];
-      for (uint8_t i = 1; i < frame.size(); i++) can_data[i] = frame.at(i - 1);
+      for (uint8_t i = 1; i < frame.size(); i++)
+        can_data[i] = (uint8_t)__REV16((uint16_t)frame.at(i - 1));
+
       CLEAR_BIT(can_data[0], 0);
       CanTxHeader.DLC = frame.size();
 
@@ -80,7 +93,8 @@ void CAN::on_loop() {
 
       std::deque<uint8_t> frame = tx.frame_data.at(0);
       uint8_t can_data[8];
-      for (uint8_t i = 2; i < frame.size(); i++) can_data[i] = frame.at(i - 2);
+      for (uint8_t i = 2; i < frame.size(); i++)
+        can_data[i] = (uint8_t)__REV16((uint16_t)frame.at(i - 1));
 
       // mark first byte as ISO "FF Frame"
       uint16_t frame_size = tx.frame_data.size();
@@ -118,13 +132,13 @@ void CAN::on_message(uint32_t stdId, uint32_t extId, uint8_t *payload,
 
   // check if is single frame/ multiframe
   Nibbler iso_tp_header;
-  iso_tp_header.byte_value = payload[0];
+  iso_tp_header.byte_value = (uint8_t)__REV16((uint16_t)payload[0]);
 
   // single frame
   if (iso_tp_header.nibbles.first == 0) {
     std::deque<uint8_t> frame;
     for (uint8_t i = 0; i < iso_tp_header.nibbles.second; i++) {
-      frame.push_back(payload[i + 1]);
+      frame.push_back((uint8_t)__REV16((uint16_t)payload[i + 1]));
     }
     RxBufferMessage.frame_data.push_back(frame);
     RxMailbox.push_back(RxBufferMessage);
@@ -133,8 +147,6 @@ void CAN::on_message(uint32_t stdId, uint32_t extId, uint8_t *payload,
   // multiple frame (first frame)
   if (iso_tp_header.nibbles.first == 1) {
     iso_tp_block_size = payload[1];
-    // inverted (big endian => litte endian)
-    int16_t iso_tp_data_size = (uint16_t)payload[3] + payload[2] << 8;
     RxBufferMessage.frame_size = iso_tp_block_size;
     // TODO: aca toca mandar un Flow Control para setear block size/tiempo
   }
@@ -145,7 +157,7 @@ void CAN::on_message(uint32_t stdId, uint32_t extId, uint8_t *payload,
     std::deque<uint8_t> frame;
 
     for (uint8_t i = 0; i < iso_tp_cf_index; i++) {
-      frame.push_back(payload[i + 1]);
+      frame.push_back((uint8_t)__REV16((uint16_t)payload[i + 1]));
     }
 
     RxBufferMessage.frame_data.assign(iso_tp_cf_index, frame);
@@ -154,7 +166,7 @@ void CAN::on_message(uint32_t stdId, uint32_t extId, uint8_t *payload,
   }
 
   // push message to mailbox && clear buffer
-  if (RxBufferMessage.current_transfered <= RxBufferMessage.frame_size) {
+  if (RxBufferMessage.current_transfered >= RxBufferMessage.frame_size) {
     RxMailbox.push_back(RxBufferMessage);
     for (auto frame : RxBufferMessage.frame_data) {
       frame.clear();
@@ -167,5 +179,18 @@ void CAN::on_message(uint32_t stdId, uint32_t extId, uint8_t *payload,
 
   // multiple frame (flow control)
   if (iso_tp_header.nibbles.first == 3) {
+    uint8_t iso_tp_status = iso_tp_header.nibbles.second;
+    switch (iso_tp_status) {
+    case 0:
+      // Continue To Send
+      break;
+    case 1:
+      // Wait
+      break;
+
+    // Overflow/abort
+    default:
+      break;
+    }
   }
 }

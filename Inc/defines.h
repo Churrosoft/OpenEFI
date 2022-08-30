@@ -1,6 +1,7 @@
 /** @file */
 #include <stdint.h>
 #include "main.h"
+#include "cmsis_gcc.h"
 #include "variables.h"
 #include "features.h"
 
@@ -229,7 +230,9 @@ static inline uint32_t mockRPM(){
 #define CPWM_DEBUG 1
 #define PMIC_DEBUG 1
 
-#define BREAKPOINT void();
+//#define BREAKPOINT void();
+// framework-stm32cubef4/Drivers/CMSIS/Include/cmsis_gcc.h (972)
+#define BREAKPOINT __BKPT();
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
