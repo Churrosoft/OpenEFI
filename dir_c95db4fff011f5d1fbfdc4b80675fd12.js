@@ -1,5 +1,6 @@
 var dir_c95db4fff011f5d1fbfdc4b80675fd12 =
 [
+    [ "can.c", "can_8c.html", "can_8c" ],
     [ "crc.c", "crc_8c.html", "crc_8c" ],
     [ "dma.c", "dma_8c.html", "dma_8c" ],
     [ "gpio.c", "gpio_8c.html", "gpio_8c" ],

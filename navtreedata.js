@@ -1,6 +1,7 @@
 var NAVTREE =
 [
   [ "OpenEFI", "index.html", [
+    [ "OBD PID definitions", "OBD.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
@@ -28,8 +29,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"group__USBD__CDC__IF.html#ga99394ed19b774f171df96c2848c411ed",
-"stm32f4xx__it_8h.html#a4c8359a023f7ede4a9d9f94ea6fb92da"
+"group__STM32F4xx__System__Private__Includes.html#gaeafcff4f57440c60e64812dddd13e7cb",
+"obd2__sid_8h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

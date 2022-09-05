@@ -1,0 +1,65 @@
+\hypertarget{can_8c}{}\section{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Src/core/can.c File Reference}
+\label{can_8c}\index{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Src/core/can.\+c@{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Src/core/can.\+c}}
+
+
+This file provides code for the configuration of the C\+AN instances.  
+
+
+{\ttfamily \#include \char`\"{}can.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{can_8c_a030a62a0956ab83394eb8354a0e97902}\label{can_8c_a030a62a0956ab83394eb8354a0e97902}} 
+void {\bfseries M\+X\+\_\+\+C\+A\+N1\+\_\+\+Init} (void)
+\item 
+void \hyperlink{can_8c_a2778ce7f3a2de42769b6de9fec4cedb9}{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+Init} (C\+A\+N\+\_\+\+Handle\+Type\+Def $\ast$can\+Handle)
+\item 
+void \hyperlink{can_8c_a4b39e42353b2781bc75d83c018640b67}{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+De\+Init} (C\+A\+N\+\_\+\+Handle\+Type\+Def $\ast$can\+Handle)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+C\+A\+N\+\_\+\+Handle\+Type\+Def \hyperlink{can_8c_a1618d731d18d69e906e8a357b7cd3c8d}{hcan1}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This file provides code for the configuration of the C\+AN instances. 
+
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+Copyright (c) 2022 S\+T\+Microelectronics. All rights reserved.
+
+This software is licensed under terms that can be found in the L\+I\+C\+E\+N\+SE file in the root directory of this software component. If no L\+I\+C\+E\+N\+SE file comes with this software, it is provided A\+S-\/\+IS. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{can_8c_a4b39e42353b2781bc75d83c018640b67}\label{can_8c_a4b39e42353b2781bc75d83c018640b67}} 
+\index{can.\+c@{can.\+c}!H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+De\+Init@{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+De\+Init}}
+\index{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+De\+Init@{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+De\+Init}!can.\+c@{can.\+c}}
+\subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+De\+Init()}{HAL\_CAN\_MspDeInit()}}
+{\footnotesize\ttfamily void H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+De\+Init (\begin{DoxyParamCaption}\item[{C\+A\+N\+\_\+\+Handle\+Type\+Def $\ast$}]{can\+Handle }\end{DoxyParamCaption})}
+
+C\+A\+N1 G\+P\+IO Configuration P\+D0 -\/-\/-\/---$>$ C\+A\+N1\+\_\+\+RX P\+D1 -\/-\/-\/---$>$ C\+A\+N1\+\_\+\+TX\mbox{\Hypertarget{can_8c_a2778ce7f3a2de42769b6de9fec4cedb9}\label{can_8c_a2778ce7f3a2de42769b6de9fec4cedb9}} 
+\index{can.\+c@{can.\+c}!H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+Init@{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+Init}}
+\index{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+Init@{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+Init}!can.\+c@{can.\+c}}
+\subsubsection{\texorpdfstring{H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+Init()}{HAL\_CAN\_MspInit()}}
+{\footnotesize\ttfamily void H\+A\+L\+\_\+\+C\+A\+N\+\_\+\+Msp\+Init (\begin{DoxyParamCaption}\item[{C\+A\+N\+\_\+\+Handle\+Type\+Def $\ast$}]{can\+Handle }\end{DoxyParamCaption})}
+
+C\+A\+N1 G\+P\+IO Configuration P\+D0 -\/-\/-\/---$>$ C\+A\+N1\+\_\+\+RX P\+D1 -\/-\/-\/---$>$ C\+A\+N1\+\_\+\+TX
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{can_8c_a1618d731d18d69e906e8a357b7cd3c8d}\label{can_8c_a1618d731d18d69e906e8a357b7cd3c8d}} 
+\index{can.\+c@{can.\+c}!hcan1@{hcan1}}
+\index{hcan1@{hcan1}!can.\+c@{can.\+c}}
+\subsubsection{\texorpdfstring{hcan1}{hcan1}}
+{\footnotesize\ttfamily C\+A\+N\+\_\+\+Handle\+Type\+Def hcan1}
+
+File Name \+: C\+A\+N.\+h Description \+: This file provides code for the configuration of the C\+AN instances.
+
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+\subsubsection*{\begin{center}\copyright{} Copyright (c) 2021 S\+T\+Microelectronics. All rights reserved.\end{center} }
+
+This software component is licensed by ST under Ultimate Liberty license S\+L\+A0044, the \char`\"{}\+License\char`\"{}; You may not use this file except in compliance with the License. You may obtain a copy of the License at\+: www.\+st.\+com/\+S\+L\+A0044 

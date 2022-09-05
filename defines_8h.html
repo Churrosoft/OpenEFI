@@ -81,6 +81,7 @@ $(document).ready(function(){initNavTree('defines_8h.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -89,11 +90,17 @@ $(document).ready(function(){initNavTree('defines_8h.html','');});
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
+<code>#include &quot;cmsis_gcc.h&quot;</code><br />
 <code>#include &quot;variables.h&quot;</code><br />
 <code>#include &quot;features.h&quot;</code><br />
 </div>
 <p><a href="defines_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionNibbler.html">Nibbler</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aca91b9017f4698def1eae778ef480c42"><td class="memItemLeft" align="right" valign="top"><a id="aca91b9017f4698def1eae778ef480c42"></a>
@@ -341,6 +348,18 @@ Macros</h2></td></tr>
 <tr class="memitem:a311fa17483e633a6b1cf6d75d41be1ef"><td class="memItemLeft" align="right" valign="top"><a id="a311fa17483e633a6b1cf6d75d41be1ef"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>TABLES_IGNITION_TPS_SETTINGS</b>&#160;&#160;&#160;{ 17, 17, 0x2 }</td></tr>
 <tr class="separator:a311fa17483e633a6b1cf6d75d41be1ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8eeb1fc76d898f4cb04eb511f42cb1d"><td class="memItemLeft" align="right" valign="top"><a id="ab8eeb1fc76d898f4cb04eb511f42cb1d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ENABLE_MISFIRE_MONITOR</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:ab8eeb1fc76d898f4cb04eb511f42cb1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77b664757379481dbffa5e2d36d21f83"><td class="memItemLeft" align="right" valign="top"><a id="a77b664757379481dbffa5e2d36d21f83"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ENABLE_FUEL_MONITOR</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a77b664757379481dbffa5e2d36d21f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d0d829365acf5f26ed281fa63d48fad"><td class="memItemLeft" align="right" valign="top"><a id="a1d0d829365acf5f26ed281fa63d48fad"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ENABLE_CATALYST_MONITOR</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a1d0d829365acf5f26ed281fa63d48fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c5668e32a1d00d046d2acf94e52d1a4"><td class="memItemLeft" align="right" valign="top"><a id="a1c5668e32a1d00d046d2acf94e52d1a4"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ENABLE_HEATED_CATALYST_MONITOR</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a1c5668e32a1d00d046d2acf94e52d1a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a140d5fcd35a311c304756863a2d79150"><td class="memItemLeft" align="right" valign="top"><a id="a140d5fcd35a311c304756863a2d79150"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ROUND_16</b>(NUMBER)&#160;&#160;&#160;((float)((uint16_t)NUMBER * 100 + .5) / 100)</td></tr>
 <tr class="separator:a140d5fcd35a311c304756863a2d79150"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -350,16 +369,16 @@ Macros</h2></td></tr>
 <tr class="memitem:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INVERT_PIN</b>(PORT,  PIN)</td></tr>
 <tr class="separator:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adced380a3ff4f0b29c4b68111127c840"><td class="memItemLeft" align="right" valign="top"><a id="adced380a3ff4f0b29c4b68111127c840"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_LOG</b>(...)&#160;&#160;&#160;void(__VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_LOG</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::LOG, __VA_ARGS__)</td></tr>
 <tr class="separator:adced380a3ff4f0b29c4b68111127c840"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4485e33df7103be14ac570d6329f295"><td class="memItemLeft" align="right" valign="top"><a id="ad4485e33df7103be14ac570d6329f295"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INFO</b>(...)&#160;&#160;&#160;void(__VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INFO</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::INFO, __VA_ARGS__)</td></tr>
 <tr class="separator:ad4485e33df7103be14ac570d6329f295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe4436f344baf72944b2e8355467a689"><td class="memItemLeft" align="right" valign="top"><a id="afe4436f344baf72944b2e8355467a689"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_EVENT</b>(...)&#160;&#160;&#160;void(__VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_EVENT</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::EVENT, __VA_ARGS__)</td></tr>
 <tr class="separator:afe4436f344baf72944b2e8355467a689"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdc29d32793749e983df2e12489bac7c"><td class="memItemLeft" align="right" valign="top"><a id="afdc29d32793749e983df2e12489bac7c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_ERROR</b>(...)&#160;&#160;&#160;void(__VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_ERROR</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::ERROR, __VA_ARGS__)</td></tr>
 <tr class="separator:afdc29d32793749e983df2e12489bac7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a1bdc2263b1a4272baa3897ea6eba85"><td class="memItemLeft" align="right" valign="top"><a id="a3a1bdc2263b1a4272baa3897ea6eba85"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MS_IN_MINUTE</b>&#160;&#160;&#160;60000</td></tr>
@@ -368,7 +387,7 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>US_IN_MINUTE</b>&#160;&#160;&#160;60000000</td></tr>
 <tr class="separator:a0b0d4589738b2ad1c84c5821bc8027e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e69f9302b527faa13fc40cc8220fde2"><td class="memItemLeft" align="right" valign="top"><a id="a4e69f9302b527faa13fc40cc8220fde2"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_US_TIME</b>&#160;&#160;&#160;(HAL_GetTick() * 1000 /* + TIM13-&gt;CNT */)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_US_TIME</b>&#160;&#160;&#160;((uwTick * 1000) + TIM13-&gt;CNT)</td></tr>
 <tr class="separator:a4e69f9302b527faa13fc40cc8220fde2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f5b4886c16d10e05be7be46d8bb7e73"><td class="memItemLeft" align="right" valign="top"><a id="a6f5b4886c16d10e05be7be46d8bb7e73"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_BIT</b>(VAR,  BIT_NEEDED)&#160;&#160;&#160;((VAR &gt;&gt; BIT_NEEDED) &amp; 1)</td></tr>
@@ -380,7 +399,7 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PMIC_DEBUG</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:aa4ed6c4ffccc1bf290457855a1158d54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0409e98ff9aade482fcfc9e67e762a86"><td class="memItemLeft" align="right" valign="top"><a id="a0409e98ff9aade482fcfc9e67e762a86"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>BREAKPOINT</b>&#160;&#160;&#160;void();</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>BREAKPOINT</b>&#160;&#160;&#160;__BKPT();</td></tr>
 <tr class="separator:a0409e98ff9aade482fcfc9e67e762a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8b243fdac3715a3da7c98b9a380eaa5"><td class="memItemLeft" align="right" valign="top"><a id="ae8b243fdac3715a3da7c98b9a380eaa5"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>BYTE_TO_BINARY_PATTERN</b>&#160;&#160;&#160;&quot;%c%c%c%c%c%c%c%c&quot;</td></tr>

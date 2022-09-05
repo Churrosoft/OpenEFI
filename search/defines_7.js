@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['max_5frpm',['MAX_RPM',['../defines_8h.html#a0d0de63cb3b2b767719451b355cb94fa',1,'defines.h']]],
-  ['mtr',['mtr',['../defines_8h.html#aa2c7aad26910626ab51d4a915b4f3160',1,'mtr():&#160;defines.h'],['../CHT__1__6___8h.html#aa2c7aad26910626ab51d4a915b4f3160',1,'mtr():&#160;CHT_1_6_.h']]]
+  ['ing_5fsecuency',['ING_SECUENCY',['../defines_8h.html#a267514d4f83c7a3ce49e997386ef97ef',1,'defines.h']]],
+  ['ing_5fsecuency_5falt',['ING_SECUENCY_ALT',['../defines_8h.html#a25b99f313e7bbad9109bae32e4d0a22b',1,'defines.h']]],
+  ['iny_5fsecuency',['INY_SECUENCY',['../defines_8h.html#a3f2c85322a7483badca2baf565e80d55',1,'defines.h']]],
+  ['iny_5fsecyency_5falt',['INY_SECYENCY_ALT',['../defines_8h.html#a13a0b4242db0b2e9a42c52608df5cd7c',1,'defines.h']]]
 ];

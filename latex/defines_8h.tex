@@ -2,8 +2,14 @@
 \label{defines_8h}\index{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Inc/defines.\+h@{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Inc/defines.\+h}}
 {\ttfamily \#include $<$stdint.\+h$>$}\newline
 {\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cmsis\+\_\+gcc.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}variables.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}features.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+union \hyperlink{unionNibbler}{Nibbler}
+\end{DoxyCompactItemize}
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -226,6 +232,18 @@
 \mbox{\Hypertarget{defines_8h_a311fa17483e633a6b1cf6d75d41be1ef}\label{defines_8h_a311fa17483e633a6b1cf6d75d41be1ef}} 
 \#define {\bfseries T\+A\+B\+L\+E\+S\+\_\+\+I\+G\+N\+I\+T\+I\+O\+N\+\_\+\+T\+P\+S\+\_\+\+S\+E\+T\+T\+I\+N\+GS}~\{ 17, 17, 0x2 \}
 \item 
+\mbox{\Hypertarget{defines_8h_ab8eeb1fc76d898f4cb04eb511f42cb1d}\label{defines_8h_ab8eeb1fc76d898f4cb04eb511f42cb1d}} 
+\#define {\bfseries E\+N\+A\+B\+L\+E\+\_\+\+M\+I\+S\+F\+I\+R\+E\+\_\+\+M\+O\+N\+I\+T\+OR}~0
+\item 
+\mbox{\Hypertarget{defines_8h_a77b664757379481dbffa5e2d36d21f83}\label{defines_8h_a77b664757379481dbffa5e2d36d21f83}} 
+\#define {\bfseries E\+N\+A\+B\+L\+E\+\_\+\+F\+U\+E\+L\+\_\+\+M\+O\+N\+I\+T\+OR}~1
+\item 
+\mbox{\Hypertarget{defines_8h_a1d0d829365acf5f26ed281fa63d48fad}\label{defines_8h_a1d0d829365acf5f26ed281fa63d48fad}} 
+\#define {\bfseries E\+N\+A\+B\+L\+E\+\_\+\+C\+A\+T\+A\+L\+Y\+S\+T\+\_\+\+M\+O\+N\+I\+T\+OR}~0
+\item 
+\mbox{\Hypertarget{defines_8h_a1c5668e32a1d00d046d2acf94e52d1a4}\label{defines_8h_a1c5668e32a1d00d046d2acf94e52d1a4}} 
+\#define {\bfseries E\+N\+A\+B\+L\+E\+\_\+\+H\+E\+A\+T\+E\+D\+\_\+\+C\+A\+T\+A\+L\+Y\+S\+T\+\_\+\+M\+O\+N\+I\+T\+OR}~0
+\item 
 \mbox{\Hypertarget{defines_8h_a140d5fcd35a311c304756863a2d79150}\label{defines_8h_a140d5fcd35a311c304756863a2d79150}} 
 \#define {\bfseries R\+O\+U\+N\+D\+\_\+16}(N\+U\+M\+B\+ER)~((float)((uint16\+\_\+t)N\+U\+M\+B\+ER $\ast$ 100 + .\+5) / 100)
 \item 
@@ -235,16 +253,16 @@
 \#define {\bfseries E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}(P\+O\+RT,  P\+IN)
 \item 
 \mbox{\Hypertarget{defines_8h_adced380a3ff4f0b29c4b68111127c840}\label{defines_8h_adced380a3ff4f0b29c4b68111127c840}} 
-\#define {\bfseries E\+F\+I\+\_\+\+L\+OG}(...)~void(\+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\#define {\bfseries E\+F\+I\+\_\+\+L\+OG}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+L\+OG, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
 \item 
 \mbox{\Hypertarget{defines_8h_ad4485e33df7103be14ac570d6329f295}\label{defines_8h_ad4485e33df7103be14ac570d6329f295}} 
-\#define {\bfseries E\+F\+I\+\_\+\+I\+N\+FO}(...)~void(\+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\#define {\bfseries E\+F\+I\+\_\+\+I\+N\+FO}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+I\+N\+FO, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
 \item 
 \mbox{\Hypertarget{defines_8h_afe4436f344baf72944b2e8355467a689}\label{defines_8h_afe4436f344baf72944b2e8355467a689}} 
-\#define {\bfseries E\+F\+I\+\_\+\+E\+V\+E\+NT}(...)~void(\+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\#define {\bfseries E\+F\+I\+\_\+\+E\+V\+E\+NT}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+E\+V\+E\+NT, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
 \item 
 \mbox{\Hypertarget{defines_8h_afdc29d32793749e983df2e12489bac7c}\label{defines_8h_afdc29d32793749e983df2e12489bac7c}} 
-\#define {\bfseries E\+F\+I\+\_\+\+E\+R\+R\+OR}(...)~void(\+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
+\#define {\bfseries E\+F\+I\+\_\+\+E\+R\+R\+OR}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+E\+R\+R\+OR, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
 \item 
 \mbox{\Hypertarget{defines_8h_a3a1bdc2263b1a4272baa3897ea6eba85}\label{defines_8h_a3a1bdc2263b1a4272baa3897ea6eba85}} 
 \#define {\bfseries M\+S\+\_\+\+I\+N\+\_\+\+M\+I\+N\+U\+TE}~60000
@@ -253,7 +271,7 @@
 \#define {\bfseries U\+S\+\_\+\+I\+N\+\_\+\+M\+I\+N\+U\+TE}~60000000
 \item 
 \mbox{\Hypertarget{defines_8h_a4e69f9302b527faa13fc40cc8220fde2}\label{defines_8h_a4e69f9302b527faa13fc40cc8220fde2}} 
-\#define {\bfseries G\+E\+T\+\_\+\+U\+S\+\_\+\+T\+I\+ME}~(H\+A\+L\+\_\+\+Get\+Tick() $\ast$ 1000 /$\ast$ + T\+I\+M13-\/$>$C\+NT $\ast$/)
+\#define {\bfseries G\+E\+T\+\_\+\+U\+S\+\_\+\+T\+I\+ME}~((uw\+Tick $\ast$ 1000) + T\+I\+M13-\/$>$C\+NT)
 \item 
 \mbox{\Hypertarget{defines_8h_a6f5b4886c16d10e05be7be46d8bb7e73}\label{defines_8h_a6f5b4886c16d10e05be7be46d8bb7e73}} 
 \#define {\bfseries G\+E\+T\+\_\+\+B\+IT}(V\+AR,  B\+I\+T\+\_\+\+N\+E\+E\+D\+ED)~((V\+AR $>$$>$ B\+I\+T\+\_\+\+N\+E\+E\+D\+ED) \& 1)
@@ -265,7 +283,7 @@
 \#define {\bfseries P\+M\+I\+C\+\_\+\+D\+E\+B\+UG}~1
 \item 
 \mbox{\Hypertarget{defines_8h_a0409e98ff9aade482fcfc9e67e762a86}\label{defines_8h_a0409e98ff9aade482fcfc9e67e762a86}} 
-\#define {\bfseries B\+R\+E\+A\+K\+P\+O\+I\+NT}~void();
+\#define {\bfseries B\+R\+E\+A\+K\+P\+O\+I\+NT}~\+\_\+\+\_\+\+B\+K\+PT();
 \item 
 \mbox{\Hypertarget{defines_8h_ae8b243fdac3715a3da7c98b9a380eaa5}\label{defines_8h_ae8b243fdac3715a3da7c98b9a380eaa5}} 
 \#define {\bfseries B\+Y\+T\+E\+\_\+\+T\+O\+\_\+\+B\+I\+N\+A\+R\+Y\+\_\+\+P\+A\+T\+T\+E\+RN}~\char`\"{}\%c\%c\%c\%c\%c\%c\%c\%c\char`\"{}

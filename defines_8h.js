@@ -1,5 +1,6 @@
 var defines_8h =
 [
+    [ "Nibbler", "unionNibbler.html", "unionNibbler" ],
     [ "_N_CALC", "defines_8h.html#aca86cc30b73249c2e6b9bd62c4a59319", null ],
     [ "_R", "defines_8h.html#a828a8829107e3f2fa9a2fcc8d19e8c77", null ],
     [ "ADC_MAX_VALUE", "defines_8h.html#a8e965b09ba8c46425032e6dd576f9bce", null ],
@@ -32,6 +33,10 @@ var defines_8h =
     [ "EFI_INFO", "defines_8h.html#ad4485e33df7103be14ac570d6329f295", null ],
     [ "EFI_INVERT_PIN", "defines_8h.html#a4101ea0e718a756439dbd3d3fb9c9c4b", null ],
     [ "EFI_LOG", "defines_8h.html#adced380a3ff4f0b29c4b68111127c840", null ],
+    [ "ENABLE_CATALYST_MONITOR", "defines_8h.html#a1d0d829365acf5f26ed281fa63d48fad", null ],
+    [ "ENABLE_FUEL_MONITOR", "defines_8h.html#a77b664757379481dbffa5e2d36d21f83", null ],
+    [ "ENABLE_HEATED_CATALYST_MONITOR", "defines_8h.html#a1c5668e32a1d00d046d2acf94e52d1a4", null ],
+    [ "ENABLE_MISFIRE_MONITOR", "defines_8h.html#ab8eeb1fc76d898f4cb04eb511f42cb1d", null ],
     [ "FLMBA", "defines_8h.html#a98548d2493312beb76c6c64acd2cd6e8", null ],
     [ "FLMBB", "defines_8h.html#acae08bccfc59b5844f006ffa825215f0", null ],
     [ "FULL_SECUENCIAL", "defines_8h.html#ab9022ef0836f3d898a79d27ce45aa5bb", null ],

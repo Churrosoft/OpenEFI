@@ -1,5 +1,6 @@
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
+{text:"Related Pages",url:"pages.html"},
 {text:"Modules",url:"modules.html"},
 {text:"Namespaces",url:"namespaces.html",children:[
 {text:"Namespace List",url:"namespaces.html"},
@@ -50,14 +51,17 @@ var menudata={children:[
 {text:"Variables",url:"globals_vars.html"},
 {text:"Macros",url:"globals_defs.html",children:[
 {text:"a",url:"globals_defs.html#index_a"},
+{text:"b",url:"globals_defs.html#index_b"},
 {text:"c",url:"globals_defs.html#index_c"},
 {text:"d",url:"globals_defs.html#index_d"},
 {text:"e",url:"globals_defs.html#index_e"},
 {text:"f",url:"globals_defs.html#index_f"},
+{text:"g",url:"globals_defs.html#index_g"},
 {text:"h",url:"globals_defs.html#index_h"},
 {text:"i",url:"globals_defs.html#index_i"},
 {text:"l",url:"globals_defs.html#index_l"},
 {text:"m",url:"globals_defs.html#index_m"},
+{text:"o",url:"globals_defs.html#index_o"},
 {text:"p",url:"globals_defs.html#index_p"},
 {text:"r",url:"globals_defs.html#index_r"},
 {text:"s",url:"globals_defs.html#index_s"},
