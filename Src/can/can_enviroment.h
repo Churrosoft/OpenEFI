@@ -10,10 +10,15 @@ extern CAN_HandleTypeDef CanHandle;
 extern uint32_t TxMailboxStatus;
 extern CAN_TxHeaderTypeDef TxHeader;
 
+// ISO:TP Flags
 extern bool is_iso_tp_control_flow_frame;
-extern uint8_t iso_tp_flow_status;
-extern uint8_t iso_tp_block_size;
-extern uint8_t iso_tp_separation_time;
+extern bool iso_tp_waiting_cfc;
+// extern uint8_t iso_tp_flow_status;
+// extern uint8_t iso_tp_block_size;
+extern int8_t iso_tp_output_block_size;
+extern int32_t iso_tp_separation_time;
+extern int32_t iso_tp_separation_time_start_time;
+extern uint32_t iso_tp_cfc_index;
 
 typedef struct {
   uint32_t stdId;
@@ -25,5 +30,6 @@ typedef struct {
 } can_message;
 
 extern std::deque<can_message> TxMailbox;
+extern std::deque<can_message> RxMailbox;
 
 #endif

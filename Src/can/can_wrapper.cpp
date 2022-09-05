@@ -4,9 +4,16 @@ uint32_t TxMailboxStatus = 0;
 
 // ISO:TP Flags
 bool is_iso_tp_control_flow_frame = false;
-uint8_t iso_tp_flow_status = -1;
-uint8_t iso_tp_block_size = -1;
-uint8_t iso_tp_separation_time = -1;
+bool iso_tp_waiting_cfc = false;
+// uint8_t iso_tp_flow_status = -1;
+// uint8_t iso_tp_block_size = -1;
+int8_t iso_tp_output_block_size = -1;
+// no hay que esperar mas tiempo si es -1
+int32_t iso_tp_separation_time = -1;
+// para comparar cuanto tiempo paso:
+int32_t iso_tp_separation_time_start_time = -1;
+
+uint32_t iso_tp_cfc_index = 0;
 
 bool transmiting_frame = false;
 
@@ -23,8 +30,26 @@ std::deque<std::deque<uint8_t>> pending_frame_data;
 // pendientes
 void CAN::on_loop() {
 
-  if (transmiting_frame && iso_tp_separation_time == -1 &&
-      is_iso_tp_control_flow_frame && pending_frame_data.size() &&
+  bool iso_tp_clear_to_send =
+      (((int32_t)HAL_GetTick()) - iso_tp_separation_time_start_time) >
+      iso_tp_separation_time;
+
+  // transferimos un byte, resetear demora
+  if (iso_tp_cfc_index != RxBufferMessage.current_transfered) {
+    iso_tp_separation_time_start_time = HAL_GetTick();
+    iso_tp_cfc_index++;
+  }
+
+  // revisar cantidad de paquetes transferidos y si es requerido esperar a un
+  // CFC
+  if (iso_tp_output_block_size != -1 &&
+      (iso_tp_output_block_size <= TxBufferMessage.current_transfered)) {
+    iso_tp_waiting_cfc = true;
+  }
+
+  if (transmiting_frame &&
+      (iso_tp_separation_time == -1 || iso_tp_clear_to_send) &&
+      !iso_tp_waiting_cfc && pending_frame_data.size() &&
       HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) > 0) {
 
     std::deque<uint8_t> frame = pending_frame_data.front();
@@ -54,8 +79,9 @@ void CAN::on_loop() {
   // transmission complete, reset iso_tp flags
   if (transmiting_frame && !pending_frame_data.size()) {
     transmiting_frame = false;
-    iso_tp_flow_status = -1;
-    iso_tp_block_size = -1;
+    // iso_tp_flow_status = -1;
+    // iso_tp_block_size = -1;
+    iso_tp_output_block_size = -1;
     iso_tp_separation_time = -1;
   }
 
@@ -85,6 +111,7 @@ void CAN::on_loop() {
 
       if (txResult == HAL_OK) {
         TxMailbox.pop_front();
+        transmiting_frame = true;
       }
     } else {
       CAN_TxHeaderTypeDef CanTxHeader;
@@ -114,6 +141,8 @@ void CAN::on_loop() {
 
       if (txResult == HAL_OK) {
         std::swap(tx.frame_data, pending_frame_data);
+        // disable TX until cfc frame
+        iso_tp_waiting_cfc = true;
         TxMailbox.pop_front();
       }
     }
@@ -146,8 +175,8 @@ void CAN::on_message(uint32_t stdId, uint32_t extId, uint8_t *payload,
 
   // multiple frame (first frame)
   if (iso_tp_header.nibbles.first == 1) {
-    iso_tp_block_size = payload[1];
-    RxBufferMessage.frame_size = iso_tp_block_size;
+    // iso_tp_block_size = payload[1];
+    RxBufferMessage.frame_size = payload[1]; // iso_tp_block_size;
     // TODO: aca toca mandar un Flow Control para setear block size/tiempo
   }
 
@@ -181,16 +210,47 @@ void CAN::on_message(uint32_t stdId, uint32_t extId, uint8_t *payload,
   if (iso_tp_header.nibbles.first == 3) {
     uint8_t iso_tp_status = iso_tp_header.nibbles.second;
     switch (iso_tp_status) {
-    case 0:
-      // Continue To Send
+      // Continue To Send | Wait
+    case 0: {
+      uint8_t iso_tp_remaining_frames = (uint8_t)__REV16((uint16_t)payload[1]);
+      uint8_t iso_tp_separation_time_frame =
+          (uint8_t)__REV16((uint16_t)payload[2]);
+
+      if (iso_tp_remaining_frames == 0) {
+        // el resto de los frames no tienen FC ni delay
+        iso_tp_waiting_cfc = false;
+        iso_tp_separation_time_start_time = HAL_GetTick();
+        iso_tp_separation_time = iso_tp_separation_time_frame;
+      } else {
+        // cantidad de paquetes a enviar antes de esperar el proximo FC
+        iso_tp_separation_time_start_time = HAL_GetTick();
+        iso_tp_separation_time = iso_tp_separation_time_frame;
+        iso_tp_waiting_cfc = false;
+        iso_tp_output_block_size = iso_tp_remaining_frames;
+      }
       break;
-    case 1:
-      // Wait
+    }
+
+    case 1: {
+      // Wait until next control flow frame
+      // crreo que no hay que hacer nada? osea  el waiting_cfc va a seguir
+      // siendo true
       break;
+    }
 
     // Overflow/abort
-    default:
+    default: {
+      // re-add message to buffer && clear temp buffer
+
+      TxMailbox.push_front(TxBufferMessage);
+      for (auto frame : TxBufferMessage.frame_data) {
+        frame.clear();
+      }
+
+      TxBufferMessage.frame_data.clear();
+      TxBufferMessage = can_message();
       break;
+    }
     }
   }
 }

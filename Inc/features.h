@@ -20,4 +20,6 @@
 
 // #define ENABLE_ENGINE_FRONTEND
 
+#define ENABLE_CAN_ISO_TP
+
 #endif

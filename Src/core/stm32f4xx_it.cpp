@@ -33,6 +33,12 @@ extern "C" {
 #include "sensors/sensors.hpp"
 #include "variables.h"
 #include "webserial/commands.hpp"
+
+#ifdef ENABLE_CAN_ISO_TP
+#include "can/can_enviroment.h"
+#include "can/can_wrapper.h"
+#endif
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -214,6 +220,8 @@ void CAN1_RX0_IRQHandler(void) {
   /* USER CODE END CAN1_RX0_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan1);
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
+
+#ifdef ENABLE_CAN_ISO_TP
   uint8_t buffer[8] = {0};
 
   if (HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) > 0) {
@@ -222,6 +230,8 @@ void CAN1_RX0_IRQHandler(void) {
     CAN::on_message(CanRxHeader.StdId, CanRxHeader.ExtId, buffer,
                     CanRxHeader.DLC);
   }
+#endif
+
   /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 
