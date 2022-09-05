@@ -66,6 +66,11 @@ extern "C" {
 #include "webserial/commands.hpp"
 
 #include "engine/engine.hpp"
+
+#ifdef ENABLE_CAN_ISO_TP
+#include "can/can_enviroment.h"
+#include "can/can_wrapper.h"
+#endif
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,6 +98,7 @@ SPI_HandleTypeDef hspi2;
 void SystemClock_Config(void);
 void MX_GPIO_Init(void);
 void MX_SPI2_Init(void);
+void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -155,8 +161,10 @@ int main(void) {
 #ifdef ENABLE_US_TIM
   MX_TIM13_Init();
   HAL_TIM_Base_Start_IT(&htim13);
-
 #endif
+
+  MX_NVIC_Init();
+  /*  HAL_InitTick(0); */
   /* USER CODE BEGIN 2 */
 
 #ifdef ENABLE_PMIC
@@ -208,15 +216,60 @@ int main(void) {
 
 #ifdef ENABLE_WEBSERIAL
     web_serial::loop();
+    web_serial::command_handler();
+    web_serial::send_deque();
+    _RPM = RPM::_RPM;
+    /*  _RPM = TIM13->CNT; */
 #endif
 
 #ifdef ENABLE_ENGINE_FRONTEND
     Engine::onEFILoop();
 #endif
+
+#ifdef ENABLE_CAN_ISO_TP
+
+#endif
+    RPM::watch_dog();
   }
   /* USER CODE END WHILE */
   /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
+}
+
+/**
+ * @brief NVIC Configuration.
+ * @retval None
+ */
+void MX_NVIC_Init(void) {
+  /* EXTI9_5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  /* TIM1_UP_TIM10_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, 10, 0);
+  HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+
+  /* TIM1_TRG_COM_TIM11_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM1_TRG_COM_TIM11_IRQn, 10, 0);
+  HAL_NVIC_EnableIRQ(TIM1_TRG_COM_TIM11_IRQn);
+
+  /* TIM3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM3_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(TIM3_IRQn);
+
+  /* TIM4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM4_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(TIM4_IRQn);
+
+  /* CAN1 interrupt Init */
+  HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
+  HAL_NVIC_SetPriority(CAN1_SCE_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(CAN1_SCE_IRQn);
+
+  /* OTG_FS_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(OTG_FS_IRQn, 10, 0);
+  HAL_NVIC_EnableIRQ(OTG_FS_IRQn);
 }
 
 // https://riunet.upv.es/bitstream/handle/10251/39538/ArticuloTimers.pdf?sequence=1

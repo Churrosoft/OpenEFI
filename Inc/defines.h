@@ -1,6 +1,7 @@
 /** @file */
 #include <stdint.h>
 #include "main.h"
+#include "cmsis_gcc.h"
 #include "variables.h"
 #include "features.h"
 
@@ -148,6 +149,14 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 
 #define TABLES_IGNITION_TPS_SETTINGS { 17, 17, 0x2 }
 
+/*-----( OBD2 )-----*/
+
+#define ENABLE_MISFIRE_MONITOR 0
+#define ENABLE_FUEL_MONITOR 1
+#define ENABLE_CATALYST_MONITOR 0
+#define ENABLE_HEATED_CATALYST_MONITOR 0
+
+
 /*-----( Helpers )-----*/
 
 #define ROUND_16(NUMBER) ((float)((uint16_t)NUMBER * 100 + .5) / 100)
@@ -193,6 +202,14 @@ static inline uint32_t GetMicrosFromISR()
 #define MS_IN_MINUTE 60000
 #define US_IN_MINUTE 60000000
 
+union Nibbler {
+     struct { 
+        uint8_t first: 4;
+        uint8_t second: 4;
+     } nibbles;
+     unsigned char byte_value;
+};
+
 #ifdef TESTING
 #define GET_US_TIME mockRPM()
 
@@ -201,7 +218,7 @@ static inline uint32_t mockRPM(){
   return mocktick;
 }
 #else
-#define GET_US_TIME (HAL_GetTick() * 1000 /* + TIM13->CNT */)
+#define GET_US_TIME ((uwTick * 1000) + TIM13->CNT)
 
 #endif
 
@@ -213,7 +230,9 @@ static inline uint32_t mockRPM(){
 #define CPWM_DEBUG 1
 #define PMIC_DEBUG 1
 
-#define BREAKPOINT void();
+//#define BREAKPOINT void();
+// framework-stm32cubef4/Drivers/CMSIS/Include/cmsis_gcc.h (972)
+#define BREAKPOINT __BKPT();
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \

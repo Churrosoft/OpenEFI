@@ -26,12 +26,19 @@ extern "C" {
 }
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "can/can_wrapper.h"
 #include "cpwm/cpwm.hpp"
 #include "cpwm/rpm_calc.h"
 #include "ignition/include/ignition.hpp"
 #include "sensors/sensors.hpp"
 #include "variables.h"
 #include "webserial/commands.hpp"
+
+#ifdef ENABLE_CAN_ISO_TP
+#include "can/can_enviroment.h"
+#include "can/can_wrapper.h"
+#endif
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,12 +74,14 @@ volatile uint32_t UptimeMillis;
 
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
+extern CAN_HandleTypeDef hcan1;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim10;
 extern TIM_HandleTypeDef htim11;
 extern TIM_HandleTypeDef htim14;
+
 /* USER CODE BEGIN EV */
 bool led_checked = true;
 bool led_checked2 = true;
@@ -203,6 +212,43 @@ void SysTick_Handler(void) {
 /******************************************************************************/
 
 /**
+ * @brief This function handles CAN1 RX0 interrupts.
+ */
+void CAN1_RX0_IRQHandler(void) {
+  /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
+
+  /* USER CODE END CAN1_RX0_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
+
+#ifdef ENABLE_CAN_ISO_TP
+  uint8_t buffer[8] = {0};
+
+  if (HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) > 0) {
+    CAN_RxHeaderTypeDef CanRxHeader;
+    HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &CanRxHeader, buffer);
+    CAN::on_message(CanRxHeader.StdId, CanRxHeader.ExtId, buffer,
+                    CanRxHeader.DLC);
+  }
+#endif
+
+  /* USER CODE END CAN1_RX0_IRQn 1 */
+}
+
+/**
+ * @brief This function handles CAN1 SCE interrupt.
+ */
+void CAN1_SCE_IRQHandler(void) {
+  /* USER CODE BEGIN CAN1_SCE_IRQn 0 */
+
+  /* USER CODE END CAN1_SCE_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_SCE_IRQn 1 */
+
+  /* USER CODE END CAN1_SCE_IRQn 1 */
+}
+
+/**
  * @brief This function handles TIM3 global interrupt.
  */
 void TIM3_IRQHandler(void) {
@@ -304,11 +350,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == TIM10) {
 
     EFI_INVERT_PIN(LED2_GPIO_Port, LED2_Pin);
-    // WEBSerial:
-    /*  web_serial::loop();
-     web_serial::send_deque(); */
+
+// WEBSerial:
+#ifdef ENABLE_WEBSERIAL
+    web_serial::loop();
+    web_serial::send_deque();
+#endif
+
+#ifdef ENABLE_SENSORS
     // Sensors:
-    // sensors::loop();
+    sensors::loop();
+#endif
+
     // INJECTION/IGNITION ALGORITHMS
 
     led_checked = !led_checked;
@@ -337,20 +390,22 @@ void OTG_FS_IRQHandler(void) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
-  EFI_INVERT_PIN(LED0_GPIO_Port, LED0_Pin);
+  if (GPIO_Pin == CKP_Pin) {
+#ifdef ENABLE_RPM_CALC
+    RPM::interrupt();
+#endif
 
-    // CPWM::interrupt();
+    if (!SINC) {
+#ifdef ENABLE_SYNC
+      SINC = sinc();
+#endif
+    } else {
 
-/*   if (GPIO_Pin == GPIO_PIN_6 && MOTOR_ENABLE && SINC) {
-    // CPWM::interrupt();
+#ifdef ENABLE_CPWM_IT
+      CPWM::interrupt();
+#endif
+    }
   }
-  if (!SINC) {
-    EFI_INVERT_PIN(LED0_GPIO_Port, LED0_Pin);
-
-    // CPWM::interrupt();
-    // RPM::interrupt();
-    // SINC = sinc();
-  } */
 }
 
 /* USER CODE END 1 */

@@ -5,7 +5,9 @@
 
 #include "dtc_codes.h"
 
+extern "C" {
 #include "../utils/basic_electronics.h"
+}
 
 #ifndef TEMP_CPP
 #define TEMP_CPP

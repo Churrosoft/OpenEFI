@@ -6,7 +6,10 @@
 
 #include "dtc_codes.h"
 
+extern "C" {
 #include "../utils/basic_electronics.h"
+}
+
 /*
     todo el codigo relacionado al control del sensor "TPS"
 */
