@@ -31,7 +31,13 @@ struct table_ref {
   int32_t memory_address;
 };
 
+/** @addtogroup Memory
+ *  @brief Namespace con I/O hacia la memoria SPI externa
+ * @{
+ */
+
 /** @addtogroup Tables
+ * @brief Implementacion de tablas 2D con vectores, valores en int32_t
  * @{
  */
 
@@ -40,12 +46,11 @@ struct table_ref {
 #define MEMORY_PAGE_SIZE 256
 #define SECTOR_TO_ADDRES(sector) (sector * 16 * MEMORY_PAGE_SIZE - 1)
 
-//! Implementacion de tablas 2D con vectores, valores en uint16_t
+//! Implementacion de tablas 2D con vectores, valores en int32_t
 namespace tables {
 // operaciones simples sobre un campo:
-int32_t get_value(table_ref, uint16_t, uint16_t);
-void set_value(table_ref, uint16_t, uint16_t, int16_t);
-int32_t get_long_value(table_ref, uint16_t, uint16_t);
+int32_t get_value(table_ref, uint32_t, uint32_t);
+void set_value(table_ref, uint32_t, uint32_t, int32_t);
 void set_long_value(table_ref, uint16_t, uint16_t, int32_t);
 
 // operaciones sobre varios campos a la vez:
@@ -53,15 +58,19 @@ void set_long_value(table_ref, uint16_t, uint16_t, int32_t);
 /**
  * @brief reads all data of the selected table
  * @param {table_ref} table - table to read
- * @return {TABLE_DATA} - vector 2D with uint16_t data
+ * @return {TABLE_DATA} - vector 2D with int32_t data
  */
 TABLEDATA read_all(table_ref);
 
-// TABLEDATA alter_table(TABLEDATA, uint16_t, uint16_t, uint16_t);
+// TABLEDATA alter_table(TABLEDATA, int32_t, int32_t, int32_t);
 
 // utils para manejar data de las tablas:
+
+/**
+ * @brief return nearest value of one row/column
+ */
 int32_t find_nearest_neighbor(std::vector<int32_t>, int32_t);
-std::vector<int32_t> col_to_row(TABLEDATA, uint16_t);
+std::vector<int32_t> col_to_row(TABLEDATA, uint32_t);
 
 /**
  * @brief erases page on memory and record new data of table
@@ -79,6 +88,8 @@ bool on_bounds(table_ref, int32_t, int32_t);
 
 // debug:
 void plot_table(TABLEDATA);
+
+//< namespace de utils para tables
 namespace {
   /***
    * @brief Retorna direccion de memoria para la posicion 2D de la tabla
@@ -118,8 +129,11 @@ namespace {
     }
   }
 } // namespace
+
 } // namespace tables
 
 /*! @} End of Doxygen Tables*/
+
+/*! @} End of Doxygen Memory*/
 
 #endif

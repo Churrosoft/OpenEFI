@@ -1,14 +1,25 @@
 #ifndef MEMORY_DTC
 #define MEMORY_DTC
-/**
- * DTC Example:
- * primer byte en primer pagina podria indicar si hay o no dtcs grabados
- * segundo byte cantidad total de DTC guardados
- * P0XXX => 6 char => 6 bytes (2 byte adicional para indicar si es temporal | permanente / cantidad?)
- * P0XXX{5 veces}{1 temporal}
- * max dtc on memory => 50 => 200 bytes
- * memory init addr: 0x1000
- * memory end addr:  0x1FFF
+
+
+/** @addtogroup Memory
+ *  @brief Namespace con I/O hacia la memoria SPI externa
+ * @{
+ */
+
+/** @addtogroup DTC_IO
+ * @brief almacenaje/borrado de DTC's en memoria
+
+ * DTC Example: \n
+ * primer byte en primer pagina podria indicar si hay o no dtcs grabados \n
+ * segundo byte cantidad total de DTC guardados \n
+ * P0XXX => 6 char => 6 bytes (2 byte adicional para indicar si es temporal | permanente / cantidad?) \n
+ * P0XXX{5 veces}{1 temporal} \n
+ * max dtc on memory => 50 => 200 bytes \n
+ * memory init addr: 0x1000 \n
+ * memory end addr:  0x1FFF \n
+
+ * @{
  */
 #include <stdint.h>
 #include <vector>
@@ -35,5 +46,10 @@ void read_dtc(uint8_t, uint8_t *);
 #define DTC_END_ADDR 0x1FFF
 #define DTC_EMPTY 0xFE
 #define DTC_EMPTY_ALT 0xFF
+
+
+/*! @} End of Doxygen DTC_IO*/
+
+/*! @} End of Doxygen Memory*/
 
 #endif
