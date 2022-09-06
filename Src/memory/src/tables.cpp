@@ -7,7 +7,7 @@ extern "C" {
 using namespace std;
 #include "defines.h"
 
-int32_t tables::get_value(table_ref table, uint16_t x, uint16_t y) {
+int32_t tables::get_value(table_ref table, uint32_t x, uint32_t y) {
   uint8_t data[3];
   uint32_t address = get_address(x, table.x_max, y, table.memory_address);
 
@@ -16,7 +16,7 @@ int32_t tables::get_value(table_ref table, uint16_t x, uint16_t y) {
   return (int32_t)(data[1] << 8) + (data[2] << 16) + (data[3] << 24) + data[0];
 }
 
-void tables::set_value(table_ref table, uint16_t x, uint16_t y, int16_t value) {
+void tables::set_value(table_ref table, uint16_t x, uint16_t y, int32_t value) {
   uint32_t address = get_address(x, table.x_max, y, table.memory_address);
 
   uint8_t data[4];
@@ -128,7 +128,7 @@ void tables::plot_table(TABLEDATA table) {
   }
 }
 
-std::vector<int32_t> tables::col_to_row(TABLEDATA table, uint16_t table_index) {
+std::vector<int32_t> tables::col_to_row(TABLEDATA table, uint32_t table_index) {
   std::vector<int32_t> out_vec;
 
   for (auto table_y : table) {
