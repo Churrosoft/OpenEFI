@@ -4,10 +4,10 @@ var indexSectionsWithContent =
   1: "ceinst",
   2: "t",
   3: "cdegmostu",
-  4: "bcdeghmnoprstu",
+  4: "bcdefghmnoprstu",
   5: "_fhu",
   6: "abcdefgilmoprstv",
-  7: "cstu",
+  7: "cdimstu",
   8: "o"
 };
 

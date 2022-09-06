@@ -1,15 +1,15 @@
 var annotated_dup =
 [
     [ "sensors", null, [
-      [ "SensorValues", "structsensors_1_1SensorValues.html", "structsensors_1_1SensorValues" ]
+      [ "SensorValues", "d4/dd1/structsensors_1_1SensorValues.html", "d4/dd1/structsensors_1_1SensorValues" ]
     ] ],
     [ "web_serial", null, [
-      [ "serial_command", "structweb__serial_1_1serial__command.html", "structweb__serial_1_1serial__command" ]
+      [ "serial_command", "d2/db9/structweb__serial_1_1serial__command.html", "d2/db9/structweb__serial_1_1serial__command" ]
     ] ],
-    [ "can_message", "structcan__message.html", "structcan__message" ],
-    [ "EMAHighPass", "structEMAHighPass.html", "structEMAHighPass" ],
-    [ "EMALowPass", "structEMALowPass.html", "structEMALowPass" ],
-    [ "input_handler", "structinput__handler.html", "structinput__handler" ],
-    [ "Nibbler", "unionNibbler.html", "unionNibbler" ],
-    [ "table_ref", "structtable__ref.html", "structtable__ref" ]
+    [ "can_message", "d7/d96/structcan__message.html", "d7/d96/structcan__message" ],
+    [ "EMAHighPass", "dc/da1/structEMAHighPass.html", "dc/da1/structEMAHighPass" ],
+    [ "EMALowPass", "de/d7b/structEMALowPass.html", "de/d7b/structEMALowPass" ],
+    [ "input_handler", "d9/db1/structinput__handler.html", "d9/db1/structinput__handler" ],
+    [ "Nibbler", "dd/d89/unionNibbler.html", "dd/d89/unionNibbler" ],
+    [ "table_ref", "d4/daf/structtable__ref.html", "d4/daf/structtable__ref" ]
 ];

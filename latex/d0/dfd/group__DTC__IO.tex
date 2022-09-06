@@ -1,0 +1,53 @@
+\hypertarget{group__DTC__IO}{}\section{D\+T\+C\+\_\+\+IO}
+\label{group__DTC__IO}\index{D\+T\+C\+\_\+\+IO@{D\+T\+C\+\_\+\+IO}}
+
+
+almacenaje/borrado de D\+TC\textquotesingle{}s en memoria  
+
+
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{group__DTC__IO_gaf895544cfc22a7bab94504ea1d6e354c}\label{group__DTC__IO_gaf895544cfc22a7bab94504ea1d6e354c}} 
+\#define {\bfseries D\+T\+C\+\_\+\+F\+L\+A\+G\+\_\+\+A\+D\+DR}~0x1000
+\item 
+\mbox{\Hypertarget{group__DTC__IO_ga0d654918ede023d8b7a8b45bff063dff}\label{group__DTC__IO_ga0d654918ede023d8b7a8b45bff063dff}} 
+\#define {\bfseries D\+T\+C\+\_\+\+I\+N\+I\+T\+\_\+\+P\+A\+GE}~20
+\item 
+\mbox{\Hypertarget{group__DTC__IO_ga239b4015a777f1ed98ec501f0362cbfc}\label{group__DTC__IO_ga239b4015a777f1ed98ec501f0362cbfc}} 
+\#define {\bfseries D\+T\+C\+\_\+\+E\+N\+D\+\_\+\+A\+D\+DR}~0x1\+F\+FF
+\item 
+\mbox{\Hypertarget{group__DTC__IO_gaa87f2fa3a82da552afa4de5630f5cb57}\label{group__DTC__IO_gaa87f2fa3a82da552afa4de5630f5cb57}} 
+\#define {\bfseries D\+T\+C\+\_\+\+E\+M\+P\+TY}~0x\+FE
+\item 
+\mbox{\Hypertarget{group__DTC__IO_gaf377a303e8d85e07f9be5dfc016c4643}\label{group__DTC__IO_gaf377a303e8d85e07f9be5dfc016c4643}} 
+\#define {\bfseries D\+T\+C\+\_\+\+E\+M\+P\+T\+Y\+\_\+\+A\+LT}~0x\+FF
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{group__DTC__IO_gac9b1c1ae7ede810de0c3e6f66ab4c438}\label{group__DTC__IO_gac9b1c1ae7ede810de0c3e6f66ab4c438}} 
+std\+::vector$<$ std\+::vector$<$ uint8\+\_\+t $>$ $>$ {\bfseries get\+\_\+all\+\_\+dtc} ()
+\item 
+\mbox{\Hypertarget{group__DTC__IO_ga704a3c4e7739c7aac25a80794996e312}\label{group__DTC__IO_ga704a3c4e7739c7aac25a80794996e312}} 
+void {\bfseries write\+\_\+dtc} (uint8\+\_\+t $\ast$)
+\item 
+\mbox{\Hypertarget{group__DTC__IO_gac91421ad57034471637dc291ba1e559a}\label{group__DTC__IO_gac91421ad57034471637dc291ba1e559a}} 
+void {\bfseries read\+\_\+dtc} (uint8\+\_\+t, uint8\+\_\+t $\ast$)
+\item 
+\mbox{\Hypertarget{group__DTC__IO_gad2cadce35748d695d07e80b4efbf1831}\label{group__DTC__IO_gad2cadce35748d695d07e80b4efbf1831}} 
+void {\bfseries write\+\_\+dtc} (uint8\+\_\+t $\ast$, uint8\+\_\+t)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+almacenaje/borrado de D\+TC\textquotesingle{}s en memoria 
+
+D\+TC Example\+: ~\newline
+primer byte en primer pagina podria indicar si hay o no dtcs grabados ~\newline
+segundo byte cantidad total de D\+TC guardados ~\newline
+P0\+X\+XX =$>$ 6 char =$>$ 6 bytes (2 byte adicional para indicar si es temporal $\vert$ permanente / cantidad?) ~\newline
+P0\+X\+XX\{5 veces\}\{1 temporal\} ~\newline
+max dtc on memory =$>$ 50 =$>$ 200 bytes ~\newline
+memory init addr\+: 0x1000 ~\newline
+memory end addr\+: 0x1\+F\+FF ~\newline

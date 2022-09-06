@@ -1,4 +1,4 @@
 var namespaces =
 [
-    [ "tables", "namespacetables.html", null ]
+    [ "tables", "d3/d9f/namespacetables.html", null ]
 ];

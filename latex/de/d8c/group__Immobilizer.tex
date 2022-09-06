@@ -1,0 +1,39 @@
+\hypertarget{group__Immobilizer}{}\section{Immobilizer}
+\label{group__Immobilizer}\index{Immobilizer@{Immobilizer}}
+
+
+Implementacion de imobilizador primitivo, solo en casos de fallas criticas.  
+
+
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{group__Immobilizer_ga2e4b52d4dfc434276aa96faaca8372b9}\label{group__Immobilizer_ga2e4b52d4dfc434276aa96faaca8372b9}} 
+\#define {\bfseries E\+M\+E\+R\+G\+E\+N\+C\+Y\+\_\+\+F\+L\+A\+G\+\_\+\+A\+D\+DR}~0x1000
+\item 
+\mbox{\Hypertarget{group__Immobilizer_ga683a9087887bf34cde108cca639a0571}\label{group__Immobilizer_ga683a9087887bf34cde108cca639a0571}} 
+\#define {\bfseries E\+M\+E\+R\+G\+E\+N\+C\+Y\+\_\+\+D\+T\+C\+\_\+\+A\+D\+DR}~0x1001
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{group__Immobilizer_gadf0449a4f1aad1229c667f356ebadadc}{can\+\_\+turn\+\_\+on} ()
+\item 
+\mbox{\Hypertarget{group__Immobilizer_ga56f17da99421bda28fd07b34b85c38f4}\label{group__Immobilizer_ga56f17da99421bda28fd07b34b85c38f4}} 
+void {\bfseries write\+\_\+emergency\+\_\+stop} (uint8\+\_\+t $\ast$)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementacion de imobilizador primitivo, solo en casos de fallas criticas. 
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{group__Immobilizer_gadf0449a4f1aad1229c667f356ebadadc}\label{group__Immobilizer_gadf0449a4f1aad1229c667f356ebadadc}} 
+\index{Immobilizer@{Immobilizer}!can\+\_\+turn\+\_\+on@{can\+\_\+turn\+\_\+on}}
+\index{can\+\_\+turn\+\_\+on@{can\+\_\+turn\+\_\+on}!Immobilizer@{Immobilizer}}
+\subsubsection{\texorpdfstring{can\+\_\+turn\+\_\+on()}{can\_turn\_on()}}
+{\footnotesize\ttfamily bool can\+\_\+turn\+\_\+on (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+I N M O B I L I Z E R \+: ahre porque el suspenso en el nombre primer byte en primer pagina para indicar parada de emergencia (para no arrancar el motor post reinicio de la misma), 6 bytes siguientes para el D\+TC asociado\+: P0\+X\+XX =$>$ 6 char =$>$ 6 bytes se reserva 1/2 bloque, para posterior uso como inmobilizador posta memory init addr\+: 0x2000 memory end addr\+: 0x2420 

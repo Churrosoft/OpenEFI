@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['emahighpass',['EMAHighPass',['../structEMAHighPass.html',1,'']]],
-  ['emalowpass',['EMALowPass',['../structEMALowPass.html',1,'']]]
+  ['emahighpass',['EMAHighPass',['../dc/da1/structEMAHighPass.html',1,'']]],
+  ['emalowpass',['EMALowPass',['../de/d7b/structEMALowPass.html',1,'']]]
 ];
