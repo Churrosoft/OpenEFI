@@ -22,7 +22,7 @@ extern "C" {
 #include <math.h>
 #include <vector>
 
-#define TABLEDATA std::vector<std::vector<int32_t>>
+typedef std::vector<std::vector<int32_t>> table_data;
 #define MAX_ROW_SIZE 30
 
 struct table_ref {
@@ -60,9 +60,9 @@ void set_long_value(table_ref, uint16_t, uint16_t, int32_t);
  * @param {table_ref} table - table to read
  * @return {TABLE_DATA} - vector 2D with int32_t data
  */
-TABLEDATA read_all(table_ref);
+table_data read_all(table_ref);
 
-// TABLEDATA alter_table(TABLEDATA, int32_t, int32_t, int32_t);
+// table_data alter_table(table_data, int32_t, int32_t, int32_t);
 
 // utils para manejar data de las tablas:
 
@@ -70,12 +70,12 @@ TABLEDATA read_all(table_ref);
  * @brief return nearest value of one row/column
  */
 int32_t find_nearest_neighbor(std::vector<int32_t>, int32_t);
-std::vector<int32_t> col_to_row(TABLEDATA, uint32_t);
+std::vector<int32_t> col_to_row(table_data, uint32_t);
 
 /**
  * @brief erases page on memory and record new data of table
  */
-void update_table(TABLEDATA, table_ref);
+void update_table(table_data, table_ref);
 
 void dump_row(std::vector<int32_t>, uint8_t *);
 
@@ -87,7 +87,7 @@ std::vector<int32_t> put_row(uint8_t *, uint32_t);
 bool on_bounds(table_ref, int32_t, int32_t);
 
 // debug:
-void plot_table(TABLEDATA);
+void plot_table(table_data);
 
 //< namespace de utils para tables
 namespace {
@@ -112,7 +112,7 @@ namespace {
    * @param {TABLE_DATA} - table to dump
    * @param {uint8_t *} - destination array
    */
-  static inline void dump_table(TABLEDATA table, uint8_t *dest_arr) {
+  static inline void dump_table(table_data table, uint8_t *dest_arr) {
     uint16_t index = 0;
     for (auto table_y : table) {
       // 312

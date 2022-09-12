@@ -1,13 +1,12 @@
-/** @file */
-// OBD Response Status from ISO15031-5 page 35
-
 #ifndef OBD2_STATUS_H
 #define OBD2_STATUS_H
 
-// Negative response:
-//  {Response Service Identifier} {Service Identifier} {Response Code}
-
-// Negative Response Codes
+/**
+ * @addtogroup OBD_STATUS definitions
+ * @brief OBD Response Status from ISO15031-5 page 35 \n
+ * format: {Response Service Identifier} {Service Identifier} {Response Code}
+ * @{
+ */
 
 /**
  *  This response code indicates that the service is rejected but the server
@@ -20,8 +19,7 @@
 /**
  *  This response code indicates that the requested action will not be taken
  *  because the server (ECU) does not support the requested service.
-  * @see also knows as SNS
-
+ *  @see also knows as SNS
  */
 #define serviceNotSupported 0x11
 #define SNS serviceNotSupported
@@ -70,5 +68,7 @@
  **/
 #define requestCorrectResponsePending 0x78
 #define RCRRP requestCorrectResponsePending
+
+/*! @} End of Doxygen OBD_STATUS definitions */
 
 #endif

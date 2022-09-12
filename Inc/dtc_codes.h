@@ -6,7 +6,7 @@
 // All DTC's codes used by OpenEFI
 #include <vector>
 // DTC init:
-#define NEW_DTC std::vector<uint8_t>
+typedef std::vector<uint8_t> dtc_data;
 #define EMPTY_DTC  { 0x0 }
 // System:
 

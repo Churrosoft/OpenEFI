@@ -10,7 +10,7 @@ using namespace web_serial;
 std::deque<serial_command> pending_commands;
 std::deque<serial_command> output_commands;
 
-TABLEDATA in_table;
+table_data in_table;
 bool table_lock;
 bool web_serial::paired = false;
 
@@ -24,7 +24,7 @@ void web_serial::command_handler() {
     uint8_t serialized_command[128];
     table_ref table;
     uint16_t selected_table;
-    TABLEDATA out_table;
+    table_data out_table;
 
     std::fill_n(payload, 123, 0x0);
 

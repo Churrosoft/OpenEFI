@@ -1,13 +1,11 @@
 /** @file */
 #include "defines.h"
-/**
- * @page OBD OBD SID definitions
- * en algun momento lo voy a hacer andar, pero tendria que importar todo este
- * archivo como una pagina
- * @verbinclude obd2_pid.h
- */
 
-// OBD SID definitions from ISO15031-5 page 32
+/**
+ * @addtogroup OBD_SID definitions
+ * @brief OBD SID definitions from ISO15031-5 page 32
+ * @{
+ */
 
 #ifndef OB2_SID_H
 #define OB2_SID_H
@@ -41,5 +39,6 @@
 #define SUPPORTED_PID11 0b00000000;
 #define SUPPORTED_PID19 0b00000000;
 
+/*! @} End of Doxygen OBD SID definitions */
 
 #endif

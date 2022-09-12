@@ -34,7 +34,7 @@ namespace TPS
 
     /** @brief revisa el estado del sensor para disparar un DTC en caso que sea necesario
      */
-    NEW_DTC dtc(void);
+    dtc_data dtc(void);
     uint8_t dtc(int32_t, int32_t);
     extern int32_t last_value;
 } // namespace TPS
