@@ -1,13 +1,7 @@
 var searchData=
 [
-  ['fs_5fcl_5ffault',['FS_CL_FAULT',['../db/d7d/obd2__pid_8h.html#adb99db995b29c9be0ae488905ff24a27',1,'obd2_pid.h']]],
-  ['fs_5fclosed_5floop',['FS_CLOSED_LOOP',['../db/d7d/obd2__pid_8h.html#a54a7650e3e2514c88c5f47e8942b8241',1,'obd2_pid.h']]],
-  ['fs_5fmotor_5foff',['FS_MOTOR_OFF',['../db/d7d/obd2__pid_8h.html#a93772e290018e845a98cbbaeb35dcd37',1,'obd2_pid.h']]],
-  ['fs_5fol_5fdrive',['FS_OL_DRIVE',['../db/d7d/obd2__pid_8h.html#a34834380e007e3b34b93416cadfbaea4',1,'obd2_pid.h']]],
-  ['fs_5fol_5ffault',['FS_OL_FAULT',['../db/d7d/obd2__pid_8h.html#a88a394c8a2d3b6adcf084f580be5edc8',1,'obd2_pid.h']]],
-  ['fs_5fopen_5floop',['FS_OPEN_LOOP',['../db/d7d/obd2__pid_8h.html#a6790f8066998a98d1f3fa7697624e5aa',1,'obd2_pid.h']]],
-  ['fuel_5fsystem_5fstatus',['FUEL_SYSTEM_STATUS',['../db/d7d/obd2__pid_8h.html#a797d0d308a5ad4cc5aedc183e5d82880',1,'obd2_pid.h']]],
-  ['fuel_5ftype',['FUEL_TYPE',['../db/d7d/obd2__pid_8h.html#a39ab0421148786183e6f5a616a66d795',1,'obd2_pid.h']]],
-  ['fuel_5ftype_5fresponse',['FUEL_TYPE_RESPONSE',['../db/d7d/obd2__pid_8h.html#a62e9969a2ac7daeecbec01b2114ca7eb',1,'obd2_pid.h']]],
-  ['full_5fsecuencial',['FULL_SECUENCIAL',['../d8/db0/defines_8h.html#ab9022ef0836f3d898a79d27ce45aa5bb',1,'defines.h']]]
+  ['ing_5fsecuency',['ING_SECUENCY',['../d8/db0/defines_8h.html#a267514d4f83c7a3ce49e997386ef97ef',1,'defines.h']]],
+  ['ing_5fsecuency_5falt',['ING_SECUENCY_ALT',['../d8/db0/defines_8h.html#a25b99f313e7bbad9109bae32e4d0a22b',1,'defines.h']]],
+  ['iny_5fsecuency',['INY_SECUENCY',['../d8/db0/defines_8h.html#a3f2c85322a7483badca2baf565e80d55',1,'defines.h']]],
+  ['iny_5fsecyency_5falt',['INY_SECYENCY_ALT',['../d8/db0/defines_8h.html#a13a0b4242db0b2e9a42c52608df5cd7c',1,'defines.h']]]
 ];

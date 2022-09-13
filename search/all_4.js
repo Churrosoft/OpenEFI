@@ -2,6 +2,7 @@ var searchData=
 [
   ['debugmon_5fhandler',['DebugMon_Handler',['../df/da1/stm32f4xx__it_8h.html#adbdfb05858cc36fc520974df37ec3cb0',1,'stm32f4xx_it.cpp']]],
   ['defines_2eh',['defines.h',['../d8/db0/defines_8h.html',1,'']]],
+  ['demo_5fspark',['demo_spark',['../db/d51/group__PMIC.html#gacc0f9db44748918cddd0d13301ec0dd9',1,'PMIC']]],
   ['dma_2ec',['dma.c',['../d8/d51/dma_8c.html',1,'']]],
   ['dnt',['DNT',['../d8/db0/defines_8h.html#a6b476c09f52c46c89cca6a640c6a8efa',1,'DNT():&#160;defines.h'],['../d6/dac/CHT__1__6___8h.html#a6b476c09f52c46c89cca6a640c6a8efa',1,'DNT():&#160;CHT_1_6_.h']]],
   ['dnt_5fdouble_5fscan',['DNT_DOUBLE_SCAN',['../d8/db0/defines_8h.html#a47467f21cf6f32b35425e9a5f97f2d89',1,'defines.h']]],
@@ -12,6 +13,7 @@ var searchData=
   ['dtc_5fcam_5fcalibration_5ffault',['DTC_CAM_CALIBRATION_FAULT',['../d7/d68/dtc__codes_8h.html#aab5cedeb2f170ab7940c2c295df8ebd2',1,'dtc_codes.h']]],
   ['dtc_5fcam_5fcontrol_5ffault',['DTC_CAM_CONTROL_FAULT',['../d7/d68/dtc__codes_8h.html#ad49d6cedc284d00858f6841f95e6621f',1,'dtc_codes.h']]],
   ['dtc_5fcam_5fsensor_5fmalfunction',['DTC_CAM_SENSOR_MALFUNCTION',['../d7/d68/dtc__codes_8h.html#a9b253b14570bc46f55ac78d91c0a6a34',1,'dtc_codes.h']]],
+  ['dtc_5fcheck',['dtc_check',['../db/d51/group__PMIC.html#ga9313d7e29fb1f4060dca04dccec44d64',1,'PMIC']]],
   ['dtc_5fcodes_2eh',['dtc_codes.h',['../d7/d68/dtc__codes_8h.html',1,'']]],
   ['dtc_5fcoil_5fa_5fmalfunction',['DTC_COIL_A_MALFUNCTION',['../d7/d68/dtc__codes_8h.html#afa82d6b18eff37ae0c478ac00e163691',1,'dtc_codes.h']]],
   ['dtc_5fcoil_5fb_5fmalfunction',['DTC_COIL_B_MALFUNCTION',['../d7/d68/dtc__codes_8h.html#a61ee1dfc577f1d5c756daa291ad86961',1,'dtc_codes.h']]],
@@ -62,5 +64,8 @@ var searchData=
   ['dtc_5ftps_5fself_5ftest_5ffault',['DTC_TPS_SELF_TEST_FAULT',['../d7/d68/dtc__codes_8h.html#aafcb00254f13848d1f085b527f0ad4e7',1,'dtc_codes.h']]],
   ['dtc_5ftps_5fsensor_5fintermittent',['DTC_TPS_SENSOR_INTERMITTENT',['../d7/d68/dtc__codes_8h.html#a3f5e6d5b289eb3cb9d78b3cc41682033',1,'dtc_codes.h']]],
   ['dtc_5fturbo_5fno_5fpressure',['DTC_TURBO_NO_PRESSURE',['../d7/d68/dtc__codes_8h.html#a3158ed67ba6120bbf8a3e3658ea38fb3',1,'dtc_codes.h']]],
-  ['dtc_5fturbo_5fpressure_5flow',['DTC_TURBO_PRESSURE_LOW',['../d7/d68/dtc__codes_8h.html#af44289051f9e235d09089b2193e3a05f',1,'dtc_codes.h']]]
+  ['dtc_5fturbo_5fpressure_5flow',['DTC_TURBO_PRESSURE_LOW',['../d7/d68/dtc__codes_8h.html#af44289051f9e235d09089b2193e3a05f',1,'dtc_codes.h']]],
+  ['definitions',['definitions',['../d6/db8/group__OBD__PID.html',1,'']]],
+  ['definitions',['definitions',['../d6/d93/group__OBD__SID.html',1,'']]],
+  ['definitions',['definitions',['../dc/de2/group__OBD__STATUS.html',1,'']]]
 ];

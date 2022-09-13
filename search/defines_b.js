@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['pmsi',['PMSI',['../d8/db0/defines_8h.html#a3ea16d89c4d1fb6e827010391c1da564',1,'PMSI():&#160;defines.h'],['../d6/dac/CHT__1__6___8h.html#a3ea16d89c4d1fb6e827010391c1da564',1,'PMSI():&#160;CHT_1_6_.h']]]
+  ['tps_5fcalc_5fa',['TPS_CALC_A',['../d8/db0/defines_8h.html#ad52b4f48f8cce28e36d77d1ced7e8dd9',1,'defines.h']]],
+  ['tps_5fdual',['TPS_DUAL',['../d8/db0/defines_8h.html#a6ece768bdf35a4e819ddc495181392b5',1,'defines.h']]],
+  ['tps_5fmax_5fa',['TPS_MAX_A',['../d8/db0/defines_8h.html#ad68d322f7d60cda5ba71dd843e48710e',1,'defines.h']]],
+  ['tps_5fmax_5fb',['TPS_MAX_B',['../d8/db0/defines_8h.html#ab32c8d7c8246a3671214e176fa5f767b',1,'defines.h']]],
+  ['tps_5fmin_5fa',['TPS_MIN_A',['../d8/db0/defines_8h.html#aa512403a6a9fcbfa17d284985e860e22',1,'defines.h']]],
+  ['tps_5fmin_5fb',['TPS_MIN_B',['../d8/db0/defines_8h.html#a853e90a498b40419ef604574cf449fa1',1,'defines.h']]]
 ];

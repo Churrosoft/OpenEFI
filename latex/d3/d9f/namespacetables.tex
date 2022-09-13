@@ -17,16 +17,16 @@ void {\bfseries set\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, u
 \mbox{\Hypertarget{namespacetables_a55cb401646e4582c598f0ed53f4bcfd7}\label{namespacetables_a55cb401646e4582c598f0ed53f4bcfd7}} 
 void {\bfseries set\+\_\+long\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint16\+\_\+t, uint16\+\_\+t, int32\+\_\+t)
 \item 
-T\+A\+B\+L\+E\+D\+A\+TA \hyperlink{namespacetables_a8a1bab94b65aabe4f2b226cdac58b41f}{read\+\_\+all} (\hyperlink{structtable__ref}{table\+\_\+ref})
+table\+\_\+data \hyperlink{namespacetables_a27170b1a1036e75516b990dc97ea5835}{read\+\_\+all} (\hyperlink{structtable__ref}{table\+\_\+ref})
 \begin{DoxyCompactList}\small\item\em reads all data of the selected table \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetables_a56f811fc2ad9ddcc8580af63abb9c200}\label{namespacetables_a56f811fc2ad9ddcc8580af63abb9c200}} 
 int32\+\_\+t \hyperlink{namespacetables_a56f811fc2ad9ddcc8580af63abb9c200}{find\+\_\+nearest\+\_\+neighbor} (std\+::vector$<$ int32\+\_\+t $>$, int32\+\_\+t)
 \begin{DoxyCompactList}\small\item\em return nearest value of one row/column \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{namespacetables_aec6908032c4ad62134936f55f2ff92b9}\label{namespacetables_aec6908032c4ad62134936f55f2ff92b9}} 
-std\+::vector$<$ int32\+\_\+t $>$ {\bfseries col\+\_\+to\+\_\+row} (T\+A\+B\+L\+E\+D\+A\+TA, uint32\+\_\+t)
+\mbox{\Hypertarget{namespacetables_af34bc025bc426995866a34ecbe393978}\label{namespacetables_af34bc025bc426995866a34ecbe393978}} 
+std\+::vector$<$ int32\+\_\+t $>$ {\bfseries col\+\_\+to\+\_\+row} (table\+\_\+data, uint32\+\_\+t)
 \item 
-\mbox{\Hypertarget{namespacetables_a3a6244d3e384337d006dfb252768558a}\label{namespacetables_a3a6244d3e384337d006dfb252768558a}} 
-void \hyperlink{namespacetables_a3a6244d3e384337d006dfb252768558a}{update\+\_\+table} (T\+A\+B\+L\+E\+D\+A\+TA, \hyperlink{structtable__ref}{table\+\_\+ref})
+\mbox{\Hypertarget{namespacetables_a609889745ffc450440eee727f8d28034}\label{namespacetables_a609889745ffc450440eee727f8d28034}} 
+void \hyperlink{namespacetables_a609889745ffc450440eee727f8d28034}{update\+\_\+table} (table\+\_\+data, \hyperlink{structtable__ref}{table\+\_\+ref})
 \begin{DoxyCompactList}\small\item\em erases page on memory and record new data of table \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetables_a3d4eae2328222f2672364baad17b14eb}\label{namespacetables_a3d4eae2328222f2672364baad17b14eb}} 
 void {\bfseries dump\+\_\+row} (std\+::vector$<$ int32\+\_\+t $>$, uint8\+\_\+t $\ast$)
@@ -37,8 +37,8 @@ std\+::vector$<$ int32\+\_\+t $>$ {\bfseries put\+\_\+row} (uint8\+\_\+t $\ast$,
 \mbox{\Hypertarget{namespacetables_a5df27daa6f33383e90a21d0ea12f6d9f}\label{namespacetables_a5df27daa6f33383e90a21d0ea12f6d9f}} 
 bool \hyperlink{namespacetables_a5df27daa6f33383e90a21d0ea12f6d9f}{on\+\_\+bounds} (\hyperlink{structtable__ref}{table\+\_\+ref}, int32\+\_\+t, int32\+\_\+t)
 \begin{DoxyCompactList}\small\item\em return true if input X/Y is on the table \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{namespacetables_adaa52c49224ec8a6aac276310d27e702}\label{namespacetables_adaa52c49224ec8a6aac276310d27e702}} 
-void {\bfseries plot\+\_\+table} (T\+A\+B\+L\+E\+D\+A\+TA)
+\mbox{\Hypertarget{namespacetables_acfce212d9f061ab7df55e665ab89932b}\label{namespacetables_acfce212d9f061ab7df55e665ab89932b}} 
+void {\bfseries plot\+\_\+table} (table\+\_\+data)
 \end{DoxyCompactItemize}
 
 
@@ -46,11 +46,11 @@ void {\bfseries plot\+\_\+table} (T\+A\+B\+L\+E\+D\+A\+TA)
 Implementacion de tablas 2D con vectores, valores en int32\+\_\+t. 
 
 \subsection{Function Documentation}
-\mbox{\Hypertarget{namespacetables_a8a1bab94b65aabe4f2b226cdac58b41f}\label{namespacetables_a8a1bab94b65aabe4f2b226cdac58b41f}} 
+\mbox{\Hypertarget{namespacetables_a27170b1a1036e75516b990dc97ea5835}\label{namespacetables_a27170b1a1036e75516b990dc97ea5835}} 
 \index{tables@{tables}!read\+\_\+all@{read\+\_\+all}}
 \index{read\+\_\+all@{read\+\_\+all}!tables@{tables}}
 \subsubsection{\texorpdfstring{read\+\_\+all()}{read\_all()}}
-{\footnotesize\ttfamily T\+A\+B\+L\+E\+D\+A\+TA tables\+::read\+\_\+all (\begin{DoxyParamCaption}\item[{\hyperlink{structtable__ref}{table\+\_\+ref}}]{table }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily table\+\_\+data tables\+::read\+\_\+all (\begin{DoxyParamCaption}\item[{\hyperlink{structtable__ref}{table\+\_\+ref}}]{table }\end{DoxyParamCaption})}
 
 
 

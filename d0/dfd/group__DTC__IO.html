@@ -112,30 +112,99 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gac9b1c1ae7ede810de0c3e6f66ab4c438"><td class="memItemLeft" align="right" valign="top"><a id="gac9b1c1ae7ede810de0c3e6f66ab4c438"></a>
-std::vector&lt; std::vector&lt; uint8_t &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_all_dtc</b> ()</td></tr>
-<tr class="separator:gac9b1c1ae7ede810de0c3e6f66ab4c438"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga704a3c4e7739c7aac25a80794996e312"><td class="memItemLeft" align="right" valign="top"><a id="ga704a3c4e7739c7aac25a80794996e312"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>write_dtc</b> (uint8_t *)</td></tr>
-<tr class="separator:ga704a3c4e7739c7aac25a80794996e312"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac91421ad57034471637dc291ba1e559a"><td class="memItemLeft" align="right" valign="top"><a id="gac91421ad57034471637dc291ba1e559a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>read_dtc</b> (uint8_t, uint8_t *)</td></tr>
-<tr class="separator:gac91421ad57034471637dc291ba1e559a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad2cadce35748d695d07e80b4efbf1831"><td class="memItemLeft" align="right" valign="top"><a id="gad2cadce35748d695d07e80b4efbf1831"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>write_dtc</b> (uint8_t *, uint8_t)</td></tr>
-<tr class="separator:gad2cadce35748d695d07e80b4efbf1831"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab691651197bbc8afd5b5beece67a868"><td class="memItemLeft" align="right" valign="top">std::vector&lt; dtc_data &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dfd/group__DTC__IO.html#gaab691651197bbc8afd5b5beece67a868">get_all_dtc</a> ()</td></tr>
+<tr class="memdesc:gaab691651197bbc8afd5b5beece67a868"><td class="mdescLeft">&#160;</td><td class="mdescRight">reads the external flash and gets all dtcs  <a href="#gaab691651197bbc8afd5b5beece67a868">More...</a><br /></td></tr>
+<tr class="separator:gaab691651197bbc8afd5b5beece67a868"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabc6581eb5f29d4e8aa0e9759368a12b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dfd/group__DTC__IO.html#gabc6581eb5f29d4e8aa0e9759368a12b8">write_dtc</a> (dtc_data)</td></tr>
+<tr class="memdesc:gabc6581eb5f29d4e8aa0e9759368a12b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">write dtc to external flash  <a href="#gabc6581eb5f29d4e8aa0e9759368a12b8">More...</a><br /></td></tr>
+<tr class="separator:gabc6581eb5f29d4e8aa0e9759368a12b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga37ca84720c4efbecb79dbbc84e088271"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dfd/group__DTC__IO.html#ga37ca84720c4efbecb79dbbc84e088271">search_dtc</a> (dtc_data)</td></tr>
+<tr class="memdesc:ga37ca84720c4efbecb79dbbc84e088271"><td class="mdescLeft">&#160;</td><td class="mdescRight">search in flash for one dtc code  <a href="#ga37ca84720c4efbecb79dbbc84e088271">More...</a><br /></td></tr>
+<tr class="separator:ga37ca84720c4efbecb79dbbc84e088271"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>almacenaje/borrado de DTC's en memoria </p>
 <p>DTC Example: <br />
 primer byte en primer pagina podria indicar si hay o no dtcs grabados <br />
 segundo byte cantidad total de DTC guardados <br />
-P0XXX =&gt; 6 char =&gt; 6 bytes (2 byte adicional para indicar si es temporal | permanente / cantidad?) <br />
-P0XXX{5 veces}{1 temporal} <br />
-max dtc on memory =&gt; 50 =&gt; 200 bytes <br />
+</p><div class="fragment"><div class="line">P0XXX =&gt; 6 <span class="keywordtype">char</span> =&gt; 6 bytes</div><div class="line">(2 byte adicional para indicar si es temporal | permanente / cantidad?)</div><div class="line">P0XXX{5 veces}{1 temporal}</div></div><!-- fragment --><p> max dtc on memory =&gt; 50 =&gt; 200 bytes <br />
 memory init addr: 0x1000 <br />
 memory end addr: 0x1FFF <br />
 </p>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="gaab691651197bbc8afd5b5beece67a868"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab691651197bbc8afd5b5beece67a868">&#9670;&nbsp;</a></span>get_all_dtc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;dtc_data&gt; get_all_dtc </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>reads the external flash and gets all dtcs </p>
+<dl class="section return"><dt>Returns</dt><dd>vector empty or with dtc's codes </dd></dl>
+
+</div>
+</div>
+<a id="ga37ca84720c4efbecb79dbbc84e088271"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga37ca84720c4efbecb79dbbc84e088271">&#9670;&nbsp;</a></span>search_dtc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool search_dtc </td>
+          <td>(</td>
+          <td class="paramtype">dtc_data&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>search in flash for one dtc code </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dtc_data</td><td>dtc to search </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool with search result </dd></dl>
+
+</div>
+</div>
+<a id="gabc6581eb5f29d4e8aa0e9759368a12b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabc6581eb5f29d4e8aa0e9759368a12b8">&#9670;&nbsp;</a></span>write_dtc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void write_dtc </td>
+          <td>(</td>
+          <td class="paramtype">dtc_data&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>write dtc to external flash </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dtc_code</td><td>dtc_data value with dtc number </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -11,7 +11,12 @@ Namespace con I/O hacia la memoria S\+PI externa.
 \hyperlink{group__DTC__IO}{D\+T\+C\+\_\+\+IO}
 \begin{DoxyCompactList}\small\item\em almacenaje/borrado de D\+TC\textquotesingle{}s en memoria \end{DoxyCompactList}\item 
 \hyperlink{group__Immobilizer}{Immobilizer}
-\begin{DoxyCompactList}\small\item\em Implementacion de imobilizador primitivo, solo en casos de fallas criticas. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Implementacion de imobilizador primitivo, solo en casos de fallas criticas 
+
+ahre porque el suspenso en el nombre ~\newline
+primer byte en primer pagina para indicar parada de emergencia (para no arrancar el motor post reinicio de la misma), ~\newline
+ 6 bytes siguientes para el D\+TC asociado\+: P0\+X\+XX =$>$ 6 char =$>$ 6 bytes se reserva 1/2 bloque, para posterior ~\newline
+ uso como inmobilizador posta memory init addr\+: 0x2000 memory end addr\+: 0x2420. \end{DoxyCompactList}\item 
 \hyperlink{group__Tables}{Tables}
 \begin{DoxyCompactList}\small\item\em Implementacion de tablas 2D con vectores, valores en int32\+\_\+t. \end{DoxyCompactList}\end{DoxyCompactItemize}
 

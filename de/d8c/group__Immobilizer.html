@@ -89,47 +89,40 @@ $(document).ready(function(){initNavTree('de/d8c/group__Immobilizer.html','../..
 </div><!--header-->
 <div class="contents">
 
-<p>Implementacion de imobilizador primitivo, solo en casos de fallas criticas.  
+<p>Implementacion de imobilizador primitivo, solo en casos de fallas criticas ahre porque el suspenso en el nombre <br />
+primer byte en primer pagina para indicar parada de emergencia (para no arrancar el motor post reinicio de la misma), <br />
+ 6 bytes siguientes para el DTC asociado: P0XXX =&gt; 6 char =&gt; 6 bytes se reserva 1/2 bloque, para posterior <br />
+ uso como inmobilizador posta memory init addr: 0x2000 memory end addr: 0x2420.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga2e4b52d4dfc434276aa96faaca8372b9"><td class="memItemLeft" align="right" valign="top"><a id="ga2e4b52d4dfc434276aa96faaca8372b9"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EMERGENCY_FLAG_ADDR</b>&#160;&#160;&#160;0x1000</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d8c/group__Immobilizer.html#ga2e4b52d4dfc434276aa96faaca8372b9">EMERGENCY_FLAG_ADDR</a>&#160;&#160;&#160;0x1000</td></tr>
+<tr class="memdesc:ga2e4b52d4dfc434276aa96faaca8372b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">dir en memoria donde se ubica el flag de emergencia (1 bytes) <br /></td></tr>
 <tr class="separator:ga2e4b52d4dfc434276aa96faaca8372b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga683a9087887bf34cde108cca639a0571"><td class="memItemLeft" align="right" valign="top"><a id="ga683a9087887bf34cde108cca639a0571"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EMERGENCY_DTC_ADDR</b>&#160;&#160;&#160;0x1001</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d8c/group__Immobilizer.html#ga683a9087887bf34cde108cca639a0571">EMERGENCY_DTC_ADDR</a>&#160;&#160;&#160;0x1001</td></tr>
+<tr class="memdesc:ga683a9087887bf34cde108cca639a0571"><td class="mdescLeft">&#160;</td><td class="mdescRight">dir en memoria donde se ubica el dtc que disparo la emergencia (6 bytes) <br /></td></tr>
 <tr class="separator:ga683a9087887bf34cde108cca639a0571"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gadf0449a4f1aad1229c667f356ebadadc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d8c/group__Immobilizer.html#gadf0449a4f1aad1229c667f356ebadadc">can_turn_on</a> ()</td></tr>
+<tr class="memitem:gadf0449a4f1aad1229c667f356ebadadc"><td class="memItemLeft" align="right" valign="top"><a id="gadf0449a4f1aad1229c667f356ebadadc"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d8c/group__Immobilizer.html#gadf0449a4f1aad1229c667f356ebadadc">can_turn_on</a> ()</td></tr>
+<tr class="memdesc:gadf0449a4f1aad1229c667f356ebadadc"><td class="mdescLeft">&#160;</td><td class="mdescRight">lee la memoria y revisa por un DTC Critico que impida el arranque <br /></td></tr>
 <tr class="separator:gadf0449a4f1aad1229c667f356ebadadc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga56f17da99421bda28fd07b34b85c38f4"><td class="memItemLeft" align="right" valign="top"><a id="ga56f17da99421bda28fd07b34b85c38f4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>write_emergency_stop</b> (uint8_t *)</td></tr>
-<tr class="separator:ga56f17da99421bda28fd07b34b85c38f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab56ecb07b9fac9a85ea8dc451f3bb612"><td class="memItemLeft" align="right" valign="top"><a id="gab56ecb07b9fac9a85ea8dc451f3bb612"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d8c/group__Immobilizer.html#gab56ecb07b9fac9a85ea8dc451f3bb612">write_emergency_stop</a> (dtc_data)</td></tr>
+<tr class="memdesc:gab56ecb07b9fac9a85ea8dc451f3bb612"><td class="mdescLeft">&#160;</td><td class="mdescRight">graba en la flash un dtc critico que impide el arranque en el proximo ciclo <br /></td></tr>
+<tr class="separator:gab56ecb07b9fac9a85ea8dc451f3bb612"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Implementacion de imobilizador primitivo, solo en casos de fallas criticas. </p>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="gadf0449a4f1aad1229c667f356ebadadc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gadf0449a4f1aad1229c667f356ebadadc">&#9670;&nbsp;</a></span>can_turn_on()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool can_turn_on </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>I N M O B I L I Z E R : ahre porque el suspenso en el nombre primer byte en primer pagina para indicar parada de emergencia (para no arrancar el motor post reinicio de la misma), 6 bytes siguientes para el DTC asociado: P0XXX =&gt; 6 char =&gt; 6 bytes se reserva 1/2 bloque, para posterior uso como inmobilizador posta memory init addr: 0x2000 memory end addr: 0x2420 </p>
-
-</div>
-</div>
+<p>Implementacion de imobilizador primitivo, solo en casos de fallas criticas </p>
+<p>ahre porque el suspenso en el nombre <br />
+primer byte en primer pagina para indicar parada de emergencia (para no arrancar el motor post reinicio de la misma), <br />
+ 6 bytes siguientes para el DTC asociado: P0XXX =&gt; 6 char =&gt; 6 bytes se reserva 1/2 bloque, para posterior <br />
+ uso como inmobilizador posta memory init addr: 0x2000 memory end addr: 0x2420. </p>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

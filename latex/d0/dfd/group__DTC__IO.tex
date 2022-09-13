@@ -26,18 +26,12 @@ almacenaje/borrado de D\+TC\textquotesingle{}s en memoria
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{group__DTC__IO_gac9b1c1ae7ede810de0c3e6f66ab4c438}\label{group__DTC__IO_gac9b1c1ae7ede810de0c3e6f66ab4c438}} 
-std\+::vector$<$ std\+::vector$<$ uint8\+\_\+t $>$ $>$ {\bfseries get\+\_\+all\+\_\+dtc} ()
-\item 
-\mbox{\Hypertarget{group__DTC__IO_ga704a3c4e7739c7aac25a80794996e312}\label{group__DTC__IO_ga704a3c4e7739c7aac25a80794996e312}} 
-void {\bfseries write\+\_\+dtc} (uint8\+\_\+t $\ast$)
-\item 
-\mbox{\Hypertarget{group__DTC__IO_gac91421ad57034471637dc291ba1e559a}\label{group__DTC__IO_gac91421ad57034471637dc291ba1e559a}} 
-void {\bfseries read\+\_\+dtc} (uint8\+\_\+t, uint8\+\_\+t $\ast$)
-\item 
-\mbox{\Hypertarget{group__DTC__IO_gad2cadce35748d695d07e80b4efbf1831}\label{group__DTC__IO_gad2cadce35748d695d07e80b4efbf1831}} 
-void {\bfseries write\+\_\+dtc} (uint8\+\_\+t $\ast$, uint8\+\_\+t)
-\end{DoxyCompactItemize}
+std\+::vector$<$ dtc\+\_\+data $>$ \hyperlink{group__DTC__IO_gaab691651197bbc8afd5b5beece67a868}{get\+\_\+all\+\_\+dtc} ()
+\begin{DoxyCompactList}\small\item\em reads the external flash and gets all dtcs \end{DoxyCompactList}\item 
+void \hyperlink{group__DTC__IO_gabc6581eb5f29d4e8aa0e9759368a12b8}{write\+\_\+dtc} (dtc\+\_\+data)
+\begin{DoxyCompactList}\small\item\em write dtc to external flash \end{DoxyCompactList}\item 
+bool \hyperlink{group__DTC__IO_ga37ca84720c4efbecb79dbbc84e088271}{search\+\_\+dtc} (dtc\+\_\+data)
+\begin{DoxyCompactList}\small\item\em search in flash for one dtc code \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -46,8 +40,61 @@ almacenaje/borrado de D\+TC\textquotesingle{}s en memoria
 D\+TC Example\+: ~\newline
 primer byte en primer pagina podria indicar si hay o no dtcs grabados ~\newline
 segundo byte cantidad total de D\+TC guardados ~\newline
-P0\+X\+XX =$>$ 6 char =$>$ 6 bytes (2 byte adicional para indicar si es temporal $\vert$ permanente / cantidad?) ~\newline
-P0\+X\+XX\{5 veces\}\{1 temporal\} ~\newline
-max dtc on memory =$>$ 50 =$>$ 200 bytes ~\newline
+
+\begin{DoxyCode}
+P0XXX => 6 \textcolor{keywordtype}{char} => 6 bytes
+(2 byte adicional para indicar si es temporal | permanente / cantidad?)
+P0XXX\{5 veces\}\{1 temporal\}
+\end{DoxyCode}
+ max dtc on memory =$>$ 50 =$>$ 200 bytes ~\newline
 memory init addr\+: 0x1000 ~\newline
 memory end addr\+: 0x1\+F\+FF ~\newline
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{group__DTC__IO_gaab691651197bbc8afd5b5beece67a868}\label{group__DTC__IO_gaab691651197bbc8afd5b5beece67a868}} 
+\index{D\+T\+C\+\_\+\+IO@{D\+T\+C\+\_\+\+IO}!get\+\_\+all\+\_\+dtc@{get\+\_\+all\+\_\+dtc}}
+\index{get\+\_\+all\+\_\+dtc@{get\+\_\+all\+\_\+dtc}!D\+T\+C\+\_\+\+IO@{D\+T\+C\+\_\+\+IO}}
+\subsubsection{\texorpdfstring{get\+\_\+all\+\_\+dtc()}{get\_all\_dtc()}}
+{\footnotesize\ttfamily std\+::vector$<$dtc\+\_\+data$>$ get\+\_\+all\+\_\+dtc (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+reads the external flash and gets all dtcs 
+
+\begin{DoxyReturn}{Returns}
+vector empty or with dtc\textquotesingle{}s codes 
+\end{DoxyReturn}
+\mbox{\Hypertarget{group__DTC__IO_ga37ca84720c4efbecb79dbbc84e088271}\label{group__DTC__IO_ga37ca84720c4efbecb79dbbc84e088271}} 
+\index{D\+T\+C\+\_\+\+IO@{D\+T\+C\+\_\+\+IO}!search\+\_\+dtc@{search\+\_\+dtc}}
+\index{search\+\_\+dtc@{search\+\_\+dtc}!D\+T\+C\+\_\+\+IO@{D\+T\+C\+\_\+\+IO}}
+\subsubsection{\texorpdfstring{search\+\_\+dtc()}{search\_dtc()}}
+{\footnotesize\ttfamily bool search\+\_\+dtc (\begin{DoxyParamCaption}\item[{dtc\+\_\+data}]{ }\end{DoxyParamCaption})}
+
+
+
+search in flash for one dtc code 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dtc\+\_\+data} & dtc to search \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool with search result 
+\end{DoxyReturn}
+\mbox{\Hypertarget{group__DTC__IO_gabc6581eb5f29d4e8aa0e9759368a12b8}\label{group__DTC__IO_gabc6581eb5f29d4e8aa0e9759368a12b8}} 
+\index{D\+T\+C\+\_\+\+IO@{D\+T\+C\+\_\+\+IO}!write\+\_\+dtc@{write\+\_\+dtc}}
+\index{write\+\_\+dtc@{write\+\_\+dtc}!D\+T\+C\+\_\+\+IO@{D\+T\+C\+\_\+\+IO}}
+\subsubsection{\texorpdfstring{write\+\_\+dtc()}{write\_dtc()}}
+{\footnotesize\ttfamily void write\+\_\+dtc (\begin{DoxyParamCaption}\item[{dtc\+\_\+data}]{ }\end{DoxyParamCaption})}
+
+
+
+write dtc to external flash 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dtc\+\_\+code} & dtc\+\_\+data value with dtc number \\
+\hline
+\end{DoxyParams}

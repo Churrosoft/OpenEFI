@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenEFI: /home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h File Reference</title>
+<title>OpenEFI: definitions</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('d2/df2/obd2__status_8h.html','../../');});
+$(document).ready(function(){initNavTree('dc/de2/group__OBD__STATUS.html','../../');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -84,48 +84,53 @@ $(document).ready(function(){initNavTree('d2/df2/obd2__status_8h.html','../../')
   <div class="summary">
 <a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
-<div class="title">obd2_status.h File Reference</div>  </div>
+<div class="title">definitions</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><a href="../../d2/df2/obd2__status_8h_source.html">Go to the source code of this file.</a></p>
+<p>OBD Response Status from ISO15031-5 page 35 <br />
+format: {Response Service Identifier} {Service Identifier} {Response Code}.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a79b0efdb947b5a43c04547709a3ed97d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/df2/obd2__status_8h.html#a79b0efdb947b5a43c04547709a3ed97d">generalReject</a>&#160;&#160;&#160;0x10</td></tr>
-<tr class="separator:a79b0efdb947b5a43c04547709a3ed97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a656da95f9680f14093be09a52ab6752f"><td class="memItemLeft" align="right" valign="top"><a id="a656da95f9680f14093be09a52ab6752f"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>GR</b>&#160;&#160;&#160;<a class="el" href="../../d2/df2/obd2__status_8h.html#a79b0efdb947b5a43c04547709a3ed97d">generalReject</a></td></tr>
-<tr class="separator:a656da95f9680f14093be09a52ab6752f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bf8ad3c3e7062832dcd4ebe32728935"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/df2/obd2__status_8h.html#a1bf8ad3c3e7062832dcd4ebe32728935">serviceNotSupported</a>&#160;&#160;&#160;0x11</td></tr>
-<tr class="separator:a1bf8ad3c3e7062832dcd4ebe32728935"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaed74ffd60140d8776b5dca5dda18ea2"><td class="memItemLeft" align="right" valign="top"><a id="aaed74ffd60140d8776b5dca5dda18ea2"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>SNS</b>&#160;&#160;&#160;<a class="el" href="../../d2/df2/obd2__status_8h.html#a1bf8ad3c3e7062832dcd4ebe32728935">serviceNotSupported</a></td></tr>
-<tr class="separator:aaed74ffd60140d8776b5dca5dda18ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a141faa9667e91c77460104aa475b4514"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/df2/obd2__status_8h.html#a141faa9667e91c77460104aa475b4514">subFunctionNotSupported</a>&#160;&#160;&#160;0x11</td></tr>
-<tr class="separator:a141faa9667e91c77460104aa475b4514"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac35ea3f2e614be5b0f5eb3fabb78d3a6"><td class="memItemLeft" align="right" valign="top"><a id="ac35ea3f2e614be5b0f5eb3fabb78d3a6"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>SFNSIF</b>&#160;&#160;&#160;<a class="el" href="../../d2/df2/obd2__status_8h.html#a141faa9667e91c77460104aa475b4514">subFunctionNotSupported</a></td></tr>
-<tr class="separator:ac35ea3f2e614be5b0f5eb3fabb78d3a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d77101c239804b1292d038157a4ffe2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/df2/obd2__status_8h.html#a6d77101c239804b1292d038157a4ffe2">busyRepeatRequest</a>&#160;&#160;&#160;0x21</td></tr>
-<tr class="separator:a6d77101c239804b1292d038157a4ffe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08c7f21c933165cdc17132746ad462e7"><td class="memItemLeft" align="right" valign="top"><a id="a08c7f21c933165cdc17132746ad462e7"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>BRR</b>&#160;&#160;&#160;<a class="el" href="../../d2/df2/obd2__status_8h.html#a6d77101c239804b1292d038157a4ffe2">busyRepeatRequest</a></td></tr>
-<tr class="separator:a08c7f21c933165cdc17132746ad462e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b9b5df5f8a65dc5d1b7f01da28eebc6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/df2/obd2__status_8h.html#a0b9b5df5f8a65dc5d1b7f01da28eebc6">conditionsNotCorrect</a>&#160;&#160;&#160;0x22</td></tr>
-<tr class="separator:a0b9b5df5f8a65dc5d1b7f01da28eebc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00c5bb426ca2a8570da70cf19132ed5d"><td class="memItemLeft" align="right" valign="top"><a id="a00c5bb426ca2a8570da70cf19132ed5d"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>CNCORSE</b>&#160;&#160;&#160;<a class="el" href="../../d2/df2/obd2__status_8h.html#a0b9b5df5f8a65dc5d1b7f01da28eebc6">conditionsNotCorrect</a></td></tr>
-<tr class="separator:a00c5bb426ca2a8570da70cf19132ed5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9e616e9eef0db36692dbabb78958b37"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/df2/obd2__status_8h.html#ac9e616e9eef0db36692dbabb78958b37">requestCorrectResponsePending</a>&#160;&#160;&#160;0x78</td></tr>
-<tr class="separator:ac9e616e9eef0db36692dbabb78958b37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c93a6e9425e995822ca7aeb04050981"><td class="memItemLeft" align="right" valign="top"><a id="a9c93a6e9425e995822ca7aeb04050981"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RCRRP</b>&#160;&#160;&#160;<a class="el" href="../../d2/df2/obd2__status_8h.html#ac9e616e9eef0db36692dbabb78958b37">requestCorrectResponsePending</a></td></tr>
-<tr class="separator:a9c93a6e9425e995822ca7aeb04050981"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga79b0efdb947b5a43c04547709a3ed97d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga79b0efdb947b5a43c04547709a3ed97d">generalReject</a>&#160;&#160;&#160;0x10</td></tr>
+<tr class="separator:ga79b0efdb947b5a43c04547709a3ed97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga656da95f9680f14093be09a52ab6752f"><td class="memItemLeft" align="right" valign="top"><a id="ga656da95f9680f14093be09a52ab6752f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>GR</b>&#160;&#160;&#160;<a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga79b0efdb947b5a43c04547709a3ed97d">generalReject</a></td></tr>
+<tr class="separator:ga656da95f9680f14093be09a52ab6752f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bf8ad3c3e7062832dcd4ebe32728935"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga1bf8ad3c3e7062832dcd4ebe32728935">serviceNotSupported</a>&#160;&#160;&#160;0x11</td></tr>
+<tr class="separator:ga1bf8ad3c3e7062832dcd4ebe32728935"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaed74ffd60140d8776b5dca5dda18ea2"><td class="memItemLeft" align="right" valign="top"><a id="gaaed74ffd60140d8776b5dca5dda18ea2"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SNS</b>&#160;&#160;&#160;<a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga1bf8ad3c3e7062832dcd4ebe32728935">serviceNotSupported</a></td></tr>
+<tr class="separator:gaaed74ffd60140d8776b5dca5dda18ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga141faa9667e91c77460104aa475b4514"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga141faa9667e91c77460104aa475b4514">subFunctionNotSupported</a>&#160;&#160;&#160;0x11</td></tr>
+<tr class="separator:ga141faa9667e91c77460104aa475b4514"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac35ea3f2e614be5b0f5eb3fabb78d3a6"><td class="memItemLeft" align="right" valign="top"><a id="gac35ea3f2e614be5b0f5eb3fabb78d3a6"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SFNSIF</b>&#160;&#160;&#160;<a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga141faa9667e91c77460104aa475b4514">subFunctionNotSupported</a></td></tr>
+<tr class="separator:gac35ea3f2e614be5b0f5eb3fabb78d3a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d77101c239804b1292d038157a4ffe2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga6d77101c239804b1292d038157a4ffe2">busyRepeatRequest</a>&#160;&#160;&#160;0x21</td></tr>
+<tr class="separator:ga6d77101c239804b1292d038157a4ffe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga08c7f21c933165cdc17132746ad462e7"><td class="memItemLeft" align="right" valign="top"><a id="ga08c7f21c933165cdc17132746ad462e7"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>BRR</b>&#160;&#160;&#160;<a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga6d77101c239804b1292d038157a4ffe2">busyRepeatRequest</a></td></tr>
+<tr class="separator:ga08c7f21c933165cdc17132746ad462e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0b9b5df5f8a65dc5d1b7f01da28eebc6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga0b9b5df5f8a65dc5d1b7f01da28eebc6">conditionsNotCorrect</a>&#160;&#160;&#160;0x22</td></tr>
+<tr class="separator:ga0b9b5df5f8a65dc5d1b7f01da28eebc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga00c5bb426ca2a8570da70cf19132ed5d"><td class="memItemLeft" align="right" valign="top"><a id="ga00c5bb426ca2a8570da70cf19132ed5d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CNCORSE</b>&#160;&#160;&#160;<a class="el" href="../../dc/de2/group__OBD__STATUS.html#ga0b9b5df5f8a65dc5d1b7f01da28eebc6">conditionsNotCorrect</a></td></tr>
+<tr class="separator:ga00c5bb426ca2a8570da70cf19132ed5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac9e616e9eef0db36692dbabb78958b37"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de2/group__OBD__STATUS.html#gac9e616e9eef0db36692dbabb78958b37">requestCorrectResponsePending</a>&#160;&#160;&#160;0x78</td></tr>
+<tr class="separator:gac9e616e9eef0db36692dbabb78958b37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9c93a6e9425e995822ca7aeb04050981"><td class="memItemLeft" align="right" valign="top"><a id="ga9c93a6e9425e995822ca7aeb04050981"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>RCRRP</b>&#160;&#160;&#160;<a class="el" href="../../dc/de2/group__OBD__STATUS.html#gac9e616e9eef0db36692dbabb78958b37">requestCorrectResponsePending</a></td></tr>
+<tr class="separator:ga9c93a6e9425e995822ca7aeb04050981"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>OBD Response Status from ISO15031-5 page 35 <br />
+format: {Response Service Identifier} {Service Identifier} {Response Code}. </p>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a6d77101c239804b1292d038157a4ffe2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d77101c239804b1292d038157a4ffe2">&#9670;&nbsp;</a></span>busyRepeatRequest</h2>
+<a id="ga6d77101c239804b1292d038157a4ffe2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6d77101c239804b1292d038157a4ffe2">&#9670;&nbsp;</a></span>busyRepeatRequest</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -143,8 +148,8 @@ busy goes brrrrrrrrrr </dd></dl>
 
 </div>
 </div>
-<a id="a0b9b5df5f8a65dc5d1b7f01da28eebc6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b9b5df5f8a65dc5d1b7f01da28eebc6">&#9670;&nbsp;</a></span>conditionsNotCorrect</h2>
+<a id="ga0b9b5df5f8a65dc5d1b7f01da28eebc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0b9b5df5f8a65dc5d1b7f01da28eebc6">&#9670;&nbsp;</a></span>conditionsNotCorrect</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -158,8 +163,8 @@ busy goes brrrrrrrrrr </dd></dl>
 
 </div>
 </div>
-<a id="a79b0efdb947b5a43c04547709a3ed97d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79b0efdb947b5a43c04547709a3ed97d">&#9670;&nbsp;</a></span>generalReject</h2>
+<a id="ga79b0efdb947b5a43c04547709a3ed97d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga79b0efdb947b5a43c04547709a3ed97d">&#9670;&nbsp;</a></span>generalReject</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -173,8 +178,8 @@ busy goes brrrrrrrrrr </dd></dl>
 
 </div>
 </div>
-<a id="ac9e616e9eef0db36692dbabb78958b37"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9e616e9eef0db36692dbabb78958b37">&#9670;&nbsp;</a></span>requestCorrectResponsePending</h2>
+<a id="gac9e616e9eef0db36692dbabb78958b37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac9e616e9eef0db36692dbabb78958b37">&#9670;&nbsp;</a></span>requestCorrectResponsePending</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,8 +193,8 @@ busy goes brrrrrrrrrr </dd></dl>
 
 </div>
 </div>
-<a id="a1bf8ad3c3e7062832dcd4ebe32728935"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1bf8ad3c3e7062832dcd4ebe32728935">&#9670;&nbsp;</a></span>serviceNotSupported</h2>
+<a id="ga1bf8ad3c3e7062832dcd4ebe32728935"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1bf8ad3c3e7062832dcd4ebe32728935">&#9670;&nbsp;</a></span>serviceNotSupported</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -203,8 +208,8 @@ busy goes brrrrrrrrrr </dd></dl>
 
 </div>
 </div>
-<a id="a141faa9667e91c77460104aa475b4514"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a141faa9667e91c77460104aa475b4514">&#9670;&nbsp;</a></span>subFunctionNotSupported</h2>
+<a id="ga141faa9667e91c77460104aa475b4514"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga141faa9667e91c77460104aa475b4514">&#9670;&nbsp;</a></span>subFunctionNotSupported</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -223,7 +228,6 @@ busy goes brrrrrrrrrr </dd></dl>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_413f4e031a85da0d68269c6fd2f76e1c.html">Src</a></li><li class="navelem"><a class="el" href="../../dir_d6f51403d2915004c6405f8e0aa708a4.html">can</a></li><li class="navelem"><a class="el" href="../../dir_f3d25f1fb59c067e192654c1fffd77fc.html">obd2</a></li><li class="navelem"><a class="el" href="../../d2/df2/obd2__status_8h.html">obd2_status.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.13 </li>

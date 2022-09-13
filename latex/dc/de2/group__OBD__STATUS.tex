@@ -1,0 +1,110 @@
+\hypertarget{group__OBD__STATUS}{}\section{definitions}
+\label{group__OBD__STATUS}\index{definitions@{definitions}}
+
+
+O\+BD Response Status from I\+S\+O15031-\/5 page 35 ~\newline
+format\+: \{Response Service Identifier\} \{Service Identifier\} \{Response Code\}.  
+
+
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__OBD__STATUS_ga79b0efdb947b5a43c04547709a3ed97d}{general\+Reject}~0x10
+\item 
+\mbox{\Hypertarget{group__OBD__STATUS_ga656da95f9680f14093be09a52ab6752f}\label{group__OBD__STATUS_ga656da95f9680f14093be09a52ab6752f}} 
+\#define {\bfseries GR}~\hyperlink{group__OBD__STATUS_ga79b0efdb947b5a43c04547709a3ed97d}{general\+Reject}
+\item 
+\#define \hyperlink{group__OBD__STATUS_ga1bf8ad3c3e7062832dcd4ebe32728935}{service\+Not\+Supported}~0x11
+\item 
+\mbox{\Hypertarget{group__OBD__STATUS_gaaed74ffd60140d8776b5dca5dda18ea2}\label{group__OBD__STATUS_gaaed74ffd60140d8776b5dca5dda18ea2}} 
+\#define {\bfseries S\+NS}~\hyperlink{group__OBD__STATUS_ga1bf8ad3c3e7062832dcd4ebe32728935}{service\+Not\+Supported}
+\item 
+\#define \hyperlink{group__OBD__STATUS_ga141faa9667e91c77460104aa475b4514}{sub\+Function\+Not\+Supported}~0x11
+\item 
+\mbox{\Hypertarget{group__OBD__STATUS_gac35ea3f2e614be5b0f5eb3fabb78d3a6}\label{group__OBD__STATUS_gac35ea3f2e614be5b0f5eb3fabb78d3a6}} 
+\#define {\bfseries S\+F\+N\+S\+IF}~\hyperlink{group__OBD__STATUS_ga141faa9667e91c77460104aa475b4514}{sub\+Function\+Not\+Supported}
+\item 
+\#define \hyperlink{group__OBD__STATUS_ga6d77101c239804b1292d038157a4ffe2}{busy\+Repeat\+Request}~0x21
+\item 
+\mbox{\Hypertarget{group__OBD__STATUS_ga08c7f21c933165cdc17132746ad462e7}\label{group__OBD__STATUS_ga08c7f21c933165cdc17132746ad462e7}} 
+\#define {\bfseries B\+RR}~\hyperlink{group__OBD__STATUS_ga6d77101c239804b1292d038157a4ffe2}{busy\+Repeat\+Request}
+\item 
+\#define \hyperlink{group__OBD__STATUS_ga0b9b5df5f8a65dc5d1b7f01da28eebc6}{conditions\+Not\+Correct}~0x22
+\item 
+\mbox{\Hypertarget{group__OBD__STATUS_ga00c5bb426ca2a8570da70cf19132ed5d}\label{group__OBD__STATUS_ga00c5bb426ca2a8570da70cf19132ed5d}} 
+\#define {\bfseries C\+N\+C\+O\+R\+SE}~\hyperlink{group__OBD__STATUS_ga0b9b5df5f8a65dc5d1b7f01da28eebc6}{conditions\+Not\+Correct}
+\item 
+\#define \hyperlink{group__OBD__STATUS_gac9e616e9eef0db36692dbabb78958b37}{request\+Correct\+Response\+Pending}~0x78
+\item 
+\mbox{\Hypertarget{group__OBD__STATUS_ga9c93a6e9425e995822ca7aeb04050981}\label{group__OBD__STATUS_ga9c93a6e9425e995822ca7aeb04050981}} 
+\#define {\bfseries R\+C\+R\+RP}~\hyperlink{group__OBD__STATUS_gac9e616e9eef0db36692dbabb78958b37}{request\+Correct\+Response\+Pending}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+O\+BD Response Status from I\+S\+O15031-\/5 page 35 ~\newline
+format\+: \{Response Service Identifier\} \{Service Identifier\} \{Response Code\}. 
+
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group__OBD__STATUS_ga6d77101c239804b1292d038157a4ffe2}\label{group__OBD__STATUS_ga6d77101c239804b1292d038157a4ffe2}} 
+\index{definitions@{definitions}!busy\+Repeat\+Request@{busy\+Repeat\+Request}}
+\index{busy\+Repeat\+Request@{busy\+Repeat\+Request}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{busy\+Repeat\+Request}{busyRepeatRequest}}
+{\footnotesize\ttfamily \#define busy\+Repeat\+Request~0x21}
+
+This response code indicates that the server (E\+CU) is temporarily too busy to perform the requested operation. \begin{DoxySeeAlso}{See also}
+also knows as B\+RR 
+\end{DoxySeeAlso}
+\begin{DoxyNote}{Note}
+If the server (E\+CU) is able to perform the diagnostic task but needs additional time to finish the task and prepares the response message, ~\newline
+ the negative response message with response code \$78 are used instead of \$21.
+
+busy goes brrrrrrrrrr 
+\end{DoxyNote}
+\mbox{\Hypertarget{group__OBD__STATUS_ga0b9b5df5f8a65dc5d1b7f01da28eebc6}\label{group__OBD__STATUS_ga0b9b5df5f8a65dc5d1b7f01da28eebc6}} 
+\index{definitions@{definitions}!conditions\+Not\+Correct@{conditions\+Not\+Correct}}
+\index{conditions\+Not\+Correct@{conditions\+Not\+Correct}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{conditions\+Not\+Correct}{conditionsNotCorrect}}
+{\footnotesize\ttfamily \#define conditions\+Not\+Correct~0x22}
+
+This response code indicates that the requested action will not be taken because the server (E\+CU) prerequisite conditions are not met. This request may also occur when sequence-\/sensitive requests are issued in the wrong order. \begin{DoxySeeAlso}{See also}
+also knows as C\+N\+C\+O\+R\+SE 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{group__OBD__STATUS_ga79b0efdb947b5a43c04547709a3ed97d}\label{group__OBD__STATUS_ga79b0efdb947b5a43c04547709a3ed97d}} 
+\index{definitions@{definitions}!general\+Reject@{general\+Reject}}
+\index{general\+Reject@{general\+Reject}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{general\+Reject}{generalReject}}
+{\footnotesize\ttfamily \#define general\+Reject~0x10}
+
+This response code indicates that the service is rejected but the server (E\+CU) does not specify the reason of the rejection. \begin{DoxySeeAlso}{See also}
+also knows as GR 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{group__OBD__STATUS_gac9e616e9eef0db36692dbabb78958b37}\label{group__OBD__STATUS_gac9e616e9eef0db36692dbabb78958b37}} 
+\index{definitions@{definitions}!request\+Correct\+Response\+Pending@{request\+Correct\+Response\+Pending}}
+\index{request\+Correct\+Response\+Pending@{request\+Correct\+Response\+Pending}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{request\+Correct\+Response\+Pending}{requestCorrectResponsePending}}
+{\footnotesize\ttfamily \#define request\+Correct\+Response\+Pending~0x78}
+
+This response code indicates that the request message was received correctly, and that any parameters in the request message were valid, but the action to be performed may not be completed yet. This response code can be used to indicate that the request message was properly received and does not need to be re-\/transmitted, but the server (E\+CU) is not yet ready to receive another request \begin{DoxySeeAlso}{See also}
+also knows as R\+C\+R-\/\+RP 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{group__OBD__STATUS_ga1bf8ad3c3e7062832dcd4ebe32728935}\label{group__OBD__STATUS_ga1bf8ad3c3e7062832dcd4ebe32728935}} 
+\index{definitions@{definitions}!service\+Not\+Supported@{service\+Not\+Supported}}
+\index{service\+Not\+Supported@{service\+Not\+Supported}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{service\+Not\+Supported}{serviceNotSupported}}
+{\footnotesize\ttfamily \#define service\+Not\+Supported~0x11}
+
+This response code indicates that the requested action will not be taken because the server (E\+CU) does not support the requested service. \begin{DoxySeeAlso}{See also}
+also knows as S\+NS 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{group__OBD__STATUS_ga141faa9667e91c77460104aa475b4514}\label{group__OBD__STATUS_ga141faa9667e91c77460104aa475b4514}} 
+\index{definitions@{definitions}!sub\+Function\+Not\+Supported@{sub\+Function\+Not\+Supported}}
+\index{sub\+Function\+Not\+Supported@{sub\+Function\+Not\+Supported}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{sub\+Function\+Not\+Supported}{subFunctionNotSupported}}
+{\footnotesize\ttfamily \#define sub\+Function\+Not\+Supported~0x11}
+
+This response code indicates that the requested action will not be taken because the server (E\+CU) does not support the arguments of the request message or the format of the argument bytes do not match the prescribed format for the specified service. \begin{DoxySeeAlso}{See also}
+also knows as S\+F\+N\+S\+IF 
+\end{DoxySeeAlso}

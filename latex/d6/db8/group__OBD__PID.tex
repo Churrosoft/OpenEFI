@@ -1,0 +1,133 @@
+\hypertarget{group__OBD__PID}{}\section{definitions}
+\label{group__OBD__PID}\index{definitions@{definitions}}
+
+
+O\+BD P\+ID definitions from I\+S\+O15031-\/5 page 115 only for services \$01 $\vert$ \$02 $\vert$ \$03 $\vert$ \$04.  
+
+
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{group__OBD__PID_ga797d0d308a5ad4cc5aedc183e5d82880}\label{group__OBD__PID_ga797d0d308a5ad4cc5aedc183e5d82880}} 
+\#define \hyperlink{group__OBD__PID_ga797d0d308a5ad4cc5aedc183e5d82880}{F\+U\+E\+L\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+S\+T\+A\+T\+US}~0x03
+\begin{DoxyCompactList}\small\item\em P\+ID \$03 \char`\"{}\+Fuel system (1 $\vert$ 2) status\char`\"{}. \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_ga93772e290018e845a98cbbaeb35dcd37}{F\+S\+\_\+\+M\+O\+T\+O\+R\+\_\+\+O\+FF}~0b00000000
+\begin{DoxyCompactList}\small\item\em Motor off. \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_ga6790f8066998a98d1f3fa7697624e5aa}{F\+S\+\_\+\+O\+P\+E\+N\+\_\+\+L\+O\+OP}~0b00000001
+\begin{DoxyCompactList}\small\item\em Fuel System Open Loop. \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_ga54a7650e3e2514c88c5f47e8942b8241}{F\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+L\+O\+OP}~0b00000010
+\begin{DoxyCompactList}\small\item\em Fuel System Closed Loop. \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_ga34834380e007e3b34b93416cadfbaea4}{F\+S\+\_\+\+O\+L\+\_\+\+D\+R\+I\+VE}~0b00000100
+\begin{DoxyCompactList}\small\item\em Fuel System Open Loop (fault) \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_ga88a394c8a2d3b6adcf084f580be5edc8}{F\+S\+\_\+\+O\+L\+\_\+\+F\+A\+U\+LT}~0b00001000
+\begin{DoxyCompactList}\small\item\em Fuel System Open Loop (fault) \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_gadb99db995b29c9be0ae488905ff24a27}{F\+S\+\_\+\+C\+L\+\_\+\+F\+A\+U\+LT}~0b00010000
+\begin{DoxyCompactList}\small\item\em Fuel System Closed Loop (fault) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{group__OBD__PID_ga3b7457ec1b9a220836340424f12f291c}\label{group__OBD__PID_ga3b7457ec1b9a220836340424f12f291c}} 
+\#define \hyperlink{group__OBD__PID_ga3b7457ec1b9a220836340424f12f291c}{E\+N\+G\+I\+N\+E\+\_\+\+R\+PM}~0x0C
+\begin{DoxyCompactList}\small\item\em P\+ID \$0C \char`\"{}\+Engine R\+P\+M\char`\"{}. \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_ga9465cf992c0eb0cc35da37d83d9d3adf}{G\+E\+T\+\_\+\+P\+I\+D\+\_\+\+R\+PM}(R\+PM)~(uint16\+\_\+t)(R\+PM $\ast$ 4)
+\item 
+\mbox{\Hypertarget{group__OBD__PID_ga06b785b333f49ebb985c8b036729df06}\label{group__OBD__PID_ga06b785b333f49ebb985c8b036729df06}} 
+\#define \hyperlink{group__OBD__PID_ga06b785b333f49ebb985c8b036729df06}{O\+B\+D\+\_\+\+S\+T\+A\+N\+D\+A\+RS}~0x1C
+\begin{DoxyCompactList}\small\item\em Service 01 P\+ID 1C -\/ O\+BD standards this vehicle conforms to. \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_ga57a2ab59b925bd8531acc9cc44cb732f}{O\+B\+D\+\_\+\+S\+T\+A\+N\+D\+A\+R\+S\+\_\+\+R\+E\+S\+P\+O\+N\+SE}~21
+\item 
+\mbox{\Hypertarget{group__OBD__PID_ga39ab0421148786183e6f5a616a66d795}\label{group__OBD__PID_ga39ab0421148786183e6f5a616a66d795}} 
+\#define \hyperlink{group__OBD__PID_ga39ab0421148786183e6f5a616a66d795}{F\+U\+E\+L\+\_\+\+T\+Y\+PE}~0x51
+\begin{DoxyCompactList}\small\item\em Fuel Type Coding. \end{DoxyCompactList}\item 
+\#define \hyperlink{group__OBD__PID_ga62e9969a2ac7daeecbec01b2114ca7eb}{F\+U\+E\+L\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+P\+O\+N\+SE}~1
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+O\+BD P\+ID definitions from I\+S\+O15031-\/5 page 115 only for services \$01 $\vert$ \$02 $\vert$ \$03 $\vert$ \$04. 
+
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{group__OBD__PID_gadb99db995b29c9be0ae488905ff24a27}\label{group__OBD__PID_gadb99db995b29c9be0ae488905ff24a27}} 
+\index{definitions@{definitions}!F\+S\+\_\+\+C\+L\+\_\+\+F\+A\+U\+LT@{F\+S\+\_\+\+C\+L\+\_\+\+F\+A\+U\+LT}}
+\index{F\+S\+\_\+\+C\+L\+\_\+\+F\+A\+U\+LT@{F\+S\+\_\+\+C\+L\+\_\+\+F\+A\+U\+LT}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{F\+S\+\_\+\+C\+L\+\_\+\+F\+A\+U\+LT}{FS\_CL\_FAULT}}
+{\footnotesize\ttfamily \#define F\+S\+\_\+\+C\+L\+\_\+\+F\+A\+U\+LT~0b00010000}
+
+
+
+Fuel System Closed Loop (fault) 
+
+Open loop -\/ due to detected system fault \mbox{\Hypertarget{group__OBD__PID_ga54a7650e3e2514c88c5f47e8942b8241}\label{group__OBD__PID_ga54a7650e3e2514c88c5f47e8942b8241}} 
+\index{definitions@{definitions}!F\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+L\+O\+OP@{F\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+L\+O\+OP}}
+\index{F\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+L\+O\+OP@{F\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+L\+O\+OP}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{F\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+L\+O\+OP}{FS\_CLOSED\_LOOP}}
+{\footnotesize\ttfamily \#define F\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+L\+O\+OP~0b00000010}
+
+
+
+Fuel System Closed Loop. 
+
+Closed loop -\/ using oxygen sensor(s) as feedback for fuel control \mbox{\Hypertarget{group__OBD__PID_ga93772e290018e845a98cbbaeb35dcd37}\label{group__OBD__PID_ga93772e290018e845a98cbbaeb35dcd37}} 
+\index{definitions@{definitions}!F\+S\+\_\+\+M\+O\+T\+O\+R\+\_\+\+O\+FF@{F\+S\+\_\+\+M\+O\+T\+O\+R\+\_\+\+O\+FF}}
+\index{F\+S\+\_\+\+M\+O\+T\+O\+R\+\_\+\+O\+FF@{F\+S\+\_\+\+M\+O\+T\+O\+R\+\_\+\+O\+FF}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{F\+S\+\_\+\+M\+O\+T\+O\+R\+\_\+\+O\+FF}{FS\_MOTOR\_OFF}}
+{\footnotesize\ttfamily \#define F\+S\+\_\+\+M\+O\+T\+O\+R\+\_\+\+O\+FF~0b00000000}
+
+
+
+Motor off. 
+
+Motor off \mbox{\Hypertarget{group__OBD__PID_ga34834380e007e3b34b93416cadfbaea4}\label{group__OBD__PID_ga34834380e007e3b34b93416cadfbaea4}} 
+\index{definitions@{definitions}!F\+S\+\_\+\+O\+L\+\_\+\+D\+R\+I\+VE@{F\+S\+\_\+\+O\+L\+\_\+\+D\+R\+I\+VE}}
+\index{F\+S\+\_\+\+O\+L\+\_\+\+D\+R\+I\+VE@{F\+S\+\_\+\+O\+L\+\_\+\+D\+R\+I\+VE}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{F\+S\+\_\+\+O\+L\+\_\+\+D\+R\+I\+VE}{FS\_OL\_DRIVE}}
+{\footnotesize\ttfamily \#define F\+S\+\_\+\+O\+L\+\_\+\+D\+R\+I\+VE~0b00000100}
+
+
+
+Fuel System Open Loop (fault) 
+
+Open loop due to driving conditions (e.\+g. power enrichment, deceleration enleanment) \mbox{\Hypertarget{group__OBD__PID_ga88a394c8a2d3b6adcf084f580be5edc8}\label{group__OBD__PID_ga88a394c8a2d3b6adcf084f580be5edc8}} 
+\index{definitions@{definitions}!F\+S\+\_\+\+O\+L\+\_\+\+F\+A\+U\+LT@{F\+S\+\_\+\+O\+L\+\_\+\+F\+A\+U\+LT}}
+\index{F\+S\+\_\+\+O\+L\+\_\+\+F\+A\+U\+LT@{F\+S\+\_\+\+O\+L\+\_\+\+F\+A\+U\+LT}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{F\+S\+\_\+\+O\+L\+\_\+\+F\+A\+U\+LT}{FS\_OL\_FAULT}}
+{\footnotesize\ttfamily \#define F\+S\+\_\+\+O\+L\+\_\+\+F\+A\+U\+LT~0b00001000}
+
+
+
+Fuel System Open Loop (fault) 
+
+Open loop -\/ due to detected system fault \mbox{\Hypertarget{group__OBD__PID_ga6790f8066998a98d1f3fa7697624e5aa}\label{group__OBD__PID_ga6790f8066998a98d1f3fa7697624e5aa}} 
+\index{definitions@{definitions}!F\+S\+\_\+\+O\+P\+E\+N\+\_\+\+L\+O\+OP@{F\+S\+\_\+\+O\+P\+E\+N\+\_\+\+L\+O\+OP}}
+\index{F\+S\+\_\+\+O\+P\+E\+N\+\_\+\+L\+O\+OP@{F\+S\+\_\+\+O\+P\+E\+N\+\_\+\+L\+O\+OP}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{F\+S\+\_\+\+O\+P\+E\+N\+\_\+\+L\+O\+OP}{FS\_OPEN\_LOOP}}
+{\footnotesize\ttfamily \#define F\+S\+\_\+\+O\+P\+E\+N\+\_\+\+L\+O\+OP~0b00000001}
+
+
+
+Fuel System Open Loop. 
+
+Open loop -\/ has not yet satisfied conditions to go closed loop \mbox{\Hypertarget{group__OBD__PID_ga62e9969a2ac7daeecbec01b2114ca7eb}\label{group__OBD__PID_ga62e9969a2ac7daeecbec01b2114ca7eb}} 
+\index{definitions@{definitions}!F\+U\+E\+L\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+P\+O\+N\+SE@{F\+U\+E\+L\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+P\+O\+N\+SE}}
+\index{F\+U\+E\+L\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+P\+O\+N\+SE@{F\+U\+E\+L\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+P\+O\+N\+SE}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{F\+U\+E\+L\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+P\+O\+N\+SE}{FUEL\_TYPE\_RESPONSE}}
+{\footnotesize\ttfamily \#define F\+U\+E\+L\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+P\+O\+N\+SE~1}
+
+Gasoline \mbox{\Hypertarget{group__OBD__PID_ga9465cf992c0eb0cc35da37d83d9d3adf}\label{group__OBD__PID_ga9465cf992c0eb0cc35da37d83d9d3adf}} 
+\index{definitions@{definitions}!G\+E\+T\+\_\+\+P\+I\+D\+\_\+\+R\+PM@{G\+E\+T\+\_\+\+P\+I\+D\+\_\+\+R\+PM}}
+\index{G\+E\+T\+\_\+\+P\+I\+D\+\_\+\+R\+PM@{G\+E\+T\+\_\+\+P\+I\+D\+\_\+\+R\+PM}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{G\+E\+T\+\_\+\+P\+I\+D\+\_\+\+R\+PM}{GET\_PID\_RPM}}
+{\footnotesize\ttfamily \#define G\+E\+T\+\_\+\+P\+I\+D\+\_\+\+R\+PM(\begin{DoxyParamCaption}\item[{}]{R\+PM }\end{DoxyParamCaption})~(uint16\+\_\+t)(R\+PM $\ast$ 4)}
+
+\begin{DoxySeeAlso}{See also}
+page 123 Table B.\+13 
+\end{DoxySeeAlso}
+\begin{DoxyReturn}{Returns}
+16b with rpm on 1/4 rpm per bit 
+\end{DoxyReturn}
+\mbox{\Hypertarget{group__OBD__PID_ga57a2ab59b925bd8531acc9cc44cb732f}\label{group__OBD__PID_ga57a2ab59b925bd8531acc9cc44cb732f}} 
+\index{definitions@{definitions}!O\+B\+D\+\_\+\+S\+T\+A\+N\+D\+A\+R\+S\+\_\+\+R\+E\+S\+P\+O\+N\+SE@{O\+B\+D\+\_\+\+S\+T\+A\+N\+D\+A\+R\+S\+\_\+\+R\+E\+S\+P\+O\+N\+SE}}
+\index{O\+B\+D\+\_\+\+S\+T\+A\+N\+D\+A\+R\+S\+\_\+\+R\+E\+S\+P\+O\+N\+SE@{O\+B\+D\+\_\+\+S\+T\+A\+N\+D\+A\+R\+S\+\_\+\+R\+E\+S\+P\+O\+N\+SE}!definitions@{definitions}}
+\subsubsection{\texorpdfstring{O\+B\+D\+\_\+\+S\+T\+A\+N\+D\+A\+R\+S\+\_\+\+R\+E\+S\+P\+O\+N\+SE}{OBD\_STANDARS\_RESPONSE}}
+{\footnotesize\ttfamily \#define O\+B\+D\+\_\+\+S\+T\+A\+N\+D\+A\+R\+S\+\_\+\+R\+E\+S\+P\+O\+N\+SE~21}
+
+World Wide Harmonized O\+BD (W\+WH O\+BD) 

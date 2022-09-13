@@ -169,7 +169,8 @@ Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobi
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobilizer.hpp...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp...
-Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/memory/src/memory_dtc.cpp...
+Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/memory/src/home/runner/work/OpenEFI/OpenEFI/Src/pmic/pmic.hpp:7: warning: missing title after \defgroup PMIC
+/memory_dtc.cpp...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/memory/src/memory_dtc.cpp...
 Preprocessing /home/runner/work/OpenEFI/OpenEFI/Src/memory/src/memory_immobilizer.cpp...
 Parsing file /home/runner/work/OpenEFI/OpenEFI/Src/memory/src/memory_immobilizer.cpp...
@@ -454,9 +455,9 @@ Gene/home/runner/work/OpenEFI/OpenEFI/Inc/crc.h:41: warning: Member MX_CRC_Init(
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:237: warning: Member BYTE_TO_BINARY_PATTERN (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:238: warning: Member BYTE_TO_BINARY(byte) (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:188: warning: Member UptimeMillis (variable) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:9: warning: Member NEW_DTC (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:10: warning: Member EMPTY_DTC (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:42: warning: Member DTC_INJECTOR_PRESSURE_NOT_DETECTED (macro definition) of file dtc_codes.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:9: warning: Member dtc_data (typedef) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/main.h:72: warning: Member R_ECN_INY_Pin (macro definition) of file main.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/main.h:73: warning: Member R_ECN_INY_GPIO_Port (macro definition) of file main.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/main.h:74: warning: Member R_GNC_GLP_Pin (macro definition) of file main.h is not documented.
@@ -595,26 +596,20 @@ Gene/home/runner/work/OpenEFI/OpenEFI/Inc/crc.h:41: warning: Member MX_CRC_Init(
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:115: warning: Member USBD_UsrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:124: warning: Member USBD_ErrLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h:132: warning: Member USBD_DbgLog(...) (macro definition) of group USBD_CONF_Exported_Macros is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:20: warning: Member RESPONSE_AVAILABLE_SID (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:22: warning: Member SUPPORTED_SID01 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:23: warning: Member SUPPORTED_SID09 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:24: warning: Member SUPPORTED_SID11 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:25: warning: Member SUPPORTED_SID19 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:27: warning: Member SUPPORTED_SID21 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:28: warning: Member SUPPORTED_SID29 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:29: warning: Member SUPPORTED_SID31 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:30: warning: Member SUPPORTED_SID39 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:37: warning: Member RESPONSE_FREEZE_FRAME_SID (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:39: warning: Member SUPPORTED_PID01 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:40: warning: Member SUPPORTED_PID09 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:41: warning: Member SUPPORTED_PID11 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:42: warning: Member SUPPORTED_PID19 (macro definition) of file obd2_sid.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:18: warning: Member GR (macro definition) of file obd2_status.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:27: warning: Member SNS (macro definition) of file obd2_status.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:37: warning: Member SFNSIF (macro definition) of file obd2_status.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:50: warning: Member BRR (macro definition) of file obd2_status.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:60: warning: Member CNCORSE (macro definition) of file obd2_status.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:72: warning: Member RCRRP (macro definition) of file obd2_status.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:18: warning: Member RESPONSE_AVAILABLE_SID (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:20: warning: Member SUPPORTED_SID01 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:21: warning: Member SUPPORTED_SID09 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:22: warning: Member SUPPORTED_SID11 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:23: warning: Member SUPPORTED_SID19 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:25: warning: Member SUPPORTED_SID21 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:26: warning: Member SUPPORTED_SID29 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:27: warning: Member SUPPORTED_SID31 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:28: warning: Member SUPPORTED_SID39 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:35: warning: Member RESPONSE_FREEZE_FRAME_SID (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:37: warning: Member SUPPORTED_PID01 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:38: warning: Member SUPPORTED_PID09 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:39: warning: Member SUPPORTED_PID11 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:40: warning: Member SUPPORTED_PID19 (macro definition) of group OBD_SID is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/can.c:30: warning: Member MX_CAN1_Init(void) (function) of file can.c is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/crc.c:30: warning: Member MX_CRC_Init(void) (function) of file crc.c is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/crc.c:51: warning: Member HAL_CRC_MspInit(CRC_HandleTypeDef *crcHandle) (function) of file crc.c is not documented.
@@ -656,7 +651,6 @@ Gene/home/runner/work/OpenEFI/OpenEFI/Inc/crc.h:41: warning: Member MX_CRC_Init(
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:17: warning: Member ema_high_pass_filter(struct EMAHighPass) (function) of file ema.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:21: warning: argument 'in' of command @param is not found in the argument list of EMALowPassFilter(struct EMALowPass)
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h:15: warning: Member sinc() (function) of file sinc.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_pid.h:7: warning: included file obd2_pid.h is not found. Check your EXAMPLE_PATH
 /home/runner/work/OpenEFI/OpenEFI/Src/core/usbd_cdc_if.cpp:121: warning: Member hUsbDeviceFS (variable) of group USBD_CDC_IF_Exported_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/usbd_desc.c:66: warning: Member USBD_VID (macro definition) of group USBD_DESC_Private_Defines is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/usbd_desc.c:67: warning: Member USBD_LANGID_STRING (macro definition) of group USBD_DESC_Private_Defines is not documented.
@@ -692,23 +686,41 @@ Gene/home/runner/work/OpenEFI/OpenEFI/Inc/crc.h:41: warning: Member MX_CRC_Init(
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h:50: warning: Member DEVICE_ID2 (macro definition) of group USBD_DESC_Exported_Constants is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h:51: warning: Member DEVICE_ID3 (macro definition) of group USBD_DESC_Exported_Constants is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_desc.h:53: warning: Member USB_SIZ_STRING_SERIAL (macro definition) of group USBD_DESC_Exported_Constants is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:18: warning: Member RESPONSE_AVAILABLE_SID (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:20: warning: Member SUPPORTED_SID01 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:21: warning: Member SUPPORTED_SID09 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:22: warning: Member SUPPORTED_SID11 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:23: warning: Member SUPPORTED_SID19 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:25: warning: Member SUPPORTED_SID21 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:26: warning: Member SUPPORTED_SID29 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:27: warning: Member SUPPORTED_SID31 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:28: warning: Member SUPPORTED_SID39 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:35: warning: Member RESPONSE_FREEZE_FRAME_SID (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:37: warning: Member SUPPORTED_PID01 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:38: warning: Member SUPPORTED_PID09 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:39: warning: Member SUPPORTED_PID11 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h:40: warning: Member SUPPORTED_PID19 (macro definition) of group OBD_SID is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:17: warning: Member GR (macro definition) of group OBD_STATUS is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:25: warning: Member SNS (macro definition) of group OBD_STATUS is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:35: warning: Member SFNSIF (macro definition) of group OBD_STATUS is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:48: warning: Member BRR (macro definition) of group OBD_STATUS is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:58: warning: Member CNCORSE (macro definition) of group OBD_STATUS is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h:70: warning: Member RCRRP (macro definition) of group OBD_STATUS is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/system_stm32f4xx.c:137: warning: Member SystemCoreClock (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/system_stm32f4xx.c:138: warning: Member AHBPrescTable[16] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/system_stm32f4xx.c:139: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/system_stm32f4xx.c:185: warning: argument 'None' of command @param is not found in the argument list of SystemCoreClockUpdate(void)
 /home/runner/work/OpenEFI/OpenEFI/Src/core/system_stm32f4xx.c:161: warning: argument 'None' of command @param is not found in the argument list of SystemInit(void)
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:43: warning: Member DTC_FLAG_ADDR (macro definition) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:45: warning: Member DTC_INIT_PAGE (macro definition) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:46: warning: Member DTC_END_ADDR (macro definition) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:47: warning: Member DTC_EMPTY (macro definition) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:48: warning: Member DTC_EMPTY_ALT (macro definition) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:35: warning: Member get_all_dtc() (function) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:38: warning: Member write_dtc(uint8_t *) (function) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:39: warning: Member read_dtc(uint8_t, uint8_t *) (function) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:40: warning: Member write_dtc(uint8_t *, uint8_t) (function) of group DTC_IO is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobilizer.hpp:28: warning: Member EMERGENCY_FLAG_ADDR (macro definition) of group Immobilizer is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobilizer.hpp:29: warning: Member EMERGENCY_DTC_ADDR (macro definition) of group Immobilizer is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobilizer.hpp:26: warning: Member write_emergency_stop(uint8_t *) (function) of group Immobilizer is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:8: warning: found subsection command outside of section context!
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:55: warning: Member DTC_FLAG_ADDR (macro definition) of group DTC_IO is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:57: warning: Member DTC_INIT_PAGE (macro definition) of group DTC_IO is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:58: warning: Member DTC_END_ADDR (macro definition) of group DTC_IO is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:59: warning: Member DTC_EMPTY (macro definition) of group DTC_IO is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:60: warning: Member DTC_EMPTY_ALT (macro definition) of group DTC_IO is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:49: warning: argument 'dtc_data' of command @param is not found in the argument list of search_dtc(dtc_data)
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:43: warning: argument 'dtc_code' of command @param is not found in the argument list of write_dtc(dtc_data)
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobilizer.hpp:16: warning: found subsection command outside of section context!
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobilizer.hpp:16: warning: found subsection command outside of section context!
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:44: warning: Member MEMORY_SECTOR_SIZE (macro definition) of group Tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:45: warning: Member MEMORY_SECTOR_COUNT (macro definition) of group Tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:46: warning: Member MEMORY_PAGE_SIZE (macro definition) of group Tables is not documented.
@@ -737,10 +749,10 @@ Gene/home/runner/work/OpenEFI/OpenEFI/Inc/crc.h:41: warning: Member MX_CRC_Init(
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:52: warning: Member get_value(table_ref, uint32_t, uint32_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:53: warning: Member set_value(table_ref, uint32_t, uint32_t, int32_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:54: warning: Member set_long_value(table_ref, uint16_t, uint16_t, int32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:73: warning: Member col_to_row(TABLEDATA, uint32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:73: warning: Member col_to_row(table_data, uint32_t) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:80: warning: Member dump_row(std::vector< int32_t >, uint8_t *) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:82: warning: Member put_row(uint8_t *, uint32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:90: warning: Member plot_table(TABLEDATA) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:90: warning: Member plot_table(table_data) (function) of namespace tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:59: warning: argument 'table_ref' of command @param is not found in the argument list of tables::read_all(table_ref table)
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:63: warning: The following parameters of tables::read_all(table_ref table) are not documented:
   parameter 'table'
@@ -772,7 +784,6 @@ Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_cdc_if.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Inc/usbd_conf.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_pid.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_sid.h...
-Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/can/obd2/obd2_status.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/core/can.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/core/crc.c...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/core/dma.c...
@@ -786,7 +797,6 @@ Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/core/usbd_desc.c.
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h...
 Generating docs for file /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/sinc.h...
 Generating page documentation...
-Generating docs for page OBD...
 Generating group documentation...
 Generating class documentation...
 Generating docs for compound can_message...
@@ -807,5 +817,5 @@ Generating namespace index...
 Generating namespace member index...
 finalizing index lists...
 writing tag file...
-lookup cache used 368/65536 hits=673 misses=375
+lookup cache used 365/65536 hits=689 misses=368
 finished...

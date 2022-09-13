@@ -97,7 +97,10 @@ Modules</h2></td></tr>
 <tr class="memdesc:d0/dfd/group__DTC__IO"><td class="mdescLeft">&#160;</td><td class="mdescRight">almacenaje/borrado de DTC's en memoria <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:de/d8c/group__Immobilizer"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d8c/group__Immobilizer.html">Immobilizer</a></td></tr>
-<tr class="memdesc:de/d8c/group__Immobilizer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementacion de imobilizador primitivo, solo en casos de fallas criticas. <br /></td></tr>
+<tr class="memdesc:de/d8c/group__Immobilizer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementacion de imobilizador primitivo, solo en casos de fallas criticas ahre porque el suspenso en el nombre <br />
+primer byte en primer pagina para indicar parada de emergencia (para no arrancar el motor post reinicio de la misma), <br />
+ 6 bytes siguientes para el DTC asociado: P0XXX =&gt; 6 char =&gt; 6 bytes se reserva 1/2 bloque, para posterior <br />
+ uso como inmobilizador posta memory init addr: 0x2000 memory end addr: 0x2420. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:de/d68/group__Tables"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d68/group__Tables.html">Tables</a></td></tr>
 <tr class="memdesc:de/d68/group__Tables"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementacion de tablas 2D con vectores, valores en int32_t. <br /></td></tr>
