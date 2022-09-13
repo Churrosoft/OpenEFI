@@ -37,9 +37,9 @@ void tables::set_value(table_ref table, uint32_t x, uint32_t y, int32_t value) {
   HAL_Delay(15);
 }
 
-TABLEDATA tables::read_all(table_ref table) {
+table_data tables::read_all(table_ref table) {
 
-  TABLEDATA matrix(table.y_max, vector<int32_t>(table.x_max, 0xff));
+  table_data matrix(table.y_max, vector<int32_t>(table.x_max, 0xff));
 
   uint32_t datarow = 0;
 
@@ -94,7 +94,7 @@ std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
   return data_out;
 }
 
-void tables::update_table(TABLEDATA data, table_ref table) {
+void tables::update_table(table_data data, table_ref table) {
   int32_t size = table.x_max * 4 * table.y_max;
   uint8_t *buffer = (uint8_t *)malloc(size);
 
@@ -116,7 +116,7 @@ int32_t tables::find_nearest_neighbor(std::vector<int32_t> vec,
   return (int32_t)std::abs(search_result);
 }
 
-void tables::plot_table(TABLEDATA table) {
+void tables::plot_table(table_data table) {
   for (auto table_y : table) {
     char row[200];
 
@@ -128,7 +128,7 @@ void tables::plot_table(TABLEDATA table) {
   }
 }
 
-std::vector<int32_t> tables::col_to_row(TABLEDATA table, uint32_t table_index) {
+std::vector<int32_t> tables::col_to_row(table_data table, uint32_t table_index) {
   std::vector<int32_t> out_vec;
 
   for (auto table_y : table) {

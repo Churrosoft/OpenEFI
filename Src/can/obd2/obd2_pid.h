@@ -1,14 +1,12 @@
 /** @file */
 #include "defines.h"
-/**
- * @page OBD OBD PID definitions
- * en algun momento lo voy a hacer andar, pero tendria que importar todo este
- * archivo como una pagina
- * @verbinclude obd2_pid.h
- */
 
-// OBD PID definitions from ISO15031-5 page 115
-// only for services $01 | $02 | $03 | $04
+/**
+ * @addtogroup OBD_PID definitions
+ * @brief OBD PID definitions from ISO15031-5 page 115
+ * only for services $01 | $02 | $03 | $04
+ * @{
+ */
 
 #ifndef OB2_PID_H
 #define OB2_PID_H
@@ -87,5 +85,7 @@
  * Gasoline
  */
 #define FUEL_TYPE_RESPONSE 1
+
+/*! @} End of Doxygen OBD PID definitions */
 
 #endif

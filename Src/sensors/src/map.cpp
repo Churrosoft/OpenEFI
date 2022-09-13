@@ -11,10 +11,10 @@ int32_t MAP::get_calibrate_value(int32_t filt_input) {
   return (int32_t)MAP_CAL(filt_input) * 100;
 }
 
-NEW_DTC MAP::dtc() {
+dtc_data MAP::dtc() {
   if (MAP::last_value > MAP_MAX)
-    return NEW_DTC DTC_MAP_SENSOR_HIGH;
+    return dtc_data DTC_MAP_SENSOR_HIGH;
   if (MAP::last_value < MAP_MIN)
-    return NEW_DTC DTC_MAP_SENSOR_LOW;
-  return NEW_DTC EMPTY_DTC;
+    return dtc_data DTC_MAP_SENSOR_LOW;
+  return dtc_data EMPTY_DTC;
 }
