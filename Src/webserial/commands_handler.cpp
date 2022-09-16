@@ -10,8 +10,9 @@ using namespace web_serial;
 std::deque<serial_command> pending_commands;
 std::deque<serial_command> output_commands;
 
-TABLEDATA in_table;
+table_data in_table;
 bool table_lock;
+bool web_serial::paired = false;
 
 void web_serial::setup() { in_table.reserve(17); }
 
@@ -23,7 +24,7 @@ void web_serial::command_handler() {
     uint8_t serialized_command[128];
     table_ref table;
     uint16_t selected_table;
-    TABLEDATA out_table;
+    table_data out_table;
 
     std::fill_n(payload, 123, 0x0);
 
@@ -44,6 +45,7 @@ void web_serial::command_handler() {
       out_comm = create_command(CORE_PONG, payload);
       export_command(out_comm, serialized_command);
       CDC_Transmit_FS(serialized_command, 128);
+      web_serial::paired = true;
       break;
     }
 
@@ -63,7 +65,7 @@ void web_serial::command_handler() {
 
     case CORE_STATUS: {
 
-      //int mockrpm = 750 + (rand() % 5750);
+      // int mockrpm = 750 + (rand() % 5750);
       int mockrpm = _RPM;
       int mocktemp = 1 + (rand() % 130);
       int mockload = 1 + (rand() % 100);
@@ -214,4 +216,8 @@ void web_serial::send_deque() {
 
 void web_serial::queue_command(serial_command command) {
   pending_commands.push_back(command);
+}
+
+void web_serial::send_command(serial_command command) {
+  output_commands.push_back(command);
 }

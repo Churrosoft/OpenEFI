@@ -27,12 +27,12 @@ int32_t TEMP::get_value(int32_t filt_input) {
   return last_value;
 }
 
-NEW_DTC TEMP::dtc() {
+dtc_data TEMP::dtc() {
   if (last_value > TEMP_MAX)
-    return NEW_DTC DTC_ECT_SENSOR_HIGH;
+    return dtc_data DTC_ECT_SENSOR_HIGH;
   if (last_value < TEMP_MIN && last_value > TEMP_OPEN)
-    return NEW_DTC DTC_ECT_SENSOR_LOW;
+    return dtc_data DTC_ECT_SENSOR_LOW;
   else
-    return NEW_DTC DTC_ECT_OUT_OF_RANGE;
-  return NEW_DTC EMPTY_DTC;
+    return dtc_data DTC_ECT_OUT_OF_RANGE;
+  return dtc_data EMPTY_DTC;
 }

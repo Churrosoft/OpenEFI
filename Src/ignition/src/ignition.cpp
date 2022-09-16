@@ -16,7 +16,7 @@ extern "C" {
 #include "trace.h"
 }
 
-TABLEDATA ignition::avc_tps_rpm;
+table_data ignition::avc_tps_rpm;
 bool ignition::loaded = false;
 table_ref ignition_table = TABLES_IGNITION_TPS_SETTINGS;
 

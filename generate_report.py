@@ -40,6 +40,7 @@ report.write(f"""
 if len(failed_test):
     for test_case in failed_test:
         test_data = test_case.split(':')
+        error_message = ' '.join(test_data[5:])
         report.write(f""" 
     <testcase name="{test_data[2]}"
 	    assertions="1"
@@ -48,11 +49,11 @@ if len(failed_test):
 	    time="1s"
     >
         <failure
-            message="{test_data[4]}"
+            message="{error_message}"
 	        type="FULL ASSERT" 
 	    >
         FAIL: {test_data[4]}
-        {test_data[2]} on file {test_data[0]} , on line {test_data[1]}
+        {error_message} on file {test_data[0]} , on line {test_data[1]}
         </failure>
     </testcase>
 """)

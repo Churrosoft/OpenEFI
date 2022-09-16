@@ -18,13 +18,13 @@ int32_t TPS::get_calibrate_value(int32_t filt_input) {
   return (int32_t)TPS_CALC_A(_t) * 1000;
 }
 
-NEW_DTC TPS::dtc() {
+dtc_data TPS::dtc() {
 
   if (TPS::last_value > TPS_MAX_A)
-    return NEW_DTC DTC_TPS_OUT_OF_RANGE;
+    return dtc_data DTC_TPS_OUT_OF_RANGE;
   if (TPS::last_value < TPS_MIN_A)
-    return NEW_DTC DTC_TPS_OUT_OF_RANGE;
-  return NEW_DTC EMPTY_DTC;
+    return dtc_data DTC_TPS_OUT_OF_RANGE;
+  return dtc_data EMPTY_DTC;
 }
 
 uint8_t TPS::dtc(int32_t in1, int32_t in2) {

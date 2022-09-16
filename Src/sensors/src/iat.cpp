@@ -14,15 +14,15 @@ int32_t IAT::get_calibrate_value(int32_t filt_input) {
   return (int32_t)IAT_CAL(filt_input) * 100;
 }
 
-NEW_DTC IAT::dtc() {
+dtc_data IAT::dtc() {
 
   if (IAT::last_value > IAT_MAX) {
-    return NEW_DTC DTC_IAT_SENSOR_HIGH;
+    return dtc_data DTC_IAT_SENSOR_HIGH;
   }
   if (IAT::last_value < IAT_MIN && IAT::last_value > IAT_OPEN) {
-    return NEW_DTC DTC_IAT_SENSOR_LOW;
+    return dtc_data DTC_IAT_SENSOR_LOW;
   } else if (IAT::last_value > IAT_OPEN) {
-    return NEW_DTC DTC_IAT_SENSOR_OPEN;
+    return dtc_data DTC_IAT_SENSOR_OPEN;
   }
-  return NEW_DTC EMPTY_DTC;
+  return dtc_data EMPTY_DTC;
 }

@@ -1,17 +1,16 @@
-#include "defines.h"
-
 #ifndef WEBSERIAL_COMMANDS_DEFINITION_HPP
 #define WEBSERIAL_COMMANDS_DEFINITION_HPP
 
 #define CORE_PING 1
 #define CORE_PONG 2
 #define CORE_HELLO 10
-#define CORE_STATUS 5 // RPM/Temp/Voltaje Bateria / avance / carga / MAP
+#define CORE_STATUS 5        // RPM/Temp/Voltaje Bateria / avance / carga / MAP
 #define CORE_STATUS_METADA 4 // devuelve max rpm / max avance
 
 // 20 => get table metadata, 21 => get X table, 22 => response get X table,
 // 23 => reset X table, 24 => write X table , 25 => response write x table
-// 26 => begin data chunck , 27 => end data chunck (podrian ser un solo comando?)
+// 26 => begin data chunck , 27 => end data chunck (podrian ser un solo
+// comando?)
 
 // input:
 #define TABLES_GET_METADATA 20
@@ -22,7 +21,8 @@
 #define TABLES_WRITE 24
 
 // response:
-#define TABLES_PUT 22 // esto tambien se usa para ir agregando data al array', primer byte el n°
+#define TABLES_PUT                                                             \
+  22 // esto tambien se usa para ir agregando data al array', primer byte el n°
 #define TABLES_WRITE_OK 25
 #define TABLES_DATA_CHUNK 26
 #define TABLES_DATA_END_CHUNK 27
@@ -33,9 +33,32 @@
 #define TABLES_IGNITION_TPS 10
 #define TABLES_IGNITION_TEMP 11
 
+// debug commands
+
+#define EFI_DEBUG_LOG 80
+#define EFI_DEBUG_INFO 81
+#define EFI_DEBUG_EVENT 82
+#define EFI_DEBUG_ERROR 83
+// enviado al final de cada mensaje para poder exceder el limite de 120 caracteres
+#define EFI_DEBUG_END 89
+
 // error commands:
 #define EFI_INVALID_CODE 91
 #define EFI_INVALID_CHECKSUM 92
 #define EFI_INVALID_PROTOCOL 93
+
+// User Fontend
+#define FRONTEND_IN_COMMAND 66
+#define FRONTEND_OUT_COMMAND 67
+#define FRONTEND_DEBUG_MESSAGE 68
+#define FRONTEND_ERROR_MESSAGE 69
+
+// DEBUG
+#define EFI_DEBUG_LOG 80
+#define EFI_DEBUG_INFO 81
+#define EFI_DEBUG_EVENT 82
+#define EFI_DEBUG_ERROR 83
+// enviado al final de cada mensaje para poder exceder el limite de 120 caracteres
+#define EFI_DEBUG_END 89
 
 #endif

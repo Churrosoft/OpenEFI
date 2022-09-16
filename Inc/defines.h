@@ -1,6 +1,9 @@
 /** @file */
 #include <stdint.h>
 #include "main.h"
+#include "cmsis_gcc.h"
+#include "variables.h"
+#include "features.h"
 
 // Acá todos los defines
 #ifndef DEFINES_H
@@ -18,23 +21,27 @@
 #define CIL 4             //!< cantidad de cilindros o pistones, o camaras de combustion, etc ?)
 #define L_CIL (CIL - 1)   //!< cilindros logicos, para manejar arrays y demases
 #define DNT 60            //!< cantidad de dientes del sensor CKP
-#define DNT_MISSING 0     //!< cantidad de dientes faltantes en PMS
-#define DNT_DOUBLE_SCAN 2 //!< 1 == interrupcion por diente
+#define DNT_MISSING 2     //!< cantidad de dientes faltantes en PMS
+#define DNT_DOUBLE_SCAN 1 //!< 1 == interrupcion por diente
 #define LOGIC_DNT ((DNT - DNT_MISSING) * DNT_DOUBLE_SCAN)
 #define Alpha 1                    //!< modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?)
 #define ED 1600                    //!< cilindrada en CC del motor
-#define ING_SECUENCY {1, 3, 4, 2}; // secuencia encendido
-#define INY_SECUENCY {3, 4, 1, 2}; // secuencia inyeccion
+#define ING_SECUENCY {1, 3, 4, 2}; //!< secuencia encendido (solo en FULL_SECUENCIAL)
+#define ING_SECUENCY_ALT { 1, 4, 3, 2 }; //!< secuencia encendido semi-secuencial
+#define INY_SECUENCY {3, 4, 1, 2}; //!< secuencia inyeccion (solo en FULL_SECUENCIAL)
+#define INY_SECYENCY_ALT { 3, 1, 4, 2 } //!< secuencia inyeccion semi-secuencial
 #define MAX_RPM 4500 //!< valor maximo de rpm, valores superiores activan cutoff de encendido/combustible
 
 /*-----( RPM )-----*/
 
+#define USING_EXPERIMENTAL_RPM_CALC false
 #define RPM_per 500 //periodo en ms en el que se actualizan las rpm ( si lo cambias , o arreglas el calculo para las rpm,o se rompe todo maquinola)
 
 /*-----( C_PWM )-----*/
 
 #define CPWM_ENABLE //!< Habilita el control de PWM
 #define SINC_ENABLE //!< No borre este define, no sea tarado
+#define FULL_SECUENCIAL false //!< solo usar en caso de tener sensor de fase, caso contrario solo se puede realizar inyeccion/encendido semi-secuencial
 
 #define PMSI 240 //!< Cantidad de dientes entre PMS
 
@@ -142,10 +149,78 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 
 #define TABLES_IGNITION_TPS_SETTINGS { 17, 17, 0x2 }
 
+/*-----( OBD2 )-----*/
+
+#define ENABLE_MISFIRE_MONITOR 0
+#define ENABLE_FUEL_MONITOR 1
+#define ENABLE_CATALYST_MONITOR 0
+#define ENABLE_HEATED_CATALYST_MONITOR 0
+
+
 /*-----( Helpers )-----*/
 
 #define ROUND_16(NUMBER) ((float)((uint16_t)NUMBER * 100 + .5) / 100)
 #define ROUND_32(NUMBER) ((float)((uint32_t)NUMBER * 100 + .5) / 100)
+
+#define EFI_INVERT_PIN(PORT, PIN)                                                  \
+  HAL_GPIO_WritePin(PORT, PIN,                                                 \
+                    HAL_GPIO_ReadPin(PORT, PIN) == GPIO_PIN_RESET              \
+                        ? GPIO_PIN_SET                                         \
+                        : GPIO_PIN_RESET)
+
+
+#ifdef ENABLE_WEBSERIAL
+
+#define EFI_LOG(...)   web_serial::send_debug_message(web_serial::debugMessage::LOG, __VA_ARGS__)
+#define EFI_INFO(...)  web_serial::send_debug_message(web_serial::debugMessage::INFO, __VA_ARGS__)
+#define EFI_EVENT(...) web_serial::send_debug_message(web_serial::debugMessage::EVENT, __VA_ARGS__)
+#define EFI_ERROR(...) web_serial::send_debug_message(web_serial::debugMessage::ERROR, __VA_ARGS__)
+
+#else
+
+#define EFI_LOG(...)   void(__VA_ARGS__)
+#define EFI_INFO(...)  void(__VA_ARGS__)
+#define EFI_EVENT(...) void(__VA_ARGS__)
+#define EFI_ERROR(...) void(__VA_ARGS__)
+
+#endif
+
+extern volatile uint32_t UptimeMillis;
+
+static inline uint32_t GetMicrosFromISR()
+{
+    uint32_t st = SysTick->VAL;
+    uint32_t pending = SCB->ICSR & SCB_ICSR_PENDSTSET_Msk;
+    uint32_t ms = UptimeMillis;
+
+    if (pending == 0)
+        ms++;
+
+    return ms * 1000 - st / ((SysTick->LOAD + 1) / 1000);
+}
+
+#define MS_IN_MINUTE 60000
+#define US_IN_MINUTE 60000000
+
+union Nibbler {
+     struct { 
+        uint8_t first: 4;
+        uint8_t second: 4;
+     } nibbles;
+     unsigned char byte_value;
+};
+
+#ifdef TESTING
+#define GET_US_TIME mockRPM()
+
+static inline uint32_t mockRPM(){
+  mocktick += tickStep;
+  return mocktick;
+}
+#else
+#define GET_US_TIME ((uwTick * 1000) + TIM13->CNT)
+
+#endif
 
 // GET_BIT only for uint8_t
 #define GET_BIT(VAR, BIT_NEEDED) ((VAR >> BIT_NEEDED) & 1) //(VAR & (1 << BIT_NEEDED)) // another way: ((VAR >> BIT_NEEDED) & 1)
@@ -155,7 +230,9 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define CPWM_DEBUG 1
 #define PMIC_DEBUG 1
 
-#define BREAKPOINT void();
+//#define BREAKPOINT void();
+// framework-stm32cubef4/Drivers/CMSIS/Include/cmsis_gcc.h (972)
+#define BREAKPOINT __BKPT();
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
