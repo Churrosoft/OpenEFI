@@ -11,6 +11,4 @@ void timer_schedule()
     sensors::loop();
   if (time % 150 == 0)
     sensors::loop_low_priority();
-  if (time % RPM_per == 0)
-    CPWM::calc_rpm();
 }

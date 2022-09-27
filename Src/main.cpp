@@ -96,7 +96,7 @@ bool SINC;
 
 uint8_t INJECTION_STRATEGY = INJECTION_MODE_SPI;
 uint8_t IGNITION_STRATEGY = IGNITION_MODE_WASTED_SPARK;
-int16_t IGNITION_DWELL_TIME = DEFAULT_DWELL_TIME;
+uint32_t IGNITION_DWELL_TIME = DEFAULT_DWELL_TIME;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

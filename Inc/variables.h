@@ -34,7 +34,7 @@ extern unsigned long Tb;
 /*-----( Variables inyeccion / encendido )-----*/
 extern uint8_t INJECTION_STRATEGY;
 extern uint8_t IGNITION_STRATEGY;
-extern int16_t IGNITION_DWELL_TIME;
+extern uint32_t IGNITION_DWELL_TIME;
 
 // only for testing:
 #ifdef TESTING

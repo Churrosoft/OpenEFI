@@ -51,8 +51,8 @@
 #define AVCPER 360 / (CIL / 2)
 #define AVCI 30    // avance de inyeccion (si queres quemar las valvulas dejalo en 0)
 
-#define INY_SECUENCY {3, 4, 1, 2};        //!< secuencia inyeccion (solo en FULL_SECUENCIAL)
-#define INY_SECYENCY_ALT {3, 1, 4, 2};    //!< secuencia inyeccion semi-secuencial
+#define INY_SECUENCY_SEMI_MPI {3, 4, 1, 2};        //!< secuencia inyeccion (solo en FULL_SECUENCIAL)
+#define INY_SECUENCY_FULL_MPI {3, 1, 4, 2};    //!< secuencia inyeccion semi-secuencial
 
 #define INJECTION_MODE_SPI      0 //!< monopunto, solo se utiliza canal 1
 #define INJECTION_MODE_SEMI_MPI 1 //!< multipunto, canales 1-2
