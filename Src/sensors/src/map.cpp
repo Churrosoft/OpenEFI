@@ -1,5 +1,7 @@
 #include "../include/map.hpp"
 
+int32_t MAP::last_value = 0;
+
 int32_t MAP::get_value(int32_t filt_input) {
 
   int32_t sensor_volt = convert_to_volt(filt_input) * 1.534;
