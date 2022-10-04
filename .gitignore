@@ -24,3 +24,6 @@ DAC_OUT_PUT*
 TESTING_CI
 RELEASE_CI
 dist
+
+xpack*
+qemu_output.log

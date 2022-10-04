@@ -12,6 +12,9 @@ usando sensors => map y rpm nomas
 #include "../include/ignition.hpp"
 
 extern "C" {
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "../../sensors/utils/basic_electronics.h"
 #include "trace.h"
 }
@@ -23,7 +26,10 @@ bool ignition::fixed_mode = false;
 int32_t _AE = 0;
 
 void ignition::interrupt() {
-  if (!ignition::loaded || sensors::values._MAP <= 0 || fixed_mode) return;
+  if (!ignition::loaded || sensors::values._MAP <= 0 || fixed_mode) {
+    _AE = ADVANCE_SAFE_VALUE;
+    return;
+  }
 
   /*
     int32_t dbg_map = sensors::values._MAP;
@@ -31,17 +37,37 @@ void ignition::interrupt() {
 
     dbg_map_v = dbg_map_v;
     dbg_map = dbg_map; */
+  debug_printf("INIT IGNITION INTERRUPT \n");
 
   auto kpa_row = tables::col_to_row(ignition::avc_tps_rpm, 0);
+
   kpa_row.at(0) = 1;
+
+#ifdef TESTING
+  /*   debug_printf("KPA row values: \n");
+
+    char row[200];
+    for (auto table_x : kpa_row) {
+      sprintf(row, "%s [%4ld]", row, table_x);
+    }
+
+    debug_printf("%s\n", row); */
+  debug_printf("KPA row size: %ld \n", kpa_row.size());
+#endif
 
   int32_t load_value = tables::find_nearest_neighbor(kpa_row, sensors::values._MAP);
 
   int32_t rpm_value = tables::find_nearest_neighbor(ignition::avc_tps_rpm.at(0), _RPM);
 
+  debug_printf("LOAD var: %ld | RPM var: %ld \n", sensors::values._MAP, _RPM);
+
+  debug_printf("LOAD index: %ld | RPM index: %ld \n", load_value, rpm_value);
+
   if (tables::on_bounds(ignition_table, load_value, rpm_value)) {
     _AE = avc_tps_rpm.at(load_value).at(rpm_value);
   }
+
+  debug_printf("END IGNITION INTERRUPT \n");
 }
 
 void ignition::setup() {

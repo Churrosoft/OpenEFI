@@ -1,4 +1,14 @@
+#include <unity.h>
+
 #include "../Src/ignition/include/ignition.hpp"
+#include "../Src/sensors/sensors.hpp"
+
+extern "C" {
+#include "trace.h"
+#include <stdio.h>
+#include <stdlib.h>
+}
+
 
 void setup_ignition_mocks() {
   table_data mock{
@@ -11,7 +21,7 @@ void setup_ignition_mocks() {
       {5000, 1300, 1000, 1510, 1810, 2120, 2430, 2730, 3040, 3350, 3450, 3450, 3450, 3450, 3450, 3450, 3450},
       {5500, 1300, 1000, 1490, 1789, 2090, 2400, 2700, 3000, 3300, 3410, 3410, 3410, 3410, 3410, 3410, 3410},
       {6000, 1300, 1000, 1470, 1770, 2070, 2360, 2660, 2960, 3260, 3360, 3360, 3360, 3360, 3360, 3360, 3360},
-      {6600, 1300, 1000, 1440, 1739, 2030, 2330, 2620, 2910, 3210, 3310, 3310, 3310, 3310, 3310, 3310, 3310},
+      {6600, 1300, 1440, 1440, 1739, 2030, 2330, 2620, 2910, 3210, 3310, 3310, 3310, 3310, 3310, 3310, 3310},
       {7100, 1300, 1000, 1430, 1720, 2000, 2290, 2580, 2870, 3160, 3260, 3260, 3260, 3260, 3260, 3260, 3260},
       {7600, 1300, 1000, 1410, 1689, 1980, 2260, 2550, 2830, 3120, 3220, 3220, 3220, 3220, 3220, 3220, 3220},
       {8100, 1300, 1000, 1390, 1670, 1950, 2230, 2510, 2800, 3080, 3170, 3170, 3170, 3170, 3170, 3170, 3170},
@@ -23,6 +33,68 @@ void setup_ignition_mocks() {
   ignition::avc_tps_rpm.assign(mock.begin(), mock.end());
 }
 
-void test_idle_advance() {}
+void test_idle_advance() {
+  setup_ignition_mocks();
 
-void test_acc_advance() {}
+  _RPM = 94000;
+  sensors::values._MAP = 3500;
+
+  ignition::loaded = true;
+
+  ignition::interrupt();
+
+  TEST_ASSERT_EQUAL_INT32_MESSAGE(1000, _AE, "Check Ignition interrupt, wrong advance value [IDLE Advance]");
+}
+
+void test_idle_to_acc_advance() {
+  setup_ignition_mocks();
+
+  _RPM = 170000;
+  sensors::values._MAP = 6600;
+
+  ignition::loaded = true;
+
+  ignition::interrupt();
+
+  TEST_ASSERT_EQUAL_INT32_MESSAGE(2030, _AE, "Check Ignition interrupt, wrong advance value [IDLE to ACC Advance]");
+}
+
+void test_acc_advance() {
+  setup_ignition_mocks();
+
+  _RPM = 94000;
+  sensors::values._MAP = 6000;
+
+  ignition::loaded = true;
+
+  ignition::interrupt();
+
+  TEST_ASSERT_EQUAL_INT32_MESSAGE(1000, _AE, "Check Ignition interrupt, wrong advance value [ACC Advance]");
+}
+
+void test_acc_to_idle_advance() {
+  setup_ignition_mocks();
+
+  _RPM = 260000;
+  sensors::values._MAP = 100;
+
+  ignition::loaded = true;
+
+  ignition::interrupt();
+
+  TEST_ASSERT_EQUAL_INT32_MESSAGE(3240, _AE, "Check Ignition interrupt, wrong advance value [ACC to IDLE Advance]");
+}
+
+int runIgnitionTests() {
+  UnityBegin("Src/ignition/src/ignition.cpp:25");
+
+  RUN_TEST(test_idle_advance);
+  debug_printf("----------------------- \n");
+  RUN_TEST(test_idle_to_acc_advance);
+  debug_printf("----------------------- \n");
+  RUN_TEST(test_acc_advance);
+  debug_printf("----------------------- \n");
+  RUN_TEST(test_acc_to_idle_advance);
+
+  return UnityEnd();
+}

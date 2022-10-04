@@ -67,6 +67,7 @@
 #define IGNITION_MODE_DISTRIBUIDOR 1
 #define IGNITION_MODE_SECUENCIAL 2
 #define DEFAULT_DWELL_TIME 2000; // en uS
+#define ADVANCE_SAFE_VALUE 3000 // 30°
 
 /*-----( I_TIME )-----*/
 /* n = PV / RT

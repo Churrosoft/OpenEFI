@@ -30,11 +30,12 @@
 #include <unity.h>
 
 #include "../test/cpwm_test.cpp"
+#include "../test/ignition_test.cpp"
 #include "../test/rpm_calc.cpp"
 
 extern int run_tests(void);
 extern int run_rpm_tests(void);
-
+extern int runIgnitionTests(void);
 #endif
 
 #include <algorithm>
@@ -97,6 +98,7 @@ bool SINC;
 uint8_t INJECTION_STRATEGY = INJECTION_MODE_SPI;
 uint8_t IGNITION_STRATEGY = IGNITION_MODE_WASTED_SPARK;
 uint32_t IGNITION_DWELL_TIME = DEFAULT_DWELL_TIME;
+uint32_t last_cycle, last_mid_cycle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -138,6 +140,7 @@ int main(void) {
   printf("INIT_TESTING \n");
   run_tests();
   run_rpm_tests();
+  runIgnitionTests();
   puts("END_TESTING \n");
 #endif
 
@@ -208,8 +211,10 @@ int main(void) {
 #endif
   // Core inits:
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
-  // Engine::onEFISetup();
 
+#ifdef ENABLE_ENGINE_FRONTEND
+  Engine::onEFISetup();
+#endif
   /* Infinite loop */
 
   /* USER CODE BEGIN WHILE */
@@ -221,18 +226,44 @@ int main(void) {
 #ifdef ENABLE_WEBSERIAL
     web_serial::loop();
     web_serial::command_handler();
-    web_serial::send_deque();
-    _RPM = RPM::_RPM;
-    /*  _RPM = TIM13->CNT; */
+#endif
+
+#ifdef ENABLE_IGNITION
+    ignition::interrupt();
 #endif
 
 #ifdef ENABLE_ENGINE_FRONTEND
     Engine::onEFILoop();
 #endif
 
+#ifdef ENABLE_SENSORS
+    sensors::loop();
+#endif
+
 #ifdef ENABLE_CAN_ISO_TP
 
 #endif
+
+    // mid priority code, runs every 50mS
+    if (HAL_GetTick() - last_mid_cycle >= 50) {
+      last_mid_cycle = HAL_GetTick();
+#ifdef ENABLE_WEBSERIAL
+      web_serial::command_handler();
+#endif
+    }
+
+    // low priority code, runs every 150mS
+    if (HAL_GetTick() - last_cycle >= 150) {
+      last_cycle = HAL_GetTick();
+#ifdef ENABLE_WEBSERIAL
+      web_serial::send_deque();
+#endif
+#ifdef ENABLE_SENSORS
+      sensors::loop_low_priority();
+#endif
+    }
+
+    _RPM = RPM::_RPM;
     RPM::watch_dog();
   }
   /* USER CODE END WHILE */
