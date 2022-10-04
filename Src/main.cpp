@@ -142,6 +142,10 @@ int main(void) {
   run_rpm_tests();
   runIgnitionTests();
   puts("END_TESTING \n");
+
+  // Que Dios y la Patria me lo demanden
+  SCB->AIRCR = (0x5FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk;
+  abort();
 #endif
 
   MOTOR_ENABLE = true;
