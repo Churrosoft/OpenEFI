@@ -1,10 +1,10 @@
 \hypertarget{defines_8h}{}\section{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Inc/defines.h File Reference}
 \label{defines_8h}\index{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Inc/defines.\+h@{/home/runner/work/\+Open\+E\+F\+I/\+Open\+E\+F\+I/\+Inc/defines.\+h}}
 {\ttfamily \#include $<$stdint.\+h$>$}\newline
-{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}cmsis\+\_\+gcc.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}variables.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}features.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}variables.\+h\char`\"{}}\newline
 \subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
@@ -16,8 +16,11 @@ union \hyperlink{unionNibbler}{Nibbler}
 \mbox{\Hypertarget{defines_8h_aca91b9017f4698def1eae778ef480c42}\label{defines_8h_aca91b9017f4698def1eae778ef480c42}} 
 \#define {\bfseries D\+E\+F\+I\+N\+E\+S\+\_\+H}
 \item 
+\mbox{\Hypertarget{defines_8h_a364a315109bb526f2f773b5c4695e76b}\label{defines_8h_a364a315109bb526f2f773b5c4695e76b}} 
+\#define {\bfseries H\+W\+\_\+\+T\+Y\+PE}~1
+\item 
 \mbox{\Hypertarget{defines_8h_a26abc5e4f99b9b7f3fbfca100ecc88be}\label{defines_8h_a26abc5e4f99b9b7f3fbfca100ecc88be}} 
-\#define {\bfseries O\+P\+E\+N\+E\+F\+I\+\_\+\+B\+O\+A\+R\+D\+\_\+\+T\+Y\+PE}~1
+\#define {\bfseries O\+P\+E\+N\+E\+F\+I\+\_\+\+B\+O\+A\+R\+D\+\_\+\+T\+Y\+PE}~H\+W\+\_\+\+T\+Y\+PE
 \item 
 \mbox{\Hypertarget{defines_8h_a4032dc4fa482ab21b6d0c42a9cc646e6}\label{defines_8h_a4032dc4fa482ab21b6d0c42a9cc646e6}} 
 \#define {\bfseries O\+P\+E\+N\+E\+F\+I\+\_\+\+V\+E\+R\+\_\+\+M\+A\+J\+OR}~2
@@ -49,24 +52,9 @@ union \hyperlink{unionNibbler}{Nibbler}
 \mbox{\Hypertarget{defines_8h_a05e541f32be39b569799db0ef38e9168}\label{defines_8h_a05e541f32be39b569799db0ef38e9168}} 
 \#define {\bfseries L\+O\+G\+I\+C\+\_\+\+D\+NT}~((\hyperlink{CHT__1__6___8h_a6b476c09f52c46c89cca6a640c6a8efa}{D\+NT} -\/ \hyperlink{CHT__1__6___8h_a4c86bd837e15883adc26d5f67e78b673}{D\+N\+T\+\_\+\+M\+I\+S\+S\+I\+NG}) $\ast$ \hyperlink{defines_8h_a47467f21cf6f32b35425e9a5f97f2d89}{D\+N\+T\+\_\+\+D\+O\+U\+B\+L\+E\+\_\+\+S\+C\+AN})
 \item 
-\mbox{\Hypertarget{defines_8h_ad9146e8f480ce926f45e4ef151653b9f}\label{defines_8h_ad9146e8f480ce926f45e4ef151653b9f}} 
-\#define \hyperlink{defines_8h_ad9146e8f480ce926f45e4ef151653b9f}{Alpha}~1
-\begin{DoxyCompactList}\small\item\em modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?) \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_a0e557f1d3a1e9da3ef071cee0dbe7c8e}\label{defines_8h_a0e557f1d3a1e9da3ef071cee0dbe7c8e}} 
 \#define \hyperlink{defines_8h_a0e557f1d3a1e9da3ef071cee0dbe7c8e}{ED}~1600
 \begin{DoxyCompactList}\small\item\em cilindrada en CC del motor \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{defines_8h_a267514d4f83c7a3ce49e997386ef97ef}\label{defines_8h_a267514d4f83c7a3ce49e997386ef97ef}} 
-\#define \hyperlink{defines_8h_a267514d4f83c7a3ce49e997386ef97ef}{I\+N\+G\+\_\+\+S\+E\+C\+U\+E\+N\+CY}~\{1, 3, 4, 2\};
-\begin{DoxyCompactList}\small\item\em secuencia encendido (solo en F\+U\+L\+L\+\_\+\+S\+E\+C\+U\+E\+N\+C\+I\+AL) \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{defines_8h_a25b99f313e7bbad9109bae32e4d0a22b}\label{defines_8h_a25b99f313e7bbad9109bae32e4d0a22b}} 
-\#define \hyperlink{defines_8h_a25b99f313e7bbad9109bae32e4d0a22b}{I\+N\+G\+\_\+\+S\+E\+C\+U\+E\+N\+C\+Y\+\_\+\+A\+LT}~\{ 1, 4, 3, 2 \};
-\begin{DoxyCompactList}\small\item\em secuencia encendido semi-\/secuencial \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{defines_8h_a3f2c85322a7483badca2baf565e80d55}\label{defines_8h_a3f2c85322a7483badca2baf565e80d55}} 
-\#define \hyperlink{defines_8h_a3f2c85322a7483badca2baf565e80d55}{I\+N\+Y\+\_\+\+S\+E\+C\+U\+E\+N\+CY}~\{3, 4, 1, 2\};
-\begin{DoxyCompactList}\small\item\em secuencia inyeccion (solo en F\+U\+L\+L\+\_\+\+S\+E\+C\+U\+E\+N\+C\+I\+AL) \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{defines_8h_a13a0b4242db0b2e9a42c52608df5cd7c}\label{defines_8h_a13a0b4242db0b2e9a42c52608df5cd7c}} 
-\#define \hyperlink{defines_8h_a13a0b4242db0b2e9a42c52608df5cd7c}{I\+N\+Y\+\_\+\+S\+E\+C\+Y\+E\+N\+C\+Y\+\_\+\+A\+LT}~\{ 3, 1, 4, 2 \}
-\begin{DoxyCompactList}\small\item\em secuencia inyeccion semi-\/secuencial \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_a0d0de63cb3b2b767719451b355cb94fa}\label{defines_8h_a0d0de63cb3b2b767719451b355cb94fa}} 
 \#define \hyperlink{defines_8h_a0d0de63cb3b2b767719451b355cb94fa}{M\+A\+X\+\_\+\+R\+PM}~4500
 \begin{DoxyCompactList}\small\item\em valor maximo de rpm, valores superiores activan cutoff de encendido/combustible \end{DoxyCompactList}\item 
@@ -94,8 +82,41 @@ union \hyperlink{unionNibbler}{Nibbler}
 \mbox{\Hypertarget{defines_8h_aaeb2f99c34c54e97fc729bf4fee024ad}\label{defines_8h_aaeb2f99c34c54e97fc729bf4fee024ad}} 
 \#define {\bfseries A\+V\+CI}~30
 \item 
-\mbox{\Hypertarget{defines_8h_a9e79d5259fccd8957c32fb5c39e80be7}\label{defines_8h_a9e79d5259fccd8957c32fb5c39e80be7}} 
-\#define {\bfseries E\+C\+NT}~20
+\mbox{\Hypertarget{defines_8h_a1833e847abc68920e4c525329d5dd8ce}\label{defines_8h_a1833e847abc68920e4c525329d5dd8ce}} 
+\#define \hyperlink{defines_8h_a1833e847abc68920e4c525329d5dd8ce}{I\+N\+Y\+\_\+\+S\+E\+C\+U\+E\+N\+C\+Y\+\_\+\+S\+E\+M\+I\+\_\+\+M\+PI}~\{3, 4, 1, 2\};
+\begin{DoxyCompactList}\small\item\em secuencia inyeccion (solo en F\+U\+L\+L\+\_\+\+S\+E\+C\+U\+E\+N\+C\+I\+AL) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_abe9cf0f96bf95e10d809212eed704c7c}\label{defines_8h_abe9cf0f96bf95e10d809212eed704c7c}} 
+\#define \hyperlink{defines_8h_abe9cf0f96bf95e10d809212eed704c7c}{I\+N\+Y\+\_\+\+S\+E\+C\+U\+E\+N\+C\+Y\+\_\+\+F\+U\+L\+L\+\_\+\+M\+PI}~\{3, 1, 4, 2\};
+\begin{DoxyCompactList}\small\item\em secuencia inyeccion semi-\/secuencial \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a26fe77b84626079d7decfcda24cc9f75}\label{defines_8h_a26fe77b84626079d7decfcda24cc9f75}} 
+\#define \hyperlink{defines_8h_a26fe77b84626079d7decfcda24cc9f75}{I\+N\+J\+E\+C\+T\+I\+O\+N\+\_\+\+M\+O\+D\+E\+\_\+\+S\+PI}~0
+\begin{DoxyCompactList}\small\item\em monopunto, solo se utiliza canal 1 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_aa76beff0579aa7ece6ac7d2678cf950e}\label{defines_8h_aa76beff0579aa7ece6ac7d2678cf950e}} 
+\#define \hyperlink{defines_8h_aa76beff0579aa7ece6ac7d2678cf950e}{I\+N\+J\+E\+C\+T\+I\+O\+N\+\_\+\+M\+O\+D\+E\+\_\+\+S\+E\+M\+I\+\_\+\+M\+PI}~1
+\begin{DoxyCompactList}\small\item\em multipunto, canales 1-\/2 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_afb144100611ec1717fb6ceb83720ea04}\label{defines_8h_afb144100611ec1717fb6ceb83720ea04}} 
+\#define \hyperlink{defines_8h_afb144100611ec1717fb6ceb83720ea04}{I\+N\+J\+E\+C\+T\+I\+O\+N\+\_\+\+M\+O\+D\+E\+\_\+\+F\+U\+L\+L\+\_\+\+M\+PI}~2
+\begin{DoxyCompactList}\small\item\em multipunto, canales 1-\/2-\/3-\/4 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a267514d4f83c7a3ce49e997386ef97ef}\label{defines_8h_a267514d4f83c7a3ce49e997386ef97ef}} 
+\#define \hyperlink{defines_8h_a267514d4f83c7a3ce49e997386ef97ef}{I\+N\+G\+\_\+\+S\+E\+C\+U\+E\+N\+CY}~\{1, 3, 4, 2\};
+\begin{DoxyCompactList}\small\item\em secuencia encendido (solo en F\+U\+L\+L\+\_\+\+S\+E\+C\+U\+E\+N\+C\+I\+AL) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a25b99f313e7bbad9109bae32e4d0a22b}\label{defines_8h_a25b99f313e7bbad9109bae32e4d0a22b}} 
+\#define \hyperlink{defines_8h_a25b99f313e7bbad9109bae32e4d0a22b}{I\+N\+G\+\_\+\+S\+E\+C\+U\+E\+N\+C\+Y\+\_\+\+A\+LT}~\{1, 4, 3, 2\};
+\begin{DoxyCompactList}\small\item\em secuencia encendido semi-\/secuencial \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a9d388a4debbc8ee555fd77e758a185fe}\label{defines_8h_a9d388a4debbc8ee555fd77e758a185fe}} 
+\#define {\bfseries I\+G\+N\+I\+T\+I\+O\+N\+\_\+\+M\+O\+D\+E\+\_\+\+W\+A\+S\+T\+E\+D\+\_\+\+S\+P\+A\+RK}~0
+\item 
+\mbox{\Hypertarget{defines_8h_aca4f89f23066549185e8bc9393430b06}\label{defines_8h_aca4f89f23066549185e8bc9393430b06}} 
+\#define {\bfseries I\+G\+N\+I\+T\+I\+O\+N\+\_\+\+M\+O\+D\+E\+\_\+\+D\+I\+S\+T\+R\+I\+B\+U\+I\+D\+OR}~1
+\item 
+\mbox{\Hypertarget{defines_8h_a56bc4c61af66c2e94d2f34f17539ecf3}\label{defines_8h_a56bc4c61af66c2e94d2f34f17539ecf3}} 
+\#define {\bfseries I\+G\+N\+I\+T\+I\+O\+N\+\_\+\+M\+O\+D\+E\+\_\+\+S\+E\+C\+U\+E\+N\+C\+I\+AL}~2
+\item 
+\mbox{\Hypertarget{defines_8h_a7d8d08f8eaf1697bd2ac658214a25c1e}\label{defines_8h_a7d8d08f8eaf1697bd2ac658214a25c1e}} 
+\#define {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+D\+W\+E\+L\+L\+\_\+\+T\+I\+ME}~2000;
+\item 
+\mbox{\Hypertarget{defines_8h_a2f9819b4e646b9f5f759886cd2232442}\label{defines_8h_a2f9819b4e646b9f5f759886cd2232442}} 
+\#define {\bfseries A\+D\+V\+A\+N\+C\+E\+\_\+\+S\+A\+F\+E\+\_\+\+V\+A\+L\+UE}~3000
 \item 
 \mbox{\Hypertarget{defines_8h_a828a8829107e3f2fa9a2fcc8d19e8c77}\label{defines_8h_a828a8829107e3f2fa9a2fcc8d19e8c77}} 
 \#define {\bfseries \+\_\+R}~8.\+31446261815324
@@ -187,9 +208,8 @@ union \hyperlink{unionNibbler}{Nibbler}
 \mbox{\Hypertarget{defines_8h_ab32c8d7c8246a3671214e176fa5f767b}\label{defines_8h_ab32c8d7c8246a3671214e176fa5f767b}} 
 \#define \hyperlink{defines_8h_ab32c8d7c8246a3671214e176fa5f767b}{T\+P\+S\+\_\+\+M\+A\+X\+\_\+B}~4500
 \begin{DoxyCompactList}\small\item\em Valor maximo en mv para el sensor T\+PS (segundo potenciometro); valores superiores disparan D\+TC. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{defines_8h_ad52b4f48f8cce28e36d77d1ced7e8dd9}\label{defines_8h_ad52b4f48f8cce28e36d77d1ced7e8dd9}} 
 \#define \hyperlink{defines_8h_ad52b4f48f8cce28e36d77d1ced7e8dd9}{T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+A}(mV)~((mV $<$= 3695) ? (mV -\/ 1823) / 37.\+44 \+: (mV -\/ 2943) / 15.\+04)
-\begin{DoxyCompactList}\small\item\em Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO M\+A\+N\+D\+ES UN M\+A\+P() DE A\+R\+D\+U\+I\+NO A\+CA. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em del sensor); NO M\+A\+N\+D\+ES UN M\+A\+P() DE A\+R\+D\+U\+I\+NO A\+CA \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_ad7d20c7d1ec1729bf6892ddabbac3ab0}\label{defines_8h_ad7d20c7d1ec1729bf6892ddabbac3ab0}} 
 \#define {\bfseries T\+E\+M\+P\+\_\+\+M\+IN}~800
 \item 
@@ -250,7 +270,8 @@ union \hyperlink{unionNibbler}{Nibbler}
 \mbox{\Hypertarget{defines_8h_a3af919d5aad2d3fd16052cb3d57824bd}\label{defines_8h_a3af919d5aad2d3fd16052cb3d57824bd}} 
 \#define {\bfseries R\+O\+U\+N\+D\+\_\+32}(N\+U\+M\+B\+ER)~((float)((uint32\+\_\+t)N\+U\+M\+B\+ER $\ast$ 100 + .\+5) / 100)
 \item 
-\#define {\bfseries E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}(P\+O\+RT,  P\+IN)
+\mbox{\Hypertarget{defines_8h_a4101ea0e718a756439dbd3d3fb9c9c4b}\label{defines_8h_a4101ea0e718a756439dbd3d3fb9c9c4b}} 
+\#define {\bfseries E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}(P\+O\+RT,  P\+IN)~H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Write\+Pin(P\+O\+RT, P\+IN, H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Read\+Pin(P\+O\+RT, P\+IN) == G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+R\+E\+S\+ET ? G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+S\+ET \+: G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+R\+E\+S\+ET)
 \item 
 \mbox{\Hypertarget{defines_8h_adced380a3ff4f0b29c4b68111127c840}\label{defines_8h_adced380a3ff4f0b29c4b68111127c840}} 
 \#define {\bfseries E\+F\+I\+\_\+\+L\+OG}(...)~web\+\_\+serial\+::send\+\_\+debug\+\_\+message(web\+\_\+serial\+::debug\+Message\+::\+L\+OG, \+\_\+\+\_\+\+V\+A\+\_\+\+A\+R\+G\+S\+\_\+\+\_\+)
@@ -307,25 +328,18 @@ volatile uint32\+\_\+t {\bfseries Uptime\+Millis}
 
 {\bfseries Value\+:}
 \begin{DoxyCode}
-(byte & 0x80 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
-  (byte & 0x40 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
-  (byte & 0x20 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
-  (byte & 0x10 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
-  (byte & 0x08 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
-  (byte & 0x04 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
-  (byte & 0x02 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
-  (byte & 0x01 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'})
+(byte & 0x80 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), (byte & 0x40 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), (byte & 0x20 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), (byte & 0x10 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}),
+       (byte & 0x08 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), \(\backslash\)
+      (byte & 0x04 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), (byte & 0x02 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'}), (byte & 0x01 ? \textcolor{charliteral}{'1'} : \textcolor{charliteral}{'0'})
 \end{DoxyCode}
-\mbox{\Hypertarget{defines_8h_a4101ea0e718a756439dbd3d3fb9c9c4b}\label{defines_8h_a4101ea0e718a756439dbd3d3fb9c9c4b}} 
-\index{defines.\+h@{defines.\+h}!E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN@{E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}}
-\index{E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN@{E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}!defines.\+h@{defines.\+h}}
-\subsubsection{\texorpdfstring{E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN}{EFI\_INVERT\_PIN}}
-{\footnotesize\ttfamily \#define E\+F\+I\+\_\+\+I\+N\+V\+E\+R\+T\+\_\+\+P\+IN(\begin{DoxyParamCaption}\item[{}]{P\+O\+RT,  }\item[{}]{P\+IN }\end{DoxyParamCaption})}
+\mbox{\Hypertarget{defines_8h_ad52b4f48f8cce28e36d77d1ced7e8dd9}\label{defines_8h_ad52b4f48f8cce28e36d77d1ced7e8dd9}} 
+\index{defines.\+h@{defines.\+h}!T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+A@{T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+A}}
+\index{T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+A@{T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+A}!defines.\+h@{defines.\+h}}
+\subsubsection{\texorpdfstring{T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+A}{TPS\_CALC\_A}}
+{\footnotesize\ttfamily \#define T\+P\+S\+\_\+\+C\+A\+L\+C\+\_\+A(\begin{DoxyParamCaption}\item[{}]{mV }\end{DoxyParamCaption})~((mV $<$= 3695) ? (mV -\/ 1823) / 37.\+44 \+: (mV -\/ 2943) / 15.\+04)}
 
-{\bfseries Value\+:}
-\begin{DoxyCode}
-HAL\_GPIO\_WritePin(PORT, PIN,                                                 \(\backslash\)
-                    HAL\_GPIO\_ReadPin(PORT, PIN) == GPIO\_PIN\_RESET              \(\backslash\)
-                        ? GPIO\_PIN\_SET                                         \(\backslash\)
-                        : GPIO\_PIN\_RESET)
-\end{DoxyCode}
+
+
+del sensor); NO M\+A\+N\+D\+ES UN M\+A\+P() DE A\+R\+D\+U\+I\+NO A\+CA 
+
+Ecuacion para transformar valor en mV a porcentaje (varia dependiendo 

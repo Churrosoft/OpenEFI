@@ -90,10 +90,10 @@ $(document).ready(function(){initNavTree('d8/db0/defines_8h.html','../../');});
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="../../d4/dbf/main_8h_source.html">main.h</a>&quot;</code><br />
 <code>#include &quot;cmsis_gcc.h&quot;</code><br />
-<code>#include &quot;variables.h&quot;</code><br />
 <code>#include &quot;features.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/dbf/main_8h_source.html">main.h</a>&quot;</code><br />
+<code>#include &quot;variables.h&quot;</code><br />
 </div>
 <p><a href="../../d8/db0/defines_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -107,8 +107,11 @@ Macros</h2></td></tr>
 <tr class="memitem:aca91b9017f4698def1eae778ef480c42"><td class="memItemLeft" align="right" valign="top"><a id="aca91b9017f4698def1eae778ef480c42"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>DEFINES_H</b></td></tr>
 <tr class="separator:aca91b9017f4698def1eae778ef480c42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a364a315109bb526f2f773b5c4695e76b"><td class="memItemLeft" align="right" valign="top"><a id="a364a315109bb526f2f773b5c4695e76b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>HW_TYPE</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a364a315109bb526f2f773b5c4695e76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26abc5e4f99b9b7f3fbfca100ecc88be"><td class="memItemLeft" align="right" valign="top"><a id="a26abc5e4f99b9b7f3fbfca100ecc88be"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>OPENEFI_BOARD_TYPE</b>&#160;&#160;&#160;1</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>OPENEFI_BOARD_TYPE</b>&#160;&#160;&#160;HW_TYPE</td></tr>
 <tr class="separator:a26abc5e4f99b9b7f3fbfca100ecc88be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4032dc4fa482ab21b6d0c42a9cc646e6"><td class="memItemLeft" align="right" valign="top"><a id="a4032dc4fa482ab21b6d0c42a9cc646e6"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>OPENEFI_VER_MAJOR</b>&#160;&#160;&#160;2</td></tr>
@@ -146,30 +149,10 @@ Macros</h2></td></tr>
 <tr class="memitem:a05e541f32be39b569799db0ef38e9168"><td class="memItemLeft" align="right" valign="top"><a id="a05e541f32be39b569799db0ef38e9168"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>LOGIC_DNT</b>&#160;&#160;&#160;((<a class="el" href="../../d6/dac/CHT__1__6___8h.html#a6b476c09f52c46c89cca6a640c6a8efa">DNT</a> - <a class="el" href="../../d6/dac/CHT__1__6___8h.html#a4c86bd837e15883adc26d5f67e78b673">DNT_MISSING</a>) * <a class="el" href="../../d8/db0/defines_8h.html#a47467f21cf6f32b35425e9a5f97f2d89">DNT_DOUBLE_SCAN</a>)</td></tr>
 <tr class="separator:a05e541f32be39b569799db0ef38e9168"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9146e8f480ce926f45e4ef151653b9f"><td class="memItemLeft" align="right" valign="top"><a id="ad9146e8f480ce926f45e4ef151653b9f"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#ad9146e8f480ce926f45e4ef151653b9f">Alpha</a>&#160;&#160;&#160;1</td></tr>
-<tr class="memdesc:ad9146e8f480ce926f45e4ef151653b9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">modo para probar sin correcciones de tiempo, ni algoritmos de inyeccion ni sincronizacion, para encajar un 555 y probar a pelo ?) <br /></td></tr>
-<tr class="separator:ad9146e8f480ce926f45e4ef151653b9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e557f1d3a1e9da3ef071cee0dbe7c8e"><td class="memItemLeft" align="right" valign="top"><a id="a0e557f1d3a1e9da3ef071cee0dbe7c8e"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a0e557f1d3a1e9da3ef071cee0dbe7c8e">ED</a>&#160;&#160;&#160;1600</td></tr>
 <tr class="memdesc:a0e557f1d3a1e9da3ef071cee0dbe7c8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">cilindrada en CC del motor <br /></td></tr>
 <tr class="separator:a0e557f1d3a1e9da3ef071cee0dbe7c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a267514d4f83c7a3ce49e997386ef97ef"><td class="memItemLeft" align="right" valign="top"><a id="a267514d4f83c7a3ce49e997386ef97ef"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a267514d4f83c7a3ce49e997386ef97ef">ING_SECUENCY</a>&#160;&#160;&#160;{1, 3, 4, 2};</td></tr>
-<tr class="memdesc:a267514d4f83c7a3ce49e997386ef97ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia encendido (solo en FULL_SECUENCIAL) <br /></td></tr>
-<tr class="separator:a267514d4f83c7a3ce49e997386ef97ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25b99f313e7bbad9109bae32e4d0a22b"><td class="memItemLeft" align="right" valign="top"><a id="a25b99f313e7bbad9109bae32e4d0a22b"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a25b99f313e7bbad9109bae32e4d0a22b">ING_SECUENCY_ALT</a>&#160;&#160;&#160;{ 1, 4, 3, 2 };</td></tr>
-<tr class="memdesc:a25b99f313e7bbad9109bae32e4d0a22b"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia encendido semi-secuencial <br /></td></tr>
-<tr class="separator:a25b99f313e7bbad9109bae32e4d0a22b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f2c85322a7483badca2baf565e80d55"><td class="memItemLeft" align="right" valign="top"><a id="a3f2c85322a7483badca2baf565e80d55"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a3f2c85322a7483badca2baf565e80d55">INY_SECUENCY</a>&#160;&#160;&#160;{3, 4, 1, 2};</td></tr>
-<tr class="memdesc:a3f2c85322a7483badca2baf565e80d55"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia inyeccion (solo en FULL_SECUENCIAL) <br /></td></tr>
-<tr class="separator:a3f2c85322a7483badca2baf565e80d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13a0b4242db0b2e9a42c52608df5cd7c"><td class="memItemLeft" align="right" valign="top"><a id="a13a0b4242db0b2e9a42c52608df5cd7c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a13a0b4242db0b2e9a42c52608df5cd7c">INY_SECYENCY_ALT</a>&#160;&#160;&#160;{ 3, 1, 4, 2 }</td></tr>
-<tr class="memdesc:a13a0b4242db0b2e9a42c52608df5cd7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia inyeccion semi-secuencial <br /></td></tr>
-<tr class="separator:a13a0b4242db0b2e9a42c52608df5cd7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d0de63cb3b2b767719451b355cb94fa"><td class="memItemLeft" align="right" valign="top"><a id="a0d0de63cb3b2b767719451b355cb94fa"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a0d0de63cb3b2b767719451b355cb94fa">MAX_RPM</a>&#160;&#160;&#160;4500</td></tr>
 <tr class="memdesc:a0d0de63cb3b2b767719451b355cb94fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">valor maximo de rpm, valores superiores activan cutoff de encendido/combustible <br /></td></tr>
@@ -202,9 +185,49 @@ Macros</h2></td></tr>
 <tr class="memitem:aaeb2f99c34c54e97fc729bf4fee024ad"><td class="memItemLeft" align="right" valign="top"><a id="aaeb2f99c34c54e97fc729bf4fee024ad"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>AVCI</b>&#160;&#160;&#160;30</td></tr>
 <tr class="separator:aaeb2f99c34c54e97fc729bf4fee024ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e79d5259fccd8957c32fb5c39e80be7"><td class="memItemLeft" align="right" valign="top"><a id="a9e79d5259fccd8957c32fb5c39e80be7"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ECNT</b>&#160;&#160;&#160;20</td></tr>
-<tr class="separator:a9e79d5259fccd8957c32fb5c39e80be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1833e847abc68920e4c525329d5dd8ce"><td class="memItemLeft" align="right" valign="top"><a id="a1833e847abc68920e4c525329d5dd8ce"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a1833e847abc68920e4c525329d5dd8ce">INY_SECUENCY_SEMI_MPI</a>&#160;&#160;&#160;{3, 4, 1, 2};</td></tr>
+<tr class="memdesc:a1833e847abc68920e4c525329d5dd8ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia inyeccion (solo en FULL_SECUENCIAL) <br /></td></tr>
+<tr class="separator:a1833e847abc68920e4c525329d5dd8ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe9cf0f96bf95e10d809212eed704c7c"><td class="memItemLeft" align="right" valign="top"><a id="abe9cf0f96bf95e10d809212eed704c7c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#abe9cf0f96bf95e10d809212eed704c7c">INY_SECUENCY_FULL_MPI</a>&#160;&#160;&#160;{3, 1, 4, 2};</td></tr>
+<tr class="memdesc:abe9cf0f96bf95e10d809212eed704c7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia inyeccion semi-secuencial <br /></td></tr>
+<tr class="separator:abe9cf0f96bf95e10d809212eed704c7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26fe77b84626079d7decfcda24cc9f75"><td class="memItemLeft" align="right" valign="top"><a id="a26fe77b84626079d7decfcda24cc9f75"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a26fe77b84626079d7decfcda24cc9f75">INJECTION_MODE_SPI</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:a26fe77b84626079d7decfcda24cc9f75"><td class="mdescLeft">&#160;</td><td class="mdescRight">monopunto, solo se utiliza canal 1 <br /></td></tr>
+<tr class="separator:a26fe77b84626079d7decfcda24cc9f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa76beff0579aa7ece6ac7d2678cf950e"><td class="memItemLeft" align="right" valign="top"><a id="aa76beff0579aa7ece6ac7d2678cf950e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#aa76beff0579aa7ece6ac7d2678cf950e">INJECTION_MODE_SEMI_MPI</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:aa76beff0579aa7ece6ac7d2678cf950e"><td class="mdescLeft">&#160;</td><td class="mdescRight">multipunto, canales 1-2 <br /></td></tr>
+<tr class="separator:aa76beff0579aa7ece6ac7d2678cf950e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb144100611ec1717fb6ceb83720ea04"><td class="memItemLeft" align="right" valign="top"><a id="afb144100611ec1717fb6ceb83720ea04"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#afb144100611ec1717fb6ceb83720ea04">INJECTION_MODE_FULL_MPI</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memdesc:afb144100611ec1717fb6ceb83720ea04"><td class="mdescLeft">&#160;</td><td class="mdescRight">multipunto, canales 1-2-3-4 <br /></td></tr>
+<tr class="separator:afb144100611ec1717fb6ceb83720ea04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a267514d4f83c7a3ce49e997386ef97ef"><td class="memItemLeft" align="right" valign="top"><a id="a267514d4f83c7a3ce49e997386ef97ef"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a267514d4f83c7a3ce49e997386ef97ef">ING_SECUENCY</a>&#160;&#160;&#160;{1, 3, 4, 2};</td></tr>
+<tr class="memdesc:a267514d4f83c7a3ce49e997386ef97ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia encendido (solo en FULL_SECUENCIAL) <br /></td></tr>
+<tr class="separator:a267514d4f83c7a3ce49e997386ef97ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25b99f313e7bbad9109bae32e4d0a22b"><td class="memItemLeft" align="right" valign="top"><a id="a25b99f313e7bbad9109bae32e4d0a22b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#a25b99f313e7bbad9109bae32e4d0a22b">ING_SECUENCY_ALT</a>&#160;&#160;&#160;{1, 4, 3, 2};</td></tr>
+<tr class="memdesc:a25b99f313e7bbad9109bae32e4d0a22b"><td class="mdescLeft">&#160;</td><td class="mdescRight">secuencia encendido semi-secuencial <br /></td></tr>
+<tr class="separator:a25b99f313e7bbad9109bae32e4d0a22b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d388a4debbc8ee555fd77e758a185fe"><td class="memItemLeft" align="right" valign="top"><a id="a9d388a4debbc8ee555fd77e758a185fe"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>IGNITION_MODE_WASTED_SPARK</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a9d388a4debbc8ee555fd77e758a185fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca4f89f23066549185e8bc9393430b06"><td class="memItemLeft" align="right" valign="top"><a id="aca4f89f23066549185e8bc9393430b06"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>IGNITION_MODE_DISTRIBUIDOR</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:aca4f89f23066549185e8bc9393430b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56bc4c61af66c2e94d2f34f17539ecf3"><td class="memItemLeft" align="right" valign="top"><a id="a56bc4c61af66c2e94d2f34f17539ecf3"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>IGNITION_MODE_SECUENCIAL</b>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a56bc4c61af66c2e94d2f34f17539ecf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d8d08f8eaf1697bd2ac658214a25c1e"><td class="memItemLeft" align="right" valign="top"><a id="a7d8d08f8eaf1697bd2ac658214a25c1e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEFAULT_DWELL_TIME</b>&#160;&#160;&#160;2000;</td></tr>
+<tr class="separator:a7d8d08f8eaf1697bd2ac658214a25c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f9819b4e646b9f5f759886cd2232442"><td class="memItemLeft" align="right" valign="top"><a id="a2f9819b4e646b9f5f759886cd2232442"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ADVANCE_SAFE_VALUE</b>&#160;&#160;&#160;3000</td></tr>
+<tr class="separator:a2f9819b4e646b9f5f759886cd2232442"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a828a8829107e3f2fa9a2fcc8d19e8c77"><td class="memItemLeft" align="right" valign="top"><a id="a828a8829107e3f2fa9a2fcc8d19e8c77"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>_R</b>&#160;&#160;&#160;8.31446261815324</td></tr>
 <tr class="separator:a828a8829107e3f2fa9a2fcc8d19e8c77"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -303,9 +326,8 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#ab32c8d7c8246a3671214e176fa5f767b">TPS_MAX_B</a>&#160;&#160;&#160;4500</td></tr>
 <tr class="memdesc:ab32c8d7c8246a3671214e176fa5f767b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor maximo en mv para el sensor TPS (segundo potenciometro); valores superiores disparan DTC. <br /></td></tr>
 <tr class="separator:ab32c8d7c8246a3671214e176fa5f767b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad52b4f48f8cce28e36d77d1ced7e8dd9"><td class="memItemLeft" align="right" valign="top"><a id="ad52b4f48f8cce28e36d77d1ced7e8dd9"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#ad52b4f48f8cce28e36d77d1ced7e8dd9">TPS_CALC_A</a>(mV)&#160;&#160;&#160;((mV &lt;= 3695) ? (mV - 1823) / 37.44 : (mV - 2943) / 15.04)</td></tr>
-<tr class="memdesc:ad52b4f48f8cce28e36d77d1ced7e8dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ecuacion para transformar valor en mV a porcentaje (varia dependiendo del sensor); NO MANDES UN MAP() DE ARDUINO ACA. <br /></td></tr>
+<tr class="memitem:ad52b4f48f8cce28e36d77d1ced7e8dd9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db0/defines_8h.html#ad52b4f48f8cce28e36d77d1ced7e8dd9">TPS_CALC_A</a>(mV)&#160;&#160;&#160;((mV &lt;= 3695) ? (mV - 1823) / 37.44 : (mV - 2943) / 15.04)</td></tr>
+<tr class="memdesc:ad52b4f48f8cce28e36d77d1ced7e8dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">del sensor); NO MANDES UN MAP() DE ARDUINO ACA  <a href="#ad52b4f48f8cce28e36d77d1ced7e8dd9">More...</a><br /></td></tr>
 <tr class="separator:ad52b4f48f8cce28e36d77d1ced7e8dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7d20c7d1ec1729bf6892ddabbac3ab0"><td class="memItemLeft" align="right" valign="top"><a id="ad7d20c7d1ec1729bf6892ddabbac3ab0"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>TEMP_MIN</b>&#160;&#160;&#160;800</td></tr>
@@ -367,7 +389,8 @@ Macros</h2></td></tr>
 <tr class="memitem:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memItemLeft" align="right" valign="top"><a id="a3af919d5aad2d3fd16052cb3d57824bd"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ROUND_32</b>(NUMBER)&#160;&#160;&#160;((float)((uint32_t)NUMBER * 100 + .5) / 100)</td></tr>
 <tr class="separator:a3af919d5aad2d3fd16052cb3d57824bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INVERT_PIN</b>(PORT,  PIN)</td></tr>
+<tr class="memitem:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memItemLeft" align="right" valign="top"><a id="a4101ea0e718a756439dbd3d3fb9c9c4b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_INVERT_PIN</b>(PORT,  PIN)&#160;&#160;&#160;HAL_GPIO_WritePin(PORT, PIN, HAL_GPIO_ReadPin(PORT, PIN) == GPIO_PIN_RESET ? GPIO_PIN_SET : GPIO_PIN_RESET)</td></tr>
 <tr class="separator:a4101ea0e718a756439dbd3d3fb9c9c4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adced380a3ff4f0b29c4b68111127c840"><td class="memItemLeft" align="right" valign="top"><a id="adced380a3ff4f0b29c4b68111127c840"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EFI_LOG</b>(...)&#160;&#160;&#160;web_serial::send_debug_message(web_serial::debugMessage::LOG, __VA_ARGS__)</td></tr>
@@ -430,35 +453,28 @@ volatile uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>UptimeMi
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">(byte &amp; 0x80 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x40 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x20 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x10 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x08 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x04 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x02 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">  (byte &amp; 0x01 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>)</div></div><!-- fragment -->
+<b>Value:</b><div class="fragment"><div class="line">(byte &amp; 0x80 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), (byte &amp; 0x40 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), (byte &amp; 0x20 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), (byte &amp; 0x10 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), (byte &amp; 0x08 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), \</div><div class="line">      (byte &amp; 0x04 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), (byte &amp; 0x02 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>), (byte &amp; 0x01 ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>)</div></div><!-- fragment -->
 </div>
 </div>
-<a id="a4101ea0e718a756439dbd3d3fb9c9c4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4101ea0e718a756439dbd3d3fb9c9c4b">&#9670;&nbsp;</a></span>EFI_INVERT_PIN</h2>
+<a id="ad52b4f48f8cce28e36d77d1ced7e8dd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad52b4f48f8cce28e36d77d1ced7e8dd9">&#9670;&nbsp;</a></span>TPS_CALC_A</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define EFI_INVERT_PIN</td>
+          <td class="memname">#define TPS_CALC_A</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">PORT, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">PIN&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="paramname">mV</td><td>)</td>
+          <td>&#160;&#160;&#160;((mV &lt;= 3695) ? (mV - 1823) / 37.44 : (mV - 2943) / 15.04)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">HAL_GPIO_WritePin(PORT, PIN,                                                 \</div><div class="line">                    HAL_GPIO_ReadPin(PORT, PIN) == GPIO_PIN_RESET              \</div><div class="line">                        ? GPIO_PIN_SET                                         \</div><div class="line">                        : GPIO_PIN_RESET)</div></div><!-- fragment -->
+
+<p>del sensor); NO MANDES UN MAP() DE ARDUINO ACA </p>
+<p>Ecuacion para transformar valor en mV a porcentaje (varia dependiendo </p>
+
 </div>
 </div>
 </div><!-- contents -->
