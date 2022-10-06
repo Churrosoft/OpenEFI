@@ -60,7 +60,7 @@ void RPM::interrupt() {
 
   if (RPM::WheelTooth >= LOGIC_DNT) {
 
-    EFI_INVERT_PIN(LED0_GPIO_Port, LED0_Pin);
+    /* EFI_INVERT_PIN(LED0_GPIO_Port, LED0_Pin); */
 
     if (lastWheelTime == 0) {
       lastWheelTime = GET_US_TIME;

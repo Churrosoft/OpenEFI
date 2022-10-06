@@ -21,8 +21,10 @@
 /* Includes ------------------------------------------------------------------*/
 extern "C" {
 #include "stm32f4xx_it.h"
+
 #include "main.h"
 #include "sensors/utils/sinc.h"
+
 }
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -227,8 +229,7 @@ void CAN1_RX0_IRQHandler(void) {
   if (HAL_CAN_GetRxFifoFillLevel(&hcan1, CAN_RX_FIFO0) > 0) {
     CAN_RxHeaderTypeDef CanRxHeader;
     HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &CanRxHeader, buffer);
-    CAN::on_message(CanRxHeader.StdId, CanRxHeader.ExtId, buffer,
-                    CanRxHeader.DLC);
+    CAN::on_message(CanRxHeader.StdId, CanRxHeader.ExtId, buffer, CanRxHeader.DLC);
   }
 #endif
 
@@ -257,7 +258,8 @@ void TIM3_IRQHandler(void) {
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
-  CPWM::tim3_irq();
+  EFI_INVERT_PIN(LED2_GPIO_Port, LED2_Pin);
+  /*  CPWM::tim3_irq(); */
   /* USER CODE END TIM3_IRQn 1 */
 }
 
@@ -348,7 +350,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   }
   /* USER CODE BEGIN Callback 1 */
   if (htim->Instance == TIM10) {
-
     EFI_INVERT_PIN(LED2_GPIO_Port, LED2_Pin);
 
 // WEBSerial:
@@ -389,7 +390,6 @@ void OTG_FS_IRQHandler(void) {
 /* USER CODE BEGIN 1 */
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-
   if (GPIO_Pin == CKP_Pin) {
 #ifdef ENABLE_RPM_CALC
     RPM::interrupt();
@@ -400,7 +400,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
       SINC = sinc();
 #endif
     } else {
-
 #ifdef ENABLE_CPWM_IT
       CPWM::interrupt();
 #endif

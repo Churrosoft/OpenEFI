@@ -9,8 +9,8 @@ void on_loop() {
 
     last_rpm = HAL_GetTick();
 
-    EFI_INVERT_PIN(LED1_GPIO_Port, LED1_Pin);
-
+/*     EFI_INVERT_PIN(LED1_GPIO_Port, LED1_Pin);
+ */
 
  /* if(usb.dev_state == USBD_STATE_CONFIGURED){
 

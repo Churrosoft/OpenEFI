@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include <string>
-
+#undef TESTING
 extern "C" {
 #ifdef TESTING
 #include <trace.h>
@@ -143,6 +143,8 @@ void CPWM::interrupt() {
     CPWM::c_tim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
     CPWM::c_tim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
+    // enable timmer
+    TIM3->CR1 |= 1;
     if (HAL_TIM_Base_Start_IT(&CPWM::c_tim3) != HAL_OK) Error_Handler();
 #endif
 #ifdef TESTING
@@ -164,11 +166,12 @@ void CPWM::interrupt() {
     CPWM::write_ecn(CPWM::eng_pin, GPIO_PIN_SET);
 #else
     CPWM::write_ecn(CPWM::eng_pin, GPIO_PIN_SET);
+
     htim4.Instance = TIM4;
-    CPWM::c_tim4.Init.Prescaler = 6000;
+    CPWM::c_tim4.Init.Prescaler = 1200;
     CPWM::c_tim4.Init.CounterMode = TIM_COUNTERMODE_UP;
     CPWM::c_tim4.Init.Period = IGNITION_DWELL_TIME;
-    CPWM::c_tim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    CPWM::c_tim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
     CPWM::c_tim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
     if (HAL_TIM_Base_Init(&htim4) != HAL_OK) Error_Handler();
@@ -196,6 +199,10 @@ void CPWM::tim3_irq() {
     CPWM::iny_pin++;
   else
     CPWM::iny_pin = 0;
+
+  // disable timmer
+/*   TIM3->CR1 |= 1;
+  TIM3->SR = (U16)~TIM_FLAG_Update; */
   HAL_TIM_Base_Stop_IT(&CPWM::c_tim3);
 }
 

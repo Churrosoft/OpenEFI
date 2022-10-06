@@ -165,11 +165,12 @@ int main(void) {
   MX_CAN1_Init();
   MX_SPI2_Init();
   MX_TIM3_Init();
-  MX_TIM4_Init();
+ /*  MX_TIM4_Init(); */
   MX_TIM9_Init();
   MX_TIM10_Init();
   // MX_TIM11_Init();
-
+/*   HAL_TIM_OnePulse_Init(&htim3, TIM_OPMODE_SINGLE);
+ */
 #ifdef ENABLE_US_TIM
   MX_TIM13_Init();
   HAL_TIM_Base_Start_IT(&htim13);
@@ -257,14 +258,18 @@ int main(void) {
     }
 
     // low priority code, runs every 150mS
-    if (HAL_GetTick() - last_cycle >= 150) {
+    if (HAL_GetTick() - last_cycle >= 1000) {
       last_cycle = HAL_GetTick();
-#ifdef ENABLE_WEBSERIAL
+  EFI_INVERT_PIN(LED1_GPIO_Port, LED1_Pin);
+
+      HAL_TIM_OnePulse_Start_IT(&htim3,TIM_CHANNEL_1);
+
+/* #ifdef ENABLE_WEBSERIAL
       web_serial::send_deque();
 #endif
 #ifdef ENABLE_SENSORS
       sensors::loop_low_priority();
-#endif
+#endif */
     }
 
     _RPM = RPM::_RPM;
