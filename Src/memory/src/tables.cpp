@@ -1,4 +1,5 @@
 #include "../include/tables.hpp"
+
 #include <stdio.h>
 
 extern "C" {
@@ -38,26 +39,20 @@ void tables::set_value(table_ref table, uint32_t x, uint32_t y, int32_t value) {
 }
 
 table_data tables::read_all(table_ref table) {
-
   table_data matrix(table.y_max, vector<int32_t>(table.x_max, 0xff));
 
   uint32_t datarow = 0;
 
   for (int32_t matrix_y = 0; matrix_y < table.y_max; matrix_y++) {
-
-    uint32_t address =
-        (4 * matrix_y * table.x_max) +
-        (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize);
+    uint32_t address = (4 * matrix_y * table.x_max) + (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize);
 
     uint8_t table_row[MAX_ROW_SIZE * 4];
 
     W25qxx_ReadBytes(table_row, address, table.x_max * 4);
 
     for (int32_t matrix_x = 0; matrix_x < table.x_max; matrix_x++) {
-
       volatile int32_t value =
-          table_row[datarow] + (table_row[datarow + 1] << 8) +
-          (table_row[datarow + 2] << 16) + (table_row[datarow + 3] << 24);
+          table_row[datarow] + (table_row[datarow + 1] << 8) + (table_row[datarow + 2] << 16) + (table_row[datarow + 3] << 24);
 
       matrix[matrix_y][matrix_x] = value;
 
@@ -84,10 +79,7 @@ std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
   std::vector<int32_t> data_out;
 
   for (uint32_t index = 2; index < buff_size; index += 4) {
-    
-    int32_t row_value = (int32_t)(data[index + 1] << 8) +
-                        (data[index + 2] << 16) + (data[index + 3] << 24) +
-                        data[index];
+    int32_t row_value = (int32_t)(data[index + 1] << 8) + (data[index + 2] << 16) + (data[index + 3] << 24) + data[index];
 
     data_out.push_back(row_value);
   }
@@ -107,10 +99,10 @@ void tables::update_table(table_data data, table_ref table) {
   free(buffer);
 }
 
-int32_t tables::find_nearest_neighbor(std::vector<int32_t> vec,
-                                      int32_t search) {
-
-  auto upper_bound = std::upper_bound(vec.begin(), vec.end(), search);
+int32_t tables::find_nearest_neighbor(std::vector<int32_t> vec, int32_t search) {
+  // "si anda, anda"
+  auto upper_bound = std::upper_bound(vec.begin(), vec.end(), search, [](const int32_t &a, const int32_t &b) { return a <= b; });
+  // std::upper_bound(vec.begin(), vec.end(), search);
   auto search_result = std::distance(vec.begin(), upper_bound);
 
   return (int32_t)std::abs(search_result);
@@ -138,12 +130,9 @@ std::vector<int32_t> tables::col_to_row(table_data table, uint32_t table_index) 
 }
 
 bool tables::on_bounds(table_ref table, int32_t x, int32_t y) {
+  if (x > table.x_max || y > table.y_max) return false;
 
-  if (x > table.x_max || y > table.y_max)
-    return false;
-
-  if (x < 0 || y < 0)
-    return false;
+  if (x < 0 || y < 0) return false;
 
   return true;
 }

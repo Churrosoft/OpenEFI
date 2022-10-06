@@ -1,11 +1,14 @@
+#ifndef TESTING
 #define TESTING
+#endif
 
 #include "../Src/cpwm/rpm_calc.h"
+
+#include <unity.h>
+
 #include "../Inc/defines.h"
 #include "../Inc/variables.h"
 #include "../Src/cpwm/cpwm.hpp"
-
-#include <unity.h>
 
 // void setUp(void) {
 //   /* Is run before every test, put unit init calls here. */
@@ -24,9 +27,7 @@ void test_stoped_rpm() {
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(5.0, RPM::_RPM, "Check RPM::interrupt");
-  TEST_ASSERT_EQUAL_UINT8_MESSAGE(
-      (uint8_t)RPM_STATUS::STOPPED, RPM::status,
-      "Check RPM::interrupt, status calculation (STOPPED)");
+  TEST_ASSERT_EQUAL_UINT8_MESSAGE((uint8_t)RPM_STATUS::STOPPED, RPM::status, "Check RPM::interrupt, status calculation (STOPPED)");
 }
 
 void test_spinup_rpm() {
@@ -36,9 +37,7 @@ void test_spinup_rpm() {
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(75.0, RPM::_RPM, "Check RPM::interrupt");
-  TEST_ASSERT_EQUAL_UINT8_MESSAGE(
-      (uint8_t)RPM_STATUS::SPIN_UP, RPM::status,
-      "Check RPM::interrupt, status calculation (SPIN_UP)");
+  TEST_ASSERT_EQUAL_UINT8_MESSAGE((uint8_t)RPM_STATUS::SPIN_UP, RPM::status, "Check RPM::interrupt, status calculation (SPIN_UP)");
 }
 
 void test_crank_rpm() {
@@ -48,9 +47,7 @@ void test_crank_rpm() {
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(600.0, RPM::_RPM, "Check RPM::interrupt");
-  TEST_ASSERT_EQUAL_UINT8_MESSAGE(
-      (uint8_t)RPM_STATUS::CRANK, RPM::status,
-      "Check RPM::interrupt, status calculation (CRANK)");
+  TEST_ASSERT_EQUAL_UINT8_MESSAGE((uint8_t)RPM_STATUS::CRANK, RPM::status, "Check RPM::interrupt, status calculation (CRANK)");
 }
 
 void test_running_rpm() {
@@ -61,9 +58,7 @@ void test_running_rpm() {
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(4000.0, RPM::_RPM, "Check RPM::interrupt");
-  TEST_ASSERT_EQUAL_UINT8_MESSAGE(
-      (uint8_t)RPM_STATUS::RUNNING, RPM::status,
-      "Check RPM::interrupt, status calculation (RUNNING)");
+  TEST_ASSERT_EQUAL_UINT8_MESSAGE((uint8_t)RPM_STATUS::RUNNING, RPM::status, "Check RPM::interrupt, status calculation (RUNNING)");
 }
 
 void test_idle_rpm() {
@@ -74,9 +69,7 @@ void test_idle_rpm() {
   for (int8_t i = 0; i < LOGIC_DNT + 1; i++) RPM::interrupt();
 
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(1200.0, RPM::_RPM, "Check RPM::interrupt");
-  TEST_ASSERT_EQUAL_UINT8_MESSAGE(
-      (uint8_t)RPM_STATUS::RUNNING, RPM::status,
-      "Check RPM::interrupt, status calculation (RUNNING)");
+  TEST_ASSERT_EQUAL_UINT8_MESSAGE((uint8_t)RPM_STATUS::RUNNING, RPM::status, "Check RPM::interrupt, status calculation (RUNNING)");
 }
 
 int run_rpm_tests() {

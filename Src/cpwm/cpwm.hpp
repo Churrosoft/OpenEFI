@@ -36,8 +36,6 @@ namespace CPWM
     void tim3_irq();
     void tim4_irq();
 
-    // calculo de rpms
-    void calc_rpm(void);
 } // namespace CPWM
 
 #endif

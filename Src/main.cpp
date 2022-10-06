@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -29,11 +30,12 @@
 #include <unity.h>
 
 #include "../test/cpwm_test.cpp"
+#include "../test/ignition_test.cpp"
 #include "../test/rpm_calc.cpp"
 
 extern int run_tests(void);
 extern int run_rpm_tests(void);
-
+extern int runIgnitionTests(void);
 #endif
 
 #include <algorithm>
@@ -53,19 +55,18 @@ extern "C" {
 #include "usb_device.h"
 #include "usbd_cdc.h"
 }
-#include "aliases/memory.hpp"
 #include <cstdlib>
 
+#include "aliases/memory.hpp"
 #include "cpwm/cpwm.hpp"
 #include "cpwm/rpm_calc.h"
 #include "debug/debug_local.h"
+#include "engine/engine.hpp"
 #include "ignition/include/ignition.hpp"
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
-
-#include "engine/engine.hpp"
 
 #ifdef ENABLE_CAN_ISO_TP
 #include "can/can_enviroment.h"
@@ -75,8 +76,7 @@ extern "C" {
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-bool MOTOR_ENABLE;
-bool SINC;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -89,25 +89,32 @@ bool SINC;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-SPI_HandleTypeDef hspi2;
 
 /* USER CODE BEGIN PV */
+SPI_HandleTypeDef hspi2;
+bool MOTOR_ENABLE;
+bool SINC;
+
+uint8_t INJECTION_STRATEGY = INJECTION_MODE_SPI;
+uint8_t IGNITION_STRATEGY = IGNITION_MODE_WASTED_SPARK;
+uint32_t IGNITION_DWELL_TIME = DEFAULT_DWELL_TIME;
+uint32_t last_cycle, last_mid_cycle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+
+/* USER CODE BEGIN PFP */
 void SystemClock_Config(void);
 void MX_GPIO_Init(void);
 void MX_SPI2_Init(void);
 void MX_NVIC_Init(void);
-/* USER CODE BEGIN PFP */
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 #ifdef TESTING
 uint32_t mocktick = 0;
-uint32_t tickStep = 15000; // 4k rpm // 50000 => 1200 // 80000 => 750
+uint32_t tickStep = 15000;    // 4k rpm // 50000 => 1200 // 80000 => 750
 #endif
 /* USER CODE END 0 */
 
@@ -133,7 +140,12 @@ int main(void) {
   printf("INIT_TESTING \n");
   run_tests();
   run_rpm_tests();
+  runIgnitionTests();
   puts("END_TESTING \n");
+
+  // Que Dios y la Patria me lo demanden
+  SCB->AIRCR = (0x5FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk;
+  abort();
 #endif
 
   MOTOR_ENABLE = true;
@@ -203,13 +215,14 @@ int main(void) {
 #endif
   // Core inits:
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
-  // Engine::onEFISetup();
 
+#ifdef ENABLE_ENGINE_FRONTEND
+  Engine::onEFISetup();
+#endif
   /* Infinite loop */
 
   /* USER CODE BEGIN WHILE */
   while (1) {
-
 #ifdef ENABLE_DEBUG_LOOP
     on_loop();
 #endif
@@ -217,18 +230,44 @@ int main(void) {
 #ifdef ENABLE_WEBSERIAL
     web_serial::loop();
     web_serial::command_handler();
-    web_serial::send_deque();
-    _RPM = RPM::_RPM;
-    /*  _RPM = TIM13->CNT; */
+#endif
+
+#ifdef ENABLE_IGNITION
+    ignition::interrupt();
 #endif
 
 #ifdef ENABLE_ENGINE_FRONTEND
     Engine::onEFILoop();
 #endif
 
+#ifdef ENABLE_SENSORS
+    sensors::loop();
+#endif
+
 #ifdef ENABLE_CAN_ISO_TP
 
 #endif
+
+    // mid priority code, runs every 50mS
+    if (HAL_GetTick() - last_mid_cycle >= 50) {
+      last_mid_cycle = HAL_GetTick();
+#ifdef ENABLE_WEBSERIAL
+      web_serial::command_handler();
+#endif
+    }
+
+    // low priority code, runs every 150mS
+    if (HAL_GetTick() - last_cycle >= 150) {
+      last_cycle = HAL_GetTick();
+#ifdef ENABLE_WEBSERIAL
+      web_serial::send_deque();
+#endif
+#ifdef ENABLE_SENSORS
+      sensors::loop_low_priority();
+#endif
+    }
+
+    _RPM = RPM::_RPM;
     RPM::watch_dog();
   }
   /* USER CODE END WHILE */
@@ -303,8 +342,7 @@ void SystemClock_Config(void) {
 
   /** Initializes the CPU, AHB and APB buses clocks
    */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |
-                                RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;

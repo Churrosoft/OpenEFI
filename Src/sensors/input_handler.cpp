@@ -26,7 +26,7 @@ int32_t get_input(uint8_t channel) {
 
   HAL_GPIO_WritePin(ADC_CS_GPIO_Port, ADC_CS_Pin, GPIO_PIN_RESET);
 
-  HAL_SPI_Transmit(&hspi2, (uint8_t *)addr, 1, 50);
+  HAL_SPI_Transmit(&hspi2, &addr, 1, 50);
   HAL_SPI_Receive(&hspi2, out_data, 2, 50);
 
   HAL_GPIO_WritePin(ADC_CS_GPIO_Port, ADC_CS_Pin, GPIO_PIN_SET);
@@ -45,7 +45,7 @@ int32_t get_adc_data(uint8_t channel) {
 
   HAL_GPIO_WritePin(ADC_CS_GPIO_Port, ADC_CS_Pin, GPIO_PIN_RESET);
 
-  HAL_SPI_Transmit(&hspi2, (uint8_t *)addr, 1, 50);
+  HAL_SPI_Transmit(&hspi2, &addr, 1, 50);
   HAL_SPI_Receive(&hspi2, out_data, 2, 50);
 
   HAL_GPIO_WritePin(ADC_CS_GPIO_Port, ADC_CS_Pin, GPIO_PIN_SET);
