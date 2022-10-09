@@ -28,6 +28,7 @@
 #define TABLES_DATA_END_CHUNK 27
 #define TABLES_INVALID_TABLE 28
 #define TABLES_INVALID_SUBTABLE 29
+#define TABLES_CRC_ERROR 30
 
 // esto llega en el payload (primeros 2byte, 16b valor), luego x2 bytes en Y
 #define TABLES_IGNITION_TPS 10

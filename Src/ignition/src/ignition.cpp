@@ -23,10 +23,12 @@ table_data ignition::avc_tps_rpm;
 bool ignition::loaded = false;
 table_ref ignition_table = TABLES_IGNITION_TPS_SETTINGS;
 bool ignition::fixed_mode = false;
+bool ignition::error = false;
+
 int32_t _AE = 0;
 
 void ignition::interrupt() {
-  if (!ignition::loaded || sensors::values._MAP <= 0 || fixed_mode) {
+  if (!ignition::loaded || sensors::values._MAP <= 0 || fixed_mode || ignition::error) {
     _AE = ADVANCE_SAFE_VALUE;
     return;
   }
@@ -73,7 +75,15 @@ void ignition::interrupt() {
 void ignition::setup() {
   /* table_ref ignition_table = TABLES_IGNITION_TPS_SETTINGS; */
   ignition::avc_tps_rpm = tables::read_all(ignition_table);
-  ignition::loaded = true;
+
+  if (!tables::validate(ignition_table, ignition::avc_tps_rpm)) {
+    _AE = ADVANCE_SAFE_VALUE;
+    ignition::fixed_mode = true;
+    ignition::error = true;
+    // TODO: grabar DTC en memoria y/o entrar en modo de emergencia
+  } else {
+    ignition::loaded = true;
+  }
 }
 
 void ignition::set_fixed_advance(int32_t adv) {

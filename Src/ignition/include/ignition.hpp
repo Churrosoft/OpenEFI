@@ -29,6 +29,7 @@ namespace ignition {
   extern int16_t avc_tps[13];
   extern bool loaded;
   extern bool fixed_mode;
+  extern bool error;
 
 }    // namespace ignition
 

@@ -60,7 +60,7 @@ table_data tables::read_all(table_ref table) {
     }
     datarow = 0;
   }
-
+  
   return matrix;
 }
 
@@ -75,6 +75,26 @@ void tables::dump_row(std::vector<int32_t> table_row, uint8_t *dest_buff) {
     index += 4;
   }
 }
+
+bool tables::validate(table_ref table, table_data data) {
+  uint32_t size = table.x_max * 4 * table.y_max;
+  uint8_t *buffer = (uint8_t *)malloc(size);
+
+  // load memory CRC
+  uint8_t memory_crc_raw[4];
+  uint32_t crc_address = (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize) - 4;
+  W25qxx_ReadBytes(memory_crc_raw, crc_address, 4);
+  uint32_t memory_crc = (int32_t)(memory_crc_raw[1] << 8) + (memory_crc_raw[2] << 16) + (memory_crc_raw[3] << 24) + memory_crc_raw[0];
+
+  // calculate buffer CRC
+  dump_table(data, buffer);
+  uint32_t table_crc = HAL_CRC_Calculate(&hcrc, (uint32_t *)buffer, size);
+
+  free(buffer);
+
+  return table_crc == memory_crc;
+}
+
 std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
   std::vector<int32_t> data_out;
 
