@@ -40,7 +40,7 @@ extern "C" {
 #include "stm32f4xx_ll_dma.h"
 
 #include "stm32f4xx_ll_exti.h"
-
+#include "crc.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 

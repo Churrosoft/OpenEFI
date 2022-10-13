@@ -1,5 +1,6 @@
 #include <deque>
 
+#include "../ignition/include/ignition.hpp"
 #include "../sensors/sensors.hpp"
 #include "aliases/memory.hpp"
 #include "commands.hpp"
@@ -186,16 +187,27 @@ void web_serial::command_handler() {
           case TABLES_IGNITION_TPS: {
             table = TABLES_IGNITION_TPS_SETTINGS;
 
-            out_table = tables::read_all(table);
+            // aca esta el caso de que haya una tabla leida, pero con falla'
+            if (!ignition::loaded && ignition::error) {
+              out_comm = create_command(TABLES_CRC_ERROR, payload);
+              output_commands.push_back(out_comm);
+              break;
+            }
+
+            if (!ignition::loaded) {
+              out_table = tables::read_all(table);
+            } else {
+              // crrrreeoo que con copiar refe y no valor estaria
+              out_table = ignition::avc_tps_rpm;
+            }
 
             tables::plot_table(out_table);
 
             for (auto table_row : out_table) {
               tables::dump_row(table_row, payload);
               out_comm = create_command(TABLES_DATA_CHUNK, payload);
-
               output_commands.push_back(out_comm);
-              web_serial::send_deque();
+              /*  web_serial::send_deque(); */
             }
             break;
           }
