@@ -233,7 +233,7 @@ Parsing file /home/runner/work/OpenEFI/OpenEFI/S/home/runner/work/OpenEFI/OpenEF
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:18: warning: Compound input_handler is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:219: warning: Compound Nibbler is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:13: warning: Compound web_serial::serial_command is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:28: warning: Compound table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:29: warning: Compound table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/can/can_enviroment.h:23: warning: Compound can_message is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:16: warning: Compound EMALowPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:32: warning: Compound sensors::SensorValues is not documented.
@@ -725,10 +725,10 @@ Generating code for file /home/runner/work/Op/home/runner/work/OpenEFI/OpenEFI/I
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:43: warning: argument 'dtc_code' of command @param is not found in the argument list of write_dtc(dtc_data)
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobilizer.hpp:16: warning: found subsection command outside of section context!
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_immobilizer.hpp:16: warning: found subsection command outside of section context!
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:44: warning: Member MEMORY_SECTOR_SIZE (macro definition) of group Tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:45: warning: Member MEMORY_SECTOR_COUNT (macro definition) of group Tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:46: warning: Member MEMORY_PAGE_SIZE (macro definition) of group Tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:47: warning: Member SECTOR_TO_ADDRES(sector) (macro definition) of group Tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:45: warning: Member MEMORY_SECTOR_SIZE (macro definition) of group Tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:46: warning: Member MEMORY_SECTOR_COUNT (macro definition) of group Tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:47: warning: Member MEMORY_PAGE_SIZE (macro definition) of group Tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:48: warning: Member SECTOR_TO_ADDRES(sector) (macro definition) of group Tables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/can/can_enviroment.h:24: warning: Member stdId (variable) of class can_message is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/can/can_enviroment.h:25: warning: Member extId (variable) of class can_message is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/can/can_enviroment.h:26: warning: Member frame_size (variable) of class can_message is not documented.
@@ -743,24 +743,24 @@ Generating code for file /home/runner/work/Op/home/runner/work/OpenEFI/OpenEFI/I
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:31: warning: Member values[16] (variable) of class input_handler is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:223: warning: Member nibbles (variable) of class Nibbler is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:224: warning: Member byte_value (variable) of class Nibbler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:29: warning: Member y_max (variable) of class table_ref is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:30: warning: Member x_max (variable) of class table_ref is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:31: warning: Member memory_address (variable) of class table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:30: warning: Member y_max (variable) of class table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:31: warning: Member x_max (variable) of class table_ref is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:32: warning: Member memory_address (variable) of class table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:33: warning: Member _TPS (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:34: warning: Member _MAP (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:35: warning: Member TEMP (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:36: warning: Member IAT (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:37: warning: Member BATT (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:38: warning: Member LMB (variable) of class sensors::SensorValues is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:52: warning: Member get_value(table_ref, uint32_t, uint32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:53: warning: Member set_value(table_ref, uint32_t, uint32_t, int32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:54: warning: Member set_long_value(table_ref, uint16_t, uint16_t, int32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:73: warning: Member col_to_row(table_data, uint32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:80: warning: Member dump_row(std::vector< int32_t >, uint8_t *) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:82: warning: Member put_row(uint8_t *, uint32_t) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:90: warning: Member plot_table(table_data) (function) of namespace tables is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:59: warning: argument 'table_ref' of command @param is not found in the argument list of tables::read_all(table_ref table)
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:63: warning: The following parameters of tables::read_all(table_ref table) are not documented:
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:53: warning: Member get_value(table_ref, uint32_t, uint32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:54: warning: Member set_value(table_ref, uint32_t, uint32_t, int32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:55: warning: Member set_long_value(table_ref, uint16_t, uint16_t, int32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:74: warning: Member col_to_row(table_data, uint32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:81: warning: Member dump_row(std::vector< int32_t >, uint8_t *) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:83: warning: Member put_row(uint8_t *, uint32_t) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:95: warning: Member plot_table(table_data) (function) of namespace tables is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:60: warning: argument 'table_ref' of command @param is not found in the argument list of tables::read_all(table_ref table)
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:64: warning: The following parameters of tables::read_all(table_ref table) are not documented:
   parameter 'table'
 /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:14: warning: Member protocol (variable) of class web_serial::serial_command is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:15: warning: Member command (variable) of class web_serial::serial_command is not documented.
@@ -828,5 +828,5 @@ Generating namespace index...
 Generating namespace member index...
 finalizing index lists...
 writing tag file...
-lookup cache used 368/65536 hits=703 misses=371
+lookup cache used 370/65536 hits=713 misses=373
 finished...
