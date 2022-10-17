@@ -80,6 +80,9 @@ void ignition::setup() {
     _AE = ADVANCE_SAFE_VALUE;
     ignition::fixed_mode = true;
     ignition::error = true;
+/*     tables::plot_table(ignition::avc_tps_rpm);
+ */    trace_printf("Event: <IGNITION> Error loading TPS/RPM Table [INVALID_CRC]\r\n");
+
     // TODO: grabar DTC en memoria y/o entrar en modo de emergencia
   } else {
     ignition::loaded = true;

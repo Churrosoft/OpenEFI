@@ -41,15 +41,15 @@ void tables::set_value(table_ref table, uint32_t x, uint32_t y, int32_t value) {
 table_data tables::read_all(table_ref table) {
   table_data matrix(table.y_max, vector<int32_t>(table.x_max, 0xff));
 
+  // primeros 4b son el crc
   uint32_t datarow = 0;
+  uint8_t table_row[MAX_ROW_SIZE * MAX_ROW_SIZE * 4];
+
+  uint32_t address = W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize+4;
+
+  W25qxx_ReadBytes(table_row, address, (4 * table.y_max * table.x_max));
 
   for (int32_t matrix_y = 0; matrix_y < table.y_max; matrix_y++) {
-    uint32_t address = (4 * matrix_y * table.x_max) + (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize);
-
-    uint8_t table_row[MAX_ROW_SIZE * 4];
-
-    W25qxx_ReadBytes(table_row, address, table.x_max * 4);
-
     for (int32_t matrix_x = 0; matrix_x < table.x_max; matrix_x++) {
       volatile int32_t value =
           table_row[datarow] + (table_row[datarow + 1] << 8) + (table_row[datarow + 2] << 16) + (table_row[datarow + 3] << 24);
@@ -58,9 +58,9 @@ table_data tables::read_all(table_ref table) {
 
       datarow += 4;
     }
-    datarow = 0;
+    datarow = (4 * matrix_y * table.x_max);
   }
-  
+
   return matrix;
 }
 
@@ -82,15 +82,25 @@ bool tables::validate(table_ref table, table_data data) {
 
   // load memory CRC
   uint8_t memory_crc_raw[4];
-  uint32_t crc_address = (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize) - 4;
+  uint32_t crc_address = (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize);
   W25qxx_ReadBytes(memory_crc_raw, crc_address, 4);
-  uint32_t memory_crc = (int32_t)(memory_crc_raw[1] << 8) + (memory_crc_raw[2] << 16) + (memory_crc_raw[3] << 24) + memory_crc_raw[0];
+
+  uint32_t memory_crc = (uint32_t)(memory_crc_raw[1] << 8) + (memory_crc_raw[2] << 16) + (memory_crc_raw[3] << 24) + memory_crc_raw[0];
 
   // calculate buffer CRC
-  dump_table(data, buffer);
-  uint32_t table_crc = HAL_CRC_Calculate(&hcrc, (uint32_t *)buffer, size);
+  dump_table(data, buffer, 0);
+  uint32_t table_crc = CrcCCITTBytes(buffer, size);
 
   free(buffer);
+  // Event: <MEMORY_CRC> Calculated: 1099883152 ## Stored: 947191890
+
+
+
+  trace_printf("Event: <MEMORY_CRC> Calculated: %d ## Stored: %d\r\n", table_crc, memory_crc);
+
+  trace_printf("Event: <MEMORY_CRC_HEX> Calculated: %d %d %d %d ## Stored: %d %d %d %d\r\n", (uint8_t)table_crc,
+               (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF, memory_crc_raw[0],
+               memory_crc_raw[1], memory_crc_raw[2], memory_crc_raw[3]);
 
   return table_crc == memory_crc;
 }
@@ -107,14 +117,29 @@ std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
 }
 
 void tables::update_table(table_data data, table_ref table) {
-  int32_t size = table.x_max * 4 * table.y_max;
+  int32_t size = (table.x_max * 4 * table.y_max) + 4;
   uint8_t *buffer = (uint8_t *)malloc(size);
 
-  dump_table(data, buffer);
+  dump_table(data, buffer, 0);
+
+  // CRC:
+  uint32_t table_crc = CrcCCITTBytes(buffer, size - 4);
+
+  buffer[0] = (uint8_t)table_crc;
+  buffer[1] = (uint8_t)(table_crc >> 8) & 0xFF;
+  buffer[2] = (uint8_t)(table_crc >> 16) & 0xFF;
+  buffer[3] = (uint8_t)(table_crc >> 24) & 0xFF;
+
+  dump_table(data, buffer, 4);
 
   W25qxx_EraseSector(table.memory_address);
 
   W25qxx_WriteSector(buffer, table.memory_address, 0, size);
+
+  trace_printf("Event: (update) <MEMORY_CRC> Calculated: %d ;", table_crc);
+
+  trace_printf("Event: (update) <MEMORY_CRC_HEX> Calculated: %d %d %d %d ;\r\n", (uint8_t)table_crc, (uint8_t)(table_crc >> 8) & 0xFF,
+               (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF);
 
   free(buffer);
 }

@@ -252,4 +252,39 @@ static inline uint32_t mockRPM() {
   (byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'), (byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'), (byte & 0x08 ? '1' : '0'), \
       (byte & 0x04 ? '1' : '0'), (byte & 0x02 ? '1' : '0'), (byte & 0x01 ? '1' : '0')
 
+
+/* uint32_t CrcCCITTBytes(const uint8_t * data, uint32_t size); */
+    static inline uint32_t CrcCCITTBytes(const uint8_t * data, uint32_t size) {
+      uint32_t i;
+      CRC->CR = CRC_CR_RESET;
+      while(CRC->CR & CRC_CR_RESET);  // avoiding the not-reset-fast-enough bug
+      i = size % 4;
+      switch(i) {
+        case 0:
+          break;
+        case 1:
+          CRC->DR = 0xFFFFFFB9;
+          CRC->DR = 0xAF644900
+            | (__RBIT(*(uint32_t*)(uintptr_t)&data[0]) >> 24)
+          ;
+          break;
+        case 2:
+          CRC->DR = 0xFFFFB950;
+          CRC->DR = 0x64490000
+            | (__RBIT(*(uint32_t*)(uintptr_t)&data[0]) >> 16)
+          ;
+          break;
+        case 3:
+          CRC->DR = 0xFFB9509B;
+          CRC->DR = 0x49000000
+            | (__RBIT(*(uint32_t*)(uintptr_t)&data[0]) >> 8)
+          ;
+          break;
+      }
+ 
+      for (; i < size; i += 4) {
+        CRC->DR = __RBIT(*(uint32_t*)(uintptr_t)&data[i]);
+      }
+      return __RBIT(CRC->DR) ^ 0xFFFFFFFF;
+   }
 #endif

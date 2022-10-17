@@ -116,8 +116,8 @@ namespace tables {
      * @param {TABLE_DATA} - table to dump
      * @param {uint8_t *} - destination array
      */
-    static inline void dump_table(table_data table, uint8_t *dest_arr) {
-      uint16_t index = 0;
+    static inline void dump_table(table_data table, uint8_t *dest_arr, uint8_t offset) {
+      uint16_t index = offset;
       for (auto table_y : table) {
         // 312
         for (int32_t table_x : table_y) {

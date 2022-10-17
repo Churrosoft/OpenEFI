@@ -1,6 +1,6 @@
-#ifndef TESTING
+/* #ifndef TESTING
 #define TESTING
-#endif
+#endif */
 
 #include "../Src/cpwm/rpm_calc.h"
 
