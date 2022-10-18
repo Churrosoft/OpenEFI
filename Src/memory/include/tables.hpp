@@ -47,6 +47,9 @@ struct table_ref {
 #define MEMORY_PAGE_SIZE 256
 #define SECTOR_TO_ADDRES(sector) (sector * 16 * MEMORY_PAGE_SIZE - 1)
 
+
+#define TABLE_METADATA_OFFSET 4
+
 //! Implementacion de tablas 2D con vectores, valores en int32_t
 namespace tables {
   // operaciones simples sobre un campo:
@@ -116,8 +119,8 @@ namespace tables {
      * @param {TABLE_DATA} - table to dump
      * @param {uint8_t *} - destination array
      */
-    static inline void dump_table(table_data table, uint8_t *dest_arr) {
-      uint16_t index = 0;
+    static inline void dump_table(table_data table, uint8_t *dest_arr, uint8_t offset) {
+      uint32_t index = (uint32_t)offset;
       for (auto table_y : table) {
         // 312
         for (int32_t table_x : table_y) {

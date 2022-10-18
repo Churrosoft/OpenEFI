@@ -13,14 +13,14 @@
 
 #define ENABLE_IGNITION
 // #define ENABLE_INJECTION
-#define ENABLE_SENSORS
+// #define ENABLE_SENSORS
 #define ENABLE_MEMORY
-#define ENABLE_PMIC
+// #define ENABLE_PMIC
 
 #define ENABLE_US_TIM
 
 // #define ENABLE_ENGINE_FRONTEND
 
-#define ENABLE_CAN_ISO_TP
+// #define ENABLE_CAN_ISO_TP
 
 #endif

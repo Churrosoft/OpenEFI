@@ -153,7 +153,6 @@ int main(void) {
 
   /* Configure the system clock */
   SystemClock_Config();
-  uint32_t StartTime = HAL_GetTick();
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
@@ -161,7 +160,7 @@ int main(void) {
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-	MX_CRC_Init();
+  MX_CRC_Init();
 
   MX_CAN1_Init();
   MX_SPI2_Init();
@@ -208,14 +207,42 @@ int main(void) {
   W25qxx_Init();
 #endif
 
+/* W25qxx_EraseChip(); */
+
   // SRAND Init:
   srand(HAL_GetTick());
 
 #ifdef ENABLE_WEBSERIAL
   web_serial::setup();
 #endif
+  uint32_t StartTime = HAL_GetTick();
+
+/*   uint8_t arr0[] = {0xf, 0xda, 0xdd};
+  uint32_t arr1[] = {0xf, 0xda, 0xdd};
+  trace_printf("Event: <MEMORY_CRC> Calculated: %d ; %d", HAL_CRC_Calculate(&hcrc, arr1, 3), HAL_CRC_Calculate(&hcrc, (uint32_t *)arr0, 3)); */
+//Event: <MEMORY_CRC> Calculated: 729167232 ; 29477989
+
+#ifdef ENABLE_IGNITION
+  ignition::setup();
+#endif
+/*   // Tabla VE
+  tables::read_all({17, 17, 0x3});
+  // Tabla correccion por bateria:
+  tables::read_all({17, 17, 0x4});
+  // WUE
+  tables::read_all({17, 2, 0x5});
+  // ASE %
+  tables::read_all({17, 2, 0x6});
+  // ASE Taper
+  tables::read_all({17, 2, 0x7});
+  // IDLE /Stepper config
+  tables::read_all({17, 2, 0x7}); */
+
   // Core inits:
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
+
+  // Enable CKP/CMP interrupts:
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 #ifdef ENABLE_ENGINE_FRONTEND
   Engine::onEFISetup();
@@ -283,7 +310,7 @@ int main(void) {
 void MX_NVIC_Init(void) {
   /* EXTI9_5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  /* HAL_NVIC_EnableIRQ(EXTI9_5_IRQn); */
 
   /* TIM1_UP_TIM10_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, 10, 0);
