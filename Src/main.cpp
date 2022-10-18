@@ -207,6 +207,8 @@ int main(void) {
   W25qxx_Init();
 #endif
 
+/* W25qxx_EraseChip(); */
+
   // SRAND Init:
   srand(HAL_GetTick());
 
@@ -223,7 +225,7 @@ int main(void) {
 #ifdef ENABLE_IGNITION
   ignition::setup();
 #endif
-  // Tabla VE
+/*   // Tabla VE
   tables::read_all({17, 17, 0x3});
   // Tabla correccion por bateria:
   tables::read_all({17, 17, 0x4});
@@ -234,7 +236,7 @@ int main(void) {
   // ASE Taper
   tables::read_all({17, 2, 0x7});
   // IDLE /Stepper config
-  tables::read_all({17, 2, 0x7});
+  tables::read_all({17, 2, 0x7}); */
 
   // Core inits:
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);

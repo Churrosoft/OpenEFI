@@ -2,6 +2,10 @@
 
 #include <stdio.h>
 
+#include <cstring>
+
+#include "../../webserial/commands.hpp"
+
 extern "C" {
 #include "trace.h"
 }
@@ -45,7 +49,7 @@ table_data tables::read_all(table_ref table) {
   uint32_t datarow = 0;
   uint8_t table_row[MAX_ROW_SIZE * MAX_ROW_SIZE * 4];
 
-  uint32_t address = W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize+4;
+  uint32_t address = W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize + TABLE_METADATA_OFFSET;
 
   W25qxx_ReadBytes(table_row, address, (4 * table.y_max * table.x_max));
 
@@ -58,7 +62,7 @@ table_data tables::read_all(table_ref table) {
 
       datarow += 4;
     }
-    datarow = (4 * matrix_y * table.x_max);
+    /*  datarow = (4 * matrix_y * table.x_max)+1; */
   }
 
   return matrix;
@@ -83,7 +87,7 @@ bool tables::validate(table_ref table, table_data data) {
   // load memory CRC
   uint8_t memory_crc_raw[4];
   uint32_t crc_address = (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize);
-  W25qxx_ReadBytes(memory_crc_raw, crc_address, 4);
+  W25qxx_ReadBytes(memory_crc_raw, crc_address, TABLE_METADATA_OFFSET);
 
   uint32_t memory_crc = (uint32_t)(memory_crc_raw[1] << 8) + (memory_crc_raw[2] << 16) + (memory_crc_raw[3] << 24) + memory_crc_raw[0];
 
@@ -92,12 +96,10 @@ bool tables::validate(table_ref table, table_data data) {
   uint32_t table_crc = CrcCCITTBytes(buffer, size);
 
   free(buffer);
-  // Event: <MEMORY_CRC> Calculated: 1099883152 ## Stored: 947191890
 
-
-
-  trace_printf("Event: <MEMORY_CRC> Calculated: %d ## Stored: %d\r\n", table_crc, memory_crc);
-
+  EFI_LOG("Event: <MEMORY_CRC_HEX> Calculated: %d %d %d %d ## Stored: %d %d %d %d\r\n", (uint8_t)table_crc,
+          (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF, memory_crc_raw[0],
+          memory_crc_raw[1], memory_crc_raw[2], memory_crc_raw[3]);
   trace_printf("Event: <MEMORY_CRC_HEX> Calculated: %d %d %d %d ## Stored: %d %d %d %d\r\n", (uint8_t)table_crc,
                (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF, memory_crc_raw[0],
                memory_crc_raw[1], memory_crc_raw[2], memory_crc_raw[3]);
@@ -117,29 +119,40 @@ std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
 }
 
 void tables::update_table(table_data data, table_ref table) {
-  int32_t size = (table.x_max * 4 * table.y_max) + 4;
+  int32_t size = (table.x_max * 4 * table.y_max);
   uint8_t *buffer = (uint8_t *)malloc(size);
+  uint8_t *buffer_aux = (uint8_t *)malloc(size) + TABLE_METADATA_OFFSET;
 
   dump_table(data, buffer, 0);
 
   // CRC:
-  uint32_t table_crc = CrcCCITTBytes(buffer, size - 4);
+  uint32_t table_crc = CrcCCITTBytes(buffer, size);
 
-  buffer[0] = (uint8_t)table_crc;
-  buffer[1] = (uint8_t)(table_crc >> 8) & 0xFF;
-  buffer[2] = (uint8_t)(table_crc >> 16) & 0xFF;
-  buffer[3] = (uint8_t)(table_crc >> 24) & 0xFF;
+  buffer_aux[0] = (uint8_t)table_crc;
+  buffer_aux[1] = (uint8_t)(table_crc >> 8) & 0xFF;
+  buffer_aux[2] = (uint8_t)(table_crc >> 16) & 0xFF;
+  buffer_aux[3] = (uint8_t)(table_crc >> 24) & 0xFF;
 
-  dump_table(data, buffer, 4);
+  std::memcpy(buffer_aux + TABLE_METADATA_OFFSET, buffer, size);
+
+  dump_table(data, buffer, TABLE_METADATA_OFFSET);
 
   W25qxx_EraseSector(table.memory_address);
 
-  W25qxx_WriteSector(buffer, table.memory_address, 0, size);
+  W25qxx_WriteSector(buffer_aux, table.memory_address, 0, size + 4);
 
-  trace_printf("Event: (update) <MEMORY_CRC> Calculated: %d ;", table_crc);
+  /*   trace_printf("---------------- NEW TABLE-----------");
 
+    tables::plot_table(data);
+
+    trace_printf("---------------- NEW TABLE-----------");
+   */
+
+  EFI_LOG("Event: (update) <MEMORY_CRC_HEX> Calculated: %d %d %d %d ;\r\n", (uint8_t)table_crc, (uint8_t)(table_crc >> 8) & 0xFF,
+          (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF);
   trace_printf("Event: (update) <MEMORY_CRC_HEX> Calculated: %d %d %d %d ;\r\n", (uint8_t)table_crc, (uint8_t)(table_crc >> 8) & 0xFF,
                (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF);
+  free(buffer_aux);
 
   free(buffer);
 }

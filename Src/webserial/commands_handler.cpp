@@ -192,6 +192,7 @@ void web_serial::command_handler() {
               out_comm = create_command(TABLES_CRC_ERROR, payload);
               pending_commands.pop_front();
               output_commands.push_back(out_comm);
+              trace_printf("WEBUSB TABLE CRC ERROR");
               return;
             }
 
@@ -203,9 +204,12 @@ void web_serial::command_handler() {
             }
 
             tables::plot_table(out_table);
-
+            uint8_t table_index = 0;
             for (auto table_row : out_table) {
               tables::dump_row(table_row, payload);
+              // FIXME: para evitar que openefi tuner revente el comando, solo reviso el checksum alla al borrar un comando
+              payload[120] = table_index;
+              table_index++;
               out_comm = create_command(TABLES_DATA_CHUNK, payload);
               output_commands.push_back(out_comm);
               /*  web_serial::send_deque(); */
