@@ -47,7 +47,6 @@ struct table_ref {
 #define MEMORY_PAGE_SIZE 256
 #define SECTOR_TO_ADDRES(sector) (sector * 16 * MEMORY_PAGE_SIZE - 1)
 
-
 #define TABLE_METADATA_OFFSET 4
 
 //! Implementacion de tablas 2D con vectores, valores en int32_t
@@ -94,6 +93,10 @@ namespace tables {
    * @brief reads CRC value on memory and validate data on current table_data
    */
   bool validate(table_ref, table_data);
+
+  bool validate(table_ref, table_data, table_data);
+  bool validate(table_ref, table_data, uint32_t);
+
   // debug:
   void plot_table(table_data);
 

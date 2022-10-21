@@ -1,12 +1,13 @@
 #include "commands.hpp"
-#include "commands_definition.hpp"
+
 #include <stdarg.h>
+
+#include "commands_definition.hpp"
 
 using namespace web_serial;
 uint8_t serial_cache[128];
 
-serial_command web_serial::create_command(uint16_t input_command,
-                                          uint8_t *payload) {
+serial_command web_serial::create_command(uint16_t input_command, uint8_t *payload) {
   serial_command comm;
   comm.protocol = payload[0];
   comm.command = input_command;
@@ -23,9 +24,8 @@ serial_command web_serial::create_command(uint16_t input_command,
   return comm;
 }
 
-void web_serial::export_command(serial_command command,
-                                uint8_t (&buffer)[128]) {
-  buffer[0] = 1; // protocol
+void web_serial::export_command(serial_command command, uint8_t (&buffer)[128]) {
+  buffer[0] = 1;    // protocol
   buffer[1] = (command.command >> 8) & 0xFF;
   buffer[2] = command.command & 0xFF;
   std::copy(command.payload, command.payload + 123, buffer + 3);
@@ -46,6 +46,12 @@ void web_serial::loop() {
 
     std::copy(serial_cache + 3, serial_cache + 123, usb_command.payload);
 
+    uint16_t comm_crc = crc16(serial_cache, 126);
+
+    if ((((comm_crc >> 8) & 0xFF) == usb_command.crc[0]) && ((comm_crc & 0xFF) == usb_command.crc[1])) {
+      usb_command.is_valid = true;
+    }
+
     // web_serial::import_command(serial_cache, usb_command);
     web_serial::queue_command(usb_command);
     CDC_FlushRxBuffer_FS();
@@ -58,11 +64,8 @@ void web_serial::loop() {
   }
 }
 
-uint8_t web_serial::send_debug_message(debugMessage message_type,
-                                       const char *format, ...) {
-
-  if (!web_serial::paired)
-    return -1;
+uint8_t web_serial::send_debug_message(debugMessage message_type, const char *format, ...) {
+  if (!web_serial::paired) return -1;
 
   int ret;
   va_list ap;
@@ -76,21 +79,21 @@ uint8_t web_serial::send_debug_message(debugMessage message_type,
     uint16_t command;
 
     switch (message_type) {
-    case debugMessage::LOG:
-      command = EFI_DEBUG_LOG;
-      break;
-    case debugMessage::INFO:
-      command = EFI_DEBUG_INFO;
-      break;
-    case debugMessage::EVENT:
-      command = EFI_DEBUG_EVENT;
-      break;
-    case debugMessage::ERROR:
-      command = EFI_DEBUG_ERROR;
-      break;
-    default:
-      command = EFI_DEBUG_LOG;
-      break;
+      case debugMessage::LOG:
+        command = EFI_DEBUG_LOG;
+        break;
+      case debugMessage::INFO:
+        command = EFI_DEBUG_INFO;
+        break;
+      case debugMessage::EVENT:
+        command = EFI_DEBUG_EVENT;
+        break;
+      case debugMessage::ERROR:
+        command = EFI_DEBUG_ERROR;
+        break;
+      default:
+        command = EFI_DEBUG_LOG;
+        break;
     }
     comm = create_command(command, (uint8_t *)buf);
     web_serial::send_command(comm);

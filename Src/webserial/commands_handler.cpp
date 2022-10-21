@@ -207,7 +207,8 @@ void web_serial::command_handler() {
             uint8_t table_index = 0;
             for (auto table_row : out_table) {
               tables::dump_row(table_row, payload);
-              // FIXME: para evitar que openefi tuner revente el comando, solo reviso el checksum alla al borrar un comando
+              // FIXME: para evitar que openefi tuner revente el comando, solo reviso el checksum alla al borrar un
+              // comando
               payload[120] = table_index;
               table_index++;
               out_comm = create_command(TABLES_DATA_CHUNK, payload);
@@ -224,13 +225,20 @@ void web_serial::command_handler() {
       }
 
       case TABLES_PUT: {
+        if (!command.is_valid) {
+          pending_commands.pop_front();
+          out_comm = create_command(TABLES_CRC_ERROR, payload);
+          output_commands.push_back(out_comm);
+          trace_printf("WEBUSB TABLES_PUT CRC ERROR ");
+          return;
+        }
+
         uint8_t table_index = command.payload[0];
         uint8_t table_row_size = command.payload[1];
 
         std::vector<int32_t> row = tables::put_row(command.payload, table_row_size);
 
         in_table.insert(in_table.begin() + table_index, row);
-
         break;
       }
 
@@ -238,12 +246,30 @@ void web_serial::command_handler() {
         // TODO: CRC check, move switch to func, write only changed rows
 
         selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
+        uint32_t table_crc =
+            (command.payload[3] << 8) + (command.payload[4] << 16) + (command.payload[5] << 24) + command.payload[2];
 
         switch (selected_table) {
           case TABLES_IGNITION_TPS:
             table = TABLES_IGNITION_TPS_SETTINGS;
             break;
         }
+
+        if (!tables::validate(table, in_table, table_crc)) {
+          for (auto ti : in_table) {
+            ti.clear();
+          }
+          in_table.clear();
+          pending_commands.pop_front();
+
+          out_comm = create_command(TABLES_WRITE_FAIL, payload);
+          export_command(out_comm, serialized_command);
+                   output_commands.push_back(out_comm);
+
+
+          return;
+        }
+
         tables::update_table(in_table, table);
 
         for (auto ti : in_table) {
