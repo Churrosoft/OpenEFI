@@ -15,8 +15,8 @@
 #define HW_TYPE 1     // 0 OpenEFI; 1 uEFI, 2 DashDash
 
 #define OPENEFI_BOARD_TYPE HW_TYPE
-#define OPENEFI_VER_MAJOR 2
-#define OPENEFI_VER_MINOR 1
+#define OPENEFI_VER_MAJOR 3
+#define OPENEFI_VER_MINOR 4
 #define OPENEFI_VER_REV 1
 
 /*-----( Globales )-----*/

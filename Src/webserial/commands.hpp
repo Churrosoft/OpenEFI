@@ -14,6 +14,7 @@ typedef struct {
   uint8_t protocol;
   uint16_t command;
   uint8_t payload[123];
+  bool is_valid;
   uint8_t crc[2];
 } serial_command;
 
