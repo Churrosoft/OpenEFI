@@ -1,8 +1,8 @@
 
 from os import path
 
-print('-D TRACE')
-print('-D USE_FULL_ASSERT')
+""" print('-D TRACE')
+print('-D USE_FULL_ASSERT') """
 # print('-D _W25QXX_DEBUG')
 
 

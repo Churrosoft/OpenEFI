@@ -13,6 +13,7 @@ extern uint32_t _RPM,    //	las rpm :V
     _POS_AE,             //	posicion arbol de levas
     _DEG;
 extern int32_t _AE;    //	avance de encendido
+extern int32_t _INY_T1;
 extern uint32_t _rpm_time;
 
 extern bool MOTOR_ENABLE,    //	cache de "can_turn_on"

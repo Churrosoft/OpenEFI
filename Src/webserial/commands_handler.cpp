@@ -67,7 +67,7 @@ void web_serial::command_handler() {
       case CORE_STATUS: {
         // int mockrpm = 750 + (rand() % 5750);
         int mockrpm = _RPM;
-        int mocktemp = 1 + (rand() % 130);
+        int mocktemp = 1 + (rand() % 13000);
         int mockload = 1 + (rand() % 100);
         int mockbattery = 1 + (rand() % 1500);
 
@@ -94,10 +94,10 @@ void web_serial::command_handler() {
         // -1 == sensor desconectado / no disponible
 
         // TPS simple/doble
-        payload[11] = (uint8_t)sensors::values._TPS;
-        payload[12] = (uint8_t)(sensors::values._TPS >> 8) & 0xFF;
-        payload[13] = (uint8_t)(sensors::values._TPS >> 16) & 0xFF;
-        payload[14] = (uint8_t)(sensors::values._TPS >> 24) & 0xFF;
+        payload[11] = (uint8_t)mockload;
+        payload[12] = (uint8_t)(mockload >> 8) & 0xFF;
+        payload[13] = (uint8_t)(mockload >> 16) & 0xFF;
+        payload[14] = (uint8_t)(mockload >> 24) & 0xFF;
 
         // MAP
         payload[15] = (uint8_t)sensors::values._MAP;
@@ -106,10 +106,10 @@ void web_serial::command_handler() {
         payload[18] = (uint8_t)(sensors::values._MAP >> 24) & 0xFF;
 
         // TEMP
-        payload[19] = (uint8_t)sensors::values.TEMP;
-        payload[20] = (uint8_t)(sensors::values.TEMP >> 8) & 0xFF;
-        payload[21] = (uint8_t)(sensors::values.TEMP >> 16) & 0xFF;
-        payload[22] = (uint8_t)(sensors::values.TEMP >> 24) & 0xFF;
+        payload[19] = (uint8_t)mocktemp;
+        payload[20] = (uint8_t)(mocktemp >> 8) & 0xFF;
+        payload[21] = (uint8_t)(mocktemp >> 16) & 0xFF;
+        payload[22] = (uint8_t)(mocktemp >> 24) & 0xFF;
 
         // IAT
         payload[23] = (uint8_t)sensors::values.IAT;
@@ -118,10 +118,10 @@ void web_serial::command_handler() {
         payload[26] = (uint8_t)(sensors::values.IAT >> 24) & 0xFF;
 
         // BATT
-        payload[27] = (uint8_t)sensors::values.BATT;
-        payload[28] = (uint8_t)(sensors::values.BATT >> 8) & 0xFF;
-        payload[29] = (uint8_t)(sensors::values.BATT >> 16) & 0xFF;
-        payload[30] = (uint8_t)(sensors::values.BATT >> 24) & 0xFF;
+        payload[27] = (uint8_t)mockbattery;
+        payload[28] = (uint8_t)(mockbattery >> 8) & 0xFF;
+        payload[29] = (uint8_t)(mockbattery >> 16) & 0xFF;
+        payload[30] = (uint8_t)(mockbattery >> 24) & 0xFF;
 
         // LMB
         payload[31] = (uint8_t)sensors::values.LMB;
@@ -130,11 +130,17 @@ void web_serial::command_handler() {
         payload[34] = (uint8_t)(sensors::values.LMB >> 24) & 0xFF;
 
         // Ignition Status (20b)
-        payload[60] = 1;
+        payload[60] = (uint8_t)_AE;
+        payload[61] = (uint8_t)(_AE >> 8) & 0xFF;
+        payload[62] = (uint8_t)(_AE >> 16) & 0xFF;
+        payload[63] = (uint8_t)(_AE >> 24) & 0xFF;
         payload[80] = 1;
 
         // Injection Status (20b)
-        payload[80] = 1;
+        payload[80] = (uint8_t)_INY_T1;
+        payload[81] = (uint8_t)(_INY_T1 >> 8) & 0xFF;
+        payload[82] = (uint8_t)(_INY_T1 >> 16) & 0xFF;
+        payload[83] = (uint8_t)(_INY_T1 >> 24) & 0xFF;
         payload[100] = 1;
 
         out_comm = create_command(CORE_STATUS, payload);
@@ -246,8 +252,7 @@ void web_serial::command_handler() {
         // TODO: CRC check, move switch to func, write only changed rows
 
         selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
-        uint32_t table_crc =
-            (command.payload[3] << 8) + (command.payload[4] << 16) + (command.payload[5] << 24) + command.payload[2];
+        uint32_t table_crc = (command.payload[3] << 8) + (command.payload[4] << 16) + (command.payload[5] << 24) + command.payload[2];
 
         switch (selected_table) {
           case TABLES_IGNITION_TPS:
@@ -264,8 +269,7 @@ void web_serial::command_handler() {
 
           out_comm = create_command(TABLES_WRITE_FAIL, payload);
           export_command(out_comm, serialized_command);
-                   output_commands.push_back(out_comm);
-
+          output_commands.push_back(out_comm);
 
           return;
         }
