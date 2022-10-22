@@ -231,7 +231,7 @@ Parsing file /home/runner/work/OpenEFI/OpenEFI/S/home/runner/work/OpenEFI/OpenEF
 /home/runner/work/OpenEFI/OpenEFI/Src/main.cpp:4: warning: the name `main.c' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Inc/stm32f4xx_hal_conf.h:4: warning: the name `stm32f4xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:18: warning: Compound input_handler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:219: warning: Compound Nibbler is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:218: warning: Compound Nibbler is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/webserial/commands.hpp:13: warning: Compound web_serial::serial_command is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:29: warning: Compound table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/can/can_enviroment.h:23: warning: Compound can_message is not documented.
@@ -398,68 +398,68 @@ Generating code for file /home/runner/work/Op/home/runner/work/OpenEFI/OpenEFI/I
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:38: warning: Member RPM_per (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:51: warning: Member AVCPER (macro definition) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:52: warning: Member AVCI (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:66: warning: Member IGNITION_MODE_WASTED_SPARK (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:67: warning: Member IGNITION_MODE_DISTRIBUIDOR (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:68: warning: Member IGNITION_MODE_SECUENCIAL (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:69: warning: Member DEFAULT_DWELL_TIME (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:70: warning: Member ADVANCE_SAFE_VALUE (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:82: warning: Member _R (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:83: warning: Member _N_CALC(KPa, iat_temp) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:92: warning: Member INY_C (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:93: warning: Member INY_P (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:94: warning: Member INY_L (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:95: warning: Member ARRTp (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:96: warning: Member TARR (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:97: warning: Member TARR2 (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:101: warning: Member LMBM (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:102: warning: Member CTA (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:103: warning: Member CTB (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:104: warning: Member P_LMB (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:105: warning: Member T_LMB (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:106: warning: Member FLMBA (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:107: warning: Member FLMBB (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:111: warning: Member BPC (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:112: warning: Member AF (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:113: warning: Member BVC (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:114: warning: Member BLM (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:116: warning: Member DFCO (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:117: warning: Member DE (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:118: warning: Member TBM (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:141: warning: Member TEMP_MIN (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:142: warning: Member TEMP_MAX (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:143: warning: Member TEMP_OPEN (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:144: warning: Member TEMP_MAX_VALUE (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:147: warning: Member TEMP_K (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:150: warning: Member MAP_MIN (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:151: warning: Member MAP_MAX (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:157: warning: Member MAP_CAL(V) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:158: warning: Member MAP_LOAD_CAL(V) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:161: warning: Member IAT_MIN (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:162: warning: Member IAT_MAX (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:163: warning: Member IAT_OPEN (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:165: warning: Member IAT_CAL(mV) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:169: warning: Member TABLES_IGNITION_TPS_SETTINGS (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:174: warning: Member ENABLE_MISFIRE_MONITOR (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:175: warning: Member ENABLE_FUEL_MONITOR (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:176: warning: Member ENABLE_CATALYST_MONITOR (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:177: warning: Member ENABLE_HEATED_CATALYST_MONITOR (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:181: warning: Member ROUND_16(NUMBER) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:182: warning: Member ROUND_32(NUMBER) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:184: warning: Member EFI_INVERT_PIN(PORT, PIN) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:189: warning: Member EFI_LOG(...) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:190: warning: Member EFI_INFO(...) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:191: warning: Member EFI_EVENT(...) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:192: warning: Member EFI_ERROR(...) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:215: warning: Member MS_IN_MINUTE (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:216: warning: Member US_IN_MINUTE (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:234: warning: Member GET_US_TIME (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:239: warning: Member GET_BIT(VAR, BIT_NEEDED) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:243: warning: Member CPWM_DEBUG (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:244: warning: Member PMIC_DEBUG (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:248: warning: Member BREAKPOINT (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:250: warning: Member BYTE_TO_BINARY_PATTERN (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:251: warning: Member BYTE_TO_BINARY(byte) (macro definition) of file defines.h is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:204: warning: Member UptimeMillis (variable) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:65: warning: Member IGNITION_MODE_WASTED_SPARK (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:66: warning: Member IGNITION_MODE_DISTRIBUIDOR (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:67: warning: Member IGNITION_MODE_SECUENCIAL (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:68: warning: Member DEFAULT_DWELL_TIME (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:69: warning: Member ADVANCE_SAFE_VALUE (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:81: warning: Member _R (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:82: warning: Member _N_CALC(KPa, iat_temp) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:91: warning: Member INY_C (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:92: warning: Member INY_P (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:93: warning: Member INY_L (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:94: warning: Member ARRTp (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:95: warning: Member TARR (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:96: warning: Member TARR2 (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:100: warning: Member LMBM (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:101: warning: Member CTA (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:102: warning: Member CTB (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:103: warning: Member P_LMB (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:104: warning: Member T_LMB (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:105: warning: Member FLMBA (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:106: warning: Member FLMBB (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:110: warning: Member BPC (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:111: warning: Member AF (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:112: warning: Member BVC (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:113: warning: Member BLM (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:115: warning: Member DFCO (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:116: warning: Member DE (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:117: warning: Member TBM (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:140: warning: Member TEMP_MIN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:141: warning: Member TEMP_MAX (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:142: warning: Member TEMP_OPEN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:143: warning: Member TEMP_MAX_VALUE (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:146: warning: Member TEMP_K (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:149: warning: Member MAP_MIN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:150: warning: Member MAP_MAX (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:156: warning: Member MAP_CAL(V) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:157: warning: Member MAP_LOAD_CAL(V) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:160: warning: Member IAT_MIN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:161: warning: Member IAT_MAX (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:162: warning: Member IAT_OPEN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:164: warning: Member IAT_CAL(mV) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:168: warning: Member TABLES_IGNITION_TPS_SETTINGS (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:173: warning: Member ENABLE_MISFIRE_MONITOR (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:174: warning: Member ENABLE_FUEL_MONITOR (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:175: warning: Member ENABLE_CATALYST_MONITOR (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:176: warning: Member ENABLE_HEATED_CATALYST_MONITOR (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:180: warning: Member ROUND_16(NUMBER) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:181: warning: Member ROUND_32(NUMBER) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:183: warning: Member EFI_INVERT_PIN(PORT, PIN) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:188: warning: Member EFI_LOG(...) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:189: warning: Member EFI_INFO(...) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:190: warning: Member EFI_EVENT(...) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:191: warning: Member EFI_ERROR(...) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:214: warning: Member MS_IN_MINUTE (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:215: warning: Member US_IN_MINUTE (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:233: warning: Member GET_US_TIME (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:238: warning: Member GET_BIT(VAR, BIT_NEEDED) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:242: warning: Member CPWM_DEBUG (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:243: warning: Member PMIC_DEBUG (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:247: warning: Member BREAKPOINT (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:249: warning: Member BYTE_TO_BINARY_PATTERN (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:250: warning: Member BYTE_TO_BINARY(byte) (macro definition) of file defines.h is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:203: warning: Member UptimeMillis (variable) of file defines.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:10: warning: Member EMPTY_DTC (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:42: warning: Member DTC_INJECTOR_PRESSURE_NOT_DETECTED (macro definition) of file dtc_codes.h is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Inc/dtc_codes.h:9: warning: Member dtc_data (typedef) of file dtc_codes.h is not documented.
@@ -742,8 +742,8 @@ Generating code for file /home/runner/work/Op/home/runner/work/OpenEFI/OpenEFI/I
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:17: warning: Member lastValue (variable) of class EMALowPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/utils/ema.h:18: warning: Member actualValue (variable) of class EMALowPass is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/input_handler.hpp:31: warning: Member values[16] (variable) of class input_handler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:223: warning: Member nibbles (variable) of class Nibbler is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:224: warning: Member byte_value (variable) of class Nibbler is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:222: warning: Member nibbles (variable) of class Nibbler is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Inc/defines.h:223: warning: Member byte_value (variable) of class Nibbler is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:30: warning: Member y_max (variable) of class table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:31: warning: Member x_max (variable) of class table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:32: warning: Member memory_address (variable) of class table_ref is not documented.
@@ -832,5 +832,5 @@ Generating namespace index...
 Generating namespace member index...
 finalizing index lists...
 writing tag file...
-lookup cache used 371/65536 hits=742 misses=375
+lookup cache used 372/65536 hits=743 misses=376
 finished...
