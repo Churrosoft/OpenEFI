@@ -51,7 +51,6 @@ void web_serial::loop() {
     if ((((comm_crc >> 8) & 0xFF) == usb_command.crc[0]) && ((comm_crc & 0xFF) == usb_command.crc[1])) {
       usb_command.is_valid = true;
     }
-
     // web_serial::import_command(serial_cache, usb_command);
     web_serial::queue_command(usb_command);
     CDC_FlushRxBuffer_FS();

@@ -12,7 +12,7 @@
 
 // Version de firmware
 
-#define HW_TYPE 1     // 0 OpenEFI; 1 uEFI, 2 DashDash
+#define HW_TYPE 1    // 0 OpenEFI; 1 uEFI, 2 DashDash
 
 #define OPENEFI_BOARD_TYPE HW_TYPE
 #define OPENEFI_VER_MAJOR 3
@@ -28,9 +28,9 @@
 #define DNT_MISSING 2        //!< cantidad de dientes faltantes en PMS
 #define DNT_DOUBLE_SCAN 1    //!< 1 == interrupcion por diente
 #define LOGIC_DNT ((DNT - DNT_MISSING) * DNT_DOUBLE_SCAN)
-#define ED 1600                           //!< cilindrada en CC del motor
+#define ED 1600    //!< cilindrada en CC del motor
 
-#define MAX_RPM 4500                      //!< valor maximo de rpm, valores superiores activan cutoff de encendido/combustible
+#define MAX_RPM 4500    //!< valor maximo de rpm, valores superiores activan cutoff de encendido/combustible
 
 /*-----( RPM )-----*/
 
@@ -51,13 +51,12 @@
 #define AVCPER 360 / (CIL / 2)
 #define AVCI 30    // avance de inyeccion (si queres quemar las valvulas dejalo en 0)
 
-#define INY_SECUENCY_SEMI_MPI {3, 4, 1, 2};        //!< secuencia inyeccion (solo en FULL_SECUENCIAL)
+#define INY_SECUENCY_SEMI_MPI {3, 4, 1, 2};    //!< secuencia inyeccion (solo en FULL_SECUENCIAL)
 #define INY_SECUENCY_FULL_MPI {3, 1, 4, 2};    //!< secuencia inyeccion semi-secuencial
 
-#define INJECTION_MODE_SPI      0 //!< monopunto, solo se utiliza canal 1
-#define INJECTION_MODE_SEMI_MPI 1 //!< multipunto, canales 1-2
-#define INJECTION_MODE_FULL_MPI 2 //!< multipunto, canales 1-2-3-4
-
+#define INJECTION_MODE_SPI 0         //!< monopunto, solo se utiliza canal 1
+#define INJECTION_MODE_SEMI_MPI 1    //!< multipunto, canales 1-2
+#define INJECTION_MODE_FULL_MPI 2    //!< multipunto, canales 1-2-3-4
 
 // Encendido:
 #define ING_SECUENCY {1, 3, 4, 2};        //!< secuencia encendido (solo en FULL_SECUENCIAL)
@@ -66,8 +65,8 @@
 #define IGNITION_MODE_WASTED_SPARK 0
 #define IGNITION_MODE_DISTRIBUIDOR 1
 #define IGNITION_MODE_SECUENCIAL 2
-#define DEFAULT_DWELL_TIME 2000; // en uS
-#define ADVANCE_SAFE_VALUE 3000 // 30°
+#define DEFAULT_DWELL_TIME 2000;    // en uS
+#define ADVANCE_SAFE_VALUE 3000     // 30°
 
 /*-----( I_TIME )-----*/
 /* n = PV / RT
