@@ -65,6 +65,7 @@ var searchData=
   ['dtc_5ftps_5fsensor_5fintermittent',['DTC_TPS_SENSOR_INTERMITTENT',['../d7/d68/dtc__codes_8h.html#a3f5e6d5b289eb3cb9d78b3cc41682033',1,'dtc_codes.h']]],
   ['dtc_5fturbo_5fno_5fpressure',['DTC_TURBO_NO_PRESSURE',['../d7/d68/dtc__codes_8h.html#a3158ed67ba6120bbf8a3e3658ea38fb3',1,'dtc_codes.h']]],
   ['dtc_5fturbo_5fpressure_5flow',['DTC_TURBO_PRESSURE_LOW',['../d7/d68/dtc__codes_8h.html#af44289051f9e235d09089b2193e3a05f',1,'dtc_codes.h']]],
+  ['dump_5frow',['dump_row',['../d3/d9f/namespacetables.html#a3d4eae2328222f2672364baad17b14eb',1,'tables']]],
   ['definitions',['definitions',['../d6/db8/group__OBD__PID.html',1,'']]],
   ['definitions',['definitions',['../d6/d93/group__OBD__SID.html',1,'']]],
   ['definitions',['definitions',['../dc/de2/group__OBD__STATUS.html',1,'']]]

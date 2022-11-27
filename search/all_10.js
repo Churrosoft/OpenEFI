@@ -4,6 +4,7 @@ var searchData=
   ['sensorvalues',['SensorValues',['../d4/dd1/structsensors_1_1SensorValues.html',1,'sensors']]],
   ['serial_5fcommand',['serial_command',['../d2/db9/structweb__serial_1_1serial__command.html',1,'web_serial']]],
   ['servicenotsupported',['serviceNotSupported',['../dc/de2/group__OBD__STATUS.html#ga1bf8ad3c3e7062832dcd4ebe32728935',1,'obd2_status.h']]],
+  ['set_5fvalue',['set_value',['../d3/d9f/namespacetables.html#a5f4f21d540c39cce3e7850a12316d98a',1,'tables']]],
   ['setup_5fspark',['setup_spark',['../db/d51/group__PMIC.html#ga95bc8cae06ee57254b0eb5286a26b004',1,'PMIC']]],
   ['sinc_2eh',['sinc.h',['../dc/d19/sinc_8h.html',1,'']]],
   ['sinc_5fenable',['SINC_ENABLE',['../d8/db0/defines_8h.html#a1941541eecb2be882abc1a4f0291771b',1,'defines.h']]],

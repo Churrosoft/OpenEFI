@@ -8,32 +8,24 @@ Implementacion de tablas 2D con vectores, valores en int32\+\_\+t.
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{namespacetables_a4a112a2cfd09a3993a24598bf087ccba}\label{namespacetables_a4a112a2cfd09a3993a24598bf087ccba}} 
-int32\+\_\+t {\bfseries get\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint32\+\_\+t, uint32\+\_\+t)
-\item 
+int32\+\_\+t \hyperlink{namespacetables_a4a112a2cfd09a3993a24598bf087ccba}{get\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint32\+\_\+t, uint32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em fast read of table on X/Y position \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetables_a5f4f21d540c39cce3e7850a12316d98a}\label{namespacetables_a5f4f21d540c39cce3e7850a12316d98a}} 
-void {\bfseries set\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint32\+\_\+t, uint32\+\_\+t, int32\+\_\+t)
-\item 
-\mbox{\Hypertarget{namespacetables_a55cb401646e4582c598f0ed53f4bcfd7}\label{namespacetables_a55cb401646e4582c598f0ed53f4bcfd7}} 
-void {\bfseries set\+\_\+long\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint16\+\_\+t, uint16\+\_\+t, int32\+\_\+t)
-\item 
+void \hyperlink{namespacetables_a5f4f21d540c39cce3e7850a12316d98a}{set\+\_\+value} (\hyperlink{structtable__ref}{table\+\_\+ref}, uint32\+\_\+t, uint32\+\_\+t, int32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em fast write, single value at X/Y position \end{DoxyCompactList}\item 
 table\+\_\+data \hyperlink{namespacetables_a27170b1a1036e75516b990dc97ea5835}{read\+\_\+all} (\hyperlink{structtable__ref}{table\+\_\+ref})
 \begin{DoxyCompactList}\small\item\em reads all data of the selected table \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{namespacetables_a56f811fc2ad9ddcc8580af63abb9c200}\label{namespacetables_a56f811fc2ad9ddcc8580af63abb9c200}} 
 int32\+\_\+t \hyperlink{namespacetables_a56f811fc2ad9ddcc8580af63abb9c200}{find\+\_\+nearest\+\_\+neighbor} (std\+::vector$<$ int32\+\_\+t $>$, int32\+\_\+t)
 \begin{DoxyCompactList}\small\item\em return nearest value of one row/column \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{namespacetables_af34bc025bc426995866a34ecbe393978}\label{namespacetables_af34bc025bc426995866a34ecbe393978}} 
-std\+::vector$<$ int32\+\_\+t $>$ {\bfseries col\+\_\+to\+\_\+row} (table\+\_\+data, uint32\+\_\+t)
-\item 
+std\+::vector$<$ int32\+\_\+t $>$ \hyperlink{namespacetables_af34bc025bc426995866a34ecbe393978}{col\+\_\+to\+\_\+row} (table\+\_\+data, uint32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em transform table\+\_\+data column to vector row \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetables_a609889745ffc450440eee727f8d28034}\label{namespacetables_a609889745ffc450440eee727f8d28034}} 
 void \hyperlink{namespacetables_a609889745ffc450440eee727f8d28034}{update\+\_\+table} (table\+\_\+data, \hyperlink{structtable__ref}{table\+\_\+ref})
 \begin{DoxyCompactList}\small\item\em erases page on memory and record new data of table \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{namespacetables_a3d4eae2328222f2672364baad17b14eb}\label{namespacetables_a3d4eae2328222f2672364baad17b14eb}} 
-void {\bfseries dump\+\_\+row} (std\+::vector$<$ int32\+\_\+t $>$, uint8\+\_\+t $\ast$)
-\item 
-\mbox{\Hypertarget{namespacetables_aacb653c68579815b85eca89c831e9300}\label{namespacetables_aacb653c68579815b85eca89c831e9300}} 
-std\+::vector$<$ int32\+\_\+t $>$ {\bfseries put\+\_\+row} (uint8\+\_\+t $\ast$, uint32\+\_\+t)
-\item 
+void \hyperlink{namespacetables_a3d4eae2328222f2672364baad17b14eb}{dump\+\_\+row} (std\+::vector$<$ int32\+\_\+t $>$, uint8\+\_\+t $\ast$)
+\begin{DoxyCompactList}\small\item\em convert vector row to uint8\+\_\+t buffer \end{DoxyCompactList}\item 
+std\+::vector$<$ int32\+\_\+t $>$ \hyperlink{namespacetables_aacb653c68579815b85eca89c831e9300}{put\+\_\+row} (uint8\+\_\+t $\ast$, uint32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em convert array to vector row \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetables_a5df27daa6f33383e90a21d0ea12f6d9f}\label{namespacetables_a5df27daa6f33383e90a21d0ea12f6d9f}} 
 bool \hyperlink{namespacetables_a5df27daa6f33383e90a21d0ea12f6d9f}{on\+\_\+bounds} (\hyperlink{structtable__ref}{table\+\_\+ref}, int32\+\_\+t, int32\+\_\+t)
 \begin{DoxyCompactList}\small\item\em return true if input X/Y is on the table \end{DoxyCompactList}\item 
@@ -41,11 +33,11 @@ bool \hyperlink{namespacetables_a5df27daa6f33383e90a21d0ea12f6d9f}{on\+\_\+bound
 bool \hyperlink{namespacetables_ad914a29af149c1059b5fcfb1501f6d87}{validate} (\hyperlink{structtable__ref}{table\+\_\+ref}, table\+\_\+data)
 \begin{DoxyCompactList}\small\item\em reads C\+RC value on memory and validate data on current table\+\_\+data \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetables_a2663a4b36458007a02e8d2ddb20801f5}\label{namespacetables_a2663a4b36458007a02e8d2ddb20801f5}} 
-bool {\bfseries validate} (\hyperlink{structtable__ref}{table\+\_\+ref}, table\+\_\+data, table\+\_\+data)
-\item 
+bool \hyperlink{namespacetables_a2663a4b36458007a02e8d2ddb20801f5}{validate} (\hyperlink{structtable__ref}{table\+\_\+ref}, table\+\_\+data, table\+\_\+data)
+\begin{DoxyCompactList}\small\item\em calculate C\+RC for R\+AM to R\+AM table \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetables_a6152b4e661d9d371ed4580b80f5f9b80}\label{namespacetables_a6152b4e661d9d371ed4580b80f5f9b80}} 
-bool {\bfseries validate} (\hyperlink{structtable__ref}{table\+\_\+ref}, table\+\_\+data, uint32\+\_\+t)
-\item 
+bool \hyperlink{namespacetables_a6152b4e661d9d371ed4580b80f5f9b80}{validate} (\hyperlink{structtable__ref}{table\+\_\+ref}, table\+\_\+data, uint32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em calculate C\+RC for R\+AM table to pre-\/calculated crc \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetables_acfce212d9f061ab7df55e665ab89932b}\label{namespacetables_acfce212d9f061ab7df55e665ab89932b}} 
 void {\bfseries plot\+\_\+table} (table\+\_\+data)
 \end{DoxyCompactItemize}
@@ -55,6 +47,101 @@ void {\bfseries plot\+\_\+table} (table\+\_\+data)
 Implementacion de tablas 2D con vectores, valores en int32\+\_\+t. 
 
 \subsection{Function Documentation}
+\mbox{\Hypertarget{namespacetables_af34bc025bc426995866a34ecbe393978}\label{namespacetables_af34bc025bc426995866a34ecbe393978}} 
+\index{tables@{tables}!col\+\_\+to\+\_\+row@{col\+\_\+to\+\_\+row}}
+\index{col\+\_\+to\+\_\+row@{col\+\_\+to\+\_\+row}!tables@{tables}}
+\subsubsection{\texorpdfstring{col\+\_\+to\+\_\+row()}{col\_to\_row()}}
+{\footnotesize\ttfamily std\+::vector$<$ int32\+\_\+t $>$ tables\+::col\+\_\+to\+\_\+row (\begin{DoxyParamCaption}\item[{table\+\_\+data}]{table,  }\item[{uint32\+\_\+t}]{table\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+transform table\+\_\+data column to vector row 
+
+
+\begin{DoxyParams}{Parameters}
+{\em table} & table to transform \\
+\hline
+{\em index} & column to parse \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetables_a3d4eae2328222f2672364baad17b14eb}\label{namespacetables_a3d4eae2328222f2672364baad17b14eb}} 
+\index{tables@{tables}!dump\+\_\+row@{dump\+\_\+row}}
+\index{dump\+\_\+row@{dump\+\_\+row}!tables@{tables}}
+\subsubsection{\texorpdfstring{dump\+\_\+row()}{dump\_row()}}
+{\footnotesize\ttfamily void tables\+::dump\+\_\+row (\begin{DoxyParamCaption}\item[{std\+::vector$<$ int32\+\_\+t $>$}]{table\+\_\+row,  }\item[{uint8\+\_\+t $\ast$}]{dest\+\_\+buff }\end{DoxyParamCaption})}
+
+
+
+convert vector row to uint8\+\_\+t buffer 
+
+\begin{DoxyRefDesc}{Bug}
+\item[\hyperlink{bug__bug000001}{Bug}]can cause overflow/segfault if the input buffer is too small \end{DoxyRefDesc}
+
+\begin{DoxyParams}{Parameters}
+{\em table\+\_\+row} & vector$<$int32\+\_\+t$>$ input data \\
+\hline
+{\em dest\+\_\+buff} & uint8\+\_\+t output buffer \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetables_a56f811fc2ad9ddcc8580af63abb9c200}\label{namespacetables_a56f811fc2ad9ddcc8580af63abb9c200}} 
+\index{tables@{tables}!find\+\_\+nearest\+\_\+neighbor@{find\+\_\+nearest\+\_\+neighbor}}
+\index{find\+\_\+nearest\+\_\+neighbor@{find\+\_\+nearest\+\_\+neighbor}!tables@{tables}}
+\subsubsection{\texorpdfstring{find\+\_\+nearest\+\_\+neighbor()}{find\_nearest\_neighbor()}}
+{\footnotesize\ttfamily int32\+\_\+t tables\+::find\+\_\+nearest\+\_\+neighbor (\begin{DoxyParamCaption}\item[{std\+::vector$<$ int32\+\_\+t $>$}]{vec,  }\item[{int32\+\_\+t}]{search }\end{DoxyParamCaption})}
+
+
+
+return nearest value of one row/column 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vec} & input data \\
+\hline
+{\em search,int32\+\_\+t} & value to search \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetables_a4a112a2cfd09a3993a24598bf087ccba}\label{namespacetables_a4a112a2cfd09a3993a24598bf087ccba}} 
+\index{tables@{tables}!get\+\_\+value@{get\+\_\+value}}
+\index{get\+\_\+value@{get\+\_\+value}!tables@{tables}}
+\subsubsection{\texorpdfstring{get\+\_\+value()}{get\_value()}}
+{\footnotesize\ttfamily int32\+\_\+t tables\+::get\+\_\+value (\begin{DoxyParamCaption}\item[{\hyperlink{structtable__ref}{table\+\_\+ref}}]{table,  }\item[{uint32\+\_\+t}]{x,  }\item[{uint32\+\_\+t}]{y }\end{DoxyParamCaption})}
+
+
+
+fast read of table on X/Y position 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{structtable__ref}{table\+\_\+ref}} & table to read \\
+\hline
+{\em x} & uint32\+\_\+t value \\
+\hline
+{\em y} & uint32\+\_\+t value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int32\+\_\+t data at x/y 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetables_aacb653c68579815b85eca89c831e9300}\label{namespacetables_aacb653c68579815b85eca89c831e9300}} 
+\index{tables@{tables}!put\+\_\+row@{put\+\_\+row}}
+\index{put\+\_\+row@{put\+\_\+row}!tables@{tables}}
+\subsubsection{\texorpdfstring{put\+\_\+row()}{put\_row()}}
+{\footnotesize\ttfamily std\+::vector$<$ int32\+\_\+t $>$ tables\+::put\+\_\+row (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{data,  }\item[{uint32\+\_\+t}]{buff\+\_\+size }\end{DoxyParamCaption})}
+
+
+
+convert array to vector row 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pdata} & uint8\+\_\+t array of data \\
+\hline
+{\em psize} & uint32\+\_\+t with size of pdata \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector$<$int32\+\_\+t$>$ 
+\end{DoxyReturn}
 \mbox{\Hypertarget{namespacetables_a27170b1a1036e75516b990dc97ea5835}\label{namespacetables_a27170b1a1036e75516b990dc97ea5835}} 
 \index{tables@{tables}!read\+\_\+all@{read\+\_\+all}}
 \index{read\+\_\+all@{read\+\_\+all}!tables@{tables}}

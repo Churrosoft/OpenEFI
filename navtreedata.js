@@ -1,6 +1,7 @@
 var NAVTREE =
 [
   [ "OpenEFI", "index.html", [
+    [ "Bug List", "de/da5/bug.html", null ],
     [ "Memory", "de/d85/group__Memory.html", [
       [ "Tables", "de/d68/group__Tables.html", null ],
       [ "Immobilizer", "de/d8c/group__Immobilizer.html", null ],

@@ -7,7 +7,8 @@ var indexSectionsWithContent =
   4: "bcdefghimnoprstuvw",
   5: "_fhu",
   6: "acdefilmprstv",
-  7: "cdimpstu"
+  7: "cdimpstu",
+  8: "b"
 };
 
 var indexSectionNames =
@@ -19,7 +20,8 @@ var indexSectionNames =
   4: "functions",
   5: "variables",
   6: "defines",
-  7: "groups"
+  7: "groups",
+  8: "pages"
 };
 
 var indexSectionLabels =
@@ -31,6 +33,7 @@ var indexSectionLabels =
   4: "Functions",
   5: "Variables",
   6: "Macros",
-  7: "Modules"
+  7: "Modules",
+  8: "Pages"
 };
 
