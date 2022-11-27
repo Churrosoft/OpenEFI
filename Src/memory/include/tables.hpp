@@ -52,9 +52,20 @@ struct table_ref {
 //! Implementacion de tablas 2D con vectores, valores en int32_t
 namespace tables {
   // operaciones simples sobre un campo:
+
+  /**
+   * @brief fast read of table on X/Y position
+   * @param table_ref table to read
+   * @param x uint32_t value
+   * @param y uint32_t value
+   * @return int32_t data at x/y
+   */
   int32_t get_value(table_ref, uint32_t, uint32_t);
+
+  /**
+   * @brief fast write, single value at X/Y position
+   */
   void set_value(table_ref, uint32_t, uint32_t, int32_t);
-  void set_long_value(table_ref, uint16_t, uint16_t, int32_t);
 
   // operaciones sobre varios campos a la vez:
 
@@ -71,8 +82,17 @@ namespace tables {
 
   /**
    * @brief return nearest value of one row/column
+   * @param vec input data
+   * @param search , int32_t value to search
    */
   int32_t find_nearest_neighbor(std::vector<int32_t>, int32_t);
+
+
+  /**
+   * @brief transform table_data column to vector row
+   * @param table table to transform
+   * @param index column to parse
+  */
   std::vector<int32_t> col_to_row(table_data, uint32_t);
 
   /**
@@ -80,8 +100,21 @@ namespace tables {
    */
   void update_table(table_data, table_ref);
 
+  /**
+   * @brief convert vector row to uint8_t buffer
+   * @bug can cause overflow/segfault if the input buffer is too small
+   * @param table_row vector<int32_t> input data
+   * @param dest_buff uint8_t output buffer
+   */
+
   void dump_row(std::vector<int32_t>, uint8_t *);
 
+  /**
+   * @brief convert array to vector row
+   * @param pdata uint8_t array of data
+   * @param psize uint32_t with size of pdata
+   * @return vector<int32_t>
+   */
   std::vector<int32_t> put_row(uint8_t *, uint32_t);
 
   /**
@@ -94,7 +127,14 @@ namespace tables {
    */
   bool validate(table_ref, table_data);
 
+  /**
+   * @brief calculate CRC for RAM to RAM table
+   */
   bool validate(table_ref, table_data, table_data);
+
+  /**
+   * @brief calculate CRC for RAM table to pre-calculated crc
+   */
   bool validate(table_ref, table_data, uint32_t);
 
   // debug:
