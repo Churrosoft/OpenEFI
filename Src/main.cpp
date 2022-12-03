@@ -63,10 +63,12 @@ extern "C" {
 #include "debug/debug_local.h"
 #include "engine/engine.hpp"
 #include "ignition/include/ignition.hpp"
+#include "injection/injection.hpp"
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
+
 
 #ifdef ENABLE_CAN_ISO_TP
 #include "can/can_enviroment.h"
@@ -209,7 +211,7 @@ int main(void) {
   W25qxx_Init();
 #endif
 
-/* W25qxx_EraseChip(); */
+  /* W25qxx_EraseChip(); */
 
   // SRAND Init:
   srand(HAL_GetTick());
@@ -219,26 +221,33 @@ int main(void) {
 #endif
   uint32_t StartTime = HAL_GetTick();
 
-/*   uint8_t arr0[] = {0xf, 0xda, 0xdd};
-  uint32_t arr1[] = {0xf, 0xda, 0xdd};
-  trace_printf("Event: <MEMORY_CRC> Calculated: %d ; %d", HAL_CRC_Calculate(&hcrc, arr1, 3), HAL_CRC_Calculate(&hcrc, (uint32_t *)arr0, 3)); */
-//Event: <MEMORY_CRC> Calculated: 729167232 ; 29477989
+  /*   uint8_t arr0[] = {0xf, 0xda, 0xdd};
+    uint32_t arr1[] = {0xf, 0xda, 0xdd};
+    trace_printf("Event: <MEMORY_CRC> Calculated: %d ; %d", HAL_CRC_Calculate(&hcrc, arr1, 3), HAL_CRC_Calculate(&hcrc, (uint32_t *)arr0,
+    3)); */
+  // Event: <MEMORY_CRC> Calculated: 729167232 ; 29477989
 
 #ifdef ENABLE_IGNITION
   ignition::setup();
 #endif
-/*   // Tabla VE
-  tables::read_all({17, 17, 0x3});
-  // Tabla correccion por bateria:
-  tables::read_all({17, 17, 0x4});
-  // WUE
-  tables::read_all({17, 2, 0x5});
-  // ASE %
-  tables::read_all({17, 2, 0x6});
-  // ASE Taper
-  tables::read_all({17, 2, 0x7});
-  // IDLE /Stepper config
-  tables::read_all({17, 2, 0x7}); */
+
+  injection::speedN::calculate_injection_time();
+
+#ifdef ENABLE_INJECTION
+  injection::setup();
+#endif
+  /*   // Tabla VE
+    tables::read_all({17, 17, 0x3});
+    // Tabla correccion por bateria:
+    tables::read_all({17, 17, 0x4});
+    // WUE
+    tables::read_all({17, 2, 0x5});
+    // ASE %
+    tables::read_all({17, 2, 0x6});
+    // ASE Taper
+    tables::read_all({17, 2, 0x7});
+    // IDLE /Stepper config
+    tables::read_all({17, 2, 0x7}); */
 
   // Core inits:
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
@@ -264,6 +273,10 @@ int main(void) {
 
 #ifdef ENABLE_IGNITION
     ignition::interrupt();
+#endif
+
+#ifdef ENABLE_INJECTION
+  injection::on_loop();
 #endif
 
 #ifdef ENABLE_ENGINE_FRONTEND

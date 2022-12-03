@@ -12,7 +12,7 @@
 #define ENABLE_TRACE
 
 #define ENABLE_IGNITION
-// #define ENABLE_INJECTION
+#define ENABLE_INJECTION
 // #define ENABLE_SENSORS
 #define ENABLE_MEMORY
 // #define ENABLE_PMIC
