@@ -213,7 +213,7 @@ void web_serial::command_handler() {
             uint8_t table_index = 0;
             for (auto table_row : out_table) {
               tables::dump_row(table_row, payload);
-              // FIXME: para evitar que openefi tuner revente el comando, solo reviso el checksum alla al borrar un
+              // FIXME: para evitar que openefi tuner reviente el comando, solo reviso el checksum alla al borrar un
               // comando
               payload[120] = table_index;
               table_index++;

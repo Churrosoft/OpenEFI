@@ -58,6 +58,7 @@ extern "C" {
 #include <cstdlib>
 
 #include "aliases/memory.hpp"
+#include "config.hpp"
 #include "cpwm/cpwm.hpp"
 #include "cpwm/rpm_calc.h"
 #include "debug/debug_local.h"
@@ -68,7 +69,7 @@ extern "C" {
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
-
+#include "engine_status.hpp"
 
 #ifdef ENABLE_CAN_ISO_TP
 #include "can/can_enviroment.h"
@@ -102,6 +103,8 @@ uint8_t INJECTION_STRATEGY = INJECTION_MODE_SPI;
 uint8_t IGNITION_STRATEGY = IGNITION_MODE_WASTED_SPARK;
 uint32_t IGNITION_DWELL_TIME = DEFAULT_DWELL_TIME;
 uint32_t last_cycle, last_mid_cycle;
+engine_status efi_status;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -127,7 +130,7 @@ uint32_t tickStep = 15000;    // 4k rpm // 50000 => 1200 // 80000 => 750
  */
 int main(void) {
   /* USER CODE BEGIN 1 */
-
+  set_default_engine_config();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -231,7 +234,7 @@ int main(void) {
   ignition::setup();
 #endif
 
-  injection::speedN::calculate_injection_time();
+  injection::speedN::calculate_injection_fuel();
 
 #ifdef ENABLE_INJECTION
   injection::setup();
@@ -276,7 +279,7 @@ int main(void) {
 #endif
 
 #ifdef ENABLE_INJECTION
-  injection::on_loop();
+    injection::on_loop();
 #endif
 
 #ifdef ENABLE_ENGINE_FRONTEND
