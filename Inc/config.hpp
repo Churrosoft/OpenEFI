@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "aliases/memory.hpp"
 
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
@@ -10,15 +11,17 @@ struct injectorConfig
     int8_t injectorCount;
     float fuelPressure;
     float fuelDensity;
+    float onTime;
+    float offTime;
 };
 
 struct injectionConfig {
   float targetLambda; // a cuanto tiene que apuntar la lambda (tendria que ser una tabla)
   float targetStoich; // proporcion A/F 14.7 nasta (o menos), 9.0 ethanol
-  bool enable_alpha_n;
-  bool enable_speed_density;
+  bool enable_alphaN;
+  bool enable_speedDensity;
   injectorConfig injector;
-
+  table_ref alphaN_ve_table;
 };
 
 struct engine_config {

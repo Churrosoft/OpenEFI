@@ -3,6 +3,7 @@
 #include "engine_status.hpp"
 
 using namespace injection;
+table_data speedN::tps_rpm_ve;
 
 #ifndef speed_n_on_file
 #pragma GCC warning "forbiden usage of namespace speedN"
@@ -33,10 +34,11 @@ fuel_mass_t speedN::calculate_injection_fuel() {
   auto stoich = efi_config.Injection.targetStoich;
 
   auto afr = stoich * lambda;
-  fuel_mass_t baseFuel = (fuel_mass_t)(currentAirMass.get() / afr);
+  fuel_mass_t baseFuel = (fuel_mass_t)(currentAirMass /* .get() */ / afr);
 
   // status antes de salir:
-  efi_status.injection.airFlow = (air_mass_t)((currentAirMass.get() * engine_cilinders / getEngineCycleDuration(_RPM)) * 3600000 / 1000);
+  efi_status.injection.airFlow =
+      (air_mass_t)((currentAirMass /* .get() */ * engine_cilinders / getEngineCycleDuration(_RPM)) * 3600000 / 1000);
   efi_status.injection.baseAir = currentAirMass;
   efi_status.injection.baseFuel = baseFuel;
 
@@ -54,6 +56,6 @@ air_mass_t speedN::get_airmass() {
   int32_t engine_displacement = 1596;
   int8_t engine_cilinders = CIL;
 
-  air_mass_t full_cycle = (air_mass_t)(VE * (engine_displacement * STD_AIR_PRES.get() / (0.28705f * STD_AIR_TEMP.get())));
+  air_mass_t full_cycle = (air_mass_t)(VE * (engine_displacement * STD_AIR_PRES /* .get() */ / (0.28705f * STD_AIR_TEMP /* .get() */)));
   return full_cycle / (air_mass_t)engine_cilinders;
 }

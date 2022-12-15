@@ -35,6 +35,7 @@ namespace injection {
 
     // estas son internas:
     air_mass_t get_airmass();
+    extern table_data tps_rpm_ve;
 
   }    // namespace speedN
   /*! @} End of Doxygen speedN*/
@@ -56,8 +57,8 @@ namespace injection {
    * @{
    */
   namespace Injectors {
-    int32_t get_base_time();
-    int32_t get_off_time();
+    float get_base_time();
+    float get_off_time();
     int32_t get_battery_correction();
     int32_t get_pressure_correction();
     int32_t get_wall_wetting_correction();
