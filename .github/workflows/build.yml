@@ -80,9 +80,7 @@ jobs:
         run: platformio run
 
       - name: Run Tests
-        run: |
-          ./launch_qemu.sh .pio/build/black_f407vg/firmware.bin || true
-          python3 generate_report.py
+        run: platformio test --without-uploading --junit-output-path qemu_report.xml
 
       - name: Generate Report (HTML)
         run: |

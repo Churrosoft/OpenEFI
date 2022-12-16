@@ -61,7 +61,7 @@ void unityOutputStart() {
   }
 }
 
-void unityOutputChar(char c) { /* HAL_UART_Transmit(&UartHandle, (uint8_t*)(&c), 1, 1000); */ }
+void unityOutputChar(char c) { HAL_UART_Transmit(&UartHandle, (uint8_t*)(&c), 1, 1000); }
 
 void unityOutputFlush() { fprintf(stdout, "\n\r"); }
 
