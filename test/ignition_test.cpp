@@ -1,8 +1,10 @@
 #include <unity.h>
 
+#include "aliases/testing.hpp"
+/* 
 #include "../Src/ignition/include/ignition.hpp"
 #include "../Src/sensors/sensors.hpp"
-
+ */
 extern "C" {
 #include "trace.h"
 #include <stdio.h>
@@ -87,13 +89,12 @@ void test_acc_to_idle_advance() {
 
 int runIgnitionTests() {
   UnityBegin("Src/ignition/src/ignition.cpp:25");
-
   RUN_TEST(test_idle_advance);
-  debug_printf("----------------------- \n");
+  debug_printf("----------------------- \n\r");
   RUN_TEST(test_idle_to_acc_advance);
-  debug_printf("----------------------- \n");
+  debug_printf("----------------------- \n\r");
   RUN_TEST(test_acc_advance);
-  debug_printf("----------------------- \n");
+  debug_printf("----------------------- \n\r");
   RUN_TEST(test_acc_to_idle_advance);
 
   return UnityEnd();

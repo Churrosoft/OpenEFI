@@ -27,15 +27,6 @@
 
 #ifdef TESTING
 #pragma GCC warning "TESTING ENABLED"
-#include <unity.h>
-
-#include "../test/cpwm_test.cpp"
-#include "../test/ignition_test.cpp"
-#include "../test/rpm_calc.cpp"
-
-extern int run_tests(void);
-extern int run_rpm_tests(void);
-extern int runIgnitionTests(void);
 #endif
 
 #include <algorithm>
@@ -123,7 +114,7 @@ uint32_t mocktick = 0;
 uint32_t tickStep = 15000;    // 4k rpm // 50000 => 1200 // 80000 => 750
 #endif
 /* USER CODE END 0 */
-
+#ifndef PIO_UNIT_TESTING
 /**
  * @brief  The application entry point.
  * @retval int
@@ -140,19 +131,6 @@ int main(void) {
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
-#ifdef TESTING
-  trace_initialize();
-  printf("INIT_TESTING \n");
-  run_tests();
-  run_rpm_tests();
-  runIgnitionTests();
-  puts("END_TESTING \n");
-
-  // Que Dios y la Patria me lo demanden
-  SCB->AIRCR = (0x5FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk;
-  abort();
-#endif
 
   MOTOR_ENABLE = true;
   /* USER CODE END Init */
@@ -320,6 +298,8 @@ int main(void) {
   /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
 }
+
+#endif
 
 /**
  * @brief NVIC Configuration.

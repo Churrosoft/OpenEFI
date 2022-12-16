@@ -10,4 +10,4 @@ script qemu_output.log -c "exec timeout 25s \
     -gdb tcp::3333 \
     -nographic -M STM32F4-Discovery \
     -no-reboot \
-    -kernel $FIRMWARE "
+    -kernel .pio/build/black_f407vg/firmware.bin " 
