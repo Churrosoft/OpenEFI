@@ -22,10 +22,10 @@ namespace injection {
 
   /**
    * @addtogroup Injection
-   * @brief Speed-N calculations
+   * @brief Alpha-N calculations
    * @{
    */
-  namespace speedN {
+  namespace AlphaN {
 
     // calcular tiempo base
     fuel_mass_t calculate_injection_fuel();
@@ -34,11 +34,11 @@ namespace injection {
     mix_mass_t calculate_correction_time();
 
     // estas son internas:
-    air_mass_t get_airmass();
+    air_mass_t get_airmass(int32_t);
     extern table_data tps_rpm_ve;
 
-  }    // namespace speedN
-  /*! @} End of Doxygen speedN*/
+  }    // namespace AlphaN
+  /*! @} End of Doxygen AlphaN*/
 
   /**
    * @addtogroup Injection

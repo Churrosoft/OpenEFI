@@ -94,7 +94,6 @@ uint8_t INJECTION_STRATEGY = INJECTION_MODE_SPI;
 uint8_t IGNITION_STRATEGY = IGNITION_MODE_WASTED_SPARK;
 uint32_t IGNITION_DWELL_TIME = DEFAULT_DWELL_TIME;
 uint32_t last_cycle, last_mid_cycle;
-engine_status efi_status;
 
 /* USER CODE END PV */
 
@@ -112,6 +111,7 @@ void MX_NVIC_Init(void);
 #ifdef TESTING
 uint32_t mocktick = 0;
 uint32_t tickStep = 15000;    // 4k rpm // 50000 => 1200 // 80000 => 750
+#define PIO_UNIT_TESTING
 #endif
 /* USER CODE END 0 */
 #ifndef PIO_UNIT_TESTING
@@ -212,7 +212,7 @@ int main(void) {
   ignition::setup();
 #endif
 
-  injection::speedN::calculate_injection_fuel();
+  injection::AlphaN::calculate_injection_fuel();
 
 #ifdef ENABLE_INJECTION
   injection::setup();

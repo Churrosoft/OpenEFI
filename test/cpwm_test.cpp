@@ -58,7 +58,7 @@ int run_tests() {
 
   RUN_TEST(test_first_cilinder_egn);
   RUN_TEST(test_first_cilinder_iny);
-  fprintf(stdout, "\n\r");
+
   RUN_TEST(test_second_cilinder_egn);
   RUN_TEST(test_second_cilinder_iny);
 

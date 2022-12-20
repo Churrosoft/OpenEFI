@@ -3,7 +3,7 @@
 #include "engine_status.hpp"
 
 using namespace injection;
-table_data speedN::tps_rpm_ve;
+table_data AlphaN::tps_rpm_ve;
 
 #ifndef speed_n_on_file
 #pragma GCC warning "forbiden usage of namespace speedN"
@@ -18,16 +18,18 @@ table_data speedN::tps_rpm_ve;
 #define STD_AIR_TEMP ((kelvin_t)((sensors::values.IAT / 100) + 273.15))    // TODO: cast C° to K° with define/func
 #endif
 
-mix_mass_t speedN::calculate_correction_time() {
+mix_mass_t AlphaN::calculate_correction_time() {
   // TODO: pala time
   return (mix_mass_t)0;
 }
 
-fuel_mass_t speedN::calculate_injection_fuel() {
+fuel_mass_t AlphaN::calculate_injection_fuel() {
   if (_RPM == 0) {
     return (fuel_mass_t)0;
   }
-  auto currentAirMass = speedN::get_airmass();
+  // VE fijo como el piñon fijo
+  int32_t VE = 8000;
+  auto currentAirMass = AlphaN::get_airmass(VE);
   int8_t engine_cilinders = CIL;
 
   auto lambda = efi_config.Injection.targetLambda;    // algunas veces me cago solo anidando tanto
@@ -46,16 +48,15 @@ fuel_mass_t speedN::calculate_injection_fuel() {
 }
 
 // from: https://www.engineeringtoolbox.com/molecular-mass-air-d_679.html
-#define AIR_R 8.31446261815324f / 28.9647f
+#define AIR_R (8.31446261815324f / 28.9647f)
 
-air_mass_t speedN::get_airmass() {
+air_mass_t AlphaN::get_airmass(int32_t VE) {
   // tendria que ser ley de gases, volumen => cilindrada
-  // VE fijo como el piñon fijo
-  int32_t VE = 8000;
+  // VE llega como numero del 0 al 100 (o ma' el turbo ameo), por eso al division por 100
   // esto tendria que venir de la config
   int32_t engine_displacement = 1596;
   int8_t engine_cilinders = CIL;
 
-  air_mass_t full_cycle = (air_mass_t)(VE * (engine_displacement * STD_AIR_PRES /* .get() */ / (0.28705f * STD_AIR_TEMP /* .get() */)));
-  return full_cycle / (air_mass_t)engine_cilinders;
+  air_mass_t full_cycle = (air_mass_t)((float)VE / 100) * (engine_displacement * STD_AIR_PRES / (AIR_R * STD_AIR_TEMP));
+  return (air_mass_t)(full_cycle / engine_cilinders);
 }

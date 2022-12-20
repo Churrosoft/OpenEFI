@@ -10,7 +10,7 @@ void injection::setup() {
 
   // Tabla TPS / RPM => VE
   // TODO: la tabla podriiia ser de tamaño configurable
-  speedN::tps_rpm_ve = tables::read_all({17, 17, 0x3});
+  AlphaN::tps_rpm_ve = tables::read_all({17, 17, 0x3});
 }
 
 void injection::on_loop() {
@@ -21,8 +21,8 @@ void injection::on_loop() {
 
   // injection::Injectors::set_injectorFlow();
   // depende del algoritmo a usar:
-  time += Injectors::fuel_mass_to_time(speedN::calculate_injection_fuel());
-  time += speedN::calculate_correction_time() /* .get() */;    // Lambda y temp de aire
+  time += Injectors::fuel_mass_to_time(AlphaN::calculate_injection_fuel());
+  time += AlphaN::calculate_correction_time() /* .get() */;    // Lambda y temp de aire
   // generico:
   time += Injectors::get_base_time();    // aka lo que tarda el inyector en despegarse
   time *= Injectors::get_pressure_correction();

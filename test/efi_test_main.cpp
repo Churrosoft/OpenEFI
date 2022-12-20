@@ -19,6 +19,7 @@ int main() {
   run_tests();
   run_rpm_tests();
   runIgnitionTests();
+  run_aplha_n_tests();
   debug_printf("END_TESTING \n\r");
 
 /*   // Que Dios y la Patria me lo demanden

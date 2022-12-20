@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
@@ -38,7 +38,7 @@ jobs:
       - name: create build tag (2/2)
         run: echo "BUILD_TAG=$(echo ${TEMP_TAG%.*})" >> $GITHUB_ENV
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         name: Upload firmware files
         with:
           name: ${{ env.BUILD_TAG }}
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install deps (testing)
         run: |
@@ -64,7 +64,7 @@ jobs:
           echo "TESTING_CI" >> TESTING_CI
 
       - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
@@ -75,9 +75,6 @@ jobs:
 
       - name: Pull build deps
         run: git submodule update --init --recursive
-
-      - name: Build firmware
-        run: platformio run
 
       - name: Run Tests
         run: platformio test --without-uploading --junit-output-path qemu_report.xml
@@ -92,7 +89,7 @@ jobs:
           report_paths: "qemu_report.xml"
           commit: ${{ github.sha }}
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         name: Upload firmware files
         if: always()
         with:
