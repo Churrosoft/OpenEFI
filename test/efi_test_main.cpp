@@ -1,8 +1,10 @@
 #define UNITY_INCLUDE_PRINT_FORMATTED
 
-#include "../Inc/main.h"
-#include "unity_config.h"
 #include <unity.h>
+
+#include "../Inc/main.h"
+#include "config.hpp"
+#include "unity_config.h"
 
 extern "C" {
 #include <stdio.h>
@@ -12,7 +14,7 @@ extern "C" {
 
 int main() {
   HAL_Init();
-
+  set_default_engine_config();
   UNITY_BEGIN();
   trace_initialize();
   debug_printf("INIT_TESTING \n\r");
@@ -22,9 +24,9 @@ int main() {
   run_aplha_n_tests();
   debug_printf("END_TESTING \n\r");
 
-/*   // Que Dios y la Patria me lo demanden
-  SCB->AIRCR = (0x5FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk;
-  abort(); */
+  /*   // Que Dios y la Patria me lo demanden
+    SCB->AIRCR = (0x5FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk;
+    abort(); */
   UNITY_END();    // stop unit testing
 
   while (1) {

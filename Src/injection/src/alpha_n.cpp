@@ -2,6 +2,10 @@
 #include "config.hpp"
 #include "engine_status.hpp"
 
+extern "C" {
+#include "trace.h"
+}
+
 using namespace injection;
 table_data AlphaN::tps_rpm_ve;
 
@@ -24,25 +28,29 @@ mix_mass_t AlphaN::calculate_correction_time() {
 }
 
 fuel_mass_t AlphaN::calculate_injection_fuel() {
-  if (_RPM == 0) {
-    return (fuel_mass_t)0;
-  }
+  /*   if (_RPM == 0) {
+      return (fuel_mass_t)0;
+    } */
+  _RPM = 850;
   // VE fijo como el piñon fijo
-  int32_t VE = 8000;
+  int32_t VE = 10;
   auto currentAirMass = AlphaN::get_airmass(VE);
   int8_t engine_cilinders = CIL;
 
-  auto lambda = efi_config.Injection.targetLambda;    // algunas veces me cago solo anidando tanto
-  auto stoich = efi_config.Injection.targetStoich;
+  auto volatile lambda = efi_config.Injection.targetLambda;    // algunas veces me cago solo anidando tanto
+  auto volatile stoich = efi_config.Injection.targetStoich;
 
-  auto afr = stoich * lambda;
+  auto volatile afr = stoich * lambda;
+
   fuel_mass_t baseFuel = (fuel_mass_t)(currentAirMass /* .get() */ / afr);
-
   // status antes de salir:
   efi_status.injection.airFlow =
       (air_mass_t)((currentAirMass /* .get() */ * engine_cilinders / getEngineCycleDuration(_RPM)) * 3600000 / 1000);
   efi_status.injection.baseAir = currentAirMass;
   efi_status.injection.baseFuel = baseFuel;
+  efi_status.injection.injectionBank1Time = (float)injection::Injectors::fuel_mass_to_time(baseFuel) / 1000;
+  efi_status.cycleDuration = getEngineCycleDuration(_RPM);
+  efi_status.injection.targetAFR = afr;
 
   return baseFuel;
 }

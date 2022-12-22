@@ -28,7 +28,7 @@ void injection::on_loop() {
   time *= Injectors::get_pressure_correction();
   time += Injectors::get_wall_wetting_correction();
   time -= Injectors::get_off_time();
-  _INY_T1 = time * 1000;    // ms => us
+  _INY_T1 = time /*  * 1000 */;    // ms => us BUG: soy tarado, fuel_mass_to_time ya devuelve en uS
 }
 
 int32_t injection::Injectors::fuel_mass_to_time(fuel_mass_t fuel) {
@@ -36,7 +36,7 @@ int32_t injection::Injectors::fuel_mass_to_time(fuel_mass_t fuel) {
   // monopunto al hacer 4 inyecciones por ciclo seria lo mismo que full secuencial
   // perooo en semi-secuencial al haber dos inyectores, y la mitad de injecciones por ciclo
   // tendria que ser 0.5
-  return fuel /* .get() */ / efi_status.injection.fuelFlowRate * 1000;
+  return (fuel /* .get() */ / efi_status.injection.fuelFlowRate * 1000) / 2;
 }
 
 // TODO: estos dos tendrian que revisar una tabla nueva de delay vs voltaje

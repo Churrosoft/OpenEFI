@@ -54,13 +54,14 @@ extern "C" {
 #include "cpwm/rpm_calc.h"
 #include "debug/debug_local.h"
 #include "engine/engine.hpp"
+#include "engine_status.hpp"
 #include "ignition/include/ignition.hpp"
 #include "injection/injection.hpp"
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
-#include "engine_status.hpp"
+
 
 #ifdef ENABLE_CAN_ISO_TP
 #include "can/can_enviroment.h"
@@ -180,7 +181,9 @@ int main(void) {
 #ifdef ENABLE_WEBSERIAL
   MX_USB_DEVICE_Init();
 #endif
-
+injection::Injectors::set_injectorFlow();
+/*   injection::AlphaN::calculate_injection_fuel(); */
+  injection::on_loop();
   HAL_TIM_Base_Start_IT(&htim10);
 
 #ifdef ENABLE_DEBUG_SETUP

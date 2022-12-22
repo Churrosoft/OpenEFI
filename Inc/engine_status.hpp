@@ -24,6 +24,7 @@ struct injection_info {
 
 struct engine_status {
   injection_info injection;
+  float cycleDuration;
 };
 
 extern engine_status efi_status;

@@ -9,7 +9,7 @@ void set_default_engine_config() {
 
 // FIXME: hasta que agregue esta tabla al tuner esto va escrito en piedra
 #pragma GCC warning "WIP: agregar tablas de lambda, todavia no es funcional"
-  inj.targetLambda = 0.85;
+  inj.targetLambda = 0.98;
   inj.targetStoich = 14.7;
   inj.enable_alphaN = true;
 
@@ -19,8 +19,8 @@ void set_default_engine_config() {
   injector.fuelPressure = 1;
   // promedio a "ojimetro" de:
   // https://documents.holley.com/techlibrary_terminatorxv2injectordata.pdf
-  injector.offTime = 0.45;
-  injector.onTime = 1.23;
+  injector.offTime = 250;
+  injector.onTime = 750;
 
   inj.injector = injector;
 
