@@ -40,7 +40,7 @@ void test_AlphaN_air_mass_full_cruising() {
 void test_AlphaN_fuel_mass_idle() {
   float fuel_mass = injection::AlphaN::calculate_injection_fuel();
 
-  TEST_ASSERT_EQUAL_FLOAT_MESSAGE(3076.013, fuel_mass, "Check AlphaN / calculate_injection_fuel VE = 80 [IDLE]");
+  TEST_ASSERT_EQUAL_FLOAT_MESSAGE(3.334963, fuel_mass, "Check AlphaN / calculate_injection_fuel VE = 80 [IDLE]");
 }
 
 
