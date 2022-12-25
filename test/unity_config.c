@@ -3,7 +3,7 @@
 #include "stdio.h"
 #include "stm32f4xx_hal.h"
 
-#define TESTING
+/* #define TESTING */
 
 #define USARTx USART2
 #define USARTx_CLK_ENABLE() __HAL_RCC_USART2_CLK_ENABLE()
@@ -61,9 +61,9 @@ void unityOutputStart() {
   }
 }
 
-void unityOutputChar(char c) { HAL_UART_Transmit(&UartHandle, (uint8_t*)(&c), 1, 1000); }
+void unityOutputChar(char c) { putchar(c); }
 
-void unityOutputFlush() { fprintf(stdout, "\n\r"); }
+void unityOutputFlush() { fflush(stdout); }
 
 void unityOutputComplete() {
   USARTx_CLK_DISABLE();

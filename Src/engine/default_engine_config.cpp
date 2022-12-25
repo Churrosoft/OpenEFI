@@ -1,8 +1,13 @@
-#include "config.hpp"
+#include "efi_config.hpp"
+#include "memory/include/config.hpp"
 
 engine_config efi_config;
 
 void set_default_engine_config() {
+#pragma GCC warning "decrepado, borrar implementaciones de esto"
+}
+
+void efi_cfg::set_default() {
   engine_config cfg;
   injectionConfig inj;
   injectorConfig injector;

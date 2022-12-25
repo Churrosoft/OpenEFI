@@ -1,6 +1,6 @@
 // OpenEFI libs:
 #include "aliases/memory.hpp"
-#include "config.hpp"
+#include "efi_config.hpp"
 #include "cpwm/cpwm.hpp"
 #include "cpwm/rpm_calc.h"
 #include "debug/debug_local.h"

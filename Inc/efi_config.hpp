@@ -32,7 +32,5 @@ struct engine_config {
 extern engine_config efi_config;
 
 void set_default_engine_config();    // safe-defaults mientras se lee de la memoria
-void get_config();                   // lee desde memoria
-void write_config(engine_config);    // webserial => memoria
 
 #endif

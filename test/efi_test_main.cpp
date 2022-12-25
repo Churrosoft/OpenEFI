@@ -3,7 +3,7 @@
 #include <unity.h>
 
 #include "../Inc/main.h"
-#include "config.hpp"
+#include "efi_config.hpp"
 #include "unity_config.h"
 
 extern "C" {

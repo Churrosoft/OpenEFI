@@ -1,7 +1,7 @@
 #include "../injection.hpp"
 
 #include "aliases/memory.hpp"
-#include "config.hpp"
+#include "efi_config.hpp"
 #include "engine_status.hpp"
 
 void injection::setup() {
@@ -19,6 +19,8 @@ void injection::on_loop() {
   using namespace injection;
   float time = 0;
 
+  // TODO: revisar RPM::status para que en SPIN_UP/CRANK tengan tiempos fijos desde la memoria flash
+
   // injection::Injectors::set_injectorFlow();
   // depende del algoritmo a usar:
   time += Injectors::fuel_mass_to_time(AlphaN::calculate_injection_fuel());
@@ -29,6 +31,11 @@ void injection::on_loop() {
   time += Injectors::get_wall_wetting_correction();
   time -= Injectors::get_off_time();
   _INY_T1 = time /*  * 1000 */;    // ms => us BUG: soy tarado, fuel_mass_to_time ya devuelve en uS
+
+#ifdef EFI_DEBUG
+  // mas que assert tendrian que ser DTC's o algo asi:
+  assert_param(baseFuel * 2 < getEngineCycleDuration(_RPM) && _RPM > 0 || _RPM <= 0);
+#endif
 }
 
 int32_t injection::Injectors::fuel_mass_to_time(fuel_mass_t fuel) {

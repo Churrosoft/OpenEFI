@@ -2,6 +2,7 @@
 
 #include "../ignition/include/ignition.hpp"
 #include "../sensors/sensors.hpp"
+#include "engine_status.hpp"
 #include "aliases/memory.hpp"
 #include "commands.hpp"
 #include "commands_definition.hpp"
@@ -141,6 +142,17 @@ void web_serial::command_handler() {
         payload[81] = (uint8_t)(_INY_T1 >> 8) & 0xFF;
         payload[82] = (uint8_t)(_INY_T1 >> 16) & 0xFF;
         payload[83] = (uint8_t)(_INY_T1 >> 24) & 0xFF;
+        
+        payload[84] = (uint8_t)_INY_T1;
+        payload[85] = (uint8_t)(_INY_T1 >> 8) & 0xFF;
+        payload[86] = (uint8_t)(_INY_T1 >> 16) & 0xFF;
+        payload[87] = (uint8_t)(_INY_T1 >> 24) & 0xFF;
+
+        payload[88] = (uint8_t)(int32_t)efi_status.injection.targetAFR;
+        payload[89] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 8) & 0xFF;
+        payload[90] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 16) & 0xFF;
+        payload[91] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 24) & 0xFF;
+        
         payload[100] = 1;
 
         out_comm = create_command(CORE_STATUS, payload);

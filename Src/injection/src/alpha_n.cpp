@@ -1,5 +1,7 @@
+#include <math.h>
+
 #include "../injection.hpp"
-#include "config.hpp"
+#include "efi_config.hpp"
 #include "engine_status.hpp"
 
 extern "C" {
@@ -28,10 +30,9 @@ mix_mass_t AlphaN::calculate_correction_time() {
 }
 
 fuel_mass_t AlphaN::calculate_injection_fuel() {
-  /*   if (_RPM == 0) {
-      return (fuel_mass_t)0;
-    } */
-  _RPM = 850;
+  if (_RPM == 0) {
+    return (fuel_mass_t)0;
+  }
   // VE fijo como el piñon fijo
   int32_t VE = 10;
   auto currentAirMass = AlphaN::get_airmass(VE);
@@ -43,6 +44,15 @@ fuel_mass_t AlphaN::calculate_injection_fuel() {
   auto volatile afr = stoich * lambda;
 
   fuel_mass_t baseFuel = (fuel_mass_t)(currentAirMass /* .get() */ / afr);
+
+#ifdef EFI_DEBUG
+  assert_param(std::isfinite(VE));
+  assert_param(std::isfinite(lambda));
+  assert_param(std::isfinite(stoich));
+  assert_param(std::isfinite(afr));
+  assert_param(std::isfinite(baseFuel));
+#endif
+
   // status antes de salir:
   efi_status.injection.airFlow =
       (air_mass_t)((currentAirMass /* .get() */ * engine_cilinders / getEngineCycleDuration(_RPM)) * 3600000 / 1000);

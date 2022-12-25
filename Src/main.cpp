@@ -49,19 +49,19 @@ extern "C" {
 #include <cstdlib>
 
 #include "aliases/memory.hpp"
-#include "config.hpp"
 #include "cpwm/cpwm.hpp"
 #include "cpwm/rpm_calc.h"
 #include "debug/debug_local.h"
+#include "efi_config.hpp"
 #include "engine/engine.hpp"
 #include "engine_status.hpp"
 #include "ignition/include/ignition.hpp"
 #include "injection/injection.hpp"
+#include "memory/include/config.hpp"
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
-
 
 #ifdef ENABLE_CAN_ISO_TP
 #include "can/can_enviroment.h"
@@ -181,8 +181,7 @@ int main(void) {
 #ifdef ENABLE_WEBSERIAL
   MX_USB_DEVICE_Init();
 #endif
-injection::Injectors::set_injectorFlow();
-/*   injection::AlphaN::calculate_injection_fuel(); */
+  // TODO: BORRAMEEEEEEEEEEEEee
   injection::on_loop();
   HAL_TIM_Base_Start_IT(&htim10);
 
@@ -196,7 +195,7 @@ injection::Injectors::set_injectorFlow();
 #endif
 
   /* W25qxx_EraseChip(); */
-
+  efi_cfg::get();
   // SRAND Init:
   srand(HAL_GetTick());
 
@@ -295,6 +294,7 @@ injection::Injectors::set_injectorFlow();
     }
 
     _RPM = RPM::_RPM;
+    efi_status.cycleStatus = RPM::status;
     RPM::watch_dog();
   }
   /* USER CODE END WHILE */
