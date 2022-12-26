@@ -5,7 +5,7 @@
 #include "../Inc/main.h"
 #include "efi_config.hpp"
 #include "unity_config.h"
-
+#include "../Src/memory/include/config.hpp"
 extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +14,7 @@ extern "C" {
 
 int main() {
   HAL_Init();
-  set_default_engine_config();
+  efi_cfg::set_default();
   UNITY_BEGIN();
   trace_initialize();
   debug_printf("INIT_TESTING \n\r");
