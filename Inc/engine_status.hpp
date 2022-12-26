@@ -3,6 +3,7 @@
 #define ENGINE_STATUS_HPP
 
 #include "custom_vars.hpp"
+#include "../Src/cpwm/rpm_calc.h"
 
 enum injectionStatus {
   FUEL_CUTOFF = 0,
