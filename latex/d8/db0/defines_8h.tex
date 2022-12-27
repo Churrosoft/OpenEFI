@@ -64,6 +64,12 @@ union \hyperlink{unionNibbler}{Nibbler}
 \mbox{\Hypertarget{defines_8h_abe4d4f0baa8393107c2882b58e411fef}\label{defines_8h_abe4d4f0baa8393107c2882b58e411fef}} 
 \#define {\bfseries R\+P\+M\+\_\+per}~500
 \item 
+\mbox{\Hypertarget{defines_8h_a6a64f81c4131e44be035d0416697c9cb}\label{defines_8h_a6a64f81c4131e44be035d0416697c9cb}} 
+\#define \hyperlink{defines_8h_a6a64f81c4131e44be035d0416697c9cb}{get\+Degree\+Time}(rpm)~(1000000.\+0f $\ast$ 60 / 360 / (rpm))
+\begin{DoxyCompactList}\small\item\em tiempo que tarda una vuelta del cigueñal \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{defines_8h_a2b153176a2406e1f49e42f04a0b9e647}\label{defines_8h_a2b153176a2406e1f49e42f04a0b9e647}} 
+\#define \hyperlink{defines_8h_a2b153176a2406e1f49e42f04a0b9e647}{get\+Engine\+Cycle\+Duration}(rpm)~\hyperlink{defines_8h_a6a64f81c4131e44be035d0416697c9cb}{get\+Degree\+Time}(rpm) / 2
+\begin{DoxyCompactList}\small\item\em , degree time / 2, ni que fueramos a usar motores 2T \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{defines_8h_ad7ea84ea521801063367444a91786f7b}\label{defines_8h_ad7ea84ea521801063367444a91786f7b}} 
 \#define \hyperlink{defines_8h_ad7ea84ea521801063367444a91786f7b}{C\+P\+W\+M\+\_\+\+E\+N\+A\+B\+LE}
 \begin{DoxyCompactList}\small\item\em Habilita el control de P\+WM. \end{DoxyCompactList}\item 

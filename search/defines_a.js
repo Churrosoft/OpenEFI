@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sinc_5fenable',['SINC_ENABLE',['../d8/db0/defines_8h.html#a1941541eecb2be882abc1a4f0291771b',1,'defines.h']]]
+  ['r1',['R1',['../d8/db0/defines_8h.html#a918f64eb53db8e8dc694f36a87646476',1,'defines.h']]]
 ];

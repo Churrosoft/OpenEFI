@@ -1,10 +1,5 @@
 var searchData=
 [
-  ['ing_5fsecuency',['ING_SECUENCY',['../d8/db0/defines_8h.html#a267514d4f83c7a3ce49e997386ef97ef',1,'defines.h']]],
-  ['ing_5fsecuency_5falt',['ING_SECUENCY_ALT',['../d8/db0/defines_8h.html#a25b99f313e7bbad9109bae32e4d0a22b',1,'defines.h']]],
-  ['injection_5fmode_5ffull_5fmpi',['INJECTION_MODE_FULL_MPI',['../d8/db0/defines_8h.html#afb144100611ec1717fb6ceb83720ea04',1,'defines.h']]],
-  ['injection_5fmode_5fsemi_5fmpi',['INJECTION_MODE_SEMI_MPI',['../d8/db0/defines_8h.html#aa76beff0579aa7ece6ac7d2678cf950e',1,'defines.h']]],
-  ['injection_5fmode_5fspi',['INJECTION_MODE_SPI',['../d8/db0/defines_8h.html#a26fe77b84626079d7decfcda24cc9f75',1,'defines.h']]],
-  ['iny_5fsecuency_5ffull_5fmpi',['INY_SECUENCY_FULL_MPI',['../d8/db0/defines_8h.html#abe9cf0f96bf95e10d809212eed704c7c',1,'defines.h']]],
-  ['iny_5fsecuency_5fsemi_5fmpi',['INY_SECUENCY_SEMI_MPI',['../d8/db0/defines_8h.html#a1833e847abc68920e4c525329d5dd8ce',1,'defines.h']]]
+  ['getdegreetime',['getDegreeTime',['../d8/db0/defines_8h.html#a6a64f81c4131e44be035d0416697c9cb',1,'defines.h']]],
+  ['getenginecycleduration',['getEngineCycleDuration',['../d8/db0/defines_8h.html#a2b153176a2406e1f49e42f04a0b9e647',1,'defines.h']]]
 ];

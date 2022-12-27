@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['input_5fhandler',['input_handler',['../d9/db1/structinput__handler.html',1,'']]]
+  ['emahighpass',['EMAHighPass',['../dc/da1/structEMAHighPass.html',1,'']]],
+  ['emalowpass',['EMALowPass',['../de/d7b/structEMALowPass.html',1,'']]],
+  ['engine_5fconfig',['engine_config',['../d8/da3/structengine__config.html',1,'']]],
+  ['engine_5fstatus',['engine_status',['../d0/d61/structengine__status.html',1,'']]]
 ];
