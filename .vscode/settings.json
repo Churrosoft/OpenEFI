@@ -5,6 +5,7 @@
   },
   "files.associations": {
     "html": "html",
+    "*.json": "jsonc",
     "defines.h": "c",
     "iostream": "cpp",
     "usbd_core.h": "c",
@@ -71,7 +72,8 @@
     "typeinfo": "cpp",
     "sh_internals.h": "c",
     "trace.h": "c",
-    "crc.h": "c"
+    "crc.h": "c",
+    "gpio.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",

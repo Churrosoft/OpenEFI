@@ -10,3 +10,6 @@
 [submodule "lib/w25qxx"]
 	path = lib/w25qxx
 	url = https://github.com/nimaltd/w25qxx.git
+[submodule "lib/NamedType"]
+	path = lib/NamedType
+	url = https://github.com/joboccara/NamedType.git

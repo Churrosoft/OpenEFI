@@ -38,6 +38,16 @@
 #define RPM_per \
   500    // periodo en ms en el que se actualizan las rpm ( si lo cambias , o arreglas el calculo para las rpm,o se rompe todo maquinola)
 
+/**
+ * @brief tiempo que tarda una vuelta del cigueñal
+ */
+#define getDegreeTime(rpm) (1000000.0f * 60 / 360 / (rpm))
+
+/**
+ * @brief, degree time / 2, ni que fueramos a usar motores 2T
+ */
+#define getEngineCycleDuration(rpm) getDegreeTime(rpm) / 2
+
 /*-----( C_PWM )-----*/
 
 #define CPWM_ENABLE    //!< Habilita el control de PWM

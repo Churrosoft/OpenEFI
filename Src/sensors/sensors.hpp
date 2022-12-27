@@ -21,7 +21,7 @@ namespace sensors {
 void setup(void);
 
 /**
- * @brief Loop principal de los sensores, corre cada 75mS
+ * @brief Loop principal de los sensores, corre cada 50-75mS
  */
 void loop(void);
 

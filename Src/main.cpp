@@ -27,15 +27,6 @@
 
 #ifdef TESTING
 #pragma GCC warning "TESTING ENABLED"
-#include <unity.h>
-
-#include "../test/cpwm_test.cpp"
-#include "../test/ignition_test.cpp"
-#include "../test/rpm_calc.cpp"
-
-extern int run_tests(void);
-extern int run_rpm_tests(void);
-extern int runIgnitionTests(void);
 #endif
 
 #include <algorithm>
@@ -61,14 +52,16 @@ extern "C" {
 #include "cpwm/cpwm.hpp"
 #include "cpwm/rpm_calc.h"
 #include "debug/debug_local.h"
+#include "efi_config.hpp"
 #include "engine/engine.hpp"
+#include "engine_status.hpp"
 #include "ignition/include/ignition.hpp"
 #include "injection/injection.hpp"
+#include "memory/include/config.hpp"
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
 #include "webserial/commands.hpp"
-
 
 #ifdef ENABLE_CAN_ISO_TP
 #include "can/can_enviroment.h"
@@ -102,6 +95,7 @@ uint8_t INJECTION_STRATEGY = INJECTION_MODE_SPI;
 uint8_t IGNITION_STRATEGY = IGNITION_MODE_WASTED_SPARK;
 uint32_t IGNITION_DWELL_TIME = DEFAULT_DWELL_TIME;
 uint32_t last_cycle, last_mid_cycle;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -118,16 +112,17 @@ void MX_NVIC_Init(void);
 #ifdef TESTING
 uint32_t mocktick = 0;
 uint32_t tickStep = 15000;    // 4k rpm // 50000 => 1200 // 80000 => 750
+#define PIO_UNIT_TESTING
 #endif
 /* USER CODE END 0 */
-
+#ifndef PIO_UNIT_TESTING
 /**
  * @brief  The application entry point.
  * @retval int
  */
 int main(void) {
   /* USER CODE BEGIN 1 */
-
+  set_default_engine_config();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -137,19 +132,6 @@ int main(void) {
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
-#ifdef TESTING
-  trace_initialize();
-  printf("INIT_TESTING \n");
-  run_tests();
-  run_rpm_tests();
-  runIgnitionTests();
-  puts("END_TESTING \n");
-
-  // Que Dios y la Patria me lo demanden
-  SCB->AIRCR = (0x5FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk;
-  abort();
-#endif
 
   MOTOR_ENABLE = true;
   /* USER CODE END Init */
@@ -199,7 +181,8 @@ int main(void) {
 #ifdef ENABLE_WEBSERIAL
   MX_USB_DEVICE_Init();
 #endif
-
+  // TODO: BORRAMEEEEEEEEEEEEee
+  injection::on_loop();
   HAL_TIM_Base_Start_IT(&htim10);
 
 #ifdef ENABLE_DEBUG_SETUP
@@ -212,7 +195,7 @@ int main(void) {
 #endif
 
   /* W25qxx_EraseChip(); */
-
+  efi_cfg::get();
   // SRAND Init:
   srand(HAL_GetTick());
 
@@ -231,7 +214,7 @@ int main(void) {
   ignition::setup();
 #endif
 
-  injection::speedN::calculate_injection_time();
+  injection::AlphaN::calculate_injection_fuel();
 
 #ifdef ENABLE_INJECTION
   injection::setup();
@@ -276,7 +259,7 @@ int main(void) {
 #endif
 
 #ifdef ENABLE_INJECTION
-  injection::on_loop();
+    injection::on_loop();
 #endif
 
 #ifdef ENABLE_ENGINE_FRONTEND
@@ -311,12 +294,15 @@ int main(void) {
     }
 
     _RPM = RPM::_RPM;
+    efi_status.cycleStatus = RPM::status;
     RPM::watch_dog();
   }
   /* USER CODE END WHILE */
   /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
 }
+
+#endif
 
 /**
  * @brief NVIC Configuration.

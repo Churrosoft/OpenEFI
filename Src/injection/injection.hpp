@@ -7,6 +7,7 @@
 
 #include "aliases/memory.hpp"
 #include "aliases/sensors.hpp"
+#include "custom_vars.hpp"
 #include "variables.h"
 
 /**
@@ -21,19 +22,23 @@ namespace injection {
 
   /**
    * @addtogroup Injection
-   * @brief Speed-N calculations
+   * @brief Alpha-N calculations
    * @{
    */
-  namespace speedN {
+  namespace AlphaN {
 
     // calcular tiempo base
-    int32_t calculate_injection_time();
+    fuel_mass_t calculate_injection_fuel();
 
     // lambda
-    int32_t calculate_correction_time();
+    mix_mass_t calculate_correction_time();
 
-  }    // namespace speedN
-  /*! @} End of Doxygen speedN*/
+    // estas son internas:
+    air_mass_t get_airmass(int32_t);
+    extern table_data tps_rpm_ve;
+
+  }    // namespace AlphaN
+  /*! @} End of Doxygen AlphaN*/
 
   /**
    * @addtogroup Injection
@@ -52,15 +57,16 @@ namespace injection {
    * @{
    */
   namespace Injectors {
-    int32_t get_base_time();
-    int32_t get_off_time();
+    float get_base_time();
+    float get_off_time();
     int32_t get_battery_correction();
     int32_t get_pressure_correction();
     int32_t get_wall_wetting_correction();
+    int32_t fuel_mass_to_time(fuel_mass_t);
+    void set_injectorFlow();
 
   }    // namespace Injectors
   /*! @} End of Doxygen Injectors*/
-
 
   /**
    * @addtogroup Injection
