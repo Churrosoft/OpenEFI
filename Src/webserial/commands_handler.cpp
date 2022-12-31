@@ -2,11 +2,11 @@
 
 #include "../ignition/include/ignition.hpp"
 #include "../sensors/sensors.hpp"
-#include "engine_status.hpp"
 #include "aliases/memory.hpp"
 #include "commands.hpp"
 #include "commands_definition.hpp"
 #include "defines.h"
+#include "engine_status.hpp"
 #include "variables.h"
 
 using namespace web_serial;
@@ -142,7 +142,7 @@ void web_serial::command_handler() {
         payload[81] = (uint8_t)(_INY_T1 >> 8) & 0xFF;
         payload[82] = (uint8_t)(_INY_T1 >> 16) & 0xFF;
         payload[83] = (uint8_t)(_INY_T1 >> 24) & 0xFF;
-        
+
         payload[84] = (uint8_t)_INY_T1;
         payload[85] = (uint8_t)(_INY_T1 >> 8) & 0xFF;
         payload[86] = (uint8_t)(_INY_T1 >> 16) & 0xFF;
@@ -152,7 +152,7 @@ void web_serial::command_handler() {
         payload[89] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 8) & 0xFF;
         payload[90] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 16) & 0xFF;
         payload[91] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 24) & 0xFF;
-        
+
         payload[100] = 1;
 
         out_comm = create_command(CORE_STATUS, payload);
@@ -271,7 +271,7 @@ void web_serial::command_handler() {
             table = TABLES_IGNITION_TPS_SETTINGS;
             break;
         }
-
+/* 
         if (!tables::validate(table, in_table, table_crc)) {
           for (auto ti : in_table) {
             ti.clear();
@@ -284,9 +284,22 @@ void web_serial::command_handler() {
           output_commands.push_back(out_comm);
 
           return;
-        }
+        } */
 
+tables::plot_table(in_table);
         tables::update_table(in_table, table);
+        // despues de updatear patcheamos la tabla en ram:
+        switch (selected_table) {
+          case TABLES_IGNITION_TPS:
+            ignition::avc_tps_rpm = in_table;
+            for (auto old_rows : ignition::avc_tps_rpm) {
+              old_rows.clear();
+            }
+            for (auto new_rows : in_table) {
+              ignition::avc_tps_rpm.push_back(new_rows);
+            }
+            break;
+        }
 
         for (auto ti : in_table) {
           ti.clear();
