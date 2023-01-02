@@ -26,9 +26,6 @@ void tables::set_value(table_ref table, uint32_t x, uint32_t y, int32_t value) {
 
   uint8_t data[4];
 
-  /*     data[0] = (value >> 8) & 0xFF;
-  data[1] = value & 0xFF; */
-
   data[0] = (uint8_t)value;
   data[1] = (uint8_t)(value >> 8) & 0xFF;
   data[2] = (uint8_t)(value >> 16) & 0xFF;
@@ -45,18 +42,18 @@ void tables::set_value(table_ref table, uint32_t x, uint32_t y, int32_t value) {
 table_data tables::read_all(table_ref table) {
   table_data matrix(table.y_max, vector<int32_t>(table.x_max, 0xff));
 
-  // primeros 4b son el crc
   uint32_t datarow = 0;
   uint8_t table_row[MAX_ROW_SIZE * MAX_ROW_SIZE * 4];
 
+  // primeros 4b son el crc
   uint32_t address = W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize + TABLE_METADATA_OFFSET;
 
   W25qxx_ReadBytes(table_row, address, (4 * table.y_max * table.x_max));
 
   for (int32_t matrix_y = 0; matrix_y < table.y_max; matrix_y++) {
     for (int32_t matrix_x = 0; matrix_x < table.x_max; matrix_x++) {
-      volatile int32_t value = table_row[datarow] + (table_row[datarow + 1] << 8) + (table_row[datarow + 2] << 16) +
-                               (table_row[datarow + 3] << 24);
+      volatile int32_t value =
+          table_row[datarow] + (table_row[datarow + 1] << 8) + (table_row[datarow + 2] << 16) + (table_row[datarow + 3] << 24);
 
       matrix[matrix_y][matrix_x] = value;
 
@@ -89,8 +86,7 @@ bool tables::validate(table_ref table, table_data data) {
   uint32_t crc_address = (W25qxx_SectorToPage(table.memory_address) * w25qxx.PageSize);
   W25qxx_ReadBytes(memory_crc_raw, crc_address, TABLE_METADATA_OFFSET);
 
-  uint32_t memory_crc =
-      (uint32_t)(memory_crc_raw[1] << 8) + (memory_crc_raw[2] << 16) + (memory_crc_raw[3] << 24) + memory_crc_raw[0];
+  uint32_t memory_crc = (uint32_t)(memory_crc_raw[1] << 8) + (memory_crc_raw[2] << 16) + (memory_crc_raw[3] << 24) + memory_crc_raw[0];
 
   // calculate buffer CRC
   dump_table(data, buffer, 0);
@@ -99,11 +95,11 @@ bool tables::validate(table_ref table, table_data data) {
   free(buffer);
 
   EFI_LOG("Event: <MEMORY_CRC_HEX> Calculated: %d %d %d %d ## Stored: %d %d %d %d\r\n", (uint8_t)table_crc,
-          (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF,
-          memory_crc_raw[0], memory_crc_raw[1], memory_crc_raw[2], memory_crc_raw[3]);
+          (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF, memory_crc_raw[0],
+          memory_crc_raw[1], memory_crc_raw[2], memory_crc_raw[3]);
   trace_printf("Event: <MEMORY_CRC_HEX> Calculated: %d %d %d %d ## Stored: %d %d %d %d\r\n", (uint8_t)table_crc,
-               (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF,
-               memory_crc_raw[0], memory_crc_raw[1], memory_crc_raw[2], memory_crc_raw[3]);
+               (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF, memory_crc_raw[0],
+               memory_crc_raw[1], memory_crc_raw[2], memory_crc_raw[3]);
 
   return table_crc == memory_crc;
 }
@@ -123,40 +119,38 @@ bool tables::validate(table_ref table, table_data data_a, table_data data_b) {
   free(buffer_a);
   free(buffer_b);
 
-  trace_printf("Event: <MEMORY_CRC RAM> DataA: %d %d %d %d ## DataB: %d %d %d %d\r\n", (uint8_t)crc_a,
-               (uint8_t)(crc_a >> 8) & 0xFF, (uint8_t)(crc_a >> 16) & 0xFF, (uint8_t)(crc_a >> 24) & 0xFF,
-               (uint8_t)crc_b, (uint8_t)(crc_b >> 8) & 0xFF, (uint8_t)(crc_b >> 16) & 0xFF,
-               (uint8_t)(crc_b >> 24) & 0xFF);
+  trace_printf("Event: <MEMORY_CRC RAM> DataA: %d %d %d %d ## DataB: %d %d %d %d\r\n", (uint8_t)crc_a, (uint8_t)(crc_a >> 8) & 0xFF,
+               (uint8_t)(crc_a >> 16) & 0xFF, (uint8_t)(crc_a >> 24) & 0xFF, (uint8_t)crc_b, (uint8_t)(crc_b >> 8) & 0xFF,
+               (uint8_t)(crc_b >> 16) & 0xFF, (uint8_t)(crc_b >> 24) & 0xFF);
 
   return crc_a == crc_b;
 }
-
 
 bool tables::validate(table_ref table, table_data data_a, uint32_t crc_b) {
   uint32_t size = table.x_max * 4 * table.y_max;
 
   uint8_t *buffer_a = (uint8_t *)malloc(size);
   dump_table(data_a, buffer_a, 0);
-  
+
   uint32_t crc_a = CrcCCITTBytes(buffer_a, size);
 
   free(buffer_a);
 
-  trace_printf("Event: <MEMORY_CRC RAM> DataA: %d %d %d %d ## DataB: %d %d %d %d\r\n", (uint8_t)crc_a,
-               (uint8_t)(crc_a >> 8) & 0xFF, (uint8_t)(crc_a >> 16) & 0xFF, (uint8_t)(crc_a >> 24) & 0xFF,
-               (uint8_t)crc_b, (uint8_t)(crc_b >> 8) & 0xFF, (uint8_t)(crc_b >> 16) & 0xFF,
-               (uint8_t)(crc_b >> 24) & 0xFF);
+  trace_printf("-----------------------------\n");
+  trace_printf("Event: <MEMORY_CRC RAM> DataA: %d %d %d %d ## DataB: %d %d %d %d\r\n", (uint8_t)crc_a, (uint8_t)(crc_a >> 8) & 0xFF,
+               (uint8_t)(crc_a >> 16) & 0xFF, (uint8_t)(crc_a >> 24) & 0xFF, (uint8_t)crc_b, (uint8_t)(crc_b >> 8) & 0xFF,
+               (uint8_t)(crc_b >> 16) & 0xFF, (uint8_t)(crc_b >> 24) & 0xFF);
+  tables::plot_table(data_a);
+  trace_printf("-----------------------------\n");
 
   return crc_a == crc_b;
 }
-
 
 std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
   std::vector<int32_t> data_out;
 
   for (uint32_t index = 2; index < buff_size; index += 4) {
-    int32_t row_value =
-        (int32_t)(data[index + 1] << 8) + (data[index + 2] << 16) + (data[index + 3] << 24) + data[index];
+    int32_t row_value = (int32_t)(data[index + 1] << 8) + (data[index + 2] << 16) + (data[index + 3] << 24) + data[index];
 
     data_out.push_back(row_value);
   }
@@ -165,8 +159,9 @@ std::vector<int32_t> tables::put_row(uint8_t *data, uint32_t buff_size) {
 
 void tables::update_table(table_data data, table_ref table) {
   int32_t size = (table.x_max * 4 * table.y_max);
-  uint8_t *buffer = (uint8_t *)malloc(size);
-  uint8_t *buffer_aux = (uint8_t *)malloc(size) + TABLE_METADATA_OFFSET;
+  // 17 * 17 * 4 = 1156
+  uint8_t /* * */ buffer[1200];        // = (uint8_t *)malloc(size);
+  uint8_t /* * */ buffer_aux[1200];    // = (uint8_t *)malloc(size) + TABLE_METADATA_OFFSET;
 
   dump_table(data, buffer, 0);
 
@@ -186,25 +181,24 @@ void tables::update_table(table_data data, table_ref table) {
 
   W25qxx_WriteSector(buffer_aux, table.memory_address, 0, size + 4);
 
-  trace_printf("---------------- NEW TABLE-----------");
+  /*   trace_printf("---------------- NEW TABLE-----------");
 
-  tables::plot_table(data);
+    tables::plot_table(data);
 
-  trace_printf("---------------- NEW TABLE-----------");
+    trace_printf("---------------- NEW TABLE-----------");
+   */
+  EFI_LOG("Event: (update) <MEMORY_CRC_HEX> Calculated: %d %d %d %d ;\r\n", (uint8_t)table_crc, (uint8_t)(table_crc >> 8) & 0xFF,
+          (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF);
+  trace_printf("Event: (update) <MEMORY_CRC_HEX> Calculated: %d %d %d %d ;\r\n", (uint8_t)table_crc, (uint8_t)(table_crc >> 8) & 0xFF,
+               (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF);
+  /*   free(buffer_aux);
 
-  EFI_LOG("Event: (update) <MEMORY_CRC_HEX> Calculated: %d %d %d %d ;\r\n", (uint8_t)table_crc,
-          (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF);
-  trace_printf("Event: (update) <MEMORY_CRC_HEX> Calculated: %d %d %d %d ;\r\n", (uint8_t)table_crc,
-               (uint8_t)(table_crc >> 8) & 0xFF, (uint8_t)(table_crc >> 16) & 0xFF, (uint8_t)(table_crc >> 24) & 0xFF);
-  free(buffer_aux);
-
-  free(buffer);
+    free(buffer); */
 }
 
 int32_t tables::find_nearest_neighbor(std::vector<int32_t> vec, int32_t search) {
   // "si anda, anda"
-  auto upper_bound =
-      std::upper_bound(vec.begin(), vec.end(), search, [](const int32_t &a, const int32_t &b) { return a <= b; });
+  auto upper_bound = std::upper_bound(vec.begin(), vec.end(), search, [](const int32_t &a, const int32_t &b) { return a <= b; });
   // std::upper_bound(vec.begin(), vec.end(), search);
   auto search_result = std::distance(vec.begin(), upper_bound);
 

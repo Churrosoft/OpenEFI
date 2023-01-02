@@ -206,7 +206,7 @@ void web_serial::command_handler() {
             table = TABLES_IGNITION_TPS_SETTINGS;
 
             // aca esta el caso de que haya una tabla leida, pero con falla'
-            if (!ignition::loaded && ignition::error) {
+            if (/* !ignition::loaded && */ ignition::error) {
               out_comm = create_command(TABLES_CRC_ERROR, payload);
               pending_commands.pop_front();
               output_commands.push_back(out_comm);
@@ -214,28 +214,37 @@ void web_serial::command_handler() {
               return;
             }
 
+            /* tabla sin leer pero con falla */
             if (!ignition::loaded) {
               out_table = tables::read_all(table);
+              if (tables::validate(table, out_table)) {
+                pending_commands.pop_front();
+                output_commands.push_back(out_comm);
+                trace_printf("WEBUSB TABLE CRC ERROR");
+                return;
+              }
             } else {
               // crrrreeoo que con copiar refe y no valor estaria
               out_table = ignition::avc_tps_rpm;
             }
 
-            tables::plot_table(out_table);
-            uint8_t table_index = 0;
-            for (auto table_row : out_table) {
-              tables::dump_row(table_row, payload);
-              // FIXME: para evitar que openefi tuner reviente el comando, solo reviso el checksum alla al borrar un
-              // comando
-              payload[120] = table_index;
-              table_index++;
-              out_comm = create_command(TABLES_DATA_CHUNK, payload);
-              output_commands.push_back(out_comm);
-              /*  web_serial::send_deque(); */
-            }
             break;
           }
         }
+
+        tables::plot_table(out_table);
+        uint8_t table_index = 0;
+        for (auto table_row : out_table) {
+          tables::dump_row(table_row, payload);
+          // FIXME: para evitar que openefi tuner reviente el comando, solo reviso el checksum alla al borrar un
+          // comando
+          payload[120] = table_index;
+          table_index++;
+          out_comm = create_command(TABLES_DATA_CHUNK, payload);
+          output_commands.push_back(out_comm);
+          /*  web_serial::send_deque(); */
+        }
+
         out_comm = create_command(TABLES_DATA_END_CHUNK, payload);
         output_commands.push_back(out_comm);
 
@@ -261,17 +270,18 @@ void web_serial::command_handler() {
       }
 
       case TABLES_WRITE: {
-        // TODO: CRC check, move switch to func, write only changed rows
+        // TODO: write only changed rows
 
         selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
-        uint32_t table_crc = (command.payload[3] << 8) + (command.payload[4] << 16) + (command.payload[5] << 24) + command.payload[2];
+        uint32_t table_crc =
+            (uint32_t)(command.payload[3] << 8) + (command.payload[4] << 16) + (command.payload[5] << 24) + command.payload[2];
 
         switch (selected_table) {
           case TABLES_IGNITION_TPS:
             table = TABLES_IGNITION_TPS_SETTINGS;
             break;
         }
-/* 
+
         if (!tables::validate(table, in_table, table_crc)) {
           for (auto ti : in_table) {
             ti.clear();
@@ -284,11 +294,11 @@ void web_serial::command_handler() {
           output_commands.push_back(out_comm);
 
           return;
-        } */
+        }
 
-tables::plot_table(in_table);
         tables::update_table(in_table, table);
         // despues de updatear patcheamos la tabla en ram:
+
         switch (selected_table) {
           case TABLES_IGNITION_TPS:
             ignition::avc_tps_rpm = in_table;
@@ -310,12 +320,6 @@ tables::plot_table(in_table);
         export_command(out_comm, serialized_command);
         CDC_Transmit_FS(serialized_command, 128);
 
-        // reload tables:
-        switch (selected_table) {
-          case TABLES_IGNITION_TPS:
-            ignition::setup();
-            break;
-        }
         break;
       }
 

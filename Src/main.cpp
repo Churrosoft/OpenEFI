@@ -194,7 +194,7 @@ int main(void) {
   W25qxx_Init();
 #endif
 
-  /* W25qxx_EraseChip(); */
+/*   W25qxx_EraseChip(); */
   efi_cfg::get();
   // SRAND Init:
   srand(HAL_GetTick());
