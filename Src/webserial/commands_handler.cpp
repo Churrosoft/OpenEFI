@@ -1,6 +1,11 @@
+#include <cstring>
 #include <deque>
+#include <string>
+#include <vector>
 
+#include "../../lib/json/include/nlohmann/json.hpp"
 #include "../ignition/include/ignition.hpp"
+#include "../memory/include/config.hpp"
 #include "../sensors/sensors.hpp"
 #include "aliases/memory.hpp"
 #include "commands.hpp"
@@ -9,7 +14,36 @@
 #include "engine_status.hpp"
 #include "variables.h"
 
+using json = nlohmann::json;
 using namespace web_serial;
+
+void to_json(json& j, const engine_config& p) {
+  j = json{
+      {"ready", p.ready},
+      {"Injection",
+       {{"targetLambda", p.Injection.targetLambda},
+        {"targetStoich", p.Injection.targetStoich},
+        {"enable_alphaN", p.Injection.enable_alphaN},
+        {"enable_speedDensity", p.Injection.enable_speedDensity},
+
+        {"injector",
+         {
+             {"flowCCMin", p.Injection.injector.flowCCMin},
+             {"injectorCount", p.Injection.injector.injectorCount},
+             {"fuelPressure", p.Injection.injector.fuelPressure},
+             {"fuelDensity", p.Injection.injector.fuelDensity},
+             {"onTime", p.Injection.injector.onTime},
+             {"offTime", p.Injection.injector.offTime},
+         }},
+
+        {"alphaN_ve_table",
+         {{"x_max", p.Injection.alphaN_ve_table.x_max},
+          {"y_max", p.Injection.alphaN_ve_table.y_max},
+          {"memory_address", p.Injection.alphaN_ve_table.memory_address}
+
+         }}}},
+  };
+}
 
 std::deque<serial_command> pending_commands;
 std::deque<serial_command> output_commands;
@@ -159,6 +193,37 @@ void web_serial::command_handler() {
         export_command(out_comm, serialized_command);
         CDC_Transmit_FS(serialized_command, 128);
         break;
+      }
+
+      case EFI_CONFIG_GET: {
+        auto eficfg = efi_cfg::get();
+        json efi_json{eficfg};
+        auto json_string = efi_json.dump();
+        std::vector<std::string> output;
+
+        for (uint16_t i = 0; i < json_string.length(); i += 100) {
+          auto output_text = json_string.substr(i, 100);
+          memcpy(payload, output_text.c_str(), output_text.length());
+          out_comm = create_command(EFI_CONFIG_CHUNK, payload);
+          export_command(out_comm, serialized_command);
+          output_commands.push_back(out_comm);
+          std::fill_n(payload, 123, 0x0);
+        }
+
+        payload[0] = (uint8_t)json_string.length();
+        payload[1] = (uint8_t)(json_string.length() >> 8) & 0xFF;
+        payload[2] = (uint8_t)(json_string.length() >> 16) & 0xFF;
+        payload[3] = (uint8_t)(json_string.length() >> 24) & 0xFF;
+
+        out_comm = create_command(EFI_CONFIG_END, payload);
+        export_command(out_comm, serialized_command);
+        output_commands.push_back(out_comm);
+        break;
+      }
+
+      case EFI_CONFIG_WRITE: {
+      }
+      case EFI_CONFIG_RESET: {
       }
 
       case TABLES_GET_METADATA: {

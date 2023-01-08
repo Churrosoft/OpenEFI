@@ -4,8 +4,8 @@
 #define CORE_PING 1
 #define CORE_PONG 2
 #define CORE_HELLO 10
-#define CORE_STATUS 5        // RPM/Temp/Voltaje Bateria / avance / carga / MAP
-#define CORE_STATUS_METADA 4 // devuelve max rpm / max avance
+#define CORE_STATUS 5           // RPM/Temp/Voltaje Bateria / avance / carga / MAP
+#define CORE_STATUS_METADA 4    // devuelve max rpm / max avance
 
 // 20 => get table metadata, 21 => get X table, 22 => response get X table,
 // 23 => reset X table, 24 => write X table , 25 => response write x table
@@ -21,8 +21,7 @@
 #define TABLES_WRITE 24
 
 // response:
-#define TABLES_PUT                                                             \
-  22 // esto tambien se usa para ir agregando data al array', primer byte el n°
+#define TABLES_PUT 22    // esto tambien se usa para ir agregando data al array', primer byte el n°
 #define TABLES_WRITE_OK 25
 #define TABLES_DATA_CHUNK 26
 #define TABLES_DATA_END_CHUNK 27
@@ -63,5 +62,13 @@
 #define EFI_DEBUG_ERROR 83
 // enviado al final de cada mensaje para poder exceder el limite de 120 caracteres
 #define EFI_DEBUG_END 89
+
+// EFI_CONFIG
+#define EFI_CONFIG_GET 100
+#define EFI_CONFIG_WRITE 101
+#define EFI_CONFIG_CHUNK 102
+#define EFI_CONFIG_END 103
+#define EFI_CONFIG_RESET 104
+#define EFI_CONFIG_OK 105
 
 #endif

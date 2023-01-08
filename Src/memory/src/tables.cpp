@@ -175,8 +175,6 @@ void tables::update_table(table_data data, table_ref table) {
 
   std::memcpy(buffer_aux + TABLE_METADATA_OFFSET, buffer, size);
 
-  dump_table(data, buffer, TABLE_METADATA_OFFSET);
-
   W25qxx_EraseSector(table.memory_address);
 
   W25qxx_WriteSector(buffer_aux, table.memory_address, 0, size + 4);

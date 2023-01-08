@@ -13,6 +13,10 @@ extern "C" {
 static_assert(sizeof(engine_config) < 250, "Struct de configuracion demasiado grande, refactorizar codigo de engine_config");
 
 engine_config efi_cfg::get() {
+  if (efi_config.ready) {
+    return efi_config;
+  }
+
   uint8_t pdata[256];
   engine_config cfg;
   uint8_t engine_config_size = sizeof(engine_config);
