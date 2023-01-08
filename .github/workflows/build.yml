@@ -78,7 +78,10 @@ jobs:
 
       - name: Pull build deps
         run: git submodule update --init --recursive
-
+      
+      - name: Remove JSON example files
+        run: rm -r ./lib/json/docs
+      
       - name: Run Tests
         run: platformio test --without-uploading --junit-output-path qemu_report.xml
 
