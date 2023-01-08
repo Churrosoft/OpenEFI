@@ -13,10 +13,11 @@ extern "C" {
 
 #include <algorithm>
 #include <vector>
-#include "../../../lib/json/include/nlohmann/json.hpp"
+
+/* #include "../../../lib/json/include/nlohmann/json.hpp"
 
 using json = nlohmann::json;
-// https://github.com/Stiffstream/json_dto#how-to-use-it
+// https://github.com/Stiffstream/json_dto#how-to-use-it */
 
 /** @addtogroup Memory
  *  @brief Namespace con I/O hacia la memoria SPI externa

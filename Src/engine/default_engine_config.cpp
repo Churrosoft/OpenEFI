@@ -1,7 +1,5 @@
-#include "../../lib/json/include/nlohmann/json.hpp"
 #include "efi_config.hpp"
 #include "memory/include/config.hpp"
-using nlohmann::json;
 
 engine_config efi_config;
 

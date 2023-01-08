@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "../../lib/json/include/nlohmann/json.hpp"
 #include "../ignition/include/ignition.hpp"
 #include "../memory/include/config.hpp"
 #include "../sensors/sensors.hpp"
@@ -14,8 +13,13 @@
 #include "engine_status.hpp"
 #include "variables.h"
 
+#ifndef TESTING
+
+//FIXME: el build desde pio test rompe con esta lib, si la ignoro funca lo mas bien
+
+#include "../../lib/json/include/nlohmann/json.hpp"
+
 using json = nlohmann::json;
-using namespace web_serial;
 
 void to_json(json& j, const engine_config& p) {
   j = json{
@@ -44,6 +48,10 @@ void to_json(json& j, const engine_config& p) {
          }}}},
   };
 }
+
+#endif
+
+using namespace web_serial;
 
 std::deque<serial_command> pending_commands;
 std::deque<serial_command> output_commands;
@@ -194,7 +202,7 @@ void web_serial::command_handler() {
         CDC_Transmit_FS(serialized_command, 128);
         break;
       }
-
+#ifndef TESTING
       case EFI_CONFIG_GET: {
         auto eficfg = efi_cfg::get();
         json efi_json{eficfg};
@@ -226,6 +234,7 @@ void web_serial::command_handler() {
       case EFI_CONFIG_RESET: {
       }
 
+#endif
       case TABLES_GET_METADATA: {
         // esto tiene que devolver el X/Y maximo de la tabla seleccionada
         selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
