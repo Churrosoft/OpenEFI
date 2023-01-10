@@ -772,7 +772,7 @@ Gener/home/runner/work/OpenEFI/OpenEFI/Inc/crc.h:41: warning: Member MX_CRC_Init
 /home/runner/work/OpenEFI/OpenEFI/Src/core/system_stm32f4xx.c:139: warning: Member APBPrescTable[8] (variable) of group STM32F4xx_System_Private_Variables is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/core/system_stm32f4xx.c:185: warning: argument 'None' of command @param is not found in the argument list of SystemCoreClockUpdate(void)
 /home/runner/work/OpenEFI/OpenEFI/Src/core/system_stm32f4xx.c:161: warning: argument 'None' of command @param is not found in the argument list of SystemInit(void)
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/config.hpp:21: warning: found subsection command outside of section context!
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/config.hpp:26: warning: found subsection command outside of section context!
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:55: warning: Member DTC_FLAG_ADDR (macro definition) of group DTC_IO is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:57: warning: Member DTC_INIT_PAGE (macro definition) of group DTC_IO is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/memory_dtc.hpp:58: warning: Member DTC_END_ADDR (macro definition) of group DTC_IO is not documented.
@@ -834,9 +834,9 @@ Gener/home/runner/work/OpenEFI/OpenEFI/Inc/crc.h:41: warning: Member MX_CRC_Init
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:30: warning: Member y_max (variable) of class table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:31: warning: Member x_max (variable) of class table_ref is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/memory/include/tables.hpp:32: warning: Member memory_address (variable) of class table_ref is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/config.hpp:30: warning: Member get() (function) of namespace efi_cfg is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/config.hpp:31: warning: Member set(engine_config) (function) of namespace efi_cfg is not documented.
-/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/config.hpp:32: warning: Member set_default() (function) of namespace efi_cfg is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/config.hpp:63: warning: Member get() (function) of namespace efi_cfg is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/config.hpp:64: warning: Member set(engine_config) (function) of namespace efi_cfg is not documented.
+/home/runner/work/OpenEFI/OpenEFI/Src/memory/include/config.hpp:65: warning: Member set_default() (function) of namespace efi_cfg is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:33: warning: Member _TPS (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:34: warning: Member _MAP (variable) of class sensors::SensorValues is not documented.
 /home/runner/work/OpenEFI/OpenEFI/Src/sensors/sensors.hpp:35: warning: Member TEMP (variable) of class sensors::SensorValues is not documented.
