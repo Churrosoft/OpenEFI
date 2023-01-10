@@ -34,3 +34,31 @@ void efi_cfg::set_default() {
 
   efi_config = cfg;
 }
+/* 
+void to_json(json& j, const engine_config& p) {
+  j = json{
+      {"ready", p.ready},
+      {"Injection",
+       {{"targetLambda", p.Injection.targetLambda},
+        {"targetStoich", p.Injection.targetStoich},
+        {"enable_alphaN", p.Injection.enable_alphaN},
+        {"enable_speedDensity", p.Injection.enable_speedDensity},
+
+        {"injector",
+         {
+             {"flowCCMin", p.Injection.injector.flowCCMin},
+             {"injectorCount", p.Injection.injector.injectorCount},
+             {"fuelPressure", p.Injection.injector.fuelPressure},
+             {"fuelDensity", p.Injection.injector.fuelDensity},
+             {"onTime", p.Injection.injector.onTime},
+             {"offTime", p.Injection.injector.offTime},
+         }},
+
+        {"alphaN_ve_table",
+         {{"x_max", p.Injection.alphaN_ve_table.x_max},
+          {"y_max", p.Injection.alphaN_ve_table.y_max},
+          {"memory_address", p.Injection.alphaN_ve_table.memory_address}
+
+         }}}},
+  };
+} */

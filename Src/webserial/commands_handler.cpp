@@ -1,13 +1,55 @@
+#include <cstring>
 #include <deque>
+#include <string>
+#include <vector>
 
 #include "../ignition/include/ignition.hpp"
+#include "../memory/include/config.hpp"
 #include "../sensors/sensors.hpp"
-#include "engine_status.hpp"
 #include "aliases/memory.hpp"
 #include "commands.hpp"
 #include "commands_definition.hpp"
 #include "defines.h"
+#include "engine_status.hpp"
 #include "variables.h"
+
+#ifndef TESTING
+
+//FIXME: el build desde pio test rompe con esta lib, si la ignoro funca lo mas bien
+
+#include "../../lib/json/include/nlohmann/json.hpp"
+
+using json = nlohmann::json;
+
+void to_json(json& j, const engine_config& p) {
+  j = json{
+      {"ready", p.ready},
+      {"Injection",
+       {{"targetLambda", p.Injection.targetLambda},
+        {"targetStoich", p.Injection.targetStoich},
+        {"enable_alphaN", p.Injection.enable_alphaN},
+        {"enable_speedDensity", p.Injection.enable_speedDensity},
+
+        {"injector",
+         {
+             {"flowCCMin", p.Injection.injector.flowCCMin},
+             {"injectorCount", p.Injection.injector.injectorCount},
+             {"fuelPressure", p.Injection.injector.fuelPressure},
+             {"fuelDensity", p.Injection.injector.fuelDensity},
+             {"onTime", p.Injection.injector.onTime},
+             {"offTime", p.Injection.injector.offTime},
+         }},
+
+        {"alphaN_ve_table",
+         {{"x_max", p.Injection.alphaN_ve_table.x_max},
+          {"y_max", p.Injection.alphaN_ve_table.y_max},
+          {"memory_address", p.Injection.alphaN_ve_table.memory_address}
+
+         }}}},
+  };
+}
+
+#endif
 
 using namespace web_serial;
 
@@ -142,7 +184,7 @@ void web_serial::command_handler() {
         payload[81] = (uint8_t)(_INY_T1 >> 8) & 0xFF;
         payload[82] = (uint8_t)(_INY_T1 >> 16) & 0xFF;
         payload[83] = (uint8_t)(_INY_T1 >> 24) & 0xFF;
-        
+
         payload[84] = (uint8_t)_INY_T1;
         payload[85] = (uint8_t)(_INY_T1 >> 8) & 0xFF;
         payload[86] = (uint8_t)(_INY_T1 >> 16) & 0xFF;
@@ -152,7 +194,7 @@ void web_serial::command_handler() {
         payload[89] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 8) & 0xFF;
         payload[90] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 16) & 0xFF;
         payload[91] = (uint8_t)((int32_t)efi_status.injection.targetAFR >> 24) & 0xFF;
-        
+
         payload[100] = 1;
 
         out_comm = create_command(CORE_STATUS, payload);
@@ -160,7 +202,39 @@ void web_serial::command_handler() {
         CDC_Transmit_FS(serialized_command, 128);
         break;
       }
+#ifndef TESTING
+      case EFI_CONFIG_GET: {
+        auto eficfg = efi_cfg::get();
+        json efi_json{eficfg};
+        auto json_string = efi_json.dump();
+        std::vector<std::string> output;
 
+        for (uint16_t i = 0; i < json_string.length(); i += 100) {
+          auto output_text = json_string.substr(i, 100);
+          memcpy(payload, output_text.c_str(), output_text.length());
+          out_comm = create_command(EFI_CONFIG_CHUNK, payload);
+          export_command(out_comm, serialized_command);
+          output_commands.push_back(out_comm);
+          std::fill_n(payload, 123, 0x0);
+        }
+
+        payload[0] = (uint8_t)json_string.length();
+        payload[1] = (uint8_t)(json_string.length() >> 8) & 0xFF;
+        payload[2] = (uint8_t)(json_string.length() >> 16) & 0xFF;
+        payload[3] = (uint8_t)(json_string.length() >> 24) & 0xFF;
+
+        out_comm = create_command(EFI_CONFIG_END, payload);
+        export_command(out_comm, serialized_command);
+        output_commands.push_back(out_comm);
+        break;
+      }
+
+      case EFI_CONFIG_WRITE: {
+      }
+      case EFI_CONFIG_RESET: {
+      }
+
+#endif
       case TABLES_GET_METADATA: {
         // esto tiene que devolver el X/Y maximo de la tabla seleccionada
         selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
@@ -206,7 +280,7 @@ void web_serial::command_handler() {
             table = TABLES_IGNITION_TPS_SETTINGS;
 
             // aca esta el caso de que haya una tabla leida, pero con falla'
-            if (!ignition::loaded && ignition::error) {
+            if (/* !ignition::loaded && */ ignition::error) {
               out_comm = create_command(TABLES_CRC_ERROR, payload);
               pending_commands.pop_front();
               output_commands.push_back(out_comm);
@@ -214,28 +288,37 @@ void web_serial::command_handler() {
               return;
             }
 
+            /* tabla sin leer pero con falla */
             if (!ignition::loaded) {
               out_table = tables::read_all(table);
+              if (tables::validate(table, out_table)) {
+                pending_commands.pop_front();
+                output_commands.push_back(out_comm);
+                trace_printf("WEBUSB TABLE CRC ERROR");
+                return;
+              }
             } else {
               // crrrreeoo que con copiar refe y no valor estaria
               out_table = ignition::avc_tps_rpm;
             }
 
-            tables::plot_table(out_table);
-            uint8_t table_index = 0;
-            for (auto table_row : out_table) {
-              tables::dump_row(table_row, payload);
-              // FIXME: para evitar que openefi tuner reviente el comando, solo reviso el checksum alla al borrar un
-              // comando
-              payload[120] = table_index;
-              table_index++;
-              out_comm = create_command(TABLES_DATA_CHUNK, payload);
-              output_commands.push_back(out_comm);
-              /*  web_serial::send_deque(); */
-            }
             break;
           }
         }
+
+        tables::plot_table(out_table);
+        uint8_t table_index = 0;
+        for (auto table_row : out_table) {
+          tables::dump_row(table_row, payload);
+          // FIXME: para evitar que openefi tuner reviente el comando, solo reviso el checksum alla al borrar un
+          // comando
+          payload[120] = table_index;
+          table_index++;
+          out_comm = create_command(TABLES_DATA_CHUNK, payload);
+          output_commands.push_back(out_comm);
+          /*  web_serial::send_deque(); */
+        }
+
         out_comm = create_command(TABLES_DATA_END_CHUNK, payload);
         output_commands.push_back(out_comm);
 
@@ -261,10 +344,11 @@ void web_serial::command_handler() {
       }
 
       case TABLES_WRITE: {
-        // TODO: CRC check, move switch to func, write only changed rows
+        // TODO: write only changed rows
 
         selected_table = ((uint16_t)command.payload[0] << 8) + command.payload[1];
-        uint32_t table_crc = (command.payload[3] << 8) + (command.payload[4] << 16) + (command.payload[5] << 24) + command.payload[2];
+        uint32_t table_crc =
+            (uint32_t)(command.payload[3] << 8) + (command.payload[4] << 16) + (command.payload[5] << 24) + command.payload[2];
 
         switch (selected_table) {
           case TABLES_IGNITION_TPS:
@@ -287,6 +371,19 @@ void web_serial::command_handler() {
         }
 
         tables::update_table(in_table, table);
+        // despues de updatear patcheamos la tabla en ram:
+
+        switch (selected_table) {
+          case TABLES_IGNITION_TPS:
+            ignition::avc_tps_rpm = in_table;
+            for (auto old_rows : ignition::avc_tps_rpm) {
+              old_rows.clear();
+            }
+            for (auto new_rows : in_table) {
+              ignition::avc_tps_rpm.push_back(new_rows);
+            }
+            break;
+        }
 
         for (auto ti : in_table) {
           ti.clear();
@@ -297,12 +394,6 @@ void web_serial::command_handler() {
         export_command(out_comm, serialized_command);
         CDC_Transmit_FS(serialized_command, 128);
 
-        // reload tables:
-        switch (selected_table) {
-          case TABLES_IGNITION_TPS:
-            ignition::setup();
-            break;
-        }
         break;
       }
 

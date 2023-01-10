@@ -2,7 +2,7 @@
 #define RPM_H
 
 #include "stdint.h"
-#include <cmath>
+#include <math.h>
 
 #include "defines.h"
 #include "variables.h"

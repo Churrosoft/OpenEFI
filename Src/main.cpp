@@ -61,6 +61,7 @@ extern "C" {
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
+
 #include "webserial/commands.hpp"
 
 #ifdef ENABLE_CAN_ISO_TP
@@ -194,7 +195,7 @@ int main(void) {
   W25qxx_Init();
 #endif
 
-  /* W25qxx_EraseChip(); */
+  /*   W25qxx_EraseChip(); */
   efi_cfg::get();
   // SRAND Init:
   srand(HAL_GetTick());

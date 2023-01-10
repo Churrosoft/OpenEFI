@@ -13,3 +13,6 @@
 [submodule "lib/NamedType"]
 	path = lib/NamedType
 	url = https://github.com/joboccara/NamedType.git
+[submodule "lib/json"]
+	path = lib/json
+	url = https://github.com/nlohmann/json
