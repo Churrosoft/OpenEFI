@@ -122,29 +122,22 @@ uint32_t tickStep = 15000;    // 4k rpm // 50000 => 1200 // 80000 => 750
  */
 int main(void) {
   /* USER CODE BEGIN 1 */
-  TIM_HandleTypeDef htim14;
-  htim14.Instance = TIM14;
 
   set_default_engine_config();
-  HAL_TIM_Base_DeInit(&htim1);
-  HAL_TIM_Base_DeInit(&htim14);
 
   /* USER CODE END 1 */
-  TIM2->ARR = 0;
-  TIM2->CR1 &= ~TIM_CR1_UDIS;
-  TIM2->EGR = TIM_EGR_UG;
-  TIM2->CR1 |= TIM_CR1_UDIS;
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick.
    */
-  // HAL_Init();
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 
   MOTOR_ENABLE = true;
   /* USER CODE END Init */
-
+  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
+  EFI_INVERT_PIN(LED2_GPIO_Port,LED2_Pin);
   /* Configure the system clock */
   SystemClock_Config();
   /* USER CODE BEGIN SysInit */

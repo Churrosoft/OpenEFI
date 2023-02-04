@@ -3,8 +3,8 @@ from os import path
 from subprocess import check_output
 
 print('-D TRACE')
-print('-D USE_FULL_ASSERT')
-print('-D _W25QXX_DEBUG')
+""" print('-D USE_FULL_ASSERT')
+print('-D _W25QXX_DEBUG') """
 
 command = "grep --include=\\*.{c,h,cpp,hpp} --exclude=speed_n.cpp -rnw './' -e 'speedN::calculate_injection_time()' | wc -l"
 cmd_output = check_output(command, shell=True)
