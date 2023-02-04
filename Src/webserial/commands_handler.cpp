@@ -15,7 +15,7 @@
 
 #ifndef TESTING
 
-//FIXME: el build desde pio test rompe con esta lib, si la ignoro funca lo mas bien
+// FIXME: el build desde pio test rompe con esta lib, si la ignoro funca lo mas bien
 
 #include "../../lib/json/include/nlohmann/json.hpp"
 
@@ -291,7 +291,8 @@ void web_serial::command_handler() {
             /* tabla sin leer pero con falla */
             if (!ignition::loaded) {
               out_table = tables::read_all(table);
-              if (tables::validate(table, out_table)) {
+              if (!tables::validate(table, out_table)) {
+                out_comm = create_command(TABLES_CRC_ERROR, payload);
                 pending_commands.pop_front();
                 output_commands.push_back(out_comm);
                 trace_printf("WEBUSB TABLE CRC ERROR");
@@ -304,9 +305,23 @@ void web_serial::command_handler() {
 
             break;
           }
+          case TABLES_INJECTION_VE_MAIN: {
+            table = TABLES_INJECTION_VE_SETTINGS;
+
+            out_table = tables::read_all(table);
+            if (!tables::validate(table, out_table)) {
+              out_comm = create_command(TABLES_CRC_ERROR, payload);
+              pending_commands.pop_front();
+              output_commands.push_back(out_comm);
+              trace_printf("WEBUSB TABLE CRC ERROR [TABLES_INJECTION_VE_MAIN]");
+              return;
+            }
+
+            break;
+          }
         }
 
-        tables::plot_table(out_table);
+        /* tables::plot_table(out_table); */
         uint8_t table_index = 0;
         for (auto table_row : out_table) {
           tables::dump_row(table_row, payload);
@@ -353,7 +368,16 @@ void web_serial::command_handler() {
         switch (selected_table) {
           case TABLES_IGNITION_TPS:
             table = TABLES_IGNITION_TPS_SETTINGS;
+          case TABLES_INJECTION_VE_MAIN:
+            table = TABLES_INJECTION_VE_SETTINGS;
             break;
+
+          default: {
+            out_comm = create_command(TABLES_WRITE_FAIL, payload);
+            export_command(out_comm, serialized_command);
+            output_commands.push_back(out_comm);
+            return;
+          }
         }
 
         if (!tables::validate(table, in_table, table_crc)) {

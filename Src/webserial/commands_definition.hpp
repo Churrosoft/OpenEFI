@@ -34,7 +34,7 @@
 // esto llega en el payload (primeros 2byte, 16b valor), luego x2 bytes en Y
 #define TABLES_IGNITION_TPS 10
 #define TABLES_IGNITION_TEMP 11
-
+#define TABLES_INJECTION_VE_MAIN 20
 // debug commands
 
 #define EFI_DEBUG_LOG 80

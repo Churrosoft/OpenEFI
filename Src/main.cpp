@@ -61,7 +61,6 @@ extern "C" {
 #include "pmic/pmic.hpp"
 #include "sensors/sensors.hpp"
 #include "usbd_cdc_if.h"
-
 #include "webserial/commands.hpp"
 
 #ifdef ENABLE_CAN_ISO_TP
@@ -123,14 +122,23 @@ uint32_t tickStep = 15000;    // 4k rpm // 50000 => 1200 // 80000 => 750
  */
 int main(void) {
   /* USER CODE BEGIN 1 */
-  set_default_engine_config();
-  /* USER CODE END 1 */
+  TIM_HandleTypeDef htim14;
+  htim14.Instance = TIM14;
 
+  set_default_engine_config();
+  HAL_TIM_Base_DeInit(&htim1);
+  HAL_TIM_Base_DeInit(&htim14);
+
+  /* USER CODE END 1 */
+  TIM2->ARR = 0;
+  TIM2->CR1 &= ~TIM_CR1_UDIS;
+  TIM2->EGR = TIM_EGR_UG;
+  TIM2->CR1 |= TIM_CR1_UDIS;
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick.
    */
-  HAL_Init();
+  // HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -155,6 +163,7 @@ int main(void) {
   MX_TIM9_Init();
   MX_TIM10_Init();
   // MX_TIM11_Init();
+  trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - 0);
 
 #ifdef ENABLE_US_TIM
   MX_TIM13_Init();
@@ -182,8 +191,6 @@ int main(void) {
 #ifdef ENABLE_WEBSERIAL
   MX_USB_DEVICE_Init();
 #endif
-  // TODO: BORRAMEEEEEEEEEEEEee
-  injection::on_loop();
   HAL_TIM_Base_Start_IT(&htim10);
 
 #ifdef ENABLE_DEBUG_SETUP
@@ -196,7 +203,7 @@ int main(void) {
 #endif
 
   /*   W25qxx_EraseChip(); */
-  efi_cfg::get();
+  efi_config = efi_cfg::get();
   // SRAND Init:
   srand(HAL_GetTick());
 
@@ -214,8 +221,6 @@ int main(void) {
 #ifdef ENABLE_IGNITION
   ignition::setup();
 #endif
-
-  injection::AlphaN::calculate_injection_fuel();
 
 #ifdef ENABLE_INJECTION
   injection::setup();
@@ -235,7 +240,6 @@ int main(void) {
 
   // Core inits:
   trace_printf("Event: <CORE> Init on: %d ms\r\n", HAL_GetTick() - StartTime);
-
   // Enable CKP/CMP interrupts:
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 

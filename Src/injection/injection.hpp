@@ -35,6 +35,7 @@ namespace injection {
 
     // estas son internas:
     air_mass_t get_airmass(int32_t);
+    int32_t get_ve();
     extern table_data tps_rpm_ve;
 
   }    // namespace AlphaN

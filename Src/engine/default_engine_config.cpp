@@ -1,3 +1,4 @@
+#include "defines.h"
 #include "efi_config.hpp"
 #include "memory/include/config.hpp"
 
@@ -28,6 +29,7 @@ void efi_cfg::set_default() {
   injector.onTime = 750;
 
   inj.injector = injector;
+  inj.alphaN_ve_table = TABLES_INJECTION_VE_SETTINGS;
 
   cfg.ready = false;
   cfg.Injection = inj;
