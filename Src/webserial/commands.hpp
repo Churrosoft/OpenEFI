@@ -64,8 +64,8 @@ namespace web_serial {
 
     static inline void serialize_command(serial_command command, uint8_t (&buffer)[126]) {
       buffer[0] = 1;    // protocol
-      buffer[1] = (command.command >> 8) & 0xFF;
-      buffer[2] = command.command & 0xFF;
+      buffer[1] = command.command;
+      buffer[2] = command.status;
       std::copy(command.payload, command.payload + 123, buffer + 3);
     }
   }    // namespace

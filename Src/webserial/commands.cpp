@@ -40,7 +40,8 @@ void web_serial::loop() {
 
     usb_command.protocol = serial_cache[0];
 
-    usb_command.command = ((int16_t)serial_cache[1] << 8) + serial_cache[2];
+    usb_command.command = serial_cache[1];
+    usb_command.status =  serial_cache[2];
 
     usb_command.crc[0] = serial_cache[126];
     usb_command.crc[1] = serial_cache[127];
