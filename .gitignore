@@ -32,3 +32,4 @@ qemu_output.log
 .idea/
 CMakeListsPrivate.txt
 CMakeLists.txt
+cmake-*

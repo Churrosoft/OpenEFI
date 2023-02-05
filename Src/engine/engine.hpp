@@ -53,25 +53,6 @@ typedef sensors::_Sensors Sensors;
 // returns current cycle degree
 #define getDEG() RPM::_DEG
 
-// Sends Debug Message over USB (max 100 characters)
-static inline void sendDebugMessage(std::string message) {
-
-  uint8_t payload[123];
-  strcpy((char *)payload, message.substr(0, 123).c_str());
-  web_serial::queue_command(
-      web_serial::create_command(FRONTEND_DEBUG_MESSAGE, payload));
-}
-
-// usb code 69 (nice)
-
-// Sends Error Message over USB (max 100 characters)
-static inline void sendErrorMessage(std::string message) {
-  uint8_t payload[123];
-  strcpy((char *)payload, message.substr(0, 123).c_str());
-  web_serial::queue_command(
-      web_serial::create_command(FRONTEND_ERROR_MESSAGE, payload));
-}
-
 // Overrides Injection time in uS, min 0uS, max 4000uS (4mS)
 static inline void setInjectionTime(uint32_t injectionTime) {}
 

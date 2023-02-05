@@ -7,10 +7,11 @@
 using namespace web_serial;
 uint8_t serial_cache[128];
 
-serial_command web_serial::create_command(uint16_t input_command, uint8_t *payload) {
+serial_command web_serial::create_command(uint8_t input_command, uint8_t status, uint8_t *payload) {
   serial_command comm;
   comm.protocol = payload[0];
   comm.command = input_command;
+  comm.status = status;
   std::copy(payload, payload + 123, comm.payload);
 
   uint8_t serialized_command[126];
@@ -26,8 +27,8 @@ serial_command web_serial::create_command(uint16_t input_command, uint8_t *paylo
 
 void web_serial::export_command(serial_command command, uint8_t (&buffer)[128]) {
   buffer[0] = 1;    // protocol
-  buffer[1] = (command.command >> 8) & 0xFF;
-  buffer[2] = command.command & 0xFF;
+  buffer[1] = command.command;
+  buffer[2] = command.status;
   std::copy(command.payload, command.payload + 123, buffer + 3);
   buffer[126] = command.crc[0];
   buffer[127] = command.crc[1];
@@ -75,26 +76,8 @@ uint8_t web_serial::send_debug_message(debugMessage message_type, const char *fo
   ret = vsnprintf(buf, sizeof(buf), format, ap);
   if (ret > 0) {
     serial_command comm;
-    uint16_t command;
 
-    switch (message_type) {
-      case debugMessage::LOG:
-        command = EFI_DEBUG_LOG;
-        break;
-      case debugMessage::INFO:
-        command = EFI_DEBUG_INFO;
-        break;
-      case debugMessage::EVENT:
-        command = EFI_DEBUG_EVENT;
-        break;
-      case debugMessage::ERROR:
-        command = EFI_DEBUG_ERROR;
-        break;
-      default:
-        command = EFI_DEBUG_LOG;
-        break;
-    }
-    comm = create_command(command, (uint8_t *)buf);
+    comm = create_command(WS_COMMAND::CORE_DEBUG, WS_COMMAND_STATUS::CMD_OK & message_type, (uint8_t *)buf);
     web_serial::send_command(comm);
   }
 

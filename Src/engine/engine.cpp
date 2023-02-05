@@ -15,9 +15,9 @@ void Engine::onEFISetup() {
 
   setInjectionTime(420);
   setIgnitionAdvance(69.420);
-
-  sendDebugMessage("debug con sin char[] para que no se nismee nadie");
-  sendErrorMessage("ooops revento algo");
+  
+  EFI_LOG("debug con sin char[] para que no se nismee nadie");
+  EFI_ERROR("ooops revento algo");
 }
 
 
