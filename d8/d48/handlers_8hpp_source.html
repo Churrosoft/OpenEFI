@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenEFI: web_serial::serial_command Struct Reference</title>
+<title>OpenEFI: /home/runner/work/OpenEFI/OpenEFI/Src/webserial/handlers/handlers.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('d2/db9/structweb__serial_1_1serial__command.html','../../');});
+$(document).ready(function(){initNavTree('d8/d48/handlers_8hpp_source.html','../../');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -81,43 +81,18 @@ $(document).ready(function(){initNavTree('d2/db9/structweb__serial_1_1serial__co
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">web_serial::serial_command Struct Reference</div>  </div>
+<div class="title">handlers.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Data Fields</h2></td></tr>
-<tr class="memitem:ac4416bc0d0cc1d325beeb0729ab019f6"><td class="memItemLeft" align="right" valign="top"><a id="ac4416bc0d0cc1d325beeb0729ab019f6"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>protocol</b></td></tr>
-<tr class="separator:ac4416bc0d0cc1d325beeb0729ab019f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea857e9be9c14bc6decaeff66e94cd63"><td class="memItemLeft" align="right" valign="top"><a id="aea857e9be9c14bc6decaeff66e94cd63"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>command</b></td></tr>
-<tr class="separator:aea857e9be9c14bc6decaeff66e94cd63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3f49ca13d7cf0154d97be4313161696"><td class="memItemLeft" align="right" valign="top"><a id="aa3f49ca13d7cf0154d97be4313161696"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>status</b></td></tr>
-<tr class="separator:aa3f49ca13d7cf0154d97be4313161696"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad19f09253d9c44ebeec74da88137496d"><td class="memItemLeft" align="right" valign="top"><a id="ad19f09253d9c44ebeec74da88137496d"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>payload</b> [123]</td></tr>
-<tr class="separator:ad19f09253d9c44ebeec74da88137496d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae120fa7eab0b26fdeb0ffc8d9d7c85d3"><td class="memItemLeft" align="right" valign="top"><a id="ae120fa7eab0b26fdeb0ffc8d9d7c85d3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_valid</b></td></tr>
-<tr class="separator:ae120fa7eab0b26fdeb0ffc8d9d7c85d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4230269eee1bba2b5637a25efb253aa1"><td class="memItemLeft" align="right" valign="top"><a id="a4230269eee1bba2b5637a25efb253aa1"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>crc</b> [2]</td></tr>
-<tr class="separator:a4230269eee1bba2b5637a25efb253aa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/runner/work/OpenEFI/OpenEFI/Src/webserial/<a class="el" href="../../df/def/webserial_2commands_8hpp_source.html">commands.hpp</a></li>
-</ul>
-</div><!-- contents -->
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef OPENEFI_HANDLERS_HPP</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define OPENEFI_HANDLERS_HPP</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../d4/d4e/namespacehandlers.html">handlers</a> {</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;  <span class="keywordtype">void</span> handle_core(<a class="code" href="../../d2/db9/structweb__serial_1_1serial__command.html">web_serial::serial_command</a> command);</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;  <span class="keywordtype">void</span> handle_tables(<a class="code" href="../../d2/db9/structweb__serial_1_1serial__command.html">web_serial::serial_command</a> command);</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;  <span class="keywordtype">void</span> handle_efi_config(<a class="code" href="../../d2/db9/structweb__serial_1_1serial__command.html">web_serial::serial_command</a> command);</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;  <span class="keywordtype">void</span> handle_fw(<a class="code" href="../../d2/db9/structweb__serial_1_1serial__command.html">web_serial::serial_command</a> command);</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;}</div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#endif    // OPENEFI_HANDLERS_HPP</span></div><div class="ttc" id="structweb__serial_1_1serial__command_html"><div class="ttname"><a href="../../d2/db9/structweb__serial_1_1serial__command.html">web_serial::serial_command</a></div><div class="ttdef"><b>Definition:</b> commands.hpp:17</div></div>
+<div class="ttc" id="namespacehandlers_html"><div class="ttname"><a href="../../d4/d4e/namespacehandlers.html">handlers</a></div><div class="ttdef"><b>Definition:</b> handlers.hpp:4</div></div>
+</div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>web_serial</b></li><li class="navelem"><a class="el" href="../../d2/db9/structweb__serial_1_1serial__command.html">serial_command</a></li>
+    <li class="navelem"><a class="el" href="../../dir_413f4e031a85da0d68269c6fd2f76e1c.html">Src</a></li><li class="navelem"><a class="el" href="../../dir_c2912778dae3a674238753aece717981.html">webserial</a></li><li class="navelem"><a class="el" href="../../dir_6fee951f2f67b276a2dfed0bfec3b5a6.html">handlers</a></li><li class="navelem"><b>handlers.hpp</b></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
