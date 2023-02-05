@@ -28,3 +28,7 @@ dist
 xpack*
 qemu_output.log
 .venv
+
+.idea/
+CMakeListsPrivate.txt
+CMakeLists.txt
