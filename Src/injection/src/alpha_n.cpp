@@ -34,7 +34,7 @@ fuel_mass_t AlphaN::calculate_injection_fuel() {
     return (fuel_mass_t)0;
   }
   // VE fijo como el piñon fijo
-  int32_t VE = 10;
+  int32_t VE = injection::AlphaN::get_ve();
   auto currentAirMass = AlphaN::get_airmass(VE);
   int8_t engine_cilinders = CIL;
 
@@ -75,6 +75,22 @@ air_mass_t AlphaN::get_airmass(int32_t VE) {
   int32_t engine_displacement = 1596;
   int8_t engine_cilinders = CIL;
 
-  air_mass_t full_cycle = (air_mass_t)((float)VE / 100) * (engine_displacement * STD_AIR_PRES / (AIR_R * STD_AIR_TEMP));
+  air_mass_t full_cycle = (air_mass_t)((float)VE / 10000) * (engine_displacement * STD_AIR_PRES / (AIR_R * STD_AIR_TEMP));
   return (air_mass_t)(full_cycle / engine_cilinders);
+}
+
+int32_t injection::AlphaN::get_ve() {
+#ifdef TESTING
+  return 10;
+#endif
+  auto load_row = tables::col_to_row(injection::AlphaN::tps_rpm_ve, 0);
+
+  // En este caso la carga la determina el TPS
+  auto load_value = tables::find_nearest_neighbor(load_row, sensors::values._TPS);
+  auto rpm_value = tables::find_nearest_neighbor(injection::AlphaN::tps_rpm_ve.at(0), _RPM * 100);
+
+  if (tables::on_bounds(/* efi_config.Injection.alphaN_ve_table */ {17, 17, 0x3}, load_value, rpm_value)) {
+    return injection::AlphaN::tps_rpm_ve.at(load_value).at(rpm_value);
+  }
+  return 0;
 }

@@ -178,6 +178,9 @@ T is the temperature of the gas in the cylinder immediately after the intake val
 #define TABLES_IGNITION_TPS_SETTINGS \
   { 17, 17, 0x5 }
 
+#define TABLES_INJECTION_VE_SETTINGS \
+  { 17, 17, 0x3 }
+
 /*-----( OBD2 )-----*/
 
 #define ENABLE_MISFIRE_MONITOR 0

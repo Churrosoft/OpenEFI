@@ -79,6 +79,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   {
     /* Start the TIM time Base generation in interrupt mode */
     return HAL_TIM_Base_Start_IT(&htim14);
+    //return HAL_OK;
   }
 
   /* Return function status */
