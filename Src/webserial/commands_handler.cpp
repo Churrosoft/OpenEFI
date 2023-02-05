@@ -420,6 +420,20 @@ void web_serial::command_handler() {
 
         break;
       }
+      
+      case FW_BOOTLOADER: {
+        if(RPM::status != RPM_STATUS::STOPPED) {
+          out_comm = create_command(FW_REBOOT_UNSAFE, payload);
+          export_command(out_comm, serialized_command);
+          CDC_Transmit_FS(serialized_command, 128);
+          break;
+        }
+        
+        // Write magic value to RAM and reset MCU
+        *((volatile unsigned int*)0x20000000) = 0xb0d42b89;
+        NVIC_SystemReset();
+        break;
+      }
 
       default:
         out_comm = create_command(EFI_INVALID_CODE, payload);

@@ -71,4 +71,7 @@
 #define EFI_CONFIG_RESET 104
 #define EFI_CONFIG_OK 105
 
+// OTA
+#define FW_BOOTLOADER 990
+#define FW_REBOOT_UNSAFE 999
 #endif

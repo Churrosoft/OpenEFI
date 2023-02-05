@@ -1,9 +1,32 @@
+/* Linker script for STM32F407VG Cortex-M4 ARM MCU                              */
+/* From http://tech.munts.com/MCU/Frameworks/ARM/stm32f4/stm32f407vg.ld         */
+
+/* Copyright (C)2013-2016, Philip Munts, President, Munts AM Corp.              */
+/*                                                                              */
+/* Redistribution and use in source and binary forms, with or without           */
+/* modification, are permitted provided that the following conditions are met:  */
+/*                                                                              */
+/* * Redistributions of source code must retain the above copyright notice,     */
+/*   this list of conditions and the following disclaimer.                      */
+/*                                                                              */
+/* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  */
+/* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    */
+/* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   */
+/* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE    */
+/* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR          */
+/* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF         */
+/* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS     */
+/* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN      */
+/* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)      */
+/* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   */
+/* POSSIBILITY OF SUCH DAMAGE.                                                  */
+
 MEMORY
 {
-  FLASH : ORIGIN = 0x08004000, LENGTH = 1024K - 0x4000
-  RAM : ORIGIN = 0x20000010, LENGTH = 128K - 0x10
+  FLASH (rx): ORIGIN = 0x08004000, LENGTH = 1024K - 0x4000
+  RAM (rwx) : ORIGIN = 0x20000010, LENGTH = 128K - 0x10
+/*  CCM (rwx) : ORIGIN = 0x10000000, LENGTH = 64K*/
 }
-
 
 /* Linker script to place sections and symbol values. Should be used together
  * with other linker script that defines memory regions FLASH and RAM.
