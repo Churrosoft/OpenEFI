@@ -33,3 +33,8 @@ qemu_output.log
 CMakeListsPrivate.txt
 CMakeLists.txt
 cmake-*
+
+
+# Added by cargo
+
+/target
