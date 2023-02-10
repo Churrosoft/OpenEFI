@@ -1,6 +1,7 @@
 shell bash -c 'for f in /dev/serial/by-id/usb-Black_Magic_Debug_Black_Magic_Probe_*-if00; do [ -e "$f" ] && echo "target extended-remote $f" || echo -e "echo \033[1;31mDEBUGGER IS NOT CONNECTED\033[0m\\n\nquit"; break; done > /tmp/gdb-conn-source'
 source /tmp/gdb-conn-source
 
+mon connect_rst enable
 mon tpwr enable
 shell bash -c 'sleep 0.05s'
 mon swdp_scan
