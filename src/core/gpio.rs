@@ -15,7 +15,7 @@ pub struct GpioMapping {
     pub ecn_1: Pin<'D', 12, Output<PushPull>>,
     pub ecn_2: Pin<'D', 13, Output<PushPull>>,
     pub ecn_3: Pin<'D', 14, Output<PushPull>>,
-    pub  ecn_4: Pin<'D', 15, Output<PushPull>>,
+    pub ecn_4: Pin<'D', 15, Output<PushPull>>,
     // PMIC
     // CKP/CMP
 
@@ -25,13 +25,8 @@ pub struct GpioMapping {
 }
 
 pub fn init_gpio(gpioc: gpioc::Parts, gpiod: gpiod::Parts) -> GpioMapping {
-    //let gpioa = dp.GPIOA.split();
-    //let gpiob = dp.GPIOB.split();
-/*     let gpioc = dp.GPIOC.split();
-    let gpiod = dp.GPIOD.split(); */
-    // let gpiof = dp.GPIOF.split();
 
-    let gpio = GpioMapping {
+    let mut gpio = GpioMapping {
         // LED's / User feedback
         led_0: gpioc.pc13.into_push_pull_output(),
         led_1: gpioc.pc14.into_push_pull_output(),
@@ -49,6 +44,10 @@ pub fn init_gpio(gpioc: gpioc::Parts, gpiod: gpiod::Parts) -> GpioMapping {
         ecn_3: gpiod.pd14.into_push_pull_output(),
         ecn_4: gpiod.pd15.into_push_pull_output(),
     };
+
+    // set default state on I/O
+    gpio.led_1.set_high();
+    gpio.led_2.set_high();
 
     return gpio;
 }
