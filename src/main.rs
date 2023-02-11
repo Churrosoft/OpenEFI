@@ -12,19 +12,27 @@ pub mod core;
 mod app {
     // use cortex_m_semihosting::{debug, hprintln};
 
-    use stm32f4xx_hal::{gpio::{self, Edge, Output, PushPull}, pac::TIM2, prelude::*, timer::{self, Event}, otg_fs::UsbBusType, otg_fs};
+    use crate::core::gpio::init_gpio;
+    use crate::core::usb;
     use stm32f4xx_hal::otg_fs::USB;
-    use usb_device::bus::{UsbBusAllocator};
+    use stm32f4xx_hal::{
+        gpio::{self, Edge, Output, PushPull},
+        otg_fs,
+        otg_fs::UsbBusType,
+        pac::TIM2,
+        pac::TIM3,
+        prelude::*,
+        timer::{self, Event},
+    };
+    use usb_device::bus::UsbBusAllocator;
     use usb_device::device::UsbDevice;
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
-    use crate::core::gpio::init_gpio;
-    use crate::core::usb;
 
     #[shared]
     struct Shared {
         timer: timer::CounterMs<TIM2>,
-        
+        timer3: timer::CounterUs<TIM3>,
         usb_cdc: SerialPort<'static, UsbBusType>,
         usb_web: WebUsb<UsbBusType>,
     }
@@ -33,8 +41,8 @@ mod app {
         delayval: u32,
         button: gpio::PD8<Output<PushPull>>,
         led: gpio::PC13<Output<PushPull>>,
-        
-        usb_dev: UsbDevice<'static, UsbBusType>
+        led2: gpio::PC14<Output<PushPull>>,
+        usb_dev: UsbDevice<'static, UsbBusType>,
     }
 
     #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
@@ -89,7 +97,7 @@ mod app {
         // 3) Create delay handle
         //let mut delay = dp.TIM1.delay_ms(&clocks);
         let mut timer = dp.TIM2.counter_ms(&clocks);
-
+        let timer3 = dp.TIM3.counter_us(&clocks);
         // esto del timer2 es caaaassiiii lo que necesito para el tema del encendido / inyeccion, tengo que ver como apagarlo cuando termina el evento nomas
         // esta otra lib soporta el oneshot: https://docs.rs/embedded-time/latest/embedded_time/timer/param/struct.OneShot.html
         // Kick off the timer with 2 seconds timeout first
@@ -110,30 +118,36 @@ mod app {
         };
 
         static mut EP_MEMORY: [u32; 1024] = [0; 1024];
-        
+
         let usb_bus = ctx.local.USB_BUS;
         unsafe {
             *usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
         }
 
         let usb_cdc = SerialPort::new(usb_bus.as_ref().unwrap());
-        let usb_web = WebUsb::new(usb_bus.as_ref().unwrap(), url_scheme::HTTPS, "tuner.openefi.tech");
+        let usb_web = WebUsb::new(
+            usb_bus.as_ref().unwrap(),
+            url_scheme::HTTPS,
+            "tuner.openefi.tech",
+        );
 
         let usb_dev = usb::new_device(usb_bus.as_ref().unwrap());
-        
+
         (
             // Initialization of shared resources
-            Shared { 
+            Shared {
                 timer,
+                timer3,
                 usb_cdc,
-                usb_web
+                usb_web,
             },
             // Initialization of task local resources
             Local {
                 button,
                 led: gpio_config.led_0,
+                led2: gpio_config.led_1,
                 delayval: 2000_u32,
-                usb_dev
+                usb_dev,
             },
             // Move the monotonic timer to the RTIC run-time, this enables
             // scheduling
@@ -148,16 +162,31 @@ mod app {
         }
     }
 
-    #[task(binds = TIM2, local=[led], shared=[timer])]
+    #[task(binds = TIM2, local=[led], shared=[timer,timer3])]
     fn timer_expired(mut ctx: timer_expired::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
         // 2) Clear Timer Pending Interrupt
 
+        ctx.shared
+            .timer3
+            .lock(|tim| tim.start(500.micros()))
+            .unwrap();
+
         ctx.local.led.toggle();
         ctx.shared
             .timer
             .lock(|tim| tim.clear_interrupt(Event::Update));
+    }
+
+    #[task(binds = TIM3, local=[led2], shared=[timer,timer3])]
+    fn timer3_exp(mut ctx: timer3_exp::Context) {
+        // When Timer Interrupt Happens Two Things Need to be Done
+        // 1) Toggle the LED
+        // 2) Clear Timer Pending Interrupt
+
+        ctx.local.led2.toggle();
+        ctx.shared.timer3.lock(|tim| tim.cancel()).unwrap();
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
@@ -201,5 +230,4 @@ mod app {
             });
         });
     }
-
 }
