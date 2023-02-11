@@ -8,19 +8,19 @@ use panic_halt as _;
 
 pub mod core;
 
-#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true)]
+#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
-    // use cortex_m_semihosting::{debug, hprintln};
+    use arrayvec::ArrayVec;
+    use cortex_m_semihosting::{hprintln};
 
     use crate::core::gpio::init_gpio;
-    use crate::core::usb;
+    use crate::core::{webserial};
     use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
         gpio::{self, Edge, Output, PushPull},
         otg_fs,
         otg_fs::UsbBusType,
-        pac::TIM2,
-        pac::TIM3,
+        pac::{TIM2, TIM3},
         prelude::*,
         timer::{self, Event},
     };
@@ -44,10 +44,13 @@ mod app {
         button: gpio::PD8<Output<PushPull>>,
         led: gpio::PC13<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
+        
+        cdc_input_buffer: ArrayVec<u8, 128>,
     }
 
     #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
     fn init(ctx: init::Context) -> (Shared, Local, init::Monotonics) {
+        hprintln!("Hello :)");
         let mut dp = ctx.device;
 
         // Configure the LED pin as a push pull ouput and obtain handle
@@ -133,7 +136,9 @@ mod app {
             "tuner.openefi.tech",
         );
 
-        let usb_dev = usb::new_device(usb_bus.as_ref().unwrap());
+        let usb_dev = webserial::new_device(usb_bus.as_ref().unwrap());
+        
+        let cdc_buff = ArrayVec::<u8, 128>::new();
 
         (
             // Initialization of shared resources
@@ -150,6 +155,7 @@ mod app {
                 led: gpio_config.led_0,
                 delayval: 2000_u32,
                 usb_dev,
+                cdc_input_buffer: cdc_buff,
             },
             // Move the monotonic timer to the RTIC run-time, this enables
             // scheduling
@@ -224,14 +230,39 @@ mod app {
         ctx.local.button.clear_interrupt_pending_bit();
     }
 
-    #[task(binds = OTG_FS, local = [usb_dev], shared = [usb_cdc, usb_web])]
+    #[task(binds = OTG_FS, local = [usb_dev, cdc_input_buffer], shared = [usb_cdc, usb_web])]
     fn usb_handler(mut ctx: usb_handler::Context) {
         let device = ctx.local.usb_dev;
         ctx.shared.usb_cdc.lock(|cdc| {
             // USB dev poll only in the interrupt handler
             ctx.shared.usb_web.lock(|web| {
                 if device.poll(&mut [web, cdc]) {
-                    // Read serial data here!
+                    let mut buf = [0u8; 64];
+                    
+                    match cdc.read(&mut buf[..]) {
+                        Ok(count) => {
+                            hprintln!("CDC Read {} bytes", count);
+                            
+                            // Push bytes into the buffer
+                            for i in 0..count {
+                                ctx.local.cdc_input_buffer.push(buf[i]);
+                                if ctx.local.cdc_input_buffer.is_full() {
+                                    hprintln!("Buffer full, processing cmd.");
+
+                                    let cdc_reply = webserial::process_command(ctx.local.cdc_input_buffer.take().into_inner().unwrap());
+                                    ctx.local.cdc_input_buffer.clear();
+                                    
+                                    match cdc_reply {
+                                        Some(message) => {
+                                            cdc.write(&webserial::finish_message(message)).unwrap();
+                                        },
+                                        _ => {}
+                                    }
+                                }
+                            }
+                        },
+                        Err(_) => {}
+                    };
                 }
             });
         });

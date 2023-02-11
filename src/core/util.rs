@@ -33,3 +33,20 @@ pub fn get_serial_str() -> &'static str {
 
     unsafe { str::from_utf8_unchecked(serial) }
 }
+
+pub fn crc16(data: &[u8], length: u8) -> u16 {
+    let mut crc: u16 = 0xFFFF;
+    let mut iter: usize = 0;
+    let mut in_len = length;
+    
+    while in_len != 0 {
+        let mut x = (crc >> 8) as u8 ^ data[iter];
+        x ^= x >> 4;
+        crc = (crc << 8) ^ ((x as u16) << 12) ^ ((x as u16) << 5) ^ (x as u16);
+
+        iter += 1;
+        in_len -= 1;
+    }
+
+    crc
+}
