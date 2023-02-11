@@ -39,10 +39,13 @@ mod app {
         // Configure the LED pin as a push pull ouput and obtain handle
         // On the Nucleo FR401 theres an on-board LED connected to pin PA5
         // 1) Promote the GPIOA PAC struct
+        let gpioa = dp.GPIOA.split();
+        let gpiob = dp.GPIOB.split();
         let gpioc = dp.GPIOC.split();
         let gpiod = dp.GPIOD.split();
+        let gpioe = dp.GPIOE.split();
 
-        let gpioConfig = init_gpio(gpioc, gpiod);
+        let gpioConfig = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
 
         // 2) Configure Pin and Obtain Handle
         // let _led = gpioc.pc15.into_push_pull_output();
