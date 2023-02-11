@@ -1,6 +1,5 @@
 //! examples/locals.rs
 
-#![deny(unsafe_code)]
 #![deny(warnings)]
 #![no_main]
 #![no_std]
@@ -13,27 +12,33 @@ pub mod core;
 mod app {
     // use cortex_m_semihosting::{debug, hprintln};
 
-    use stm32f4xx_hal::{
-        gpio::{self, Edge, Output, PushPull},
-        pac::TIM2,
-        prelude::*,
-        timer::{self, Event},
-    };
+    use stm32f4xx_hal::{gpio::{self, Edge, Output, PushPull}, pac::TIM2, prelude::*, timer::{self, Event}, otg_fs::UsbBusType, otg_fs};
+    use stm32f4xx_hal::otg_fs::USB;
+    use usb_device::bus::{UsbBusAllocator};
+    use usb_device::device::UsbDevice;
+    use usbd_serial::SerialPort;
+    use usbd_webusb::{url_scheme, WebUsb};
+    use crate::core::gpio::init_gpio;
+    use crate::core::usb;
 
     #[shared]
     struct Shared {
         timer: timer::CounterMs<TIM2>,
+        
+        usb_cdc: SerialPort<'static, UsbBusType>,
+        usb_web: WebUsb<UsbBusType>,
     }
     #[local]
     struct Local {
         delayval: u32,
         button: gpio::PD8<Output<PushPull>>,
         led: gpio::PC13<Output<PushPull>>,
+        
+        usb_dev: UsbDevice<'static, UsbBusType>
     }
 
-    #[init]
+    #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
     fn init(ctx: init::Context) -> (Shared, Local, init::Monotonics) {
-        use crate::core::gpio::init_gpio;
         let mut dp = ctx.device;
 
         // Configure the LED pin as a push pull ouput and obtain handle
@@ -45,7 +50,7 @@ mod app {
         let gpiod = dp.GPIOD.split();
         let gpioe = dp.GPIOE.split();
 
-        let gpioConfig = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
+        let gpio_config = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
 
         // 2) Configure Pin and Obtain Handle
         // let _led = gpioc.pc15.into_push_pull_output();
@@ -55,7 +60,7 @@ mod app {
         // 1) Promote the GPIOC PAC struct
         // 2) Configure Pin and Obtain Handle
         // no me borre todavia esto del boton que lo voy a reciclar para los interrupts del ckp/cmp
-        let mut button = gpioConfig.iny_1;
+        let mut button = gpio_config.iny_1;
 
         // Configure Button Pin for Interrupts
         // 1) Promote SYSCFG structure to HAL to be able to configure interrupts
@@ -94,14 +99,41 @@ mod app {
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
 
+        // Init USB
+        let usb = USB {
+            usb_global: dp.OTG_FS_GLOBAL,
+            usb_device: dp.OTG_FS_DEVICE,
+            usb_pwrclk: dp.OTG_FS_PWRCLK,
+            pin_dm: gpio_config.usb_dp,
+            pin_dp: gpio_config.usb_dm,
+            hclk: clocks.hclk(),
+        };
+
+        static mut EP_MEMORY: [u32; 1024] = [0; 1024];
+        
+        let usb_bus = ctx.local.USB_BUS;
+        unsafe {
+            *usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
+        }
+
+        let usb_cdc = SerialPort::new(usb_bus.as_ref().unwrap());
+        let usb_web = WebUsb::new(usb_bus.as_ref().unwrap(), url_scheme::HTTPS, "tuner.openefi.tech");
+
+        let usb_dev = usb::new_device(usb_bus.as_ref().unwrap());
+        
         (
             // Initialization of shared resources
-            Shared { timer },
+            Shared { 
+                timer,
+                usb_cdc,
+                usb_web
+            },
             // Initialization of task local resources
             Local {
                 button,
-                led: gpioConfig.led_0,
+                led: gpio_config.led_0,
                 delayval: 2000_u32,
+                usb_dev
             },
             // Move the monotonic timer to the RTIC run-time, this enables
             // scheduling
@@ -156,4 +188,18 @@ mod app {
         // Obtain access to Button Peripheral and Clear Interrupt Pending Flag
         ctx.local.button.clear_interrupt_pending_bit();
     }
+
+    #[task(binds = OTG_FS, local = [usb_dev], shared = [usb_cdc, usb_web])]
+    fn usb_handler(mut ctx: usb_handler::Context) {
+        let device = ctx.local.usb_dev;
+        ctx.shared.usb_cdc.lock(|cdc| {
+            // USB dev poll only in the interrupt handler
+            ctx.shared.usb_web.lock(|web| {
+                if device.poll(&mut [web, cdc]) {
+                    // Read serial data here!
+                }
+            });
+        });
+    }
+
 }

@@ -1,4 +1,5 @@
-use stm32f4xx_hal::gpio::{self, gpioa, gpiob, gpioc, gpiod, gpioe, Input, Output, PushPull};
+use stm32f4xx_hal::gpio::{self, Alternate, gpioa, gpiob, gpioc, gpiod, gpioe, Input, Output, PushPull};
+
 pub struct GpioMapping {
     // LED's / User feedback
     pub led_0: gpio::PC13<Output<PushPull>>,
@@ -53,6 +54,9 @@ pub struct GpioMapping {
 
     pub aux_cs_1: gpio::PE14<Output<PushPull>>,
     pub aux_cs_2: gpio::PE15<Output<PushPull>>,
+    
+    pub usb_dp: gpio::PA11<Alternate<10, PushPull>>,
+    pub usb_dm: gpio::PA12<Alternate<10, PushPull>>
 }
 
 pub fn init_gpio(
@@ -116,7 +120,10 @@ pub fn init_gpio(
 
         aux_cs_1: gpioe.pe14.into_push_pull_output(),
         aux_cs_2: gpioe.pe15.into_push_pull_output(),
-
+        
+        // USB
+        usb_dp: gpioa.pa11.into_alternate(),
+        usb_dm: gpioa.pa12.into_alternate(),
     };
 
     // set default state on I/O
