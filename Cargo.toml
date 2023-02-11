@@ -18,8 +18,8 @@ debug = false
 
 [profile.dev]
 opt-level = 's'
-strip = true
-lto = true
+codegen-units = 1
+lto = false
 
 
 [dependencies]
@@ -37,4 +37,4 @@ usbd-webusb = "1.0.2"
 
 [dependencies.stm32f4xx-hal]
 version = "0.14.0"
-features = ["stm32f407", "usb_fs"]
+features = ["stm32f407", "usb_fs", "rtic"]

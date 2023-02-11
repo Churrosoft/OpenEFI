@@ -96,8 +96,8 @@ mod app {
          */
         // 3) Create delay handle
         //let mut delay = dp.TIM1.delay_ms(&clocks);
-        let mut timer = dp.TIM2.counter_ms(&clocks);
-        let timer3 = dp.TIM3.counter_us(&clocks);
+        let mut timer: timer::CounterMs<TIM2> = dp.TIM2.counter_ms(&clocks);
+        let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
         // esto del timer2 es caaaassiiii lo que necesito para el tema del encendido / inyeccion, tengo que ver como apagarlo cuando termina el evento nomas
         // esta otra lib soporta el oneshot: https://docs.rs/embedded-time/latest/embedded_time/timer/param/struct.OneShot.html
         // Kick off the timer with 2 seconds timeout first
@@ -106,6 +106,7 @@ mod app {
 
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
+        timer3.listen(Event::Update);
 
         // Init USB
         let usb = USB {
@@ -162,31 +163,34 @@ mod app {
         }
     }
 
-    #[task(binds = TIM2, local=[led], shared=[timer,timer3])]
+    #[task(binds = TIM2, priority = 1, local=[led], shared=[timer, timer3])]
     fn timer_expired(mut ctx: timer_expired::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
         // 2) Clear Timer Pending Interrupt
-
-        ctx.shared
-            .timer3
-            .lock(|tim| tim.start(500.micros()))
-            .unwrap();
-
-        ctx.local.led.toggle();
         ctx.shared
             .timer
             .lock(|tim| tim.clear_interrupt(Event::Update));
+        
+        ctx.local.led.toggle();
+
+        ctx.shared.timer3.lock(|tim| {
+            tim.start(50000.micros()).unwrap();
+        });
+
     }
 
-    #[task(binds = TIM3, local=[led2], shared=[timer,timer3])]
+    #[task(binds = TIM3, local=[led2], shared=[timer3])]
     fn timer3_exp(mut ctx: timer3_exp::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
         // 2) Clear Timer Pending Interrupt
+        ctx.shared.timer3.lock(|tim| {
+            tim.clear_interrupt(Event::Update);
+            tim.cancel().unwrap();
+        });
 
         ctx.local.led2.toggle();
-        ctx.shared.timer3.lock(|tim| tim.cancel()).unwrap();
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
