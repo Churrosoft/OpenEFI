@@ -35,13 +35,14 @@ mod app {
         timer3: timer::CounterUs<TIM3>,
         usb_cdc: SerialPort<'static, UsbBusType>,
         usb_web: WebUsb<UsbBusType>,
+        led2: gpio::PC14<Output<PushPull>>,
+
     }
     #[local]
     struct Local {
         delayval: u32,
         button: gpio::PD8<Output<PushPull>>,
         led: gpio::PC13<Output<PushPull>>,
-        led2: gpio::PC14<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
     }
 
@@ -141,12 +142,12 @@ mod app {
                 timer3,
                 usb_cdc,
                 usb_web,
+                led2: gpio_config.led_1,
             },
             // Initialization of task local resources
             Local {
                 button,
                 led: gpio_config.led_0,
-                led2: gpio_config.led_1,
                 delayval: 2000_u32,
                 usb_dev,
             },
@@ -163,7 +164,7 @@ mod app {
         }
     }
 
-    #[task(binds = TIM2, priority = 1, local=[led], shared=[timer, timer3])]
+    #[task(binds = TIM2, priority = 1, local=[led], shared=[timer, timer3,led2])]
     fn timer_expired(mut ctx: timer_expired::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
@@ -173,6 +174,7 @@ mod app {
             .lock(|tim| tim.clear_interrupt(Event::Update));
         
         ctx.local.led.toggle();
+        ctx.shared.led2.lock(|l| l.toggle());
 
         ctx.shared.timer3.lock(|tim| {
             tim.start(50000.micros()).unwrap();
@@ -180,7 +182,7 @@ mod app {
 
     }
 
-    #[task(binds = TIM3, local=[led2], shared=[timer3])]
+    #[task(binds = TIM3, local=[], shared=[timer3,led2])]
     fn timer3_exp(mut ctx: timer3_exp::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
@@ -190,7 +192,7 @@ mod app {
             tim.cancel().unwrap();
         });
 
-        ctx.local.led2.toggle();
+        ctx.shared.led2.lock(|l| l.toggle());
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
