@@ -39,6 +39,9 @@ pub struct GpioMapping {
     pub mtr_fault: gpio::PE9<Output<PushPull>>,
     pub mtr_enable: gpio::PE10<Output<PushPull>>,
 
+    // SPI Flash
+    pub memory_cs : gpio::PE13<Output<PushPull>>,
+
     // AUX I/O
     pub aux_in_1: gpio::PA0<Input>,
     pub aux_in_2: gpio::PA1<Input>,
@@ -85,16 +88,22 @@ pub fn init_gpio(
         pmic_maxi: gpioc.pc11.into_input(),
 
         // CKP/CMP
+        ckp: gpioc.pc6.into_input(),
+        cmp: gpioc.pc7.into_input(),
         // RELAY's
         relay_iny: gpioe.pe2.into_push_pull_output(),
         relay_gnc: gpioe.pe3.into_push_pull_output(),
         relay_ac: gpioe.pe4.into_push_pull_output(),
+        relay_lmb: gpioe.pe0.into_push_pull_output(),
 
         // Step-Step motor TODO
         mtr_step: gpioe.pe7.into_push_pull_output(),
         mtr_dir: gpioe.pe8.into_push_pull_output(),
         mtr_fault: gpioe.pe9.into_push_pull_output(),
         mtr_enable: gpioe.pe10.into_push_pull_output(),
+
+            // SPI Flash
+        memory_cs: gpioe.pe13.into_push_pull_output(),
 
         // AUX I/O
         aux_in_1: gpioa.pa0.into_input(),
@@ -104,12 +113,22 @@ pub fn init_gpio(
         aux_out_1: gpioc.pc4.into_push_pull_output(),
         aux_out_2: gpioc.pc5.into_push_pull_output(),
         aux_out_3: gpiob.pb0.into_push_pull_output(),
+
+        aux_cs_1: gpioe.pe14.into_push_pull_output(),
+        aux_cs_2: gpioe.pe15.into_push_pull_output(),
+
     };
 
     // set default state on I/O
     gpio.led_0.set_high();
     gpio.led_1.set_high();
     gpio.led_2.set_high();
+
+    gpio.aux_cs_1.set_high();
+    gpio.aux_cs_2.set_high();
+    gpio.mtr_enable.set_high();
+    gpio.pmic_cs.set_high();
+    gpio.memory_cs.set_high();
 
     return gpio;
 }

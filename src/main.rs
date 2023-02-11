@@ -54,6 +54,7 @@ mod app {
         // On the Nucleo FR401 there is a button connected to pin PC13
         // 1) Promote the GPIOC PAC struct
         // 2) Configure Pin and Obtain Handle
+        // no me borre todavia esto del boton que lo voy a reciclar para los interrupts del ckp/cmp
         let mut button = gpioConfig.iny_1;
 
         // Configure Button Pin for Interrupts
@@ -84,6 +85,8 @@ mod app {
         //let mut delay = dp.TIM1.delay_ms(&clocks);
         let mut timer = dp.TIM2.counter_ms(&clocks);
 
+        // esto del timer2 es caaaassiiii lo que necesito para el tema del encendido / inyeccion, tengo que ver como apagarlo cuando termina el evento nomas
+        // esta otra lib soporta el oneshot: https://docs.rs/embedded-time/latest/embedded_time/timer/param/struct.OneShot.html
         // Kick off the timer with 2 seconds timeout first
         // It probably would be better to use the global variable here but I did not to avoid the clutter of having to create a crtical section
         timer.start(2000.millis()).unwrap();
@@ -125,6 +128,7 @@ mod app {
             .lock(|tim| tim.clear_interrupt(Event::Update));
     }
 
+    // EXTI9_5_IRQn para los pines ckp/cmp
     #[task(binds = EXTI15_10, local = [delayval, button], shared=[timer])]
     fn button_pressed(mut ctx: button_pressed::Context) {
         // When Button press interrupt happens three things need to be done
