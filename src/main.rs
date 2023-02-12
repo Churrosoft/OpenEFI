@@ -12,9 +12,9 @@ mod app {
     pub mod webserial;
     pub mod gpio;
     pub mod util;
+    pub mod logging;
 
     use arrayvec::ArrayVec;
-    use cortex_m_semihosting::{hprintln};
     
     use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
@@ -54,8 +54,8 @@ mod app {
 
     #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
     fn init(ctx: init::Context) -> (Shared, Local, init::Monotonics) {
-        hprintln!("Hello :)");
         let mut dp = ctx.device;
+        logging::host::debug!("Hello :)");
 
         // Configure the LED pin as a push pull ouput and obtain handle
         // On the Nucleo FR401 theres an on-board LED connected to pin PA5
@@ -245,14 +245,10 @@ mod app {
                     
                     match cdc.read(&mut buf[..]) {
                         Ok(count) => {
-                            hprintln!("CDC Read {} bytes", count);
-                            
                             // Push bytes into the buffer
                             for i in 0..count {
                                 ctx.local.cdc_input_buffer.push(buf[i]);
                                 if ctx.local.cdc_input_buffer.is_full() {
-                                    hprintln!("Buffer full, processing cmd.");
-
                                     webserial::process_command(ctx.local.cdc_input_buffer.take().into_inner().unwrap());
                                     ctx.local.cdc_input_buffer.clear();
                                 }

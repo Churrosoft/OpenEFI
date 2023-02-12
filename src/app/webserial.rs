@@ -6,7 +6,7 @@ use cortex_m_semihosting::hprintln;
 use usb_device::bus::{UsbBus, UsbBusAllocator};
 use usb_device::device::{UsbDevice, UsbDeviceBuilder, UsbVidPid};
 use crate::app;
-use crate::app::util;
+use crate::app::{logging, util};
 
 
 #[repr(C, packed)]
@@ -57,7 +57,7 @@ pub fn process_command(buf: [u8; 128]) {
         crc,
     };
 
-    hprintln!("CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - CRC:  {}", serial_cmd.protocol, serial_cmd.command, serial_cmd.status, crc);
+    logging::host::debug!("CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - CRC:  {}", serial_cmd.protocol, serial_cmd.command, serial_cmd.status, crc);
 
     if serial_cmd.protocol != 1 {
         return;
