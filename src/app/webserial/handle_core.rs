@@ -1,4 +1,4 @@
-use crate::core::webserial::SerialMessage;
+use crate::app::webserial::SerialMessage;
 
 pub fn handler(command: SerialMessage) -> Option<SerialMessage> {
     let mut response_buf = SerialMessage {

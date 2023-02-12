@@ -1,23 +1,24 @@
 //! examples/locals.rs
-
+#![feature(proc_macro_hygiene)]
 #![deny(warnings)]
 #![no_main]
 #![no_std]
 
 use panic_halt as _;
 
-pub mod core;
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
+    pub mod webserial;
+    pub mod gpio;
+    pub mod util;
+
     use arrayvec::ArrayVec;
     use cortex_m_semihosting::{hprintln};
-
-    use crate::core::gpio::init_gpio;
-    use crate::core::{webserial};
+    
     use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
-        gpio::{self, Edge, Output, PushPull},
+        gpio::{Edge, Output, PushPull},
         otg_fs,
         otg_fs::UsbBusType,
         pac::{TIM2, TIM3},
@@ -28,6 +29,8 @@ mod app {
     use usb_device::device::UsbDevice;
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
+    
+    use crate::app::gpio::init_gpio;
 
     #[shared]
     struct Shared {
@@ -35,14 +38,14 @@ mod app {
         timer3: timer::CounterUs<TIM3>,
         usb_cdc: SerialPort<'static, UsbBusType>,
         usb_web: WebUsb<UsbBusType>,
-        led2: gpio::PC14<Output<PushPull>>,
+        led2: stm32f4xx_hal::gpio::PC14<Output<PushPull>>,
 
     }
     #[local]
     struct Local {
         delayval: u32,
-        button: gpio::PD8<Output<PushPull>>,
-        led: gpio::PC13<Output<PushPull>>,
+        button: stm32f4xx_hal::gpio::PD8<Output<PushPull>>,
+        led: stm32f4xx_hal::gpio::PC13<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
         
         cdc_input_buffer: ArrayVec<u8, 128>,
@@ -268,3 +271,5 @@ mod app {
         });
     }
 }
+
+
