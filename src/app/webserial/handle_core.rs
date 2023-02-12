@@ -1,9 +1,10 @@
-use crate::app::webserial::SerialMessage;
+use crate::app;
+use crate::app::webserial::{SerialError, SerialMessage, SerialStatus};
 
-pub fn handler(command: SerialMessage) -> Option<SerialMessage> {
+pub fn handler(command: SerialMessage) {
     let mut response_buf = SerialMessage {
         protocol: 1,
-        command: 1,
+        command: command.command,
         status: 0,
         payload: [0u8; 123],
         crc: 0,
@@ -26,12 +27,12 @@ pub fn handler(command: SerialMessage) -> Option<SerialMessage> {
             response_buf.payload[5] = ((efi_ver_patch >> 8) & 0xFF) as u8;
             response_buf.payload[6] = (efi_ver_patch & 0xFF) as u8;
 
-            // TODO set status bits
-
-            Some(response_buf)
+            app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
         }
-        _ => None // TODO command not found
-    }
+        _ => {
+            app::send_message::spawn(SerialStatus::Error, SerialError::UnknownCmd as u8, response_buf).unwrap();
+        }
+    };
     
     
 }

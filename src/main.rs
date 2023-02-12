@@ -31,6 +31,7 @@ mod app {
     use usbd_webusb::{url_scheme, WebUsb};
     
     use crate::app::gpio::init_gpio;
+    use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
 
     #[shared]
     struct Shared {
@@ -252,15 +253,8 @@ mod app {
                                 if ctx.local.cdc_input_buffer.is_full() {
                                     hprintln!("Buffer full, processing cmd.");
 
-                                    let cdc_reply = webserial::process_command(ctx.local.cdc_input_buffer.take().into_inner().unwrap());
+                                    webserial::process_command(ctx.local.cdc_input_buffer.take().into_inner().unwrap());
                                     ctx.local.cdc_input_buffer.clear();
-                                    
-                                    match cdc_reply {
-                                        Some(message) => {
-                                            cdc.write(&webserial::finish_message(message)).unwrap();
-                                        },
-                                        _ => {}
-                                    }
                                 }
                             }
                         },
@@ -270,6 +264,11 @@ mod app {
             });
         });
     }
+    
+    // Externally defined tasks
+    extern "Rust" {
+        // Low-priority task to send back replies via the serial port.
+        #[task(shared = [usb_cdc], priority = 2)]
+        fn send_message(ctx: send_message::Context, status: SerialStatus, code: u8, mut message: SerialMessage);
+    }
 }
-
-
