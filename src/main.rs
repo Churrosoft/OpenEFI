@@ -15,7 +15,7 @@ mod app {
     pub mod logging;
 
     use arrayvec::ArrayVec;
-    
+
     use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
         gpio::{Edge, Output, PushPull},
@@ -53,8 +53,10 @@ mod app {
     }
 
     #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
-    fn init(ctx: init::Context) -> (Shared, Local, init::Monotonics) {
+    fn init(mut ctx: init::Context) -> (Shared, Local, init::Monotonics) {
         let mut dp = ctx.device;
+        
+        ctx.core.DWT.enable_cycle_counter(); // TODO: Disable this in release builds
         logging::host::debug!("Hello :)");
 
         // Configure the LED pin as a push pull ouput and obtain handle
