@@ -268,12 +268,14 @@ dependencies = [
  "cortex-m-rt",
  "cortex-m-rtic",
  "cortex-m-semihosting",
+ "embedded-hal 0.2.7",
  "numtoa",
  "panic-halt",
  "stm32f4xx-hal",
  "usb-device",
  "usbd-serial",
  "usbd-webusb",
+ "w25q",
 ]
 
 [[package]]
@@ -558,4 +560,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ee8f19f9d74293faf70901bc20ad067dc1ad390d2cbf1e3f75f721ffee908b6"
 dependencies = [
  "vcell",
+]
+
+[[package]]
+name = "w25q"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "813e0f6bbd5fe89eb7ae448814e0ef1f6699d46e89d328f158fb95464f84c0bd"
+dependencies = [
+ "bitflags",
+ "embedded-hal 0.2.7",
 ]

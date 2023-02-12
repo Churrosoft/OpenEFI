@@ -27,6 +27,7 @@ mod app {
         pac::{TIM2, TIM3},
         prelude::*,
         timer::{self, Event},
+        spi::*,
     };
     use usb_device::bus::UsbBusAllocator;
     use usb_device::device::UsbDevice;
@@ -34,6 +35,8 @@ mod app {
     use usbd_webusb::{url_scheme, WebUsb};
 
     use crate::app::gpio::init_gpio;
+    use embedded_hal::spi::{Mode, Phase, Polarity};
+
 
     #[shared]
     struct Shared {
@@ -63,7 +66,6 @@ mod app {
     fn init(ctx: init::Context) -> (Shared, Local, init::Monotonics) {
         hprintln!("Hello :)");
         let mut dp = ctx.device;
-
         // Configure the LED pin as a push pull ouput and obtain handle
         // On the Nucleo FR401 theres an on-board LED connected to pin PA5
         // 1) Promote the GPIOA PAC struct
@@ -142,6 +144,18 @@ mod app {
         // EFI Related:
         let _efi_cfg = get_default_efi_cfg();
         let _efi_status = get_default_engine_status();
+
+        // SPI:
+        let pb15 = gpiob.pb15.into_alternate().internal_pull_up(true);
+        let pb13 = gpiob.pb13.into_alternate();
+
+        let mode = Mode {
+            polarity: Polarity::IdleLow,
+            phase: Phase::CaptureOnFirstTransition,
+        };
+
+        let spi2 = Spi::new(dp.SPI2, (pb13, NoMiso {}, pb15), mode, 3.MHz(), &clocks);
+    
 
         (
             // Initialization of shared resources

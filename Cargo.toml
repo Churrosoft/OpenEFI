@@ -34,6 +34,8 @@ arrayvec = { version = "0.7.2", default-features = false }
 numtoa = "0.2"
 usbd-serial = "0.1.1"
 usbd-webusb = "1.0.2"
+w25q = "0.2.1"
+embedded-hal = "0.2.7"
 
 [dependencies.stm32f4xx-hal]
 version = "0.14.0"
