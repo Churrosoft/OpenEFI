@@ -10,18 +10,18 @@ mod injection;
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
-    pub mod webserial;
     pub mod gpio;
     pub mod util;
+    pub mod webserial;
 
     use crate::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
     use crate::engine::efi_status::{get_default_engine_status, EngineStatus};
     use arrayvec::ArrayVec;
-    use cortex_m_semihosting::{hprintln};
+    use cortex_m_semihosting::hprintln;
 
     use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
-        gpio::{Edge, Output, PushPull},
+        gpio::{Edge, Output, PushPull,Input},
         otg_fs,
         otg_fs::UsbBusType,
         pac::{TIM2, TIM3},
@@ -42,6 +42,7 @@ mod app {
         usb_cdc: SerialPort<'static, UsbBusType>,
         usb_web: WebUsb<UsbBusType>,
         led2: stm32f4xx_hal::gpio::PC14<Output<PushPull>>,
+        led3: stm32f4xx_hal::gpio::PC15<Output<PushPull>>,
 
         // EFI Related:
         efi_cfg: EngineConfig,
@@ -50,11 +51,12 @@ mod app {
     #[local]
     struct Local {
         delayval: u32,
-        button: stm32f4xx_hal::gpio::PD8<Output<PushPull>>,
         led: stm32f4xx_hal::gpio::PC13<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
-
         cdc_input_buffer: ArrayVec<u8, 128>,
+
+        // EFI Related:
+        ckp: stm32f4xx_hal::gpio::PC6<Input>,
     }
 
     #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
@@ -73,25 +75,16 @@ mod app {
 
         let gpio_config = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
 
-        // 2) Configure Pin and Obtain Handle
-        // let _led = gpioc.pc15.into_push_pull_output();
-
-        // Configure the button pin as input and obtain handle
-        // On the Nucleo FR401 there is a button connected to pin PC13
-        // 1) Promote the GPIOC PAC struct
-        // 2) Configure Pin and Obtain Handle
-        // no me borre todavia esto del boton que lo voy a reciclar para los interrupts del ckp/cmp
-        let mut button = gpio_config.iny_1;
+        // CKP/CMP
+        let mut ckp = gpio_config.ckp;
 
         // Configure Button Pin for Interrupts
         // 1) Promote SYSCFG structure to HAL to be able to configure interrupts
         let mut syscfg = dp.SYSCFG.constrain();
-        // 2) Make button an interrupt source
-        button.make_interrupt_source(&mut syscfg);
-        // 3) Make button an interrupt source
-        button.trigger_on_edge(&mut dp.EXTI, Edge::Rising);
-        // 4) Enable gpio interrupt for button
-        button.enable_interrupt(&mut dp.EXTI);
+
+        ckp.make_interrupt_source(&mut syscfg);
+        ckp.trigger_on_edge(&mut dp.EXTI, Edge::Rising);
+        ckp.enable_interrupt(&mut dp.EXTI);
 
         // Configure and obtain handle for delay abstraction
         // 1) Promote RCC structure to HAL to be able to configure clocks
@@ -111,10 +104,7 @@ mod app {
         //let mut delay = dp.TIM1.delay_ms(&clocks);
         let mut timer: timer::CounterMs<TIM2> = dp.TIM2.counter_ms(&clocks);
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
-        // esto del timer2 es caaaassiiii lo que necesito para el tema del encendido / inyeccion, tengo que ver como apagarlo cuando termina el evento nomas
-        // esta otra lib soporta el oneshot: https://docs.rs/embedded-time/latest/embedded_time/timer/param/struct.OneShot.html
-        // Kick off the timer with 2 seconds timeout first
-        // It probably would be better to use the global variable here but I did not to avoid the clutter of having to create a crtical section
+
         timer.start(2000.millis()).unwrap();
 
         // Set up to generate interrupt when timer expires
@@ -161,13 +151,14 @@ mod app {
                 usb_cdc,
                 usb_web,
                 led2: gpio_config.led_1,
+                led3: gpio_config.led_2,
                 // EFI Related
                 efi_cfg: _efi_cfg,
                 efi_status: _efi_status,
             },
             // Initialization of task local resources
             Local {
-                button,
+                ckp,
                 led: gpio_config.led_0,
                 delayval: 2000_u32,
                 usb_dev,
@@ -186,7 +177,7 @@ mod app {
         }
     }
 
-    #[task(binds = TIM2, priority = 1, local=[led], shared=[timer, timer3,led2])]
+    #[task(binds = TIM2, priority = 1, local=[led], shared=[timer,timer3,led2])]
     fn timer_expired(mut ctx: timer_expired::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
@@ -194,7 +185,7 @@ mod app {
         ctx.shared
             .timer
             .lock(|tim| tim.clear_interrupt(Event::Update));
-        
+
         ctx.local.led.toggle();
         ctx.shared.led2.lock(|l| l.toggle());
 
@@ -217,32 +208,11 @@ mod app {
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
-    #[task(binds = EXTI15_10, local = [delayval, button], shared=[timer])]
-    fn button_pressed(mut ctx: button_pressed::Context) {
-        // When Button press interrupt happens three things need to be done
-        // 1) Adjust Global Delay Variable
-        // 2) Update Timer with new Global Delay value
-        // 3) Clear Button Pending Interrupt
-
-        // Obtain a copy of the delay value from the global context
-        let mut delay = *ctx.local.delayval;
-
-        // Adjust the amount of delay
-        delay = delay - 500_u32;
-        if delay < 500_u32 {
-            delay = 2000_u32;
-        }
-
-        // Update delay value in global context
-        *ctx.local.delayval = delay;
-
-        // Update the timeout value in the timer peripheral
-        ctx.shared
-            .timer
-            .lock(|tim| tim.start(delay.millis()).unwrap());
-
+    #[task(binds = EXTI9_5, local = [ckp], shared=[led3])]
+    fn ckp_trigger(mut ctx: ckp_trigger::Context) {
+        ctx.shared.led3.lock(|f| f.toggle());
         // Obtain access to Button Peripheral and Clear Interrupt Pending Flag
-        ctx.local.button.clear_interrupt_pending_bit();
+        ctx.local.ckp.clear_interrupt_pending_bit();
     }
 
     #[task(binds = OTG_FS, local = [usb_dev, cdc_input_buffer], shared = [usb_cdc, usb_web])]
@@ -264,18 +234,20 @@ mod app {
                                 if ctx.local.cdc_input_buffer.is_full() {
                                     hprintln!("Buffer full, processing cmd.");
 
-                                    let cdc_reply = webserial::process_command(ctx.local.cdc_input_buffer.take().into_inner().unwrap());
+                                    let cdc_reply = webserial::process_command(
+                                        ctx.local.cdc_input_buffer.take().into_inner().unwrap(),
+                                    );
                                     ctx.local.cdc_input_buffer.clear();
 
                                     match cdc_reply {
                                         Some(message) => {
                                             cdc.write(&webserial::finish_message(message)).unwrap();
-                                        },
+                                        }
                                         _ => {}
                                     }
                                 }
                             }
-                        },
+                        }
                         Err(_) => {}
                     };
                 }
@@ -283,5 +255,3 @@ mod app {
         });
     }
 }
-
-

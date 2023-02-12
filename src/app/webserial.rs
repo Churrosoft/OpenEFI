@@ -20,7 +20,7 @@ pub struct SerialMessage {
 pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B> where B: UsbBus {
     UsbDeviceBuilder::new(bus, UsbVidPid(0x1209, 0xeef1))
         .manufacturer("Churrosoft")
-        .product("OpenEFI | uEFI v2")
+        .product("OpenEFI | uEFI v4")
         .serial_number(util::get_serial_str())
         .device_release(0x0200)
         .self_powered(false)
