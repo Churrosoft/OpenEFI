@@ -1,11 +1,12 @@
 //! examples/locals.rs
 #![feature(proc_macro_hygiene)]
-#![deny(warnings)]
 #![no_main]
 #![no_std]
 
 use panic_halt as _;
 
+mod engine;
+mod injection;
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
@@ -13,9 +14,11 @@ mod app {
     pub mod gpio;
     pub mod util;
 
+    use crate::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
+    use crate::engine::efi_status::{get_default_engine_status, EngineStatus};
     use arrayvec::ArrayVec;
     use cortex_m_semihosting::{hprintln};
-    
+
     use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
         gpio::{Edge, Output, PushPull},
@@ -29,7 +32,7 @@ mod app {
     use usb_device::device::UsbDevice;
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
-    
+
     use crate::app::gpio::init_gpio;
 
     #[shared]
@@ -40,6 +43,9 @@ mod app {
         usb_web: WebUsb<UsbBusType>,
         led2: stm32f4xx_hal::gpio::PC14<Output<PushPull>>,
 
+        // EFI Related:
+        efi_cfg: EngineConfig,
+        efi_status: EngineStatus,
     }
     #[local]
     struct Local {
@@ -47,7 +53,7 @@ mod app {
         button: stm32f4xx_hal::gpio::PD8<Output<PushPull>>,
         led: stm32f4xx_hal::gpio::PC13<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
-        
+
         cdc_input_buffer: ArrayVec<u8, 128>,
     }
 
@@ -140,8 +146,12 @@ mod app {
         );
 
         let usb_dev = webserial::new_device(usb_bus.as_ref().unwrap());
-        
+
         let cdc_buff = ArrayVec::<u8, 128>::new();
+
+        // EFI Related:
+        let _efi_cfg = get_default_efi_cfg();
+        let _efi_status = get_default_engine_status();
 
         (
             // Initialization of shared resources
@@ -151,6 +161,9 @@ mod app {
                 usb_cdc,
                 usb_web,
                 led2: gpio_config.led_1,
+                // EFI Related
+                efi_cfg: _efi_cfg,
+                efi_status: _efi_status,
             },
             // Initialization of task local resources
             Local {
@@ -188,7 +201,6 @@ mod app {
         ctx.shared.timer3.lock(|tim| {
             tim.start(50000.micros()).unwrap();
         });
-
     }
 
     #[task(binds = TIM3, local=[], shared=[timer3,led2])]
@@ -241,11 +253,11 @@ mod app {
             ctx.shared.usb_web.lock(|web| {
                 if device.poll(&mut [web, cdc]) {
                     let mut buf = [0u8; 64];
-                    
+
                     match cdc.read(&mut buf[..]) {
                         Ok(count) => {
                             hprintln!("CDC Read {} bytes", count);
-                            
+
                             // Push bytes into the buffer
                             for i in 0..count {
                                 ctx.local.cdc_input_buffer.push(buf[i]);
@@ -254,7 +266,7 @@ mod app {
 
                                     let cdc_reply = webserial::process_command(ctx.local.cdc_input_buffer.take().into_inner().unwrap());
                                     ctx.local.cdc_input_buffer.clear();
-                                    
+
                                     match cdc_reply {
                                         Some(message) => {
                                             cdc.write(&webserial::finish_message(message)).unwrap();
