@@ -7,6 +7,7 @@ use panic_halt as _;
 
 mod engine;
 mod injection;
+mod memory;
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
@@ -21,13 +22,13 @@ mod app {
 
     use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
-        gpio::{Edge, Output, PushPull,Input},
+        gpio::{Edge, Input, Output, PushPull},
         otg_fs,
         otg_fs::UsbBusType,
         pac::{TIM2, TIM3},
         prelude::*,
-        timer::{self, Event},
         spi::*,
+        timer::{self, Event},
     };
     use usb_device::bus::UsbBusAllocator;
     use usb_device::device::UsbDevice;
@@ -36,7 +37,6 @@ mod app {
 
     use crate::app::gpio::init_gpio;
     use embedded_hal::spi::{Mode, Phase, Polarity};
-
 
     #[shared]
     struct Shared {
@@ -146,16 +146,27 @@ mod app {
         let _efi_status = get_default_engine_status();
 
         // SPI:
-        let pb15 = gpiob.pb15.into_alternate().internal_pull_up(true);
-        let pb13 = gpiob.pb13.into_alternate();
 
         let mode = Mode {
             polarity: Polarity::IdleLow,
             phase: Phase::CaptureOnFirstTransition,
         };
 
-        let spi2 = Spi::new(dp.SPI2, (pb13, NoMiso {}, pb15), mode, 3.MHz(), &clocks);
-    
+        let spi2 = Spi::new(
+            dp.SPI2,
+            (
+                gpio_config.spi_sck,
+                gpio_config.spi_miso,
+                gpio_config.spi_mosi,
+            ),
+            mode,
+            3.MHz(),
+            &clocks,
+        );
+
+        let mut flash = w25q::series25::Flash::init(spi2, gpio_config.memory_cs).unwrap();
+        let id = flash.read_jedec_id().unwrap();
+        hprintln!("FLASH: {:?}", id);
 
         (
             // Initialization of shared resources

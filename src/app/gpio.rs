@@ -55,7 +55,11 @@ pub struct GpioMapping {
     pub aux_cs_2: gpio::PE15<Output<PushPull>>,
 
     pub usb_dp: gpio::PA11<Alternate<10, PushPull>>,
-    pub usb_dm: gpio::PA12<Alternate<10, PushPull>>
+    pub usb_dm: gpio::PA12<Alternate<10, PushPull>>,
+
+    pub spi_sck: gpio::PB10<Alternate<5>>,
+    pub spi_miso : gpio::PB14<Alternate<5>>,
+    pub spi_mosi : gpio:: PB15<Alternate<5,PushPull>>,
 }
 
 pub fn init_gpio(
@@ -123,6 +127,11 @@ pub fn init_gpio(
         // USB
         usb_dp: gpioa.pa11.into_alternate(),
         usb_dm: gpioa.pa12.into_alternate(),
+
+        // SPI
+        spi_sck: gpiob.pb10.into_alternate(),
+        spi_miso: gpiob.pb14.into_alternate(),
+        spi_mosi: gpiob.pb15.into_alternate().internal_pull_up(true),
     };
 
     // set default state on I/O
