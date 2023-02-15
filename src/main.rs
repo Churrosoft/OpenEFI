@@ -177,6 +177,7 @@ mod app {
 
         let mut td_test = TableData {
             data: None,
+            crc: 0,
             address: 0x5,
             max_x: 17,
             max_y: 17,
@@ -186,12 +187,13 @@ mod app {
                    core::prelude::v1::Some(table_data_test.read_from_memory(flash, &flash_info));
         */
         //let mut vv_32: Vec<Vec<i32>> = Vec::with_capacity(10);
-        
-        td_test.data = td_test.read_from_memory(&mut flash, &flash_info);
+
+        td_test.data = td_test.read_from_memory(&mut flash, &flash_info, &mut crc);
 
         hprintln!("FLASH: {:?}", id);
+
         // let mut vv_32 = ArrayVec::<ArrayVec<i32, 17>, 17>::new();
-        
+
         let mut vv_32 = [[0i32; 17]; 17];
 
         vv_32[0][0] = 4;
@@ -205,12 +207,19 @@ mod app {
         hprintln!("FLASH: Block Count {:?}", flash_info.block_count);
         hprintln!("FLASH: Page Count {:?}", flash_info.page_count);
 
-          hprintln!(
+        hprintln!(
             "SPI READ {:?} {:?} {:?}",
             td_test.data.clone().unwrap()[0][0],
             td_test.data.clone().unwrap()[1][1],
             td_test.data.clone().unwrap()[2][2]
         );
+
+        let mut ldata = td_test.data.unwrap();
+        ldata[2][2] = 12345;
+
+        td_test.data = Some(ldata);
+
+  /*       td_test.write_to_memory(&mut flash, &flash_info, &mut crc); */
 
         (
             // Initialization of shared resources
