@@ -16,12 +16,17 @@ mod app {
     pub mod webserial;
 
     use crate::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
-    use crate::engine::efi_status::{get_default_engine_status, EngineStatus};
+    use crate::engine::engine_status::{get_default_engine_status, EngineStatus};
     use arrayvec::ArrayVec;
     use cortex_m_semihosting::hprintln;
 
+    use crate::app::gpio::init_gpio;
+    use crate::memory::tables::TableData;
+    use embedded_hal::spi::{Mode, Phase, Polarity};
+    use stm32f4xx_hal::crc32::Crc32;
     use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
+        crc32,
         gpio::{Edge, Input, Output, PushPull},
         otg_fs,
         otg_fs::UsbBusType,
@@ -34,10 +39,7 @@ mod app {
     use usb_device::device::UsbDevice;
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
-
-    use crate::app::gpio::init_gpio;
-    use embedded_hal::spi::{Mode, Phase, Polarity};
-
+    use w25q::series25::FlashInfo;
     #[shared]
     struct Shared {
         timer: timer::CounterMs<TIM2>,
@@ -46,10 +48,11 @@ mod app {
         usb_web: WebUsb<UsbBusType>,
         led2: stm32f4xx_hal::gpio::PC14<Output<PushPull>>,
         led3: stm32f4xx_hal::gpio::PC15<Output<PushPull>>,
-
+        crc: Crc32,
         // EFI Related:
         efi_cfg: EngineConfig,
         efi_status: EngineStatus,
+        flash_info: FlashInfo,
     }
     #[local]
     struct Local {
@@ -164,9 +167,50 @@ mod app {
             &clocks,
         );
 
+        // CRC32:
+        let mut crc = crc32::Crc32::new(dp.CRC);
+
         let mut flash = w25q::series25::Flash::init(spi2, gpio_config.memory_cs).unwrap();
         let id = flash.read_jedec_id().unwrap();
+
+        let flash_info = flash.get_device_info().unwrap();
+
+        let mut td_test = TableData {
+            data: None,
+            address: 0x5,
+            max_x: 17,
+            max_y: 17,
+        };
+
+        /*  table_data_test.data =
+                   core::prelude::v1::Some(table_data_test.read_from_memory(flash, &flash_info));
+        */
+        //let mut vv_32: Vec<Vec<i32>> = Vec::with_capacity(10);
+        
+        td_test.data = td_test.read_from_memory(&mut flash, &flash_info);
+
         hprintln!("FLASH: {:?}", id);
+        // let mut vv_32 = ArrayVec::<ArrayVec<i32, 17>, 17>::new();
+        
+        let mut vv_32 = [[0i32; 17]; 17];
+
+        vv_32[0][0] = 4;
+        hprintln!("{:?}", vv_32[0][0]);
+        //::read_from_memory(flash,flash_info,0)
+        /*   let test = w25q::BlockDevice */
+        //let bd = w25q::BlockDevice{SPI:spi2, CS: gpio_config.memory_cs};
+
+        hprintln!("FLASH: {:?}", id);
+        hprintln!("FLASH: Size {:?}", flash_info.capacity_kb);
+        hprintln!("FLASH: Block Count {:?}", flash_info.block_count);
+        hprintln!("FLASH: Page Count {:?}", flash_info.page_count);
+
+          hprintln!(
+            "SPI READ {:?} {:?} {:?}",
+            td_test.data.clone().unwrap()[0][0],
+            td_test.data.clone().unwrap()[1][1],
+            td_test.data.clone().unwrap()[2][2]
+        );
 
         (
             // Initialization of shared resources
@@ -177,9 +221,11 @@ mod app {
                 usb_web,
                 led2: gpio_config.led_1,
                 led3: gpio_config.led_2,
+                crc,
                 // EFI Related
                 efi_cfg: _efi_cfg,
                 efi_status: _efi_status,
+                flash_info,
             },
             // Initialization of task local resources
             Local {
@@ -212,7 +258,7 @@ mod app {
             .lock(|tim| tim.clear_interrupt(Event::Update));
 
         ctx.local.led.toggle();
-        ctx.shared.led2.lock(|l| l.toggle());
+        ctx.shared.led2.lock(|l| l.set_low());
 
         ctx.shared.timer3.lock(|tim| {
             tim.start(50000.micros()).unwrap();
@@ -229,13 +275,14 @@ mod app {
             tim.cancel().unwrap();
         });
 
-        ctx.shared.led2.lock(|l| l.toggle());
+        ctx.shared.led2.lock(|l| l.set_high());
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
-    #[task(binds = EXTI9_5, local = [ckp], shared=[led3])]
+    #[task(binds = EXTI9_5, local = [ckp], shared=[led3,efi_status,flash_info])]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
-        ctx.shared.led3.lock(|f| f.toggle());
+        // ctx.shared.led3.lock(|f| f.toggle());
+        ctx.shared.efi_status.lock(|es| es.cycle_tick += 1);
         // Obtain access to Button Peripheral and Clear Interrupt Pending Flag
         ctx.local.ckp.clear_interrupt_pending_bit();
     }

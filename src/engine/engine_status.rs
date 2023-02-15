@@ -27,6 +27,7 @@ pub struct InjectionInfo {
 
 pub struct EngineStatus {
     pub injection: InjectionInfo,
+    pub cycle_tick: u32,
     pub cycle_duration: f32,
     pub cycle_status: __rpm_status,
 }
@@ -43,6 +44,7 @@ pub fn get_default_engine_status() -> EngineStatus {
             fuel_load: 0.0,
             injection_status: InjectionStatus::FuelCutoff,
         },
+        cycle_tick: 0,
         cycle_duration: 0.0,
         cycle_status: __rpm_status::STOPPED,
     };

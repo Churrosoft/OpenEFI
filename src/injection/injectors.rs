@@ -1,4 +1,4 @@
-use crate::engine::{efi_cfg::InjectorConfig, efi_status::InjectionInfo};
+use crate::engine::{efi_cfg::InjectorConfig, engine_status::InjectionInfo};
 
 pub fn get_base_time(cfg: InjectorConfig) -> f32 {
     return cfg.on_time - cfg.on_time;
