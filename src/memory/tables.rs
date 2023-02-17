@@ -106,7 +106,7 @@ impl TableData {
         {
             let write_address = fi.sector_to_page(&self.address) * (fi.page_size as u32);
 
-            flash.erase_block(write_address).unwrap();
+            flash.erase_sectors(write_address,1).unwrap();
 
             flash.write_bytes(write_address, &mut buf).unwrap();
         }
