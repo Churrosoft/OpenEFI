@@ -1,10 +1,12 @@
 mod handle_core;
 
+use rtic::Mutex;
 use arrayvec::ArrayVec;
 use cortex_m_semihosting::hprintln;
 use usb_device::bus::{UsbBus, UsbBusAllocator};
 use usb_device::device::{UsbDevice, UsbDeviceBuilder, UsbVidPid};
-use crate::app::util;
+use crate::app;
+use crate::app::{logging, util};
 
 
 #[repr(C, packed)]
@@ -15,6 +17,18 @@ pub struct SerialMessage {
     pub status: u8,
     pub payload: [u8; 123],
     pub crc: u16
+}
+
+#[derive(Debug)]
+#[repr(u8)]
+pub enum SerialStatus {
+    Error = 0b00000000,
+    Ok = 0b10000000,
+}
+
+#[repr(u8)]
+pub enum SerialError {
+    UnknownCmd   = 0x7f,
 }
 
 pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B> where B: UsbBus {
@@ -29,7 +43,7 @@ pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B> where B: UsbB
         .build()
 }
 
-pub fn process_command(buf: [u8; 128]) -> Option<SerialMessage> {
+pub fn process_command(buf: [u8; 128]) {
     let mut payload = [0u8; 123];
     payload.copy_from_slice(&buf[3..126]);
 
@@ -43,16 +57,18 @@ pub fn process_command(buf: [u8; 128]) -> Option<SerialMessage> {
         crc,
     };
 
-    hprintln!("CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - CRC:  {}", serial_cmd.protocol, serial_cmd.command, serial_cmd.status, crc);
+    logging::host::debug!("CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - CRC:  {}", serial_cmd.protocol, serial_cmd.command, serial_cmd.status, crc);
 
     if serial_cmd.protocol != 1 {
-        return None;
+        return;
     }
 
     match serial_cmd.command & 0xF0 {
         0x00 => handle_core::handler(serial_cmd),
-        _ => None  // TODO: Error message
-    }
+        _ => {
+            app::send_message::spawn(SerialStatus::Error, SerialError::UnknownCmd as u8, serial_cmd).unwrap();
+        }
+    };
 }
 
 pub fn finish_message(message: SerialMessage) -> [u8; 128] {
@@ -73,4 +89,13 @@ pub fn finish_message(message: SerialMessage) -> [u8; 128] {
     message_buf.try_extend_from_slice(&crc.to_be_bytes()).unwrap();
 
     message_buf.take().into_inner().unwrap()
+}
+
+// Send a message via web serial.
+pub(crate) fn send_message(mut ctx: app::send_message::Context, status: SerialStatus, code: u8, mut message: SerialMessage) {
+    message.status = status as u8 | code;
+    
+    ctx.shared.usb_cdc.lock(|cdc| {
+        cdc.write(&finish_message(message)).unwrap();
+    });
 }

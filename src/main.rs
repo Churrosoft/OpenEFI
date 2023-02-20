@@ -14,6 +14,7 @@ mod app {
     pub mod gpio;
     pub mod util;
     pub mod webserial;
+    pub mod logging;
 
     use crate::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
     use crate::engine::engine_status::{get_default_engine_status, EngineStatus};
@@ -40,6 +41,9 @@ mod app {
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
     use w25q::series25::FlashInfo;
+    
+    use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
+
     #[shared]
     struct Shared {
         timer: timer::CounterMs<TIM2>,
@@ -65,9 +69,12 @@ mod app {
     }
 
     #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
-    fn init(ctx: init::Context) -> (Shared, Local, init::Monotonics) {
-        hprintln!("Hello :)");
+    fn init(mut ctx: init::Context) -> (Shared, Local, init::Monotonics) {
         let mut dp = ctx.device;
+        
+        ctx.core.DWT.enable_cycle_counter(); // TODO: Disable this in release builds
+        logging::host::debug!("Hello :)");
+
         // Configure the LED pin as a push pull ouput and obtain handle
         // On the Nucleo FR401 theres an on-board LED connected to pin PA5
         // 1) Promote the GPIOA PAC struct
@@ -334,25 +341,12 @@ mod app {
 
                     match cdc.read(&mut buf[..]) {
                         Ok(count) => {
-                            hprintln!("CDC Read {} bytes", count);
-
                             // Push bytes into the buffer
                             for i in 0..count {
                                 ctx.local.cdc_input_buffer.push(buf[i]);
                                 if ctx.local.cdc_input_buffer.is_full() {
-                                    hprintln!("Buffer full, processing cmd.");
-
-                                    let cdc_reply = webserial::process_command(
-                                        ctx.local.cdc_input_buffer.take().into_inner().unwrap(),
-                                    );
+                                    webserial::process_command(ctx.local.cdc_input_buffer.take().into_inner().unwrap());
                                     ctx.local.cdc_input_buffer.clear();
-
-                                    match cdc_reply {
-                                        Some(message) => {
-                                            cdc.write(&webserial::finish_message(message)).unwrap();
-                                        }
-                                        _ => {}
-                                    }
                                 }
                             }
                         }
@@ -361,5 +355,12 @@ mod app {
                 }
             });
         });
+    }
+    
+    // Externally defined tasks
+    extern "Rust" {
+        // Low-priority task to send back replies via the serial port.
+        #[task(shared = [usb_cdc], priority = 2)]
+        fn send_message(ctx: send_message::Context, status: SerialStatus, code: u8, mut message: SerialMessage);
     }
 }
