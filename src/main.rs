@@ -23,13 +23,13 @@ mod app {
     use crate::app::gpio::init_gpio;
     use crate::memory::tables::TableData;
     use embedded_hal::spi::{Mode, Phase, Polarity};
-    use stm32f4xx_hal::crc32::Crc32;
-    use stm32f4xx_hal::otg_fs::USB;
     use stm32f4xx_hal::{
         crc32,
+        crc32::Crc32,
         gpio::{Edge, Input, Output, PushPull},
         otg_fs,
         otg_fs::UsbBusType,
+        otg_fs::USB,
         pac::{TIM2, TIM3},
         prelude::*,
         spi::*,
@@ -56,7 +56,6 @@ mod app {
     }
     #[local]
     struct Local {
-        delayval: u32,
         led: stm32f4xx_hal::gpio::PC13<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
         cdc_input_buffer: ArrayVec<u8, 128>,
@@ -80,11 +79,8 @@ mod app {
 
         let gpio_config = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
 
-        // CKP/CMP
+        // configure CKP/CMP Pin for Interrupts
         let mut ckp = gpio_config.ckp;
-
-        // Configure Button Pin for Interrupts
-        // 1) Promote SYSCFG structure to HAL to be able to configure interrupts
         let mut syscfg = dp.SYSCFG.constrain();
 
         ckp.make_interrupt_source(&mut syscfg);
@@ -92,10 +88,7 @@ mod app {
         ckp.enable_interrupt(&mut dp.EXTI);
 
         // Configure and obtain handle for delay abstraction
-        // 1) Promote RCC structure to HAL to be able to configure clocks
         let rcc = dp.RCC.constrain();
-        // 2) Configure the system clocks
-        // 8 MHz must be used for HSE on the Nucleo-F401RE board according to manual
         let clocks = rcc
             .cfgr
             .use_hse(25.MHz())
@@ -103,10 +96,6 @@ mod app {
             .require_pll48clk()
             .freeze();
 
-        /*  let clocks = rcc.cfgr.use_hse(8.MHz()).freeze();
-         */
-        // 3) Create delay handle
-        //let mut delay = dp.TIM1.delay_ms(&clocks);
         let mut timer: timer::CounterMs<TIM2> = dp.TIM2.counter_ms(&clocks);
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
 
@@ -279,7 +268,6 @@ mod app {
             Local {
                 ckp,
                 led: gpio_config.led_0,
-                delayval: 2000_u32,
                 usb_dev,
                 cdc_input_buffer: cdc_buff,
             },

@@ -20,6 +20,7 @@ pub struct InjectionInfo {
     pub injection_bank_2_time: f32,
     pub air_flow: f32,
     pub base_air: f32,
+    pub base_fuel: f32,
     pub fuel_flow_rate: f32,
     pub fuel_load: f32,
     pub injection_status: InjectionStatus,
@@ -30,6 +31,7 @@ pub struct EngineStatus {
     pub cycle_tick: u32,
     pub cycle_duration: f32,
     pub cycle_status: __rpm_status,
+    pub rpm: i32,
 }
 
 pub fn get_default_engine_status() -> EngineStatus {
@@ -40,6 +42,7 @@ pub fn get_default_engine_status() -> EngineStatus {
             injection_bank_2_time: 0.0,
             air_flow: 0.0,
             base_air: 0.0,
+            base_fuel: 0.0,
             fuel_flow_rate: 0.0,
             fuel_load: 0.0,
             injection_status: InjectionStatus::FuelCutoff,
@@ -47,6 +50,7 @@ pub fn get_default_engine_status() -> EngineStatus {
         cycle_tick: 0,
         cycle_duration: 0.0,
         cycle_status: __rpm_status::STOPPED,
+        rpm: 0,
     };
     return status;
 }

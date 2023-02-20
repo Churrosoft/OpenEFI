@@ -19,7 +19,7 @@ pub fn get_wall_wetting_correction() -> f32 {
     1.0
 }
 
-pub fn fuel_mass_to_time(status: InjectionInfo, fuel: f32) -> f32 {
+pub fn fuel_mass_to_time(status: &InjectionInfo, fuel: f32) -> f32 {
     // TODO: revisar modo de inyeccion y cilindros
     // monopunto al hacer 4 inyecciones por ciclo seria lo mismo que full secuencial
     // perooo en semi-secuencial al haber dos inyectores, y la mitad de injecciones por ciclo
