@@ -7,6 +7,7 @@ pub struct InjectorConfig {
     pub off_time: f32,
 }
 
+#[allow(non_snake_case)]
 pub struct InjectionConfig {
     pub target_lambda: f32,
     pub target_stoich: f32,

@@ -13,7 +13,7 @@ pub enum InjectionStatus {
     FuelAcc,
 }
 
-// #[allow(non_camel_case_types)]
+#[allow(non_snake_case)]
 pub struct InjectionInfo {
     pub targetAFR: f32,
     pub injection_bank_1_time: f32,

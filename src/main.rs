@@ -12,17 +12,20 @@ mod memory;
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
     pub mod gpio;
+    pub mod logging;
     pub mod util;
     pub mod webserial;
-    pub mod logging;
 
     use crate::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
     use crate::engine::engine_status::{get_default_engine_status, EngineStatus};
+    use crate::injection::injection_setup;
     use arrayvec::ArrayVec;
     use cortex_m_semihosting::hprintln;
 
     use crate::app::gpio::init_gpio;
+    use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
     use crate::memory::tables::TableData;
+    use crate::memory::tables::Tables;
     use embedded_hal::spi::{Mode, Phase, Polarity};
     use stm32f4xx_hal::{
         crc32,
@@ -41,8 +44,6 @@ mod app {
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
     use w25q::series25::FlashInfo;
-    
-    use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
 
     #[shared]
     struct Shared {
@@ -57,6 +58,7 @@ mod app {
         efi_cfg: EngineConfig,
         efi_status: EngineStatus,
         flash_info: FlashInfo,
+        tables: Tables,
     }
     #[local]
     struct Local {
@@ -71,7 +73,7 @@ mod app {
     #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
     fn init(mut ctx: init::Context) -> (Shared, Local, init::Monotonics) {
         let mut dp = ctx.device;
-        
+
         ctx.core.DWT.enable_cycle_counter(); // TODO: Disable this in release builds
         logging::host::debug!("Hello :)");
 
@@ -171,44 +173,10 @@ mod app {
 
         let flash_info = flash.get_device_info().unwrap();
 
-        let mut td_test = TableData {
-            data: None,
-            crc: 0,
-            address: 0x5,
-            max_x: 17,
-            max_y: 17,
-        };
-
-        /*  table_data_test.data =
-                   core::prelude::v1::Some(table_data_test.read_from_memory(flash, &flash_info));
-        */
-        //let mut vv_32: Vec<Vec<i32>> = Vec::with_capacity(10);
-
-        td_test.data = td_test.read_from_memory(&mut flash, &flash_info, &mut crc);
-
-        hprintln!("FLASH: {:?}", id);
-
-        // let mut vv_32 = ArrayVec::<ArrayVec<i32, 17>, 17>::new();
-
-        let mut vv_32 = [[0i32; 17]; 17];
-
-        vv_32[0][0] = 4;
-        hprintln!("{:?}", vv_32[0][0]);
-        //::read_from_memory(flash,flash_info,0)
-        /*   let test = w25q::BlockDevice */
-        //let bd = w25q::BlockDevice{SPI:spi2, CS: gpio_config.memory_cs};
-
         hprintln!("FLASH: {:?}", id);
         hprintln!("FLASH: Size {:?}", flash_info.capacity_kb);
         hprintln!("FLASH: Block Count {:?}", flash_info.block_count);
         hprintln!("FLASH: Page Count {:?}", flash_info.page_count);
-
-        hprintln!(
-            "SPI READ {:?} {:?} {:?}",
-            td_test.data.clone().unwrap()[0][0],
-            td_test.data.clone().unwrap()[1][1],
-            td_test.data.clone().unwrap()[2][2]
-        );
 
         let ldata:[[i32; 17]; 17] = [
             [0, 600, 750, 1100, 1400, 1700, 2000, 2300, 2600, 2900, 3200, 3400, 3700, 4200, 4400, 4700, 5000],
@@ -230,15 +198,6 @@ mod app {
             [15, 35, 35, 35, 35, 35, 36, 37, 38, 38, 38, 38, 38, 38, 38, 38, 37],
         ];
 
-        td_test.data = Some(ldata);
-        // td_test.write_to_memory(&mut flash, &flash_info, &mut crc);
-        
-        // td_test.address = 0x3;
-
-      //  td_test.write_to_memory(&mut flash, &flash_info, &mut crc);
-
-
-        hprintln!("ROW> {:?}", td_test.read_from_memory(&mut flash, &flash_info, &mut crc));
         hprintln!(
             "Find 2 in vec1: {:?}",
             ldata[1].into_iter().position(|x| x <= 307200)
@@ -252,9 +211,12 @@ mod app {
             max_y: 17,
         };
 
-
         td_test2.data = td_test2.read_from_memory(&mut flash, &flash_info, &mut crc);
-        hprintln!("ROW 2 {:?}", td_test2.data.unwrap());
+
+        let mut table = Tables { tps_rpm_ve: None };
+
+        // EFI Setup:
+        injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
         (
             // Initialization of shared resources
@@ -270,6 +232,7 @@ mod app {
                 efi_cfg: _efi_cfg,
                 efi_status: _efi_status,
                 flash_info,
+                tables: table,
             },
             // Initialization of task local resources
             Local {
@@ -308,7 +271,7 @@ mod app {
         });
     }
 
-    #[task(binds = TIM3, local=[], shared=[timer3,led2])]
+    #[task(binds = TIM3, local=[], shared=[timer3,led2, tables])]
     fn timer3_exp(mut ctx: timer3_exp::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
@@ -317,6 +280,8 @@ mod app {
             tim.clear_interrupt(Event::Update);
             tim.cancel().unwrap();
         });
+
+/*         ctx.shared.tables.lock(|t| t.tps_rpm_ve = None); */
 
         ctx.shared.led2.lock(|l| l.set_high());
     }
@@ -345,7 +310,9 @@ mod app {
                             for i in 0..count {
                                 ctx.local.cdc_input_buffer.push(buf[i]);
                                 if ctx.local.cdc_input_buffer.is_full() {
-                                    webserial::process_command(ctx.local.cdc_input_buffer.take().into_inner().unwrap());
+                                    webserial::process_command(
+                                        ctx.local.cdc_input_buffer.take().into_inner().unwrap(),
+                                    );
                                     ctx.local.cdc_input_buffer.clear();
                                 }
                             }
@@ -356,11 +323,16 @@ mod app {
             });
         });
     }
-    
+
     // Externally defined tasks
     extern "Rust" {
         // Low-priority task to send back replies via the serial port.
         #[task(shared = [usb_cdc], priority = 2)]
-        fn send_message(ctx: send_message::Context, status: SerialStatus, code: u8, mut message: SerialMessage);
+        fn send_message(
+            ctx: send_message::Context,
+            status: SerialStatus,
+            code: u8,
+            mut message: SerialMessage,
+        );
     }
 }

@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use cortex_m_semihosting::hprintln;
 use stm32f4xx_hal::crc32::Crc32;
 use stm32f4xx_hal::gpio::{Alternate, Output, Pin};
@@ -7,6 +9,10 @@ use w25q::series25::{Flash, FlashInfo};
 
 type DataT = [[i32; 17]; 17];
 
+pub struct Tables {
+    pub tps_rpm_ve: Option<DataT>,
+}
+
 pub struct TableData {
     pub data: Option<DataT>,
     pub crc: u32,
@@ -15,7 +21,7 @@ pub struct TableData {
     pub max_y: u16,
 }
 
-type FlashT = Flash<
+pub type FlashT = Flash<
     Spi<
         SPI2,
         (
@@ -106,7 +112,7 @@ impl TableData {
         {
             let write_address = fi.sector_to_page(&self.address) * (fi.page_size as u32);
 
-            flash.erase_sectors(write_address,1).unwrap();
+            flash.erase_sectors(write_address, 1).unwrap();
 
             flash.write_bytes(write_address, &mut buf).unwrap();
         }
