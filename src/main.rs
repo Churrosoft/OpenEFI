@@ -5,9 +5,7 @@
 
 use panic_halt as _;
 
-mod engine;
-mod injection;
-mod memory;
+
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
@@ -15,17 +13,20 @@ mod app {
     pub mod logging;
     pub mod util;
     pub mod webserial;
+    pub mod engine;
+    pub mod injection;
+    pub mod memory;
 
-    use crate::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
-    use crate::engine::engine_status::{get_default_engine_status, EngineStatus};
-    use crate::injection::injection_setup;
+    use crate::app::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
+    use crate::app::engine::engine_status::{get_default_engine_status, EngineStatus};
+    use crate::app::injection::injection_setup;
     use arrayvec::ArrayVec;
     use cortex_m_semihosting::hprintln;
-
+    use crate::app::injection::calculate_time_isr;
     use crate::app::gpio::init_gpio;
     use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
-    use crate::memory::tables::TableData;
-    use crate::memory::tables::Tables;
+    use crate::app::memory::tables::TableData;
+    use crate::app::memory::tables::Tables;
     use embedded_hal::spi::{Mode, Phase, Polarity};
     use stm32f4xx_hal::{
         crc32,
@@ -143,8 +144,8 @@ mod app {
         let cdc_buff = ArrayVec::<u8, 128>::new();
 
         // EFI Related:
-        let _efi_cfg = get_default_efi_cfg();
-        let _efi_status = get_default_engine_status();
+        let mut _efi_cfg = get_default_efi_cfg();
+        let mut _efi_status = get_default_engine_status();
 
         // SPI:
 
@@ -217,6 +218,7 @@ mod app {
 
         // EFI Setup:
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
+        calculate_time_isr(&mut _efi_status, &_efi_cfg);
 
         (
             // Initialization of shared resources

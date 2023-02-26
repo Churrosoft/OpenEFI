@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use crate::engine::{
+use crate::app::engine::{
     efi_cfg::EngineConfig, engine_status::EngineStatus, get_engine_cycle_duration,
 };
 
@@ -15,7 +15,7 @@ pub fn calculate_injection_fuel(es: &mut EngineStatus, ecfg: &EngineConfig) -> f
         return 0.0;
     }
     // TODO: MOVE TO CONFIG
-    let engine_cilinders = 4;
+    let engine_cilinders:u8 = 4;
 
     let ve = get_ve();
     let air_mass = get_air_mass(ve);
@@ -46,8 +46,9 @@ pub fn calculate_correction_time() -> f32 {
 }
 
 pub fn get_air_mass(ve: f32) -> f32 {
-    let engine_displacement = 1596;
-    let engine_cilinders = 4;
+    let engine_displacement:u32 = 1596;
+    let engine_cilinders:u8 = 4;
+
     let full_cycle: f32 =
         (ve / 10000.0) * (engine_displacement as f32 * STD_AIR_PRES / (AIR_R * STD_AIR_TEMP));
 

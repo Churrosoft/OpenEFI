@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use crate::engine::{efi_cfg::InjectorConfig, engine_status::InjectionInfo};
+use crate::app::engine::{efi_cfg::InjectorConfig, engine_status::InjectionInfo};
 
 pub fn get_base_time(cfg: &InjectorConfig) -> f32 {
     return cfg.on_time - cfg.on_time;
@@ -27,7 +27,7 @@ pub fn fuel_mass_to_time(status: &InjectionInfo, fuel: f32) -> f32 {
     // monopunto al hacer 4 inyecciones por ciclo seria lo mismo que full secuencial
     // perooo en semi-secuencial al haber dos inyectores, y la mitad de injecciones por ciclo
     // tendria que ser 0.5
-    return (fuel / status.fuel_flow_rate * 1000.0) / 2.0;
+    return (fuel / status.fuel_flow_rate * 1000.0f32) / 2.0f32;
 }
 
 pub fn set_injector_flow(mut status: InjectionInfo, config: InjectorConfig) {

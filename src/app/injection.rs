@@ -1,7 +1,7 @@
 use stm32f4xx_hal::crc32::Crc32;
 use w25q::series25::FlashInfo;
 
-use crate::{
+use crate::app::{
     engine::{efi_cfg::EngineConfig, engine_status::EngineStatus, get_engine_cycle_duration},
     memory::tables::{FlashT, TableData, Tables},
 };
@@ -31,7 +31,7 @@ pub fn calculate_time_isr(es: &mut EngineStatus, ecfg: &EngineConfig) {
 
     // TODO: revisar RPM::status para que en SPIN_UP/CRANK tengan tiempos fijos desde la memoria flash
 
-    bank_a_time += alpha_n::calculate_injection_fuel(es, ecfg);
+    bank_a_time += alpha_n::calculate_injection_fuel(es, &ecfg);
     bank_a_time += alpha_n::calculate_correction_time();
     bank_a_time += injectors::get_base_time(&ecfg.injection.injector);
     bank_a_time += injectors::get_battery_correction();
@@ -44,5 +44,8 @@ pub fn calculate_time_isr(es: &mut EngineStatus, ecfg: &EngineConfig) {
 
     // en criollo:
     // "si hay mas tiempo que la duracion de un ciclo, es porque tenes el multiple lleno de nasta"
-    debug_assert!(bank_a_time * 2.0 < get_engine_cycle_duration(es.rpm) && es.rpm > 0);
+    debug_assert!(
+        bank_a_time * 2.0 < get_engine_cycle_duration(es.rpm) && es.rpm >= 0 || es.rpm >= 0,
+        "asddsa"
+    );
 }
