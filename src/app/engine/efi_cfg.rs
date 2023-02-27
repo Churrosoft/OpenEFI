@@ -1,3 +1,6 @@
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct InjectorConfig {
     pub flow_cc_min: f32,
     pub injector_count: u8,
@@ -8,6 +11,7 @@ pub struct InjectorConfig {
 }
 
 #[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct InjectionConfig {
     pub target_lambda: f32,
     pub target_stoich: f32,
@@ -16,6 +20,7 @@ pub struct InjectionConfig {
     pub injector: InjectorConfig,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct EngineConfig {
     pub ready: bool,
     pub injection: InjectionConfig,

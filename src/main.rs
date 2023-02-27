@@ -4,29 +4,28 @@
 #![no_std]
 
 use panic_halt as _;
-
-
+use serde::{Deserialize, Serialize};
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
+    pub mod engine;
     pub mod gpio;
+    pub mod injection;
     pub mod logging;
+    pub mod memory;
     pub mod util;
     pub mod webserial;
-    pub mod engine;
-    pub mod injection;
-    pub mod memory;
 
     use crate::app::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
     use crate::app::engine::engine_status::{get_default_engine_status, EngineStatus};
-    use crate::app::injection::injection_setup;
-    use arrayvec::ArrayVec;
-    use cortex_m_semihosting::hprintln;
-    use crate::app::injection::calculate_time_isr;
     use crate::app::gpio::init_gpio;
-    use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
+    use crate::app::injection::calculate_time_isr;
+    use crate::app::injection::injection_setup;
     use crate::app::memory::tables::TableData;
     use crate::app::memory::tables::Tables;
+    use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
+    use arrayvec::ArrayVec;
+    use cortex_m_semihosting::hprintln;
     use embedded_hal::spi::{Mode, Phase, Polarity};
     use stm32f4xx_hal::{
         crc32,
@@ -54,6 +53,8 @@ mod app {
         usb_web: WebUsb<UsbBusType>,
         led2: stm32f4xx_hal::gpio::PC14<Output<PushPull>>,
         led3: stm32f4xx_hal::gpio::PC15<Output<PushPull>>,
+        string: serde_json_core::heapless::String<1000>,
+        str_lock: bool,
         crc: Crc32,
         // EFI Related:
         efi_cfg: EngineConfig,
@@ -179,24 +180,59 @@ mod app {
         hprintln!("FLASH: Block Count {:?}", flash_info.block_count);
         hprintln!("FLASH: Page Count {:?}", flash_info.page_count);
 
-        let ldata:[[i32; 17]; 17] = [
-            [0, 600, 750, 1100, 1400, 1700, 2000, 2300, 2600, 2900, 3200, 3400, 3700, 4200, 4400, 4700, 5000],
-            [100, 85, 88, 90, 92, 94, 96, 98, 100, 99, 99, 99, 99, 98, 97, 96, 94],
-            [95, 82, 85, 87, 89, 91, 93, 95, 96, 96, 96, 96, 96, 95, 94, 93, 91],
-            [90, 79, 82, 84, 86, 88, 89, 91, 92, 92, 92, 92, 92, 91, 90, 89, 88],
-            [85, 75, 78, 80, 82, 84, 86, 88, 89, 89, 89, 89, 89, 87, 87, 86, 84],
-            [75, 68, 72, 74, 76, 77, 79, 81, 82, 82, 82, 82, 81, 80, 80, 79, 78],
-            [70, 64, 68, 70, 72, 74, 76, 77, 78, 78, 78, 78, 78, 77, 76, 75, 74],
-            [65, 59, 64, 67, 69, 71, 72, 74, 75, 75, 75, 75, 74, 74, 73, 72, 71],
-            [60, 55, 61, 63, 66, 67, 69, 70, 71, 71, 71, 71, 71, 70, 70, 69, 67],
-            [55, 50, 57, 60, 62, 64, 65, 67, 68, 68, 68, 68, 67, 67, 66, 65, 64],
-            [50, 46, 52, 56, 59, 60, 62, 63, 64, 64, 64, 64, 64, 63, 63, 62, 61],
-            [45, 42, 48, 52, 55, 57, 58, 60, 60, 60, 60, 60, 60, 60, 59, 58, 57],
-            [40, 39, 44, 47, 51, 53, 55, 56, 57, 57, 57, 57, 57, 56, 56, 55, 54],
-            [35, 37, 40, 43, 47, 49, 51, 52, 53, 53, 53, 53, 53, 53, 52, 51, 51],
-            [30, 36, 37, 40, 43, 45, 47, 49, 50, 50, 50, 50, 50, 49, 49, 48, 47],
-            [25, 35, 36, 37, 39, 41, 43, 45, 46, 46, 46, 46, 46, 45, 45, 45, 44],
-            [15, 35, 35, 35, 35, 35, 36, 37, 38, 38, 38, 38, 38, 38, 38, 38, 37],
+        let ldata: [[i32; 17]; 17] = [
+            [
+                0, 600, 750, 1100, 1400, 1700, 2000, 2300, 2600, 2900, 3200, 3400, 3700, 4200,
+                4400, 4700, 5000,
+            ],
+            [
+                100, 85, 88, 90, 92, 94, 96, 98, 100, 99, 99, 99, 99, 98, 97, 96, 94,
+            ],
+            [
+                95, 82, 85, 87, 89, 91, 93, 95, 96, 96, 96, 96, 96, 95, 94, 93, 91,
+            ],
+            [
+                90, 79, 82, 84, 86, 88, 89, 91, 92, 92, 92, 92, 92, 91, 90, 89, 88,
+            ],
+            [
+                85, 75, 78, 80, 82, 84, 86, 88, 89, 89, 89, 89, 89, 87, 87, 86, 84,
+            ],
+            [
+                75, 68, 72, 74, 76, 77, 79, 81, 82, 82, 82, 82, 81, 80, 80, 79, 78,
+            ],
+            [
+                70, 64, 68, 70, 72, 74, 76, 77, 78, 78, 78, 78, 78, 77, 76, 75, 74,
+            ],
+            [
+                65, 59, 64, 67, 69, 71, 72, 74, 75, 75, 75, 75, 74, 74, 73, 72, 71,
+            ],
+            [
+                60, 55, 61, 63, 66, 67, 69, 70, 71, 71, 71, 71, 71, 70, 70, 69, 67,
+            ],
+            [
+                55, 50, 57, 60, 62, 64, 65, 67, 68, 68, 68, 68, 67, 67, 66, 65, 64,
+            ],
+            [
+                50, 46, 52, 56, 59, 60, 62, 63, 64, 64, 64, 64, 64, 63, 63, 62, 61,
+            ],
+            [
+                45, 42, 48, 52, 55, 57, 58, 60, 60, 60, 60, 60, 60, 60, 59, 58, 57,
+            ],
+            [
+                40, 39, 44, 47, 51, 53, 55, 56, 57, 57, 57, 57, 57, 56, 56, 55, 54,
+            ],
+            [
+                35, 37, 40, 43, 47, 49, 51, 52, 53, 53, 53, 53, 53, 53, 52, 51, 51,
+            ],
+            [
+                30, 36, 37, 40, 43, 45, 47, 49, 50, 50, 50, 50, 50, 49, 49, 48, 47,
+            ],
+            [
+                25, 35, 36, 37, 39, 41, 43, 45, 46, 46, 46, 46, 46, 45, 45, 45, 44,
+            ],
+            [
+                15, 35, 35, 35, 35, 35, 36, 37, 38, 38, 38, 38, 38, 38, 38, 38, 37,
+            ],
         ];
 
         hprintln!(
@@ -217,9 +253,20 @@ mod app {
         let mut table = Tables { tps_rpm_ve: None };
 
         // EFI Setup:
+
+        _efi_status.rpm = 1500;
+
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
         calculate_time_isr(&mut _efi_status, &_efi_cfg);
 
+        hprintln!("AF {:?}", _efi_status.injection.air_flow);
+
+        let mut serialized: serde_json_core::heapless::String<1000> =
+            serde_json_core::to_string(&_efi_cfg).unwrap();
+        
+        let mut str_lock = false;
+
+        hprintln!("FFFF {:?}", serialized);
         (
             // Initialization of shared resources
             Shared {
@@ -230,6 +277,8 @@ mod app {
                 led2: gpio_config.led_1,
                 led3: gpio_config.led_2,
                 crc,
+                string: serialized,
+                str_lock,
                 // EFI Related
                 efi_cfg: _efi_cfg,
                 efi_status: _efi_status,
@@ -283,7 +332,7 @@ mod app {
             tim.cancel().unwrap();
         });
 
-/*         ctx.shared.tables.lock(|t| t.tps_rpm_ve = None); */
+        /*         ctx.shared.tables.lock(|t| t.tps_rpm_ve = None); */
 
         ctx.shared.led2.lock(|l| l.set_high());
     }

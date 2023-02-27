@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Blinky",
+      "name": "Debug OpenEFI",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/open_efi",
       "svdFile": "${workspaceFolder}/STM32F407.svd",
@@ -18,17 +18,11 @@
 
       "BMPGDBSerialPort": "/dev/ttyACM0",
       "runToMain": true,
-
       "configFiles": ["debug.gdb"],
       "preLaunchTask": "Cargo build",
-      "preLaunchCommands": [
-        "set async-remote false",
-        "set remote-timeout 20"
-    ],
-    "preRestartCommands": [
-        "enable breakpoint",
-        "break main"
-    ]
+      "preLaunchCommands": ["set async-remote false", "set remote-timeout 20"],
+      "preRestartCommands": ["enable breakpoint", "break main"],
+      "postLaunchCommands": ["monitor arm semihosting enable"]
     }
   ]
 }
