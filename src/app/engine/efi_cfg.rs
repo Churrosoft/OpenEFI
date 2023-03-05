@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InjectorConfig {
@@ -30,17 +30,19 @@ pub fn get_default_efi_cfg() -> EngineConfig {
     let cfg = EngineConfig {
         ready: false,
         injection: InjectionConfig {
-            target_lambda: 0.0,
-            target_stoich: 0.0,
-            enable_alphaN: false,
+            target_lambda: 1.1,
+            target_stoich: 14.7,
+            enable_alphaN: true,
             enable_speedDensity: false,
             injector: InjectorConfig {
-                flow_cc_min: 0.0,
-                injector_count: 0,
-                fuel_pressure: 0.0,
-                fuel_density: 0.0,
-                on_time: 0.0,
-                off_time: 0.0,
+                flow_cc_min: 110.0,
+                injector_count: 4,
+                fuel_pressure: 1.0,
+                fuel_density: 0.726,
+                // promedio a "ojimetro" de:
+                // https://documents.holley.com/techlibrary_terminatorxv2injectordata.pdf
+                on_time: 750.0,
+                off_time: 250.0,
             },
         },
     };

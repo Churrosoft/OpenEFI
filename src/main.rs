@@ -4,7 +4,6 @@
 #![no_std]
 
 use panic_halt as _;
-use serde::{Deserialize, Serialize};
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
 mod app {
@@ -67,7 +66,7 @@ mod app {
         led: stm32f4xx_hal::gpio::PC13<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
         cdc_input_buffer: ArrayVec<u8, 128>,
-
+ 
         // EFI Related:
         ckp: stm32f4xx_hal::gpio::PC6<Input>,
     }
@@ -237,7 +236,7 @@ mod app {
 
         hprintln!(
             "Find 2 in vec1: {:?}",
-            ldata[1].into_iter().position(|x| x <= 307200)
+            ldata[0].into_iter().position(|x| x <= 307200)
         );
 
         let mut td_test2 = TableData {

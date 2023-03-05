@@ -16,7 +16,7 @@
       "interface": "swd",
       "device": "STM32F407",
 
-      "BMPGDBSerialPort": "/dev/ttyACM0",
+      "BMPGDBSerialPort": "/dev/ttyACM1",
       "runToMain": true,
       "configFiles": ["debug.gdb"],
       "preLaunchTask": "Cargo build",
