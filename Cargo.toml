@@ -34,6 +34,10 @@ arrayvec = { version = "0.7.2", default-features = false }
 numtoa = "0.2"
 usbd-serial = "0.1.1"
 usbd-webusb = "1.0.2"
+w25q = "0.2.1"
+embedded-hal = "0.2.7"
+serde = { version = "1.0.152", default-features = false, features = ["derive"] }
+serde-json-core = "0.5.0"
 
 [dependencies.stm32f4xx-hal]
 version = "0.14.0"

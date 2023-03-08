@@ -257,7 +257,7 @@ static inline uint32_t mockRPM() {
 
 //#define BREAKPOINT void();
 // framework-stm32cubef4/Drivers/CMSIS/Include/cmsis_gcc.h (972)
-#define BREAKPOINT __BKPT();
+#define BREAKPOINT __BKPT(); // __ASM volatile ("bkpt "#value)
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)                                                                                                             \
