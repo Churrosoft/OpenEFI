@@ -14,11 +14,9 @@ pub fn calculate_injection_fuel(es: &mut EngineStatus, ecfg: &EngineConfig) -> f
     if es.rpm == 0 {
         return 0.0;
     }
-    // TODO: MOVE TO CONFIG
-    let engine_cilinders:u8 = 4;
 
     let ve = get_ve();
-    let air_mass = get_air_mass(ve);
+    let air_mass = get_air_mass(ve, ecfg.engine.cilinder_count, ecfg.engine.displacement);
 
     let lambda = ecfg.injection.target_lambda;
     let stoich = ecfg.injection.target_stoich;
@@ -28,9 +26,10 @@ pub fn calculate_injection_fuel(es: &mut EngineStatus, ecfg: &EngineConfig) -> f
     let base_fuel = air_mass / afr;
 
     {
-        es.injection.air_flow =
-            (air_mass * engine_cilinders as f32 / get_engine_cycle_duration(es.rpm)) * 3600000.0
-                / 1000.0;
+        es.injection.air_flow = (air_mass * ecfg.engine.cilinder_count as f32
+            / get_engine_cycle_duration(es.rpm))
+            * 3600000.0
+            / 1000.0;
 
         es.injection.base_air = air_mass;
         es.injection.base_fuel = base_fuel;
@@ -45,10 +44,7 @@ pub fn calculate_correction_time() -> f32 {
     0.0
 }
 
-pub fn get_air_mass(ve: f32) -> f32 {
-    let engine_displacement:u32 = 1596;
-    let engine_cilinders:u8 = 4;
-
+pub fn get_air_mass(ve: f32, engine_cilinders: u8, engine_displacement: u32) -> f32 {
     let full_cycle: f32 =
         (ve / 10000.0) * (engine_displacement as f32 * STD_AIR_PRES / (AIR_R * STD_AIR_TEMP));
 

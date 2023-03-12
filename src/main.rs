@@ -5,7 +5,7 @@
 
 use panic_halt as _;
 
-#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5])]
+#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5,TIM7,TIM4])]
 mod app {
     pub mod engine;
     pub mod gpio;
@@ -66,7 +66,7 @@ mod app {
         led: stm32f4xx_hal::gpio::PC13<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
         cdc_input_buffer: ArrayVec<u8, 128>,
- 
+
         // EFI Related:
         ckp: stm32f4xx_hal::gpio::PC6<Input>,
     }
@@ -262,7 +262,7 @@ mod app {
 
         let mut serialized: serde_json_core::heapless::String<1000> =
             serde_json_core::to_string(&_efi_cfg).unwrap();
-        
+
         let mut str_lock = false;
 
         hprintln!("FFFF {:?}", serialized);
@@ -337,11 +337,26 @@ mod app {
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
-    #[task(binds = EXTI9_5, local = [ckp], shared=[led3,efi_status,flash_info])]
+    #[task(binds = EXTI9_5, local = [ckp], shared=[led3,efi_status,flash_info,efi_cfg,timer,timer3])]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
-        // ctx.shared.led3.lock(|f| f.toggle());
         ctx.shared.efi_status.lock(|es| es.cycle_tick += 1);
-        // Obtain access to Button Peripheral and Clear Interrupt Pending Flag
+
+        let efi_cfg = ctx.shared.efi_cfg;
+        let efi_status = ctx.shared.efi_status;
+        let led3 = ctx.shared.led3;
+
+        // calculo de RPM && led
+        (efi_cfg, efi_status, led3).lock(|efi_cfg, efi_status, led3| {
+            if efi_status.cycle_tick
+                >= efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
+            {
+                led3.toggle();
+                efi_status.cycle_tick = 0;
+            }
+            cpwm_callback::spawn().unwrap();
+        });
+
+        // Obtain access to the peripheral and Clear Interrupt Pending Flag
         ctx.local.ckp.clear_interrupt_pending_bit();
     }
 
@@ -384,5 +399,11 @@ mod app {
             code: u8,
             mut message: SerialMessage,
         );
+
+    }
+    // prioridad? si, task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
+    #[task(priority = 10,shared=[efi_status,flash_info,efi_cfg,timer,timer3])]
+    fn cpwm_callback(mut _ctx: cpwm_callback::Context) {
+        // TODO: cpwm if;
     }
 }
