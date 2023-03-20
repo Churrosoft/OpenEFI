@@ -9,6 +9,7 @@ use panic_halt as _;
 mod app {
     pub mod engine;
     pub mod gpio;
+    pub mod gpio_legacy;
     pub mod injection;
     pub mod logging;
     pub mod memory;
@@ -17,7 +18,7 @@ mod app {
 
     use crate::app::engine::efi_cfg::{get_default_efi_cfg, EngineConfig};
     use crate::app::engine::engine_status::{get_default_engine_status, EngineStatus};
-    use crate::app::gpio::init_gpio;
+    use crate::app::gpio_legacy::init_gpio;
     use crate::app::injection::calculate_time_isr;
     use crate::app::injection::injection_setup;
     use crate::app::memory::tables::TableData;
@@ -46,15 +47,18 @@ mod app {
 
     #[shared]
     struct Shared {
-        timer: timer::CounterMs<TIM2>,
-        timer3: timer::CounterUs<TIM3>,
         usb_cdc: SerialPort<'static, UsbBusType>,
         usb_web: WebUsb<UsbBusType>,
-        led2: stm32f4xx_hal::gpio::PC14<Output<PushPull>>,
-        led3: stm32f4xx_hal::gpio::PC15<Output<PushPull>>,
+
+        // core:
+        timer: timer::CounterMs<TIM2>,
+        timer3: timer::CounterUs<TIM3>,
+       //  gpio: gpio_legacy::GpioMapping,
+        spi: gpio_legacy::ISPI,
         string: serde_json_core::heapless::String<1000>,
         str_lock: bool,
         crc: Crc32,
+
         // EFI Related:
         efi_cfg: EngineConfig,
         efi_status: EngineStatus,
@@ -63,7 +67,6 @@ mod app {
     }
     #[local]
     struct Local {
-        led: stm32f4xx_hal::gpio::PC13<Output<PushPull>>,
         usb_dev: UsbDevice<'static, UsbBusType>,
         cdc_input_buffer: ArrayVec<u8, 128>,
 
@@ -78,16 +81,13 @@ mod app {
         ctx.core.DWT.enable_cycle_counter(); // TODO: Disable this in release builds
         logging::host::debug!("Hello :)");
 
-        // Configure the LED pin as a push pull ouput and obtain handle
-        // On the Nucleo FR401 theres an on-board LED connected to pin PA5
-        // 1) Promote the GPIOA PAC struct
         let gpioa = dp.GPIOA.split();
         let gpiob = dp.GPIOB.split();
         let gpioc = dp.GPIOC.split();
         let gpiod = dp.GPIOD.split();
         let gpioe = dp.GPIOE.split();
 
-        let gpio_config = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
+        let mut gpio_config = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
 
         // configure CKP/CMP Pin for Interrupts
         let mut ckp = gpio_config.ckp;
@@ -154,7 +154,7 @@ mod app {
             phase: Phase::CaptureOnFirstTransition,
         };
 
-        let spi2 = Spi::new(
+        let mut spi2 = Spi::new(
             dp.SPI2,
             (
                 gpio_config.spi_sck,
@@ -169,7 +169,8 @@ mod app {
         // CRC32:
         let mut crc = crc32::Crc32::new(dp.CRC);
 
-        let mut flash = w25q::series25::Flash::init(spi2, gpio_config.memory_cs).unwrap();
+        let mut flash = w25q::series25::Flash::init(&mut spi2, &mut gpio_config.memory_cs).unwrap();
+
         let id = flash.read_jedec_id().unwrap();
 
         let flash_info = flash.get_device_info().unwrap();
@@ -273,8 +274,8 @@ mod app {
                 timer3,
                 usb_cdc,
                 usb_web,
-                led2: gpio_config.led_1,
-                led3: gpio_config.led_2,
+                spi: spi2,
+               // gpio: gpio_config,
                 crc,
                 string: serialized,
                 str_lock,
@@ -287,7 +288,6 @@ mod app {
             // Initialization of task local resources
             Local {
                 ckp,
-                led: gpio_config.led_0,
                 usb_dev,
                 cdc_input_buffer: cdc_buff,
             },
@@ -304,7 +304,7 @@ mod app {
         }
     }
 
-    #[task(binds = TIM2, priority = 1, local=[led], shared=[timer,timer3,led2])]
+    #[task(binds = TIM2, priority = 1, local=[], shared=[timer,timer3/* ,gpio */])]
     fn timer_expired(mut ctx: timer_expired::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
@@ -313,15 +313,15 @@ mod app {
             .timer
             .lock(|tim| tim.clear_interrupt(Event::Update));
 
-        ctx.local.led.toggle();
-        ctx.shared.led2.lock(|l| l.set_low());
+/*         ctx.shared.gpio.lock(|gpio| gpio.led_0.toggle());
+        ctx.shared.gpio.lock(|gpio| gpio.led_2.set_low()); */
 
         ctx.shared.timer3.lock(|tim| {
             tim.start(50000.micros()).unwrap();
         });
     }
 
-    #[task(binds = TIM3, local=[], shared=[timer3,led2, tables])]
+    #[task(binds = TIM3, local=[], shared=[timer3,/* gpio, */ tables])]
     fn timer3_exp(mut ctx: timer3_exp::Context) {
         // When Timer Interrupt Happens Two Things Need to be Done
         // 1) Toggle the LED
@@ -332,25 +332,24 @@ mod app {
         });
 
         /*         ctx.shared.tables.lock(|t| t.tps_rpm_ve = None); */
-
-        ctx.shared.led2.lock(|l| l.set_high());
+/*         ctx.shared.gpio.lock(|gpio| gpio.led_2.set_high()); */
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
-    #[task(binds = EXTI9_5, local = [ckp], shared=[led3,efi_status,flash_info,efi_cfg,timer,timer3])]
+    #[task(binds = EXTI9_5, local = [ckp], shared=[/* gpio, */efi_status,flash_info,efi_cfg,timer,timer3])]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
         ctx.shared.efi_status.lock(|es| es.cycle_tick += 1);
 
         let efi_cfg = ctx.shared.efi_cfg;
         let efi_status = ctx.shared.efi_status;
-        let led3 = ctx.shared.led3;
+      /*   let gpio = ctx.shared.gpio; */
 
         // calculo de RPM && led
-        (efi_cfg, efi_status, led3).lock(|efi_cfg, efi_status, led3| {
+        (efi_cfg, efi_status,/*  gpio */).lock(|efi_cfg, efi_status/* , gpio */| {
             if efi_status.cycle_tick
                 >= efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
             {
-                led3.toggle();
+                /* gpio.led_2.toggle(); */
                 efi_status.cycle_tick = 0;
             }
             cpwm_callback::spawn().unwrap();
@@ -401,7 +400,7 @@ mod app {
         );
 
     }
-    // prioridad? si, task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
+    // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
     #[task(priority = 10,shared=[efi_status,flash_info,efi_cfg,timer,timer3])]
     fn cpwm_callback(mut _ctx: cpwm_callback::Context) {
         // TODO: cpwm if;

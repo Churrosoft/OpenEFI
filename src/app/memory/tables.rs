@@ -7,6 +7,7 @@ use stm32f4xx_hal::pac::SPI2;
 use stm32f4xx_hal::spi::Spi;
 use w25q::series25::{Flash, FlashInfo};
 
+
 type DataT = [[i32; 17]; 17];
 
 pub struct Tables {
@@ -21,7 +22,8 @@ pub struct TableData {
     pub max_y: u16,
 }
 
-pub type FlashT = Flash<
+pub type FlashT<'a> = Flash<'a, 
+    
     Spi<
         SPI2,
         (
@@ -49,7 +51,6 @@ impl TableData {
         {
             flash.read(read_address, &mut buf).unwrap();
         }
-
         for matrix_y in 0..self.max_y {
             for matrix_x in 0..self.max_x {
                 let u8buff = [
