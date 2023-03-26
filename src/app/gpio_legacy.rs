@@ -5,12 +5,15 @@ use stm32f4xx_hal::{
     pac::SPI2,
     spi::Spi,
 };
-
 pub struct GpioMapping {
     // LED's / User feedback
     pub led_0: gpio::PC13<Output<PushPull>>,
     pub led_1: gpio::PC14<Output<PushPull>>,
     pub led_2: gpio::PC15<Output<PushPull>>,
+    pub led_can_tx: gpio::PD6<Output<PushPull>>,
+    pub led_can_rx: gpio::PD7<Output<PushPull>>,
+    pub led_check: gpio::PC9<Output<PushPull>>,
+    pub led_mil: gpio::PC8<Output<PushPull>>,
 
     // Injection
     pub iny_1: gpio::PD8<Output<PushPull>>,
@@ -81,6 +84,10 @@ pub fn init_gpio(
         led_0: gpioc.pc13.into_push_pull_output(),
         led_1: gpioc.pc14.into_push_pull_output(),
         led_2: gpioc.pc15.into_push_pull_output(),
+        led_can_tx: gpiod.pd6.into_push_pull_output(),
+        led_can_rx: gpiod.pd7.into_push_pull_output(),
+        led_check: gpioc.pc9.into_push_pull_output(),
+        led_mil: gpioc.pc8.into_push_pull_output(),
 
         // Injection
         iny_1: gpiod.pd8.into_push_pull_output(),

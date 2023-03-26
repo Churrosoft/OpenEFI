@@ -53,7 +53,7 @@ mod app {
         // core:
         timer: timer::CounterMs<TIM2>,
         timer3: timer::CounterUs<TIM3>,
-       //  gpio: gpio_legacy::GpioMapping,
+        gpio: gpio_legacy::GpioMapping,
         spi: gpio_legacy::ISPI,
         string: serde_json_core::heapless::String<1000>,
         str_lock: bool,
@@ -266,6 +266,9 @@ mod app {
 
         let mut str_lock = false;
 
+        gpio_config.led_check.toggle();
+        gpio_config.led_mil.toggle();
+
         hprintln!("FFFF {:?}", serialized);
         (
             // Initialization of shared resources
@@ -275,7 +278,7 @@ mod app {
                 usb_cdc,
                 usb_web,
                 spi: spi2,
-               // gpio: gpio_config,
+                gpio: gpio_config,
                 crc,
                 string: serialized,
                 str_lock,
@@ -313,7 +316,7 @@ mod app {
             .timer
             .lock(|tim| tim.clear_interrupt(Event::Update));
 
-/*         ctx.shared.gpio.lock(|gpio| gpio.led_0.toggle());
+        /*         ctx.shared.gpio.lock(|gpio| gpio.led_0.toggle());
         ctx.shared.gpio.lock(|gpio| gpio.led_2.set_low()); */
 
         ctx.shared.timer3.lock(|tim| {
@@ -332,7 +335,7 @@ mod app {
         });
 
         /*         ctx.shared.tables.lock(|t| t.tps_rpm_ve = None); */
-/*         ctx.shared.gpio.lock(|gpio| gpio.led_2.set_high()); */
+        /*         ctx.shared.gpio.lock(|gpio| gpio.led_2.set_high()); */
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
@@ -342,10 +345,10 @@ mod app {
 
         let efi_cfg = ctx.shared.efi_cfg;
         let efi_status = ctx.shared.efi_status;
-      /*   let gpio = ctx.shared.gpio; */
+        /*   let gpio = ctx.shared.gpio; */
 
         // calculo de RPM && led
-        (efi_cfg, efi_status,/*  gpio */).lock(|efi_cfg, efi_status/* , gpio */| {
+        (efi_cfg, efi_status /*  gpio */).lock(|efi_cfg, efi_status /* , gpio */| {
             if efi_status.cycle_tick
                 >= efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
             {
