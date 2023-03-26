@@ -2,7 +2,7 @@ shell bash -c 'for f in /dev/serial/by-id/usb-Black_Magic_Debug_Black_Magic_Prob
 source /tmp/gdb-conn-source
 
 mon connect_rst enable
-# mon tpwr enable
+mon tpwr enable
 shell bash -c 'sleep 0.05s'
 mon swdp_scan
 attach 1

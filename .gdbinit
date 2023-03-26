@@ -7,8 +7,8 @@ source /tmp/gdb-conn-source
 mon connect_rst enable
 
 # Enable target power and sleep for a bit
-# mon tpwr enable
-shell bash -c 'sleep 0.05s'
+mon tpwr enable
+shell bash -c 'sleep 0.5s'
 
 # Attach to target
 mon swdp_scan
