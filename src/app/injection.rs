@@ -10,15 +10,24 @@ pub mod alpha_n;
 pub mod injectors;
 
 pub fn injection_setup(table: &mut Tables, flash: &mut FlashT, fi: &FlashInfo, crc: &mut Crc32) {
-    let mut tps_rpm = TableData {
-        address: 0x05,
+    let mut tps_rpm_ve = TableData {
         data: None,
         crc: 0,
+        address: 0x3,
         max_x: 17,
         max_y: 17,
     };
+
+    let mut injector_delay = TableData {
+        data: None,
+        crc: 0,
+        address: 0x4,
+        max_x: 8,
+        max_y: 8,
+    };
     {
-        table.tps_rpm_ve = tps_rpm.read_from_memory(flash, fi, crc);
+        table.tps_rpm_ve = tps_rpm_ve.read_from_memory(flash, &fi, crc);
+        table.injector_delay = injector_delay.read_from_memory(flash, &fi, crc);
     }
 }
 

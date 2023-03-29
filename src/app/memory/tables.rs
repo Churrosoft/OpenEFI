@@ -7,11 +7,11 @@ use stm32f4xx_hal::pac::SPI2;
 use stm32f4xx_hal::spi::Spi;
 use w25q::series25::{Flash, FlashInfo};
 
-
 type DataT = [[i32; 17]; 17];
 
 pub struct Tables {
     pub tps_rpm_ve: Option<DataT>,
+    pub injector_delay: Option<DataT>,
 }
 
 pub struct TableData {
@@ -22,8 +22,7 @@ pub struct TableData {
     pub max_y: u16,
 }
 
-pub type FlashT<'a> = Flash<'a, 
-    
+pub type FlashT = Flash<
     Spi<
         SPI2,
         (

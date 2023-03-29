@@ -1,4 +1,5 @@
 mod handle_core;
+mod handle_tables;
 
 use rtic::Mutex;
 use arrayvec::ArrayVec;
@@ -34,7 +35,7 @@ pub enum SerialError {
 pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B> where B: UsbBus {
     UsbDeviceBuilder::new(bus, UsbVidPid(0x1209, 0xeef1))
         .manufacturer("Churrosoft")
-        .product("OpenEFI | uEFI v4")
+        .product("OpenEFI | uEFI v3.4.0")
         .serial_number(util::get_serial_str())
         .device_release(0x0200)
         .self_powered(false)
@@ -65,6 +66,7 @@ pub fn process_command(buf: [u8; 128]) {
 
     match serial_cmd.command & 0xF0 {
         0x00 => handle_core::handler(serial_cmd),
+        0x01 => handle_tables::handler(serial_cmd),
         _ => {
             app::send_message::spawn(SerialStatus::Error, SerialError::UnknownCmd as u8, serial_cmd).unwrap();
         }

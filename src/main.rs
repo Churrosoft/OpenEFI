@@ -21,7 +21,6 @@ mod app {
     use crate::app::gpio_legacy::init_gpio;
     use crate::app::injection::calculate_time_isr;
     use crate::app::injection::injection_setup;
-    use crate::app::memory::tables::TableData;
     use crate::app::memory::tables::Tables;
     use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
     use arrayvec::ArrayVec;
@@ -30,7 +29,7 @@ mod app {
     use stm32f4xx_hal::{
         crc32,
         crc32::Crc32,
-        gpio::{Edge, Input, Output, PushPull},
+        gpio::{Edge, Input},
         otg_fs,
         otg_fs::UsbBusType,
         otg_fs::USB,
@@ -53,8 +52,7 @@ mod app {
         // core:
         timer: timer::CounterMs<TIM2>,
         timer3: timer::CounterUs<TIM3>,
-        gpio: gpio_legacy::GpioMapping,
-        spi: gpio_legacy::ISPI,
+        leds: gpio_legacy::LedGpioMapping,
         string: serde_json_core::heapless::String<1000>,
         str_lock: bool,
         crc: Crc32,
@@ -62,6 +60,7 @@ mod app {
         // EFI Related:
         efi_cfg: EngineConfig,
         efi_status: EngineStatus,
+        flash: memory::tables::FlashT,
         flash_info: FlashInfo,
         tables: Tables,
     }
@@ -154,7 +153,7 @@ mod app {
             phase: Phase::CaptureOnFirstTransition,
         };
 
-        let mut spi2 = Spi::new(
+        let spi2 = Spi::new(
             dp.SPI2,
             (
                 gpio_config.spi_sck,
@@ -169,7 +168,7 @@ mod app {
         // CRC32:
         let mut crc = crc32::Crc32::new(dp.CRC);
 
-        let mut flash = w25q::series25::Flash::init(&mut spi2, &mut gpio_config.memory_cs).unwrap();
+        let mut flash = w25q::series25::Flash::init(spi2, gpio_config.memory_cs).unwrap();
 
         let id = flash.read_jedec_id().unwrap();
 
@@ -180,83 +179,22 @@ mod app {
         hprintln!("FLASH: Block Count {:?}", flash_info.block_count);
         hprintln!("FLASH: Page Count {:?}", flash_info.page_count);
 
-        let ldata: [[i32; 17]; 17] = [
-            [
-                0, 600, 750, 1100, 1400, 1700, 2000, 2300, 2600, 2900, 3200, 3400, 3700, 4200,
-                4400, 4700, 5000,
-            ],
-            [
-                100, 85, 88, 90, 92, 94, 96, 98, 100, 99, 99, 99, 99, 98, 97, 96, 94,
-            ],
-            [
-                95, 82, 85, 87, 89, 91, 93, 95, 96, 96, 96, 96, 96, 95, 94, 93, 91,
-            ],
-            [
-                90, 79, 82, 84, 86, 88, 89, 91, 92, 92, 92, 92, 92, 91, 90, 89, 88,
-            ],
-            [
-                85, 75, 78, 80, 82, 84, 86, 88, 89, 89, 89, 89, 89, 87, 87, 86, 84,
-            ],
-            [
-                75, 68, 72, 74, 76, 77, 79, 81, 82, 82, 82, 82, 81, 80, 80, 79, 78,
-            ],
-            [
-                70, 64, 68, 70, 72, 74, 76, 77, 78, 78, 78, 78, 78, 77, 76, 75, 74,
-            ],
-            [
-                65, 59, 64, 67, 69, 71, 72, 74, 75, 75, 75, 75, 74, 74, 73, 72, 71,
-            ],
-            [
-                60, 55, 61, 63, 66, 67, 69, 70, 71, 71, 71, 71, 71, 70, 70, 69, 67,
-            ],
-            [
-                55, 50, 57, 60, 62, 64, 65, 67, 68, 68, 68, 68, 67, 67, 66, 65, 64,
-            ],
-            [
-                50, 46, 52, 56, 59, 60, 62, 63, 64, 64, 64, 64, 64, 63, 63, 62, 61,
-            ],
-            [
-                45, 42, 48, 52, 55, 57, 58, 60, 60, 60, 60, 60, 60, 60, 59, 58, 57,
-            ],
-            [
-                40, 39, 44, 47, 51, 53, 55, 56, 57, 57, 57, 57, 57, 56, 56, 55, 54,
-            ],
-            [
-                35, 37, 40, 43, 47, 49, 51, 52, 53, 53, 53, 53, 53, 53, 52, 51, 51,
-            ],
-            [
-                30, 36, 37, 40, 43, 45, 47, 49, 50, 50, 50, 50, 50, 49, 49, 48, 47,
-            ],
-            [
-                25, 35, 36, 37, 39, 41, 43, 45, 46, 46, 46, 46, 46, 45, 45, 45, 44,
-            ],
-            [
-                15, 35, 35, 35, 35, 35, 36, 37, 38, 38, 38, 38, 38, 38, 38, 38, 37,
-            ],
-        ];
-
-        hprintln!(
+        /*         hprintln!(
             "Find 2 in vec1: {:?}",
             ldata[0].into_iter().position(|x| x <= 307200)
-        );
-
-        let mut td_test2 = TableData {
-            data: None,
-            crc: 0,
-            address: 0x3,
-            max_x: 17,
-            max_y: 17,
-        };
-
-        td_test2.data = td_test2.read_from_memory(&mut flash, &flash_info, &mut crc);
-
-        let mut table = Tables { tps_rpm_ve: None };
+        ); */
 
         // EFI Setup:
-
-        _efi_status.rpm = 1500;
+        let mut table = Tables {
+            tps_rpm_ve: None,
+            injector_delay: None,
+        };
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
+
+        // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
+        _efi_status.rpm = 1500;
+
         calculate_time_isr(&mut _efi_status, &_efi_cfg);
 
         hprintln!("AF {:?}", _efi_status.injection.air_flow);
@@ -266,10 +204,10 @@ mod app {
 
         let mut str_lock = false;
 
-        gpio_config.led_check.toggle();
-        gpio_config.led_mil.toggle();
+        gpio_config.leds.led_check.toggle();
+        gpio_config.leds.led_mil.toggle();
 
-        hprintln!("FFFF {:?}", serialized);
+        //  hprintln!("FFFF {:?}", serialized);
         (
             // Initialization of shared resources
             Shared {
@@ -277,14 +215,15 @@ mod app {
                 timer3,
                 usb_cdc,
                 usb_web,
-                spi: spi2,
-                gpio: gpio_config,
+                // GPIO:
+                leds: gpio_config.leds,
                 crc,
                 string: serialized,
                 str_lock,
                 // EFI Related
                 efi_cfg: _efi_cfg,
                 efi_status: _efi_status,
+                flash,
                 flash_info,
                 tables: table,
             },
@@ -307,56 +246,49 @@ mod app {
         }
     }
 
-    #[task(binds = TIM2, priority = 1, local=[], shared=[timer,timer3/* ,gpio */])]
+    //TODO: reciclar para encendido
+    #[task(binds = TIM2, priority = 1, local=[], shared=[timer,timer3,leds])]
     fn timer_expired(mut ctx: timer_expired::Context) {
-        // When Timer Interrupt Happens Two Things Need to be Done
-        // 1) Toggle the LED
-        // 2) Clear Timer Pending Interrupt
         ctx.shared
             .timer
             .lock(|tim| tim.clear_interrupt(Event::Update));
 
-        /*         ctx.shared.gpio.lock(|gpio| gpio.led_0.toggle());
-        ctx.shared.gpio.lock(|gpio| gpio.led_2.set_low()); */
-
-        ctx.shared.timer3.lock(|tim| {
-            tim.start(50000.micros()).unwrap();
-        });
+        ctx.shared.leds.lock(|l| l.led_0.toggle());
     }
 
-    #[task(binds = TIM3, local=[], shared=[timer3,/* gpio, */ tables])]
+    #[task(binds = TIM3, local=[], shared=[timer3,leds, tables])]
     fn timer3_exp(mut ctx: timer3_exp::Context) {
-        // When Timer Interrupt Happens Two Things Need to be Done
-        // 1) Toggle the LED
-        // 2) Clear Timer Pending Interrupt
         ctx.shared.timer3.lock(|tim| {
             tim.clear_interrupt(Event::Update);
             tim.cancel().unwrap();
         });
 
-        /*         ctx.shared.tables.lock(|t| t.tps_rpm_ve = None); */
-        /*         ctx.shared.gpio.lock(|gpio| gpio.led_2.set_high()); */
+        ctx.shared.leds.lock(|l| l.led_2.set_high());
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
-    #[task(binds = EXTI9_5, local = [ckp], shared=[/* gpio, */efi_status,flash_info,efi_cfg,timer,timer3])]
+    #[task(binds = EXTI9_5, local = [ckp], shared=[leds, efi_status,flash_info,efi_cfg,timer,timer3])]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
         ctx.shared.efi_status.lock(|es| es.cycle_tick += 1);
 
         let efi_cfg = ctx.shared.efi_cfg;
         let efi_status = ctx.shared.efi_status;
-        /*   let gpio = ctx.shared.gpio; */
 
         // calculo de RPM && led
-        (efi_cfg, efi_status /*  gpio */).lock(|efi_cfg, efi_status /* , gpio */| {
-            if efi_status.cycle_tick
-                >= efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
-            {
-                /* gpio.led_2.toggle(); */
-                efi_status.cycle_tick = 0;
-            }
-            cpwm_callback::spawn().unwrap();
-        });
+        (efi_cfg, efi_status, ctx.shared.leds, ctx.shared.timer3).lock(
+            |efi_cfg, efi_status, leds, timer3| {
+                if efi_status.cycle_tick
+                    >= efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
+                {
+                    leds.led_2.set_low();
+                    // FIXME: por ahora solo prendo el led una vez por vuelta, luego lo hago funcionar con el primer cilindro
+                    timer3.start(50000.micros()).unwrap();
+                    efi_status.cycle_tick = 0;
+                }
+            },
+        );
+
+        cpwm_callback::spawn().unwrap();
 
         // Obtain access to the peripheral and Clear Interrupt Pending Flag
         ctx.local.ckp.clear_interrupt_pending_bit();
