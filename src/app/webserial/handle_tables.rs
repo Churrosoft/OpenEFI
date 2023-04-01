@@ -2,6 +2,7 @@ use crate::app::memory::tables::{FlashT, Tables};
 use crate::app::webserial::{SerialError, SerialMessage, SerialStatus};
 use crate::app::{self, logging};
 
+use stm32f4xx_hal::crc32::Crc32;
 use w25q::series25::FlashInfo;
 
 pub fn handler(
@@ -9,6 +10,7 @@ pub fn handler(
     flash: &mut FlashT,
     flash_info: &mut FlashInfo,
     tables: &mut Tables,
+    crc: &mut Crc32,
 ) {
     let mut response_buf = SerialMessage {
         protocol: 1,
@@ -36,18 +38,64 @@ pub fn handler(
     match command.command & 0b00001111 {
         // table get metadata
         0x01 => {
-            response_buf.payload[0] = 254;
-            response_buf.payload[1] = selected_table;
-            for _i in 0..20 {
-                app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+            //TODO: faltaria un objeto global de poneleque solo lectura para traer toda la metadata de las tablas
+            // ya si hago mutable el struct de tablas con la data adentro rompe por lifetime
+
+            match selected_table {
+                0x01 => {
+                    // TPS RPM VE
+                    response_buf.payload[0] = 17;
+                    response_buf.payload[1] = 17;
+                    logging::host::debug!("Table get metadata. TPS VE");
+                }
+                _ => {
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialError::UnknownTable as u8,
+                        response_buf,
+                    )
+                    .unwrap();
+                    return;
+                }
             }
-            logging::host::debug!("Table get metadata");
         }
         // get X table
         0x02 => {
-            response_buf.payload[0] = 253;
-            logging::host::debug!("Table get");
-            app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+            #[allow(unused_assignments)]
+            let mut table = [[0i32; 17]; 17];
+
+            match selected_table {
+                0x01 => {
+                    // TPS RPM VE
+                    logging::host::debug!("Table get. TPS VE");
+                    // TODO: read table if not read prev.
+                    table = tables.tps_rpm_ve.unwrap();
+                }
+                _ => {
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialError::UnknownTable as u8,
+                        response_buf,
+                    )
+                    .unwrap();
+                    return;
+                }
+            }
+
+            for row in table {
+                let mut i = 0;
+
+                for row_number in row {
+                    let number_arr: [u8; 4] = i32::to_le_bytes(row_number);
+                    response_buf.payload[i] = number_arr[0];
+                    response_buf.payload[i + 1] = number_arr[1];
+                    response_buf.payload[i + 2] = number_arr[2];
+                    response_buf.payload[i + 3] = number_arr[3];
+                    i += 4;
+                }
+
+                app::send_message::spawn(SerialStatus::DataChunk, 0, response_buf).unwrap();
+            }
         }
         // put X table
         0x03 => {

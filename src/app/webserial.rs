@@ -27,11 +27,14 @@ pub struct SerialMessage {
 pub enum SerialStatus {
     Error = 0b00000000,
     Ok = 0b10000000,
+    DataChunk = 0b11100000,
+    DataChunkEnd = 0b11110000,
 }
 
 #[repr(u8)]
 pub enum SerialError {
     UnknownCmd = 0x7f,
+    UnknownTable = 0x8f,
 }
 
 pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
@@ -49,12 +52,7 @@ where
         .build()
 }
 
-pub fn process_command(
-    buf: [u8; 128],
-    flash: &mut FlashT,
-    flash_info: &mut FlashInfo,
-    tables: &mut Tables,
-) {
+pub fn process_command(buf: [u8; 128]) {
     let mut payload = [0u8; 123];
     payload.copy_from_slice(&buf[3..126]);
 
