@@ -294,47 +294,58 @@ mod app {
         ctx.local.ckp.clear_interrupt_pending_bit();
     }
 
-    #[task(binds = OTG_FS, local = [usb_dev, cdc_input_buffer], shared = [usb_cdc, usb_web])]
+    #[task(binds = OTG_FS, local = [usb_dev, cdc_input_buffer], shared = [usb_cdc, usb_web,flash,flash_info,tables])]
     fn usb_handler(mut ctx: usb_handler::Context) {
         let device = ctx.local.usb_dev;
+
+        let flash = ctx.shared.flash;
+        let flash_info = ctx.shared.flash_info;
+        let tables = ctx.shared.tables;
+
         ctx.shared.usb_cdc.lock(|cdc| {
             // USB dev poll only in the interrupt handler
-            ctx.shared.usb_web.lock(|web| {
-                if device.poll(&mut [web, cdc]) {
-                    let mut buf = [0u8; 64];
+            (ctx.shared.usb_web, flash, flash_info, tables).lock(
+                |web, flash, flash_info, tables| {
+                    if device.poll(&mut [web, cdc]) {
+                        let mut buf = [0u8; 64];
 
-                    match cdc.read(&mut buf[..]) {
-                        Ok(count) => {
-                            // Push bytes into the buffer
-                            for i in 0..count {
-                                ctx.local.cdc_input_buffer.push(buf[i]);
-                                if ctx.local.cdc_input_buffer.is_full() {
-                                    webserial::process_command(
-                                        ctx.local.cdc_input_buffer.take().into_inner().unwrap(),
-                                    );
-                                    ctx.local.cdc_input_buffer.clear();
+                        match cdc.read(&mut buf[..]) {
+                            Ok(count) => {
+                                // Push bytes into the buffer
+                                for i in 0..count {
+                                    ctx.local.cdc_input_buffer.push(buf[i]);
+                                    if ctx.local.cdc_input_buffer.is_full() {
+                                        webserial::process_command(
+                                            ctx.local.cdc_input_buffer.take().into_inner().unwrap(),
+                                            flash,
+                                            flash_info,
+                                            tables,
+                                        );
+
+                                        ctx.local.cdc_input_buffer.clear();
+                                    }
                                 }
                             }
-                        }
-                        Err(_) => {}
-                    };
-                }
-            });
+                            Err(_) => {}
+                        };
+                    }
+                },
+            );
         });
     }
 
     // Externally defined tasks
     extern "Rust" {
         // Low-priority task to send back replies via the serial port.
-        #[task(shared = [usb_cdc], priority = 2)]
+        #[task(shared = [usb_cdc], priority = 2,capacity = 30)]
         fn send_message(
             ctx: send_message::Context,
             status: SerialStatus,
             code: u8,
             mut message: SerialMessage,
         );
-
     }
+    
     // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
     #[task(priority = 10,shared=[efi_status,flash_info,efi_cfg,timer,timer3])]
     fn cpwm_callback(mut _ctx: cpwm_callback::Context) {

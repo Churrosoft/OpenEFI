@@ -1,14 +1,16 @@
 mod handle_core;
 mod handle_tables;
 
-use rtic::Mutex;
-use arrayvec::ArrayVec;
-use cortex_m_semihosting::hprintln;
-use usb_device::bus::{UsbBus, UsbBusAllocator};
-use usb_device::device::{UsbDevice, UsbDeviceBuilder, UsbVidPid};
 use crate::app;
 use crate::app::{logging, util};
+use arrayvec::ArrayVec;
+use cortex_m_semihosting::hprintln;
+use rtic::Mutex;
+use usb_device::bus::{UsbBus, UsbBusAllocator};
+use usb_device::device::{UsbDevice, UsbDeviceBuilder, UsbVidPid};
+use w25q::series25::FlashInfo;
 
+use super::memory::tables::{FlashT, Tables};
 
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
@@ -17,7 +19,7 @@ pub struct SerialMessage {
     pub command: u8,
     pub status: u8,
     pub payload: [u8; 123],
-    pub crc: u16
+    pub crc: u16,
 }
 
 #[derive(Debug)]
@@ -29,10 +31,13 @@ pub enum SerialStatus {
 
 #[repr(u8)]
 pub enum SerialError {
-    UnknownCmd   = 0x7f,
+    UnknownCmd = 0x7f,
 }
 
-pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B> where B: UsbBus {
+pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
+where
+    B: UsbBus,
+{
     UsbDeviceBuilder::new(bus, UsbVidPid(0x1209, 0xeef1))
         .manufacturer("Churrosoft")
         .product("OpenEFI | uEFI v3.4.0")
@@ -44,7 +49,12 @@ pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B> where B: UsbB
         .build()
 }
 
-pub fn process_command(buf: [u8; 128]) {
+pub fn process_command(
+    buf: [u8; 128],
+    flash: &mut FlashT,
+    flash_info: &mut FlashInfo,
+    tables: &mut Tables,
+) {
     let mut payload = [0u8; 123];
     payload.copy_from_slice(&buf[3..126]);
 
@@ -58,7 +68,13 @@ pub fn process_command(buf: [u8; 128]) {
         crc,
     };
 
-    logging::host::debug!("CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - CRC:  {}", serial_cmd.protocol, serial_cmd.command, serial_cmd.status, crc);
+    logging::host::debug!(
+        "CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - CRC:  {}",
+        serial_cmd.protocol,
+        serial_cmd.command,
+        serial_cmd.status,
+        crc
+    );
 
     if serial_cmd.protocol != 1 {
         return;
@@ -66,9 +82,14 @@ pub fn process_command(buf: [u8; 128]) {
 
     match serial_cmd.command & 0xF0 {
         0x00 => handle_core::handler(serial_cmd),
-        0x01 => handle_tables::handler(serial_cmd),
+        0x10 => handle_tables::handler(serial_cmd, flash, flash_info, tables),
         _ => {
-            app::send_message::spawn(SerialStatus::Error, SerialError::UnknownCmd as u8, serial_cmd).unwrap();
+            app::send_message::spawn(
+                SerialStatus::Error,
+                SerialError::UnknownCmd as u8,
+                serial_cmd,
+            )
+            .unwrap();
         }
     };
 }
@@ -82,21 +103,30 @@ pub fn finish_message(message: SerialMessage) -> [u8; 128] {
     // Add empty CRC
     message_buf.push(0);
     message_buf.push(0);
-    
-    let payload: [u8; 126] = message_buf.take().into_inner().unwrap()[0..126].try_into().unwrap();
+
+    let payload: [u8; 126] = message_buf.take().into_inner().unwrap()[0..126]
+        .try_into()
+        .unwrap();
     let crc = util::crc16(&payload, 126);
 
     message_buf.clear();
     message_buf.try_extend_from_slice(&payload).unwrap();
-    message_buf.try_extend_from_slice(&crc.to_be_bytes()).unwrap();
+    message_buf
+        .try_extend_from_slice(&crc.to_be_bytes())
+        .unwrap();
 
     message_buf.take().into_inner().unwrap()
 }
 
 // Send a message via web serial.
-pub(crate) fn send_message(mut ctx: app::send_message::Context, status: SerialStatus, code: u8, mut message: SerialMessage) {
+pub(crate) fn send_message(
+    mut ctx: app::send_message::Context,
+    status: SerialStatus,
+    code: u8,
+    mut message: SerialMessage,
+) {
     message.status = status as u8 | code;
-    
+
     ctx.shared.usb_cdc.lock(|cdc| {
         cdc.write(&finish_message(message)).unwrap();
     });
