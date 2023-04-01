@@ -46,7 +46,7 @@ mod app {
 
     #[shared]
     struct Shared {
-        usb_cdc: SerialPort<'static, UsbBusType>,
+        usb_cdc: SerialPort<'static, UsbBusType, [u8; 128], [u8; 4000]>,
         usb_web: WebUsb<UsbBusType>,
 
         // core:
@@ -125,13 +125,16 @@ mod app {
         };
 
         static mut EP_MEMORY: [u32; 1024] = [0; 1024];
+        static mut __USB_TX: [u8; 4000] = [0; 4000];
+        static mut __USB_RX: [u8; 128] = [0; 128];
 
         let usb_bus = ctx.local.USB_BUS;
         unsafe {
             *usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
         }
 
-        let usb_cdc = SerialPort::new(usb_bus.as_ref().unwrap());
+        let usb_cdc =
+            unsafe { SerialPort::new_with_store(usb_bus.as_ref().unwrap(), __USB_RX, __USB_TX) };
         let usb_web = WebUsb::new(
             usb_bus.as_ref().unwrap(),
             url_scheme::HTTPS,
