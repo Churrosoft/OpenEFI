@@ -1,5 +1,5 @@
 mod handle_core;
-mod handle_tables;
+pub mod handle_tables;
 
 use crate::app;
 use crate::app::{logging, util};
@@ -82,7 +82,7 @@ pub fn process_command(
 
     match serial_cmd.command & 0xF0 {
         0x00 => handle_core::handler(serial_cmd),
-        0x10 => handle_tables::handler(serial_cmd, flash, flash_info, tables),
+        0x10 => app::table_cdc_callback::spawn(serial_cmd).unwrap(),
         _ => {
             app::send_message::spawn(
                 SerialStatus::Error,

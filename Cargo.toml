@@ -38,6 +38,7 @@ w25q = "0.2.6"
 embedded-hal = "0.2.7"
 serde = { version = "1.0.152", default-features = false, features = ["derive"] }
 serde-json-core = "0.5.0"
+panic-semihosting = "0.6.0"
 
 [dependencies.stm32f4xx-hal]
 version = "0.14.0"

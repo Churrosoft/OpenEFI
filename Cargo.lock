@@ -271,6 +271,7 @@ dependencies = [
  "embedded-hal 0.2.7",
  "numtoa",
  "panic-halt",
+ "panic-semihosting",
  "serde",
  "serde-json-core",
  "stm32f4xx-hal",
@@ -285,6 +286,16 @@ name = "panic-halt"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de96540e0ebde571dc55c73d60ef407c653844e6f9a1e2fdbd40c07b9252d812"
+
+[[package]]
+name = "panic-semihosting"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee8a3e1233d9073d76a870223512ce4eeea43c067a94a445c13bd6d792d7b1ab"
+dependencies = [
+ "cortex-m",
+ "cortex-m-semihosting",
+]
 
 [[package]]
 name = "proc-macro-error"

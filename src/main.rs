@@ -22,7 +22,7 @@ mod app {
     use crate::app::injection::calculate_time_isr;
     use crate::app::injection::injection_setup;
     use crate::app::memory::tables::Tables;
-    use crate::app::webserial::{send_message, SerialMessage, SerialStatus};
+    use crate::app::webserial::{handle_tables, send_message, SerialMessage, SerialStatus};
     use arrayvec::ArrayVec;
     use cortex_m_semihosting::hprintln;
     use embedded_hal::spi::{Mode, Phase, Polarity};
@@ -345,7 +345,18 @@ mod app {
             mut message: SerialMessage,
         );
     }
-    
+
+    #[task(priority = 2,shared=[flash,flash_info,efi_cfg,tables])]
+    fn table_cdc_callback(ctx: table_cdc_callback::Context, serial_cmd: SerialMessage) {
+        let flash = ctx.shared.flash;
+        let flash_info = ctx.shared.flash_info;
+        let tables = ctx.shared.tables;
+
+        (flash, flash_info, tables).lock(|flash, flash_info, tables| {
+            handle_tables::handler(serial_cmd, flash, flash_info, tables);
+        });
+    }
+
     // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
     #[task(priority = 10,shared=[efi_status,flash_info,efi_cfg,timer,timer3])]
     fn cpwm_callback(mut _ctx: cpwm_callback::Context) {
