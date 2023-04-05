@@ -35,6 +35,7 @@ pub enum SerialStatus {
 pub enum SerialError {
     UnknownCmd = 0x7f,
     UnknownTable = 0x8f,
+    TableNotLoaded = 0x9f,
 }
 
 pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>

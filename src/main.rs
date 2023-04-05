@@ -195,6 +195,8 @@ mod app {
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
+        hprintln!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
+
         // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         _efi_status.rpm = 1500;
 
@@ -348,6 +350,7 @@ mod app {
         let crc = ctx.shared.crc;
 
         (flash, flash_info, tables, crc).lock(|flash, flash_info, tables, crc| {
+            tables.tps_rpm_ve.as_mut().unwrap()[0][0] = 40;
             handle_tables::handler(serial_cmd, flash, flash_info, tables, crc);
         });
     }

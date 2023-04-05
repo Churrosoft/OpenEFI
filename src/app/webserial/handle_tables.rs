@@ -1,4 +1,4 @@
-use crate::app::memory::tables::{FlashT, Tables};
+use crate::app::memory::tables::{self, FlashT, TableData, Tables};
 use crate::app::webserial::{SerialError, SerialMessage, SerialStatus};
 use crate::app::{self, logging};
 
@@ -9,7 +9,7 @@ pub fn handler(
     command: SerialMessage,
     flash: &mut FlashT,
     flash_info: &mut FlashInfo,
-    tables: &mut Tables,
+    table_data: &mut Tables,
     crc: &mut Crc32,
 ) {
     let mut response_buf = SerialMessage {
@@ -27,12 +27,12 @@ pub fn handler(
     // c = (a << 4);
     // c = c | b;
 
-    logging::host::debug!(
+    /*  logging::host::debug!(
         "Table A {} ; B {} ; C {}",
         command.status & 0b00001111,
         (command.status & 0b11110000) >> 4,
         command.command & 0b11110000
-    );
+    ); */
     let selected_table = command.status & 0b00001111;
 
     match command.command & 0b00001111 {
@@ -46,7 +46,7 @@ pub fn handler(
                     // TPS RPM VE
                     response_buf.payload[0] = 17;
                     response_buf.payload[1] = 17;
-                    logging::host::debug!("Table get metadata. TPS VE");
+                    logging::host::debug!("Table get metadata - TPS VE");
                 }
                 _ => {
                     app::send_message::spawn(
@@ -67,9 +67,9 @@ pub fn handler(
             match selected_table {
                 0x01 => {
                     // TPS RPM VE
-                    logging::host::debug!("Table get. TPS VE");
+                    logging::host::debug!("Table get - TPS VE");
                     // TODO: read table if not read prev.
-                    table = tables.tps_rpm_ve.unwrap();
+                    table = table_data.tps_rpm_ve.unwrap();
                 }
                 _ => {
                     app::send_message::spawn(
@@ -96,19 +96,91 @@ pub fn handler(
 
                 app::send_message::spawn(SerialStatus::DataChunk, 0, response_buf).unwrap();
             }
+            app::send_message::spawn(SerialStatus::DataChunkEnd, 0, response_buf).unwrap();
         }
         // put X table
         0x03 => {
-            response_buf.payload[0] = 253;
-            logging::host::debug!("Table put");
-            app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+            let mut row_data = 1;
+            let row_index = command.payload[0] as usize;
+            let mut table_row = [0i32; 17];
+
+            // FIXME: get max index from correct table
+            for matrix_x in 0..17 {
+                let u8buff = [
+                    command.payload[row_data],
+                    command.payload[row_data + 1],
+                    command.payload[row_data + 2],
+                    command.payload[row_data + 3],
+                ];
+
+                let value = i32::from_le_bytes(u8buff);
+                table_row[matrix_x] = value;
+                row_data += 4;
+            }
+
+            match selected_table {
+                0x01 => {
+                    // TPS RPM VE
+                    logging::host::debug!("Table PUT {} - TPS VE", row_index);
+                    // TODO: read table if not read prev.
+                    table_data.tps_rpm_ve.as_mut().unwrap()[row_index] = table_row;
+                    app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+                    return;
+                }
+                _ => {
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialError::UnknownTable as u8,
+                        response_buf,
+                    )
+                    .unwrap();
+                    return;
+                }
+            }
         }
         // write X table
+        // TODO: check crc32 prev write
         0x04 => {
             response_buf.payload[0] = 253;
-            logging::host::debug!("Table write");
 
-            app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+            match selected_table {
+                0x01 => {
+                    // TPS RPM VE
+                    let tps_rpm_ve = TableData {
+                        data: table_data.tps_rpm_ve,
+                        crc: 0,
+                        address: 0x3,
+                        max_x: 17,
+                        max_y: 17,
+                    };
+
+                    if table_data.tps_rpm_ve.is_some() {
+                        logging::host::debug!("Table Write - TPS VE");
+                        tps_rpm_ve.write_to_memory(flash, flash_info, crc);
+                        app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+                        return;
+                    }
+
+                    logging::host::debug!("Table Write TableNotLoaded - TPS VE");
+
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialError::TableNotLoaded as u8,
+                        response_buf,
+                    )
+                    .unwrap();
+                    return;
+                }
+                _ => {
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialError::UnknownTable as u8,
+                        response_buf,
+                    )
+                    .unwrap();
+                    return;
+                }
+            }
         }
         _ => {
             app::send_message::spawn(
@@ -117,6 +189,7 @@ pub fn handler(
                 response_buf,
             )
             .unwrap();
+            return;
         }
     };
 }
