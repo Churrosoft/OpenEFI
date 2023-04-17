@@ -7,6 +7,7 @@ use panic_halt as _;
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5,TIM7,TIM4])]
 mod app {
+    pub mod debug;
     pub mod engine;
     pub mod gpio;
     pub mod gpio_legacy;
@@ -33,7 +34,7 @@ mod app {
         otg_fs,
         otg_fs::UsbBusType,
         otg_fs::USB,
-        pac::{TIM2, TIM3},
+        pac::{TIM2, TIM3, TIM6},
         prelude::*,
         spi::*,
         timer::{self, Event},
@@ -107,6 +108,9 @@ mod app {
 
         let mut timer: timer::CounterMs<TIM2> = dp.TIM2.counter_ms(&clocks);
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
+
+        // NOTE: timer para delays en hilos
+        let mut timer6: timer::DelayUs<TIM6> = dp.TIM6.delay_us(&clocks);
 
         timer.start(2000.millis()).unwrap();
 
@@ -211,6 +215,9 @@ mod app {
 
         gpio_config.leds.led_check.toggle();
         gpio_config.leds.led_mil.toggle();
+
+        debug::spark_demo(&mut gpio_config.ignition, &mut timer6);
+        debug::injector_demo(&mut gpio_config.injection, &mut timer6);
 
         //  hprintln!("FFFF {:?}", serialized);
         (
