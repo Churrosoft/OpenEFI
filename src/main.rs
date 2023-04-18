@@ -5,7 +5,7 @@
 
 use panic_halt as _;
 
-#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5,TIM7,TIM4])]
+#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5,TIM7])]
 mod app {
     pub mod debug;
     pub mod engine;
@@ -25,7 +25,7 @@ mod app {
     use crate::app::memory::tables::Tables;
     use crate::app::webserial::{handle_tables, send_message, SerialMessage, SerialStatus};
     use arrayvec::ArrayVec;
-    use cortex_m_semihosting::hprintln;
+    use cortex_m::delay;
     use embedded_hal::spi::{Mode, Phase, Polarity};
     use stm32f4xx_hal::{
         crc32,
@@ -111,8 +111,7 @@ mod app {
 
         // NOTE: timer para delays en hilos
         let mut timer6: timer::DelayUs<TIM6> = dp.TIM6.delay_us(&clocks);
-
-        timer.start(2000.millis()).unwrap();
+        timer.start(150.millis()).unwrap();
 
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
@@ -181,12 +180,12 @@ mod app {
 
         let flash_info = flash.get_device_info().unwrap();
 
-        hprintln!("FLASH: {:?}", id);
-        hprintln!("FLASH: Size {:?}", flash_info.capacity_kb);
-        hprintln!("FLASH: Block Count {:?}", flash_info.block_count);
-        hprintln!("FLASH: Page Count {:?}", flash_info.page_count);
+        logging::host::debug!("FLASH: {:?}", id);
+        logging::host::debug!("FLASH: Size {:?}", flash_info.capacity_kb);
+        logging::host::debug!("FLASH: Block Count {:?}", flash_info.block_count);
+        logging::host::debug!("FLASH: Page Count {:?}", flash_info.page_count);
 
-        /*         hprintln!(
+        /*         logging::host::debug!(
             "Find 2 in vec1: {:?}",
             ldata[0].into_iter().position(|x| x <= 307200)
         ); */
@@ -199,14 +198,14 @@ mod app {
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
-        hprintln!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
+        logging::host::debug!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
 
         // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         _efi_status.rpm = 1500;
 
         calculate_time_isr(&mut _efi_status, &_efi_cfg);
 
-        hprintln!("AF {:?}", _efi_status.injection.air_flow);
+        logging::host::debug!("AF {:?}", _efi_status.injection.air_flow);
 
         let mut serialized: serde_json_core::heapless::String<1000> =
             serde_json_core::to_string(&_efi_cfg).unwrap();
@@ -220,6 +219,65 @@ mod app {
         debug::injector_demo(&mut gpio_config.injection, &mut timer6);
 
         //  hprintln!("FFFF {:?}", serialized);
+        let mut delay = dp.TIM5.delay_us(&clocks);
+
+        // va en contramano rosalia:
+        /* for ii in 0..10 {
+            for i in 0..60 {
+                gpio_config.aux.out_1.set_low();
+                gpio_config.aux.out_2.set_low();
+                gpio_config.aux.out_3.set_low();
+                gpio_config.aux.out_4.set_high();
+                delay.delay_ms(10_u32);
+
+                gpio_config.aux.out_1.set_low();
+                gpio_config.aux.out_2.set_high();
+                gpio_config.aux.out_3.set_low();
+                gpio_config.aux.out_4.set_low();
+
+                delay.delay_ms(10_u32);
+                gpio_config.aux.out_1.set_low();
+                gpio_config.aux.out_2.set_low();
+                gpio_config.aux.out_3.set_high();
+                gpio_config.aux.out_4.set_low();
+
+                delay.delay_ms(10_u32);
+                gpio_config.aux.out_1.set_high();
+                gpio_config.aux.out_2.set_low();
+                gpio_config.aux.out_3.set_low();
+                gpio_config.aux.out_4.set_low();
+                delay.delay_ms(10_u32);
+            }
+
+            for i in 0..60 {
+                gpio_config.aux.out_1.set_high();
+                gpio_config.aux.out_2.set_low();
+                gpio_config.aux.out_3.set_low();
+                gpio_config.aux.out_4.set_low();
+
+                delay.delay_ms(10_u32);
+                gpio_config.aux.out_1.set_low();
+                gpio_config.aux.out_2.set_low();
+                gpio_config.aux.out_3.set_high();
+                gpio_config.aux.out_4.set_low();
+
+                delay.delay_ms(10_u32);
+                gpio_config.aux.out_1.set_low();
+                gpio_config.aux.out_2.set_high();
+                gpio_config.aux.out_3.set_low();
+                gpio_config.aux.out_4.set_low();
+
+                delay.delay_ms(10_u32);
+                gpio_config.aux.out_1.set_low();
+                gpio_config.aux.out_2.set_low();
+                gpio_config.aux.out_3.set_low();
+                gpio_config.aux.out_4.set_high();
+                delay.delay_ms(10_u32);
+            }
+        }
+         */
+
+        //  logging::host::debug!("FFFF {:?}", serialized);
         (
             // Initialization of shared resources
             Shared {

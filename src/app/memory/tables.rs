@@ -1,6 +1,5 @@
 #![allow(dead_code)]
 
-use cortex_m_semihosting::hprintln;
 use stm32f4xx_hal::crc32::Crc32;
 use stm32f4xx_hal::gpio::{Alternate, Output, Pin};
 use stm32f4xx_hal::pac::SPI2;
@@ -71,8 +70,6 @@ impl TableData {
         let memory_crc = u32::from_le_bytes(u8buff);
         let calculated_crc = crc.update_bytes(&buf[3..]);
 
-        hprintln!("CRC 1: {:?} || CRC 2: {:?}", memory_crc, calculated_crc);
-
         {
             self.crc = calculated_crc;
             self.data = Some(vv_32);
@@ -84,8 +81,6 @@ impl TableData {
     pub fn write_to_memory(&self, flash: &mut FlashT, fi: &FlashInfo, crc: &mut Crc32) {
         let mut buf: [u8; 4 * 17 * 17 + 3] = [0; 4 * 17 * 17 + 3];
         let mut datarow = 3;
-
-        hprintln!("2/2  {:?}", self.data.unwrap()[2][2]);
 
         for matrix_y in 0..self.max_y {
             for matrix_x in 0..self.max_x {

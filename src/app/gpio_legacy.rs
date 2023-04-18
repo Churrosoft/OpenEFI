@@ -43,9 +43,10 @@ pub struct AuxIoMapping {
     pub in_2: gpio::PA1<Input>,
     pub in_3: gpio::PA3<Input>,
 
-    pub out_1: gpio::PC4<Output<PushPull>>,
-    pub out_2: gpio::PC5<Output<PushPull>>,
-    pub out_3: gpio::PB0<Output<PushPull>>,
+    pub out_1: gpio::PB5<Output<PushPull>>,
+    pub out_2: gpio::PB6<Output<PushPull>>,
+    pub out_3: gpio::PB7<Output<PushPull>>,
+    pub out_4: gpio::PB8<Output<PushPull>>,
 
     pub cs_1: gpio::PE14<Output<PushPull>>,
     pub cs_2: gpio::PE15<Output<PushPull>>,
@@ -169,9 +170,10 @@ pub fn init_gpio(
             in_2: gpioa.pa1.into_input(),
             in_3: gpioa.pa3.into_input(),
 
-            out_1: gpioc.pc4.into_push_pull_output(),
-            out_2: gpioc.pc5.into_push_pull_output(),
-            out_3: gpiob.pb0.into_push_pull_output(),
+            out_1: gpiob.pb5.into_push_pull_output(),
+            out_2: gpiob.pb6.into_push_pull_output(),
+            out_3: gpiob.pb7.into_push_pull_output(),
+            out_4: gpiob.pb8.into_push_pull_output(),
 
             cs_1: gpioe.pe14.into_push_pull_output(),
             cs_2: gpioe.pe15.into_push_pull_output(),
@@ -198,7 +200,10 @@ pub fn init_gpio(
 
     gpio.aux.cs_1.set_high();
     gpio.aux.cs_2.set_high();
-    gpio.mtr_enable.set_high();
+    gpio.mtr_enable.set_low();
+    // 4231 reversa
+    // 1234 derecho
+
     gpio.pmic.pmic_cs.set_high();
     gpio.memory_cs.set_high();
 

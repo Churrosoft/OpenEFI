@@ -4,7 +4,6 @@ pub mod handle_tables;
 use crate::app;
 use crate::app::{logging, util};
 use arrayvec::ArrayVec;
-use cortex_m_semihosting::hprintln;
 use rtic::Mutex;
 use usb_device::bus::{UsbBus, UsbBusAllocator};
 use usb_device::device::{UsbDevice, UsbDeviceBuilder, UsbVidPid};
