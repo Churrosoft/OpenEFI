@@ -1,6 +1,7 @@
 pub mod efi_cfg;
 pub mod engine_status;
 pub mod cpwm;
+pub mod sensors;
 
 /**
  * @brief tiempo que tarda una vuelta del cigueñal

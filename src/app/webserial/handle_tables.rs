@@ -1,6 +1,6 @@
-use crate::app::memory::tables::{self, FlashT, TableData, Tables};
-use crate::app::webserial::{SerialError, SerialMessage, SerialStatus};
-use crate::app::{self, logging};
+use crate::app::memory::tables::{ FlashT, TableData, Tables };
+use crate::app::webserial::{ SerialError, SerialMessage, SerialStatus };
+use crate::app::{ self, logging };
 
 use stm32f4xx_hal::crc32::Crc32;
 use w25q::series25::FlashInfo;
@@ -10,7 +10,7 @@ pub fn handler(
     flash: &mut FlashT,
     flash_info: &mut FlashInfo,
     table_data: &mut Tables,
-    crc: &mut Crc32,
+    crc: &mut Crc32
 ) {
     let mut response_buf = SerialMessage {
         protocol: 1,
@@ -49,12 +49,9 @@ pub fn handler(
                     logging::host::debug!("Table get metadata - TPS VE");
                 }
                 _ => {
-                    app::send_message::spawn(
-                        SerialStatus::Error,
-                        SerialError::UnknownTable as u8,
-                        response_buf,
-                    )
-                    .unwrap();
+                    app::send_message
+                        ::spawn(SerialStatus::Error, SerialError::UnknownTable as u8, response_buf)
+                        .unwrap();
                     return;
                 }
             }
@@ -72,12 +69,9 @@ pub fn handler(
                     table = table_data.tps_rpm_ve.unwrap();
                 }
                 _ => {
-                    app::send_message::spawn(
-                        SerialStatus::Error,
-                        SerialError::UnknownTable as u8,
-                        response_buf,
-                    )
-                    .unwrap();
+                    app::send_message
+                        ::spawn(SerialStatus::Error, SerialError::UnknownTable as u8, response_buf)
+                        .unwrap();
                     return;
                 }
             }
@@ -128,12 +122,9 @@ pub fn handler(
                     return;
                 }
                 _ => {
-                    app::send_message::spawn(
-                        SerialStatus::Error,
-                        SerialError::UnknownTable as u8,
-                        response_buf,
-                    )
-                    .unwrap();
+                    app::send_message
+                        ::spawn(SerialStatus::Error, SerialError::UnknownTable as u8, response_buf)
+                        .unwrap();
                     return;
                 }
             }
@@ -163,33 +154,28 @@ pub fn handler(
 
                     logging::host::debug!("Table Write TableNotLoaded - TPS VE");
 
-                    app::send_message::spawn(
-                        SerialStatus::Error,
-                        SerialError::TableNotLoaded as u8,
-                        response_buf,
-                    )
-                    .unwrap();
+                    app::send_message
+                        ::spawn(
+                            SerialStatus::Error,
+                            SerialError::TableNotLoaded as u8,
+                            response_buf
+                        )
+                        .unwrap();
                     return;
                 }
                 _ => {
-                    app::send_message::spawn(
-                        SerialStatus::Error,
-                        SerialError::UnknownTable as u8,
-                        response_buf,
-                    )
-                    .unwrap();
+                    app::send_message
+                        ::spawn(SerialStatus::Error, SerialError::UnknownTable as u8, response_buf)
+                        .unwrap();
                     return;
                 }
             }
         }
         _ => {
-            app::send_message::spawn(
-                SerialStatus::Error,
-                SerialError::UnknownCmd as u8,
-                response_buf,
-            )
-            .unwrap();
+            app::send_message
+                ::spawn(SerialStatus::Error, SerialError::UnknownCmd as u8, response_buf)
+                .unwrap();
             return;
         }
-    };
+    }
 }

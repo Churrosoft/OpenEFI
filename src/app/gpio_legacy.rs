@@ -1,7 +1,20 @@
 // FOR uEFI v3.x boards
 
 use stm32f4xx_hal::{
-    gpio::{self, gpioa, gpiob, gpioc, gpiod, gpioe, Alternate, Input, Output, Pin, PushPull},
+    gpio::{
+        self,
+        gpioa,
+        gpiob,
+        gpioc,
+        gpiod,
+        gpioe,
+        Alternate,
+        Input,
+        Output,
+        Pin,
+        PushPull,
+        Analog,
+    },
     pac::SPI2,
     spi::Spi,
 };
@@ -39,9 +52,8 @@ pub struct LedGpioMapping {
 }
 
 pub struct AuxIoMapping {
-    pub in_1: gpio::PA0<Input>,
-    pub in_2: gpio::PA1<Input>,
-    pub in_3: gpio::PA3<Input>,
+    pub in_1: gpio::PC4<Input>,
+    pub in_2: gpio::PC5<Input>,
 
     pub out_1: gpio::PB5<Output<PushPull>>,
     pub out_2: gpio::PB6<Output<PushPull>>,
@@ -57,6 +69,13 @@ pub struct RelayMapping {
     pub gnc: gpio::PE3<Output<PushPull>>,
     pub ac: gpio::PE4<Output<PushPull>>,
     pub lmb: gpio::PE0<Output<PushPull>>,
+}
+
+pub struct ADCMapping {
+    pub mux_a: gpio::PD2<Output<PushPull>>,
+    pub mux_b: gpio::PD3<Output<PushPull>>,
+    pub mux_c: gpio::PD4<Output<PushPull>>,
+    pub analog_in: gpio::PA0<Analog>,
 }
 
 pub struct GpioMapping {
@@ -97,6 +116,8 @@ pub struct GpioMapping {
     pub spi_sck: gpio::PB10<Alternate<5>>,
     pub spi_miso: gpio::PB14<Alternate<5>>,
     pub spi_mosi: gpio::PB15<Alternate<5, PushPull>>,
+
+    pub adc: ADCMapping,
 }
 
 pub fn init_gpio(
@@ -104,7 +125,7 @@ pub fn init_gpio(
     gpiob: gpiob::Parts,
     gpioc: gpioc::Parts,
     gpiod: gpiod::Parts,
-    gpioe: gpioe::Parts,
+    gpioe: gpioe::Parts
 ) -> GpioMapping {
     let mut gpio = GpioMapping {
         // LED's / User feedback
@@ -166,9 +187,8 @@ pub fn init_gpio(
 
         // AUX I/O
         aux: AuxIoMapping {
-            in_1: gpioa.pa0.into_input(),
-            in_2: gpioa.pa1.into_input(),
-            in_3: gpioa.pa3.into_input(),
+            in_1: gpioc.pc4.into_input(),
+            in_2: gpioc.pc5.into_input(),
 
             out_1: gpiob.pb5.into_push_pull_output(),
             out_2: gpiob.pb6.into_push_pull_output(),
@@ -187,6 +207,13 @@ pub fn init_gpio(
         spi_sck: gpiob.pb10.into_alternate(),
         spi_miso: gpiob.pb14.into_alternate(),
         spi_mosi: gpiob.pb15.into_alternate().internal_pull_up(true),
+
+        adc: ADCMapping {
+            mux_a: gpiod.pd2.into_push_pull_output(),
+            mux_b: gpiod.pd3.into_push_pull_output(),
+            mux_c: gpiod.pd4.into_push_pull_output(),
+            analog_in: gpioa.pa0.into_analog(),
+        },
     };
 
     // set default state on I/O
@@ -212,10 +239,6 @@ pub fn init_gpio(
 
 pub type ISPI = Spi<
     SPI2,
-    (
-        Pin<'B', 10, Alternate<5>>,
-        Pin<'B', 14, Alternate<5>>,
-        Pin<'B', 15, Alternate<5>>,
-    ),
-    false,
+    (Pin<'B', 10, Alternate<5>>, Pin<'B', 14, Alternate<5>>, Pin<'B', 15, Alternate<5>>),
+    false
 >;
