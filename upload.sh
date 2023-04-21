@@ -10,9 +10,10 @@ ttyPortArr=($ttyPorts)
 
 arm-none-eabi-gdb -nx --batch \
   -ex "target extended-remote ${ttyPortArr}" \
+  -ex 'mon tpwr enable' \
   -ex 'monitor swdp_scan' \
   -ex 'attach 1' \
   -ex 'load' \
   -ex 'compare-sections' \
   -ex 'kill' \
-./target/thumbv7em-none-eabihf/debug/open_efi 
+./target/thumbv7em-none-eabihf/release/open_efi 
