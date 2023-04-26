@@ -43,6 +43,7 @@ mod app {
     use usbd_serial::SerialPort;
     use usbd_webusb::{ url_scheme, WebUsb };
     use w25q::series25::FlashInfo;
+    use stm32f4xx_hal::{ pac::ADC1, adc::{ Adc, config::AdcConfig } };
 
     use self::gpio_legacy::{
         AuxIoMapping,
@@ -63,6 +64,7 @@ mod app {
         string: serde_json_core::heapless::String<1000>,
         str_lock: bool,
         crc: Crc32,
+        adc: Adc<ADC1>,
 
         // EFI Related:
         efi_cfg: EngineConfig,
@@ -100,6 +102,9 @@ mod app {
         let gpioe = dp.GPIOE.split();
 
         let mut gpio_config = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
+
+        // ADC
+        let mut adc = Adc::adc1(dp.ADC1, true, AdcConfig::default());
 
         // configure CKP/CMP Pin for Interrupts
         let mut ckp = gpio_config.ckp;
@@ -250,6 +255,7 @@ mod app {
                 crc,
                 flash,
                 flash_info,
+                adc,
 
                 // EFI Related
                 efi_cfg: _efi_cfg,
