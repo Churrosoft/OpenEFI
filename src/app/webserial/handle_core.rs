@@ -1,5 +1,7 @@
-use crate::app;
-use crate::app::webserial::{SerialError, SerialMessage, SerialStatus};
+use crate::{
+    app,
+    app::webserial::{SerialError, SerialMessage, SerialStatus},
+};
 
 pub fn handler(command: SerialMessage) {
     let mut response_buf = SerialMessage {
@@ -9,11 +11,11 @@ pub fn handler(command: SerialMessage) {
         payload: [0u8; 123],
         crc: 0,
     };
-    
+
     match command.command {
         0x01 => {
             response_buf.payload[0] = 1; // BOARD TYPE
-            
+
             let efi_ver_major: u16 = env!("CARGO_PKG_VERSION_MAJOR").parse().unwrap();
             let efi_ver_minor: u16 = env!("CARGO_PKG_VERSION_MINOR").parse().unwrap();
             let efi_ver_patch: u16 = env!("CARGO_PKG_VERSION_PATCH").parse().unwrap();
@@ -30,9 +32,12 @@ pub fn handler(command: SerialMessage) {
             app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
         }
         _ => {
-            app::send_message::spawn(SerialStatus::Error, SerialError::UnknownCmd as u8, response_buf).unwrap();
+            app::send_message::spawn(
+                SerialStatus::Error,
+                SerialError::UnknownCmd as u8,
+                response_buf,
+            )
+            .unwrap();
         }
     };
-    
-    
 }

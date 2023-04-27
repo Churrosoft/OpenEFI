@@ -2,18 +2,7 @@
 
 use stm32f4xx_hal::{
     gpio::{
-        self,
-        gpioa,
-        gpiob,
-        gpioc,
-        gpiod,
-        gpioe,
-        Alternate,
-        Input,
-        Output,
-        Pin,
-        PushPull,
-        Analog,
+        self, gpioa, gpiob, gpioc, gpiod, gpioe, Alternate, Analog, Input, Output, Pin, PushPull,
     },
     pac::SPI2,
     spi::Spi,
@@ -125,7 +114,7 @@ pub fn init_gpio(
     gpiob: gpiob::Parts,
     gpioc: gpioc::Parts,
     gpiod: gpiod::Parts,
-    gpioe: gpioe::Parts
+    gpioe: gpioe::Parts,
 ) -> GpioMapping {
     let mut gpio = GpioMapping {
         // LED's / User feedback
@@ -239,6 +228,10 @@ pub fn init_gpio(
 
 pub type ISPI = Spi<
     SPI2,
-    (Pin<'B', 10, Alternate<5>>, Pin<'B', 14, Alternate<5>>, Pin<'B', 15, Alternate<5>>),
-    false
+    (
+        Pin<'B', 10, Alternate<5>>,
+        Pin<'B', 14, Alternate<5>>,
+        Pin<'B', 15, Alternate<5>>,
+    ),
+    false,
 >;

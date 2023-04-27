@@ -12,7 +12,6 @@ pub fn get_serial_str() -> &'static str {
     // let sn = read_serial();
     let uid = Uid::get();
 
-
     let mut text = ArrayString::<32>::new();
     let mut num_buffer = [0u8; 20];
 
@@ -38,7 +37,7 @@ pub fn crc16(data: &[u8], length: u8) -> u16 {
     let mut crc: u16 = 0xFFFF;
     let mut iter: usize = 0;
     let mut in_len = length;
-    
+
     while in_len != 0 {
         let mut x = (crc >> 8) as u8 ^ data[iter];
         x ^= x >> 4;

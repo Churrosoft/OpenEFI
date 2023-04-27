@@ -1,12 +1,16 @@
 mod handle_core;
 pub mod handle_tables;
 
-use crate::app;
-use crate::app::{ logging, util };
+use crate::{
+    app,
+    app::{logging, util},
+};
 use arrayvec::ArrayVec;
 use rtic::Mutex;
-use usb_device::bus::{ UsbBus, UsbBusAllocator };
-use usb_device::device::{ UsbDevice, UsbDeviceBuilder, UsbVidPid };
+use usb_device::{
+    bus::{UsbBus, UsbBusAllocator},
+    device::{UsbDevice, UsbDeviceBuilder, UsbVidPid},
+};
 
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
@@ -34,7 +38,10 @@ pub enum SerialError {
     TableNotLoaded = 0x9f,
 }
 
-pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B> where B: UsbBus {
+pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
+where
+    B: UsbBus,
+{
     UsbDeviceBuilder::new(bus, UsbVidPid(0x1209, 0xeef1))
         .manufacturer("Churrosoft")
         .product("OpenEFI | uEFI v3.4.0")
@@ -77,9 +84,12 @@ pub fn process_command(buf: [u8; 128]) {
         0x10 => app::table_cdc_callback::spawn(serial_cmd).unwrap(),
         0x90 => app::debug_demo::spawn(serial_cmd.command & 0b00001111).unwrap(),
         _ => {
-            app::send_message
-                ::spawn(SerialStatus::Error, SerialError::UnknownCmd as u8, serial_cmd)
-                .unwrap();
+            app::send_message::spawn(
+                SerialStatus::Error,
+                SerialError::UnknownCmd as u8,
+                serial_cmd,
+            )
+            .unwrap();
         }
     }
 }
@@ -94,12 +104,16 @@ pub fn finish_message(message: SerialMessage) -> [u8; 128] {
     message_buf.push(0);
     message_buf.push(0);
 
-    let payload: [u8; 126] = message_buf.take().into_inner().unwrap()[0..126].try_into().unwrap();
+    let payload: [u8; 126] = message_buf.take().into_inner().unwrap()[0..126]
+        .try_into()
+        .unwrap();
     let crc = util::crc16(&payload, 126);
 
     message_buf.clear();
     message_buf.try_extend_from_slice(&payload).unwrap();
-    message_buf.try_extend_from_slice(&crc.to_be_bytes()).unwrap();
+    message_buf
+        .try_extend_from_slice(&crc.to_be_bytes())
+        .unwrap();
 
     message_buf.take().into_inner().unwrap()
 }
@@ -109,7 +123,7 @@ pub(crate) fn send_message(
     mut ctx: app::send_message::Context,
     status: SerialStatus,
     code: u8,
-    mut message: SerialMessage
+    mut message: SerialMessage,
 ) {
     message.status = (status as u8) | code;
 

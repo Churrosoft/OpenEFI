@@ -1,13 +1,11 @@
-use super::gpio_legacy::{ AuxIoMapping, IgnitionGpioMapping, InjectionGpioMapping, RelayMapping };
+use super::gpio_legacy::{AuxIoMapping, IgnitionGpioMapping, InjectionGpioMapping, RelayMapping};
 
 use cortex_m::prelude::{
-    _embedded_hal_blocking_delay_DelayUs,
-    _embedded_hal_blocking_delay_DelayMs,
+    _embedded_hal_blocking_delay_DelayMs, _embedded_hal_blocking_delay_DelayUs,
 };
-use stm32f4xx_hal::pac::TIM6;
-use stm32f4xx_hal::timer;
+use stm32f4xx_hal::{pac::TIM13, timer};
 
-pub fn spark_demo(ecn: &mut IgnitionGpioMapping, tim6: &mut timer::DelayUs<TIM6>) {
+pub fn spark_demo(ecn: &mut IgnitionGpioMapping, tim6: &mut timer::DelayUs<TIM13>) {
     for i in 1..15 {
         ecn.ecn_1.set_high();
         tim6.delay_us(1200u32);
@@ -35,7 +33,7 @@ pub fn spark_demo(ecn: &mut IgnitionGpioMapping, tim6: &mut timer::DelayUs<TIM6>
     ecn.ecn_4.set_low();
 }
 
-pub fn injector_demo(inj: &mut InjectionGpioMapping, tim6: &mut timer::DelayUs<TIM6>) {
+pub fn injector_demo(inj: &mut InjectionGpioMapping, tim6: &mut timer::DelayUs<TIM13>) {
     for i in 1..15 {
         inj.iny_1.set_high();
         tim6.delay_us(320u32);
@@ -64,7 +62,7 @@ pub fn injector_demo(inj: &mut InjectionGpioMapping, tim6: &mut timer::DelayUs<T
     inj.iny_4.set_low();
 }
 
-pub fn external_idle_demo(aux: &mut AuxIoMapping, tim6: &mut timer::DelayUs<TIM6>) {
+pub fn external_idle_demo(aux: &mut AuxIoMapping, tim6: &mut timer::DelayUs<TIM13>) {
     for _ in 0..3 {
         (0..45).for_each(|_| {
             aux.out_1.set_low();
@@ -120,7 +118,7 @@ pub fn external_idle_demo(aux: &mut AuxIoMapping, tim6: &mut timer::DelayUs<TIM6
     }
 }
 
-pub fn relay_demo(rly: &mut RelayMapping, tim6: &mut timer::DelayUs<TIM6>) {
+pub fn relay_demo(rly: &mut RelayMapping, tim6: &mut timer::DelayUs<TIM13>) {
     for i in 1..10 {
         rly.ac.set_high();
         rly.gnc.set_high();

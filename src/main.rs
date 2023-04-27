@@ -17,40 +17,39 @@ mod app {
     pub mod util;
     pub mod webserial;
 
-    use crate::app::engine::efi_cfg::{ get_default_efi_cfg, EngineConfig };
-    use crate::app::engine::engine_status::{ get_default_engine_status, EngineStatus };
-    use crate::app::gpio_legacy::init_gpio;
-    use crate::app::injection::calculate_time_isr;
-    use crate::app::injection::injection_setup;
-    use crate::app::memory::tables::Tables;
-    use crate::app::webserial::{ handle_tables, send_message, SerialMessage, SerialStatus };
+    use crate::app::{
+        engine::{
+            efi_cfg::{get_default_efi_cfg, EngineConfig},
+            engine_status::{get_default_engine_status, EngineStatus},
+            sensors::{get_sensor_raw, SensorTypes, SensorValues},
+        },
+        gpio_legacy::{
+            init_gpio, ADCMapping, AuxIoMapping, IgnitionGpioMapping, InjectionGpioMapping,
+            RelayMapping,
+        },
+        injection::{calculate_time_isr, injection_setup},
+        memory::tables::Tables,
+        webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
+    };
     use arrayvec::ArrayVec;
-    use embedded_hal::spi::{ Mode, Phase, Polarity };
+    use embedded_hal::spi::{Mode, Phase, Polarity};
+    //    use stm32f4xx_hal::pac::TIM13;
     use stm32f4xx_hal::{
+        adc::{config::AdcConfig, Adc},
         crc32,
         crc32::Crc32,
-        gpio::{ Edge, Input },
+        gpio::{Edge, Input},
         otg_fs,
-        otg_fs::UsbBusType,
-        otg_fs::USB,
-        pac::{ TIM2, TIM3, TIM6 },
+        otg_fs::{UsbBusType, USB},
+        pac::{ADC1, TIM13, TIM2, TIM3, TIM6},
         prelude::*,
         spi::*,
-        timer::{ self, Event },
+        timer::{self, Event},
     };
-    use usb_device::bus::UsbBusAllocator;
-    use usb_device::device::UsbDevice;
+    use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
     use usbd_serial::SerialPort;
-    use usbd_webusb::{ url_scheme, WebUsb };
+    use usbd_webusb::{url_scheme, WebUsb};
     use w25q::series25::FlashInfo;
-    use stm32f4xx_hal::{ pac::ADC1, adc::{ Adc, config::AdcConfig } };
-
-    use self::gpio_legacy::{
-        AuxIoMapping,
-        IgnitionGpioMapping,
-        InjectionGpioMapping,
-        RelayMapping,
-    };
 
     #[shared]
     struct Shared {
@@ -64,7 +63,6 @@ mod app {
         string: serde_json_core::heapless::String<1000>,
         str_lock: bool,
         crc: Crc32,
-        adc: Adc<ADC1>,
 
         // EFI Related:
         efi_cfg: EngineConfig,
@@ -72,12 +70,15 @@ mod app {
         flash: memory::tables::FlashT,
         flash_info: FlashInfo,
         tables: Tables,
+        sensors: SensorValues,
+
         // EFI debug:
         inj_pins: InjectionGpioMapping,
         ign_pins: IgnitionGpioMapping,
         aux_pins: AuxIoMapping,
         relay_pins: RelayMapping,
-        timer6: timer::DelayUs<TIM6>,
+        timer6: timer::CounterUs<TIM6>,
+        timer13: timer::DelayUs<TIM13>,
     }
     #[local]
     struct Local {
@@ -86,6 +87,8 @@ mod app {
 
         // EFI Related:
         ckp: stm32f4xx_hal::gpio::PC6<Input>,
+        adc: Adc<ADC1>,
+        analog_pins: ADCMapping,
     }
 
     #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
@@ -116,18 +119,33 @@ mod app {
 
         // Configure and obtain handle for delay abstraction
         let rcc = dp.RCC.constrain();
-        let clocks = rcc.cfgr.use_hse((25).MHz()).sysclk((120).MHz()).require_pll48clk().freeze();
+        let clocks = rcc
+            .cfgr
+            .use_hse((25).MHz())
+            .sysclk((120).MHz())
+            .require_pll48clk()
+            .freeze();
 
         let mut timer: timer::CounterMs<TIM2> = dp.TIM2.counter_ms(&clocks);
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
 
         // NOTE: timer para delays en hilos
-        let mut timer6: timer::DelayUs<TIM6> = dp.TIM6.delay_us(&clocks);
+        let mut timer6: timer::CounterUs<TIM6> = dp.TIM6.counter_us(&clocks);
+
+        // NOTE: para task de sensores
+        let mut timer13: timer::DelayUs<TIM13> = dp.TIM13.delay_us(&clocks);
+
+        //  TIM5, TIM7, TIM4
+
         timer.start((150).millis()).unwrap();
 
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
         timer3.listen(Event::Update);
+        timer13.listen(Event::Update);
+
+        // TODO: revisar cual es el mejor periodo
+        timer6.start((150).millis()).unwrap();
 
         // Init USB
         let usb = USB {
@@ -148,13 +166,12 @@ mod app {
             *usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
         }
 
-        let usb_cdc = unsafe {
-            SerialPort::new_with_store(usb_bus.as_ref().unwrap(), __USB_RX, __USB_TX)
-        };
+        let usb_cdc =
+            unsafe { SerialPort::new_with_store(usb_bus.as_ref().unwrap(), __USB_RX, __USB_TX) };
         let usb_web = WebUsb::new(
             usb_bus.as_ref().unwrap(),
             url_scheme::HTTPS,
-            "tuner.openefi.tech"
+            "tuner.openefi.tech",
         );
 
         let usb_dev = webserial::new_device(usb_bus.as_ref().unwrap());
@@ -174,10 +191,14 @@ mod app {
 
         let spi2 = Spi::new(
             dp.SPI2,
-            (gpio_config.spi_sck, gpio_config.spi_miso, gpio_config.spi_mosi),
+            (
+                gpio_config.spi_sck,
+                gpio_config.spi_miso,
+                gpio_config.spi_mosi,
+            ),
             mode,
             (3).MHz(),
-            &clocks
+            &clocks,
         );
 
         // CRC32:
@@ -217,27 +238,29 @@ mod app {
         logging::host::debug!("AF {:?}", _efi_status.injection.air_flow);
 
         // NOTE: con crear el string estaria, no hace falta parsear el objecto de config
-        let mut serialized: serde_json_core::heapless::String<1000> = serde_json_core
-            ::to_string(&_efi_cfg)
-            .unwrap();
+        let mut serialized: serde_json_core::heapless::String<1000> =
+            serde_json_core::to_string(&_efi_cfg).unwrap();
 
         let mut str_lock = false; // NOTE: sesuponeque rtic hace todo el laburo de los locks asi que esto quedaria al pedo
 
         gpio_config.leds.led_check.toggle();
         gpio_config.leds.led_mil.toggle();
 
-        debug::spark_demo(&mut gpio_config.ignition, &mut timer6);
-        debug::injector_demo(&mut gpio_config.injection, &mut timer6);
+        debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
+        debug::injector_demo(&mut gpio_config.injection, &mut timer13);
 
-        //  hprintln!("FFFF {:?}", serialized);
-        //  logging::host::debug!("FFFF {:?}", serialized);
-        (
+        let mut sensors = SensorValues::new();
+
+        return (
+            //  hprintln!("FFFF {:?}", serialized);
+            //  logging::host::debug!("FFFF {:?}", serialized);
             // Initialization of shared resources
             Shared {
                 // Timers:
                 timer,
                 timer3,
                 timer6,
+                timer13,
 
                 usb_cdc,
                 usb_web,
@@ -248,6 +271,7 @@ mod app {
                 ign_pins: gpio_config.ignition,
                 aux_pins: gpio_config.aux,
                 relay_pins: gpio_config.relay,
+                sensors,
 
                 // CORE:
                 string: serialized,
@@ -255,7 +279,6 @@ mod app {
                 crc,
                 flash,
                 flash_info,
-                adc,
 
                 // EFI Related
                 efi_cfg: _efi_cfg,
@@ -267,11 +290,13 @@ mod app {
                 ckp,
                 usb_dev,
                 cdc_input_buffer: cdc_buff,
+                adc,
+                analog_pins: gpio_config.adc,
             },
             // Move the monotonic timer to the RTIC run-time, this enables
             // scheduling
             init::Monotonics(),
-        )
+        );
     }
 
     #[idle]
@@ -284,7 +309,9 @@ mod app {
     //TODO: reciclar para encendido
     #[task(binds = TIM2, priority = 1, local = [], shared = [timer, timer3, leds])]
     fn timer_expired(mut ctx: timer_expired::Context) {
-        ctx.shared.timer.lock(|tim| tim.clear_interrupt(Event::Update));
+        ctx.shared
+            .timer
+            .lock(|tim| tim.clear_interrupt(Event::Update));
 
         ctx.shared.leds.lock(|l| l.led_0.toggle());
     }
@@ -316,16 +343,15 @@ mod app {
         // calculo de RPM && led
         (efi_cfg, efi_status, ctx.shared.leds, ctx.shared.timer3).lock(
             |efi_cfg, efi_status, leds, timer3| {
-                if
-                    efi_status.cycle_tick >=
-                    efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
+                if efi_status.cycle_tick
+                    >= efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
                 {
                     leds.led_2.set_low();
                     // FIXME: por ahora solo prendo el led una vez por vuelta, luego lo hago funcionar con el primer cilindro
                     timer3.start((50000).micros()).unwrap();
                     efi_status.cycle_tick = 0;
                 }
-            }
+            },
         );
 
         cpwm_callback::spawn().unwrap();
@@ -351,7 +377,7 @@ mod app {
                                 ctx.local.cdc_input_buffer.push(buf[i]);
                                 if ctx.local.cdc_input_buffer.is_full() {
                                     webserial::process_command(
-                                        ctx.local.cdc_input_buffer.take().into_inner().unwrap()
+                                        ctx.local.cdc_input_buffer.take().into_inner().unwrap(),
                                     );
 
                                     ctx.local.cdc_input_buffer.clear();
@@ -373,7 +399,7 @@ mod app {
             ctx: send_message::Context,
             status: SerialStatus,
             code: u8,
-            mut message: SerialMessage
+            mut message: SerialMessage,
         );
     }
 
@@ -390,25 +416,52 @@ mod app {
         });
     }
 
-    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, timer6])]
+    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, timer13])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         let inj_pins = ctx.shared.inj_pins;
         let ign_pins = ctx.shared.ign_pins;
         let aux_pins = ctx.shared.aux_pins;
         let relay_pins = ctx.shared.relay_pins;
-        let timer6 = ctx.shared.timer6;
+        let timer13 = ctx.shared.timer13;
 
-        (inj_pins, ign_pins, aux_pins, relay_pins, timer6).lock(
-            |inj_pins, ign_pins, aux_pins, relay_pins, timer6| {
-                match demo_mode {
-                    0x0 => debug::spark_demo(ign_pins, timer6),
-                    0x1 => debug::injector_demo(inj_pins, timer6),
-                    0x2 => debug::external_idle_demo(aux_pins, timer6),
-                    0x3 => debug::relay_demo(relay_pins, timer6),
-                    0x4..=u8::MAX => debug::external_idle_demo(aux_pins, timer6),
-                }
-            }
+        (inj_pins, ign_pins, aux_pins, relay_pins, timer13).lock(
+            |inj_pins, ign_pins, aux_pins, relay_pins, timer13| match demo_mode {
+                0x0 => debug::spark_demo(ign_pins, timer13),
+                0x1 => debug::injector_demo(inj_pins, timer13),
+                0x2 => debug::external_idle_demo(aux_pins, timer13),
+                0x3 => debug::relay_demo(relay_pins, timer13),
+                0x4..=u8::MAX => debug::external_idle_demo(aux_pins, timer13),
+            },
         )
+    }
+
+    #[task(binds = TIM6_DAC, priority = 5, local = [analog_pins, adc], shared = [sensors])]
+    fn sensors_callback(ctx: sensors_callback::Context) {
+        let mut sensors = ctx.shared.sensors;
+        let adc_pins = ctx.local.analog_pins;
+        let adc = ctx.local.adc;
+
+        sensors.lock(|sensors| {
+            sensors.update(
+                get_sensor_raw(SensorTypes::AirTemp, adc_pins, adc),
+                SensorTypes::AirTemp,
+            );
+
+            sensors.update(
+                get_sensor_raw(SensorTypes::TPS, adc_pins, adc),
+                SensorTypes::TPS,
+            );
+
+            sensors.update(
+                get_sensor_raw(SensorTypes::MAP, adc_pins, adc),
+                SensorTypes::MAP,
+            );
+
+            sensors.update(
+                get_sensor_raw(SensorTypes::CooltanTemp, adc_pins, adc),
+                SensorTypes::CooltanTemp,
+            );
+        })
     }
 
     // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs

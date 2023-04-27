@@ -1,5 +1,8 @@
-use stm32f4xx_hal::{ pac::ADC1, adc::{ Adc, config::SampleTime } };
 use crate::app::gpio_legacy::ADCMapping;
+use stm32f4xx_hal::{
+    adc::{config::SampleTime, Adc},
+    pac::ADC1,
+};
 
 const EMA_LP_ALPHA: f32 = 0.45f32;
 
@@ -27,33 +30,43 @@ pub struct SensorValues {
 }
 
 impl SensorValues {
+    pub fn new() -> SensorValues {
+        SensorValues {
+            map: 0.0f32,
+            tps: 0.0f32,
+            cooltan_temp: 0.0f32,
+            air_temp: 0.0f32,
+            batt: 0.0f32,
+            raw_map: 0.0f32,
+            raw_tps: 0.0f32,
+            raw_temp: 0.0f32,
+            raw_air_temp: 0.0f32,
+            raw_batt: 0.0f32,
+        }
+    }
+
     // TODO: falta calcular cada valor del sensor ademas del low pass
     pub fn update(&mut self, raw_value: u16, sensor_type: SensorTypes) {
         match sensor_type {
             SensorTypes::AirTemp => {
-                self.raw_air_temp =
-                    EMA_LP_ALPHA * (raw_value as f32) +
-                    (1.0 - EMA_LP_ALPHA) * (self.raw_air_temp as f32);
+                self.raw_air_temp = EMA_LP_ALPHA * (raw_value as f32)
+                    + (1.0 - EMA_LP_ALPHA) * (self.raw_air_temp as f32);
             }
             SensorTypes::CooltanTemp => {
-                self.raw_temp =
-                    EMA_LP_ALPHA * (raw_value as f32) +
-                    (1.0 - EMA_LP_ALPHA) * (self.raw_temp as f32);
+                self.raw_temp = EMA_LP_ALPHA * (raw_value as f32)
+                    + (1.0 - EMA_LP_ALPHA) * (self.raw_temp as f32);
             }
             SensorTypes::MAP => {
-                self.raw_map =
-                    EMA_LP_ALPHA * (raw_value as f32) +
-                    (1.0 - EMA_LP_ALPHA) * (self.raw_map as f32);
+                self.raw_map = EMA_LP_ALPHA * (raw_value as f32)
+                    + (1.0 - EMA_LP_ALPHA) * (self.raw_map as f32);
             }
             SensorTypes::TPS => {
-                self.raw_tps =
-                    EMA_LP_ALPHA * (raw_value as f32) +
-                    (1.0 - EMA_LP_ALPHA) * (self.raw_tps as f32);
+                self.raw_tps = EMA_LP_ALPHA * (raw_value as f32)
+                    + (1.0 - EMA_LP_ALPHA) * (self.raw_tps as f32);
             }
             SensorTypes::BatteryVoltage => {
-                self.raw_batt =
-                    EMA_LP_ALPHA * (raw_value as f32) +
-                    (1.0 - EMA_LP_ALPHA) * (self.raw_batt as f32);
+                self.raw_batt = EMA_LP_ALPHA * (raw_value as f32)
+                    + (1.0 - EMA_LP_ALPHA) * (self.raw_batt as f32);
             }
         }
     }
@@ -62,7 +75,7 @@ impl SensorValues {
 pub fn get_sensor_raw(
     sensor_type: SensorTypes,
     adc_pins: &mut ADCMapping,
-    adc: &mut Adc<ADC1>
+    adc: &mut Adc<ADC1>,
 ) -> u16 {
     let a = sensor_type as u8;
     let b = a;

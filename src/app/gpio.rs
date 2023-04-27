@@ -1,4 +1,6 @@
-use stm32f4xx_hal::gpio::{self, Alternate, gpioa, gpiob, gpioc, gpiod, gpioe, Input, Output, PushPull};
+use stm32f4xx_hal::gpio::{
+    self, gpioa, gpiob, gpioc, gpiod, gpioe, Alternate, Input, Output, PushPull,
+};
 pub struct GpioMapping {
     // LED's / User feedback
     pub led_0: gpio::PC13<Output<PushPull>>,
@@ -58,8 +60,8 @@ pub struct GpioMapping {
     pub usb_dm: gpio::PA12<Alternate<10, PushPull>>,
 
     pub spi_sck: gpio::PB10<Alternate<5>>,
-    pub spi_miso : gpio::PB14<Alternate<5>>,
-    pub spi_mosi : gpio:: PB15<Alternate<5,PushPull>>,
+    pub spi_miso: gpio::PB14<Alternate<5>>,
+    pub spi_mosi: gpio::PB15<Alternate<5, PushPull>>,
 }
 
 pub fn init_gpio(

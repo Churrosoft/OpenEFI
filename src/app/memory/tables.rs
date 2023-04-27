@@ -1,9 +1,11 @@
 #![allow(dead_code)]
 
-use stm32f4xx_hal::crc32::Crc32;
-use stm32f4xx_hal::gpio::{Alternate, Output, Pin};
-use stm32f4xx_hal::pac::SPI2;
-use stm32f4xx_hal::spi::Spi;
+use stm32f4xx_hal::{
+    crc32::Crc32,
+    gpio::{Alternate, Output, Pin},
+    pac::SPI2,
+    spi::Spi,
+};
 use w25q::series25::{Flash, FlashInfo};
 
 type DataT = [[i32; 17]; 17];
