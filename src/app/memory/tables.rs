@@ -7,6 +7,8 @@ use stm32f4xx_hal::{
     spi::Spi,
 };
 use w25q::series25::{Flash, FlashInfo};
+use shared_bus_rtic::SharedBus;
+
 
 type DataT = [[i32; 17]; 17];
 
@@ -23,18 +25,18 @@ pub struct TableData {
     pub max_y: u16,
 }
 
-pub type FlashT = Flash<
-    Spi<
-        SPI2,
-        (
-            Pin<'B', 10, Alternate<5>>,
-            Pin<'B', 14, Alternate<5>>,
-            Pin<'B', 15, Alternate<5>>,
-        ),
-        false,
-    >,
-    Pin<'E', 13, Output>,
+
+pub type SpiT = Spi<
+    SPI2,
+    (
+        Pin<'B', 10, Alternate<5>>,
+        Pin<'B', 14, Alternate<5>>,
+        Pin<'B', 15, Alternate<5>>,
+    ),
+    false,
 >;
+
+pub type FlashT = Flash<SharedBus<SpiT>,  Pin<'E', 13, Output>>;
 
 impl TableData {
     pub fn read_from_memory(

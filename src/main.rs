@@ -7,6 +7,43 @@ use panic_halt as _;
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5, TIM7, TIM4])]
 mod app {
+    use arrayvec::ArrayVec;
+    use embedded_hal::spi::{Mode, Phase, Polarity};
+    use shared_bus_rtic::SharedBus;
+    use stm32f4xx_hal::{
+        adc::{Adc, config::AdcConfig},
+        crc32,
+        crc32::Crc32,
+        gpio::{Edge, Input},
+        otg_fs,
+        otg_fs::{USB, UsbBusType},
+        pac::{ADC1, TIM13, TIM2, TIM3, TIM6},
+        prelude::*,
+        spi::*,
+        timer::{self, Event},
+    };
+    use stm32f4xx_hal::gpio::{Alternate, Output, Pin};
+    use stm32f4xx_hal::pac::SPI2;
+    use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
+    use usbd_serial::SerialPort;
+    use usbd_webusb::{url_scheme, WebUsb};
+    use w25q::series25::{Flash, FlashInfo};
+
+    use crate::app::{
+        engine::{
+            efi_cfg::{EngineConfig, get_default_efi_cfg},
+            engine_status::{EngineStatus, get_default_engine_status},
+            sensors::{get_sensor_raw, SensorTypes, SensorValues},
+        },
+        gpio_legacy::{
+            ADCMapping, AuxIoMapping, IgnitionGpioMapping, init_gpio, InjectionGpioMapping,
+            RelayMapping,
+        },
+        injection::{calculate_time_isr, injection_setup},
+        memory::tables::{SpiT, Tables},
+        webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
+    };
+
     pub mod debug;
     pub mod engine;
     pub mod gpio;
@@ -16,40 +53,6 @@ mod app {
     pub mod memory;
     pub mod util;
     pub mod webserial;
-
-    use crate::app::{
-        engine::{
-            efi_cfg::{get_default_efi_cfg, EngineConfig},
-            engine_status::{get_default_engine_status, EngineStatus},
-            sensors::{get_sensor_raw, SensorTypes, SensorValues},
-        },
-        gpio_legacy::{
-            init_gpio, ADCMapping, AuxIoMapping, IgnitionGpioMapping, InjectionGpioMapping,
-            RelayMapping,
-        },
-        injection::{calculate_time_isr, injection_setup},
-        memory::tables::Tables,
-        webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
-    };
-    use arrayvec::ArrayVec;
-    use embedded_hal::spi::{Mode, Phase, Polarity};
-    //    use stm32f4xx_hal::pac::TIM13;
-    use stm32f4xx_hal::{
-        adc::{config::AdcConfig, Adc},
-        crc32,
-        crc32::Crc32,
-        gpio::{Edge, Input},
-        otg_fs,
-        otg_fs::{UsbBusType, USB},
-        pac::{ADC1, TIM13, TIM2, TIM3, TIM6},
-        prelude::*,
-        spi::*,
-        timer::{self, Event},
-    };
-    use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
-    use usbd_serial::SerialPort;
-    use usbd_webusb::{url_scheme, WebUsb};
-    use w25q::series25::FlashInfo;
 
     #[shared]
     struct Shared {
@@ -71,6 +74,9 @@ mod app {
         flash_info: FlashInfo,
         tables: Tables,
         sensors: SensorValues,
+        // el implement de "shared_bus_resources" anda para el culo;
+        // asi que hago el lock a mano
+        spi_lock: bool,
 
         // EFI debug:
         inj_pins: InjectionGpioMapping,
@@ -80,6 +86,7 @@ mod app {
         timer6: timer::CounterUs<TIM6>,
         timer13: timer::DelayUs<TIM13>,
     }
+
     #[local]
     struct Local {
         usb_dev: UsbDevice<'static, UsbBusType>,
@@ -91,11 +98,13 @@ mod app {
         analog_pins: ADCMapping,
     }
 
-    #[init(local = [USB_BUS: Option<UsbBusAllocator<UsbBusType>> = None])]
+
+    #[init(local = [USB_BUS: Option < UsbBusAllocator < UsbBusType >> = None])]
     fn init(mut ctx: init::Context) -> (Shared, Local, init::Monotonics) {
         let mut dp = ctx.device;
 
-        ctx.core.DWT.enable_cycle_counter(); // TODO: Disable this in release builds
+        ctx.core.DWT.enable_cycle_counter();
+        // TODO: Disable this in release builds
         logging::host::debug!("Hello :)");
 
         let gpioa = dp.GPIOA.split();
@@ -201,10 +210,13 @@ mod app {
             &clocks,
         );
 
+        let spi_bus = shared_bus_rtic::new!(spi2, SpiT );
+
+
         // CRC32:
         let mut crc = crc32::Crc32::new(dp.CRC);
 
-        let mut flash = w25q::series25::Flash::init(spi2, gpio_config.memory_cs).unwrap();
+        let mut flash = w25q::series25::Flash::init(spi_bus.acquire(), gpio_config.memory_cs).unwrap();
 
         let id = flash.read_jedec_id().unwrap();
 
@@ -251,6 +263,8 @@ mod app {
 
         let mut sensors = SensorValues::new();
 
+        let mut spi_lock = false;
+
         return (
             //  hprintln!("FFFF {:?}", serialized);
             //  logging::host::debug!("FFFF {:?}", serialized);
@@ -262,6 +276,7 @@ mod app {
                 timer6,
                 timer13,
 
+                // USB
                 usb_cdc,
                 usb_web,
 
@@ -279,6 +294,7 @@ mod app {
                 crc,
                 flash,
                 flash_info,
+                spi_lock,
 
                 // EFI Related
                 efi_cfg: _efi_cfg,
@@ -328,9 +344,9 @@ mod app {
 
     // EXTI9_5_IRQn para los pines ckp/cmp
     #[task(
-        binds = EXTI9_5,
-        local = [ckp],
-        shared = [leds, efi_status, flash_info, efi_cfg, timer, timer3]
+    binds = EXTI9_5,
+    local = [ckp],
+    shared = [leds, efi_status, flash_info, efi_cfg, timer, timer3]
     )]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
         ctx.shared.efi_status.lock(|es| {
@@ -366,7 +382,7 @@ mod app {
 
         ctx.shared.usb_cdc.lock(|cdc| {
             // USB dev poll only in the interrupt handler
-            (ctx.shared.usb_web,).lock(|web| {
+            (ctx.shared.usb_web, ).lock(|web| {
                 if device.poll(&mut [web, cdc]) {
                     let mut buf = [0u8; 64];
 
@@ -403,16 +419,19 @@ mod app {
         );
     }
 
-    #[task(priority = 2, shared = [flash, flash_info, efi_cfg, tables, crc])]
+    #[task(priority = 2, shared = [flash_info, efi_cfg, tables, crc, flash, spi_lock])]
     fn table_cdc_callback(ctx: table_cdc_callback::Context, serial_cmd: SerialMessage) {
         let flash = ctx.shared.flash;
         let flash_info = ctx.shared.flash_info;
         let tables = ctx.shared.tables;
         let crc = ctx.shared.crc;
+        let spi_lock = ctx.shared.spi_lock;
 
-        (flash, flash_info, tables, crc).lock(|flash, flash_info, tables, crc| {
+        (flash, flash_info, tables, crc, spi_lock).lock(|flash, flash_info, tables, crc, spi_lock| {
+            *spi_lock = true;
             tables.tps_rpm_ve.as_mut().unwrap()[0][0] = 40;
             handle_tables::handler(serial_cmd, flash, flash_info, tables, crc);
+            *spi_lock = false;
         });
     }
 
