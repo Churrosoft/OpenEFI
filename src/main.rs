@@ -9,7 +9,7 @@ use panic_halt as _;
 mod app {
     use arrayvec::ArrayVec;
     use embedded_hal::spi::{Mode, Phase, Polarity};
-    use shared_bus_rtic::SharedBus;
+    use rtic::mutex_prelude::TupleExt05;
     use stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
         crc32,
@@ -22,12 +22,10 @@ mod app {
         spi::*,
         timer::{self, Event},
     };
-    use stm32f4xx_hal::gpio::{Alternate, Output, Pin};
-    use stm32f4xx_hal::pac::SPI2;
     use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
-    use w25q::series25::{Flash, FlashInfo};
+    use w25q::series25::FlashInfo;
 
     use crate::app::{
         engine::{
@@ -37,7 +35,7 @@ mod app {
         },
         gpio_legacy::{
             ADCMapping, AuxIoMapping, IgnitionGpioMapping, init_gpio, InjectionGpioMapping,
-            RelayMapping,
+            RelayMapping,StepperMapping
         },
         injection::{calculate_time_isr, injection_setup},
         memory::tables::{SpiT, Tables},
@@ -54,17 +52,34 @@ mod app {
     pub mod util;
     pub mod webserial;
 
+    use logging::host;
+
     #[shared]
     struct Shared {
+        // Timers:
+        timer6: timer::CounterUs<TIM6>,
+        timer13: timer::DelayUs<TIM13>,
+        timer: timer::CounterMs<TIM2>,
+        timer3: timer::CounterUs<TIM3>,
+
+        // Core I/O
+        led: gpio_legacy::LedGpioMapping,
+        inj_pins: InjectionGpioMapping,
+        ign_pins: IgnitionGpioMapping,
+        aux_pins: AuxIoMapping,
+        relay_pins: RelayMapping,
+        stepper_pins: StepperMapping,
+
+        // USB:
         usb_cdc: SerialPort<'static, UsbBusType, [u8; 128], [u8; 4000]>,
         usb_web: WebUsb<UsbBusType>,
 
         // core:
-        timer: timer::CounterMs<TIM2>,
-        timer3: timer::CounterUs<TIM3>,
-        leds: gpio_legacy::LedGpioMapping,
         string: serde_json_core::heapless::String<1000>,
         str_lock: bool,
+        // el implement de "shared_bus_resources" anda para el culo;
+        // asi que hago el lock a mano
+        spi_lock: bool,
         crc: Crc32,
 
         // EFI Related:
@@ -74,17 +89,6 @@ mod app {
         flash_info: FlashInfo,
         tables: Tables,
         sensors: SensorValues,
-        // el implement de "shared_bus_resources" anda para el culo;
-        // asi que hago el lock a mano
-        spi_lock: bool,
-
-        // EFI debug:
-        inj_pins: InjectionGpioMapping,
-        ign_pins: IgnitionGpioMapping,
-        aux_pins: AuxIoMapping,
-        relay_pins: RelayMapping,
-        timer6: timer::CounterUs<TIM6>,
-        timer13: timer::DelayUs<TIM13>,
     }
 
     #[local]
@@ -105,15 +109,15 @@ mod app {
 
         ctx.core.DWT.enable_cycle_counter();
         // TODO: Disable this in release builds
-        logging::host::debug!("Hello :)");
+        host::debug!("Hello :)");
 
-        let gpioa = dp.GPIOA.split();
-        let gpiob = dp.GPIOB.split();
-        let gpioc = dp.GPIOC.split();
-        let gpiod = dp.GPIOD.split();
-        let gpioe = dp.GPIOE.split();
+        let gpio_a = dp.GPIOA.split();
+        let gpio_b = dp.GPIOB.split();
+        let gpio_c = dp.GPIOC.split();
+        let gpio_d = dp.GPIOD.split();
+        let gpio_e = dp.GPIOE.split();
 
-        let mut gpio_config = init_gpio(gpioa, gpiob, gpioc, gpiod, gpioe);
+        let mut gpio_config = init_gpio(gpio_a, gpio_b, gpio_c, gpio_d, gpio_e);
 
         // ADC
         let mut adc = Adc::adc1(dp.ADC1, true, AdcConfig::default());
@@ -212,7 +216,6 @@ mod app {
 
         let spi_bus = shared_bus_rtic::new!(spi2, SpiT );
 
-
         // CRC32:
         let mut crc = crc32::Crc32::new(dp.CRC);
 
@@ -222,15 +225,10 @@ mod app {
 
         let flash_info = flash.get_device_info().unwrap();
 
-        logging::host::debug!("FLASH: {:?}", id);
-        logging::host::debug!("FLASH: Size {:?}", flash_info.capacity_kb);
-        logging::host::debug!("FLASH: Block Count {:?}", flash_info.block_count);
-        logging::host::debug!("FLASH: Page Count {:?}", flash_info.page_count);
-
-        /*         logging::host::debug!(
-            "Find 2 in vec1: {:?}",
-            ldata[0].into_iter().position(|x| x <= 307200)
-        ); */
+        host::debug!("FLASH: {:?}", id);
+        // logging::host::debug!("FLASH: Size {:?}", flash_info.capacity_kb);
+        // logging::host::debug!("FLASH: Block Count {:?}", flash_info.block_count);
+        // logging::host::debug!("FLASH: Page Count {:?}", flash_info.page_count);
 
         // EFI Setup:
         let mut table = Tables {
@@ -255,19 +253,17 @@ mod app {
 
         let mut str_lock = false; // NOTE: sesuponeque rtic hace todo el laburo de los locks asi que esto quedaria al pedo
 
-        gpio_config.leds.led_check.toggle();
-        gpio_config.leds.led_mil.toggle();
+        gpio_config.led.led_check.toggle();
+        gpio_config.led.led_mil.toggle();
 
         debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
         debug::injector_demo(&mut gpio_config.injection, &mut timer13);
 
-        let mut sensors = SensorValues::new();
+        let sensors = SensorValues::new();
 
-        let mut spi_lock = false;
+        let spi_lock = false;
 
         return (
-            //  hprintln!("FFFF {:?}", serialized);
-            //  logging::host::debug!("FFFF {:?}", serialized);
             // Initialization of shared resources
             Shared {
                 // Timers:
@@ -281,11 +277,12 @@ mod app {
                 usb_web,
 
                 // GPIO:
-                leds: gpio_config.leds,
+                led: gpio_config.led,
                 inj_pins: gpio_config.injection,
                 ign_pins: gpio_config.ignition,
                 aux_pins: gpio_config.aux,
                 relay_pins: gpio_config.relay,
+                stepper_pins: gpio_config.stepper,
                 sensors,
 
                 // CORE:
@@ -323,30 +320,30 @@ mod app {
     }
 
     //TODO: reciclar para encendido
-    #[task(binds = TIM2, priority = 1, local = [], shared = [timer, timer3, leds])]
-    fn timer_expired(mut ctx: timer_expired::Context) {
+    #[task(binds = TIM2, priority = 1, local = [], shared = [timer, timer3, led])]
+    fn timer2_exp(mut ctx: timer2_exp::Context) {
         ctx.shared
             .timer
             .lock(|tim| tim.clear_interrupt(Event::Update));
 
-        ctx.shared.leds.lock(|l| l.led_0.toggle());
+        ctx.shared.led.lock(|l| l.led_0.toggle());
     }
 
-    #[task(binds = TIM3, local = [], shared = [timer3, leds, tables])]
+    #[task(binds = TIM3, local = [], shared = [timer3, led, tables])]
     fn timer3_exp(mut ctx: timer3_exp::Context) {
         ctx.shared.timer3.lock(|tim| {
             tim.clear_interrupt(Event::Update);
             tim.cancel().unwrap();
         });
 
-        ctx.shared.leds.lock(|l| l.led_2.set_high());
+        ctx.shared.led.lock(|l| l.led_2.set_high());
     }
 
     // EXTI9_5_IRQn para los pines ckp/cmp
     #[task(
     binds = EXTI9_5,
     local = [ckp],
-    shared = [leds, efi_status, flash_info, efi_cfg, timer, timer3]
+    shared = [led, efi_status, flash_info, efi_cfg, timer, timer3]
     )]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
         ctx.shared.efi_status.lock(|es| {
@@ -357,12 +354,12 @@ mod app {
         let efi_status = ctx.shared.efi_status;
 
         // calculo de RPM && led
-        (efi_cfg, efi_status, ctx.shared.leds, ctx.shared.timer3).lock(
-            |efi_cfg, efi_status, leds, timer3| {
+        (efi_cfg, efi_status, ctx.shared.led, ctx.shared.timer3).lock(
+            |efi_cfg, efi_status, led, timer3| {
                 if efi_status.cycle_tick
                     >= efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
                 {
-                    leds.led_2.set_low();
+                    led.led_2.set_low();
                     // FIXME: por ahora solo prendo el led una vez por vuelta, luego lo hago funcionar con el primer cilindro
                     timer3.start((50000).micros()).unwrap();
                     efi_status.cycle_tick = 0;
@@ -435,21 +432,21 @@ mod app {
         });
     }
 
-    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, timer13])]
+    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins,stepper_pins ,timer13])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         let inj_pins = ctx.shared.inj_pins;
         let ign_pins = ctx.shared.ign_pins;
-        let aux_pins = ctx.shared.aux_pins;
+        let stepper_pins = ctx.shared.stepper_pins;
         let relay_pins = ctx.shared.relay_pins;
         let timer13 = ctx.shared.timer13;
 
-        (inj_pins, ign_pins, aux_pins, relay_pins, timer13).lock(
-            |inj_pins, ign_pins, aux_pins, relay_pins, timer13| match demo_mode {
+        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13).lock(
+            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13| match demo_mode {
                 0x0 => debug::spark_demo(ign_pins, timer13),
                 0x1 => debug::injector_demo(inj_pins, timer13),
-                0x2 => debug::external_idle_demo(aux_pins, timer13),
+                0x2 => debug::external_idle_demo(stepper_pins, timer13),
                 0x3 => debug::relay_demo(relay_pins, timer13),
-                0x4..=u8::MAX => debug::external_idle_demo(aux_pins, timer13),
+                0x4..=u8::MAX => debug::external_idle_demo(stepper_pins, timer13),
             },
         )
     }

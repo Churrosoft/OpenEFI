@@ -67,9 +67,16 @@ pub struct ADCMapping {
     pub analog_in: gpio::PA0<Analog>,
 }
 
+pub struct StepperMapping{
+    pub step: gpio::PE7<Output<PushPull>>,
+    pub dir: gpio::PE8<Output<PushPull>>,
+    pub fault: gpio::PE9<Output<PushPull>>,
+    pub enable: gpio::PE10<Output<PushPull>>,
+}
+
 pub struct GpioMapping {
     // LED's / User feedback
-    pub leds: LedGpioMapping,
+    pub led: LedGpioMapping,
 
     // Injection
     pub injection: InjectionGpioMapping,
@@ -88,10 +95,7 @@ pub struct GpioMapping {
     pub relay: RelayMapping,
 
     // Step-Step motor TODO
-    pub mtr_step: gpio::PE7<Output<PushPull>>,
-    pub mtr_dir: gpio::PE8<Output<PushPull>>,
-    pub mtr_fault: gpio::PE9<Output<PushPull>>,
-    pub mtr_enable: gpio::PE10<Output<PushPull>>,
+    pub stepper: StepperMapping,
 
     // SPI Flash
     pub memory_cs: gpio::PE13<Output<PushPull>>,
@@ -110,113 +114,115 @@ pub struct GpioMapping {
 }
 
 pub fn init_gpio(
-    gpioa: gpioa::Parts,
-    gpiob: gpiob::Parts,
-    gpioc: gpioc::Parts,
-    gpiod: gpiod::Parts,
-    gpioe: gpioe::Parts,
+    gpio_a: gpioa::Parts,
+    gpio_b: gpiob::Parts,
+    gpio_c: gpioc::Parts,
+    gpio_d: gpiod::Parts,
+    gpio_e: gpioe::Parts,
 ) -> GpioMapping {
     let mut gpio = GpioMapping {
         // LED's / User feedback
-        leds: LedGpioMapping {
-            led_0: gpioc.pc13.into_push_pull_output(),
-            led_1: gpioc.pc14.into_push_pull_output(),
-            led_2: gpioc.pc15.into_push_pull_output(),
-            led_can_tx: gpiod.pd6.into_push_pull_output(),
-            led_can_rx: gpiod.pd7.into_push_pull_output(),
-            led_check: gpioc.pc9.into_push_pull_output(),
-            led_mil: gpioc.pc8.into_push_pull_output(),
+        led: LedGpioMapping {
+            led_0: gpio_c.pc13.into_push_pull_output(),
+            led_1: gpio_c.pc14.into_push_pull_output(),
+            led_2: gpio_c.pc15.into_push_pull_output(),
+            led_can_tx: gpio_d.pd6.into_push_pull_output(),
+            led_can_rx: gpio_d.pd7.into_push_pull_output(),
+            led_check: gpio_c.pc9.into_push_pull_output(),
+            led_mil: gpio_c.pc8.into_push_pull_output(),
         },
 
         // Injection
         injection: InjectionGpioMapping {
-            iny_1: gpiod.pd8.into_push_pull_output(),
-            iny_2: gpiod.pd9.into_push_pull_output(),
-            iny_3: gpiod.pd10.into_push_pull_output(),
-            iny_4: gpiod.pd11.into_push_pull_output(),
+            iny_1: gpio_d.pd8.into_push_pull_output(),
+            iny_2: gpio_d.pd9.into_push_pull_output(),
+            iny_3: gpio_d.pd10.into_push_pull_output(),
+            iny_4: gpio_d.pd11.into_push_pull_output(),
         },
 
         // Ignition
         ignition: IgnitionGpioMapping {
-            ecn_1: gpiod.pd12.into_push_pull_output(),
-            ecn_2: gpiod.pd13.into_push_pull_output(),
-            ecn_3: gpiod.pd14.into_push_pull_output(),
-            ecn_4: gpiod.pd15.into_push_pull_output(),
+            ecn_1: gpio_d.pd12.into_push_pull_output(),
+            ecn_2: gpio_d.pd13.into_push_pull_output(),
+            ecn_3: gpio_d.pd14.into_push_pull_output(),
+            ecn_4: gpio_d.pd15.into_push_pull_output(),
         },
 
         // PMIC
         pmic: PMICGpioMapping {
-            pmic_enable: gpiob.pb12.into_push_pull_output(),
-            pmic_spark: gpiob.pb13.into_input(),
-            pmic_cs: gpioa.pa15.into_push_pull_output(),
-            pmic_nomi: gpioc.pc10.into_input(),
-            pmic_maxi: gpioc.pc11.into_input(),
+            pmic_enable: gpio_b.pb12.into_push_pull_output(),
+            pmic_spark: gpio_b.pb13.into_input(),
+            pmic_cs: gpio_a.pa15.into_push_pull_output(),
+            pmic_nomi: gpio_c.pc10.into_input(),
+            pmic_maxi: gpio_c.pc11.into_input(),
         },
 
         // CKP/CMP
-        ckp: gpioc.pc6.into_input(),
-        cmp: gpioc.pc7.into_input(),
+        ckp: gpio_c.pc6.into_input(),
+        cmp: gpio_c.pc7.into_input(),
 
         // RELAY's
         relay: RelayMapping {
-            iny: gpioe.pe2.into_push_pull_output(),
-            gnc: gpioe.pe3.into_push_pull_output(),
-            ac: gpioe.pe4.into_push_pull_output(),
-            lmb: gpioe.pe0.into_push_pull_output(),
+            iny: gpio_e.pe2.into_push_pull_output(),
+            gnc: gpio_e.pe3.into_push_pull_output(),
+            ac: gpio_e.pe4.into_push_pull_output(),
+            lmb: gpio_e.pe0.into_push_pull_output(),
         },
 
         // Step-Step motor TODO
-        mtr_step: gpioe.pe7.into_push_pull_output(),
-        mtr_dir: gpioe.pe8.into_push_pull_output(),
-        mtr_fault: gpioe.pe9.into_push_pull_output(),
-        mtr_enable: gpioe.pe10.into_push_pull_output(),
+        stepper: StepperMapping {
+            step: gpio_e.pe7.into_push_pull_output(),
+            dir: gpio_e.pe8.into_push_pull_output(),
+            fault: gpio_e.pe9.into_push_pull_output(),
+            enable: gpio_e.pe10.into_push_pull_output(),
+        },
 
         // SPI Flash
-        memory_cs: gpioe.pe13.into_push_pull_output(),
+        memory_cs: gpio_e.pe13.into_push_pull_output(),
 
         // AUX I/O
         aux: AuxIoMapping {
-            in_1: gpioc.pc4.into_input(),
-            in_2: gpioc.pc5.into_input(),
+            in_1: gpio_c.pc4.into_input(),
+            in_2: gpio_c.pc5.into_input(),
 
-            out_1: gpiob.pb5.into_push_pull_output(),
-            out_2: gpiob.pb6.into_push_pull_output(),
-            out_3: gpiob.pb7.into_push_pull_output(),
-            out_4: gpiob.pb8.into_push_pull_output(),
+            out_1: gpio_b.pb5.into_push_pull_output(),
+            out_2: gpio_b.pb6.into_push_pull_output(),
+            out_3: gpio_b.pb7.into_push_pull_output(),
+            out_4: gpio_b.pb8.into_push_pull_output(),
 
-            cs_1: gpioe.pe14.into_push_pull_output(),
-            cs_2: gpioe.pe15.into_push_pull_output(),
+            cs_1: gpio_e.pe14.into_push_pull_output(),
+            cs_2: gpio_e.pe15.into_push_pull_output(),
         },
 
         // USB
-        usb_dp: gpioa.pa11.into_alternate(),
-        usb_dm: gpioa.pa12.into_alternate(),
+        usb_dp: gpio_a.pa11.into_alternate(),
+        usb_dm: gpio_a.pa12.into_alternate(),
 
         // SPI
-        spi_sck: gpiob.pb10.into_alternate(),
-        spi_miso: gpiob.pb14.into_alternate(),
-        spi_mosi: gpiob.pb15.into_alternate().internal_pull_up(true),
+        spi_sck: gpio_b.pb10.into_alternate(),
+        spi_miso: gpio_b.pb14.into_alternate(),
+        spi_mosi: gpio_b.pb15.into_alternate().internal_pull_up(true),
 
         adc: ADCMapping {
-            mux_a: gpiod.pd2.into_push_pull_output(),
-            mux_b: gpiod.pd3.into_push_pull_output(),
-            mux_c: gpiod.pd4.into_push_pull_output(),
-            analog_in: gpioa.pa0.into_analog(),
+            mux_a: gpio_d.pd2.into_push_pull_output(),
+            mux_b: gpio_d.pd3.into_push_pull_output(),
+            mux_c: gpio_d.pd4.into_push_pull_output(),
+            analog_in: gpio_a.pa0.into_analog(),
         },
     };
 
     // set default state on I/O
-    gpio.leds.led_0.set_high();
-    gpio.leds.led_1.set_high();
-    gpio.leds.led_2.set_high();
-    gpio.leds.led_can_rx.set_high();
-    gpio.leds.led_can_tx.set_high();
-    gpio.leds.led_check.set_low();
-    gpio.leds.led_mil.set_low();
+    gpio.led.led_0.set_high();
+    gpio.led.led_1.set_high();
+    gpio.led.led_2.set_high();
+    gpio.led.led_can_rx.set_high();
+    gpio.led.led_can_tx.set_high();
+    gpio.led.led_check.set_low();
+    gpio.led.led_mil.set_low();
 
     gpio.aux.cs_1.set_high();
     gpio.aux.cs_2.set_high();
-    gpio.mtr_enable.set_low();
+    gpio.stepper.enable.set_high();
     // 4231 reversa
     // 1234 derecho
 
