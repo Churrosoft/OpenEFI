@@ -2,14 +2,15 @@
 #![feature(proc_macro_hygiene)]
 #![no_main]
 #![no_std]
+#![feature(stdsimd)]
 
 use panic_halt as _;
 
-#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5, TIM7, TIM4])]
+#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5, TIM7, TIM8_CC])]
 mod app {
+    use core::arch::arm::__breakpoint;
     use arrayvec::ArrayVec;
     use embedded_hal::spi::{Mode, Phase, Polarity};
-    use rtic::mutex_prelude::TupleExt05;
     use stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
         crc32,
@@ -17,7 +18,7 @@ mod app {
         gpio::{Edge, Input},
         otg_fs,
         otg_fs::{USB, UsbBusType},
-        pac::{ADC1, TIM13, TIM2, TIM3, TIM6},
+        pac::{ADC1, TIM13, TIM2, TIM3, TIM5},
         prelude::*,
         spi::*,
         timer::{self, Event},
@@ -35,7 +36,7 @@ mod app {
         },
         gpio_legacy::{
             ADCMapping, AuxIoMapping, IgnitionGpioMapping, init_gpio, InjectionGpioMapping,
-            RelayMapping,StepperMapping
+            RelayMapping, StepperMapping,
         },
         injection::{calculate_time_isr, injection_setup},
         memory::tables::{SpiT, Tables},
@@ -57,7 +58,7 @@ mod app {
     #[shared]
     struct Shared {
         // Timers:
-        timer6: timer::CounterUs<TIM6>,
+        timer5: timer::CounterUs<TIM5>,
         timer13: timer::DelayUs<TIM13>,
         timer: timer::CounterMs<TIM2>,
         timer3: timer::CounterUs<TIM3>,
@@ -143,7 +144,7 @@ mod app {
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
 
         // NOTE: timer para delays en hilos
-        let mut timer6: timer::CounterUs<TIM6> = dp.TIM6.counter_us(&clocks);
+        let mut timer5: timer::CounterUs<TIM5> = dp.TIM5.counter_us(&clocks);
 
         // NOTE: para task de sensores
         let mut timer13: timer::DelayUs<TIM13> = dp.TIM13.delay_us(&clocks);
@@ -152,13 +153,13 @@ mod app {
 
         timer.start((150).millis()).unwrap();
 
+        // TODO: revisar cual es el mejor periodo
+        timer5.start((150).millis()).unwrap();
+
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
         timer3.listen(Event::Update);
         timer13.listen(Event::Update);
-
-        // TODO: revisar cual es el mejor periodo
-        timer6.start((150).millis()).unwrap();
 
         // Init USB
         let usb = USB {
@@ -215,6 +216,7 @@ mod app {
         );
 
         let spi_bus = shared_bus_rtic::new!(spi2, SpiT );
+        let mut spi_pmic = spi_bus.acquire();
 
         // CRC32:
         let mut crc = crc32::Crc32::new(dp.CRC);
@@ -255,13 +257,115 @@ mod app {
 
         gpio_config.led.led_check.toggle();
         gpio_config.led.led_mil.toggle();
-
         debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
         debug::injector_demo(&mut gpio_config.injection, &mut timer13);
+        //  debug::injector_demo(&mut gpio_config.injection, &mut timer13);
+        // loop {
+        //     debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
+        // }
+        // debug::injector_demo(&mut gpio_config.injection, &mut timer13);
 
         let sensors = SensorValues::new();
 
         let spi_lock = false;
+
+
+        let mut spi_result = [0x0, 0x0];
+
+        let spi_status = [0b0000_1111, 0b0000_0000]; // SPI status
+        let update_mode = [0b0001_1111, 0b0000_0000];// cambio de modo ignicion => generico
+
+        let read_all = [0b0000_1010, 0b0000_0000];// all status register
+        let read_out_fault = [0b0000_1010, 0b0001_0000]; // OUT0/OUT1 fault
+
+        let read_ignition_status = [0b0000_1010, 0b0100_0000]; // OUT0/OUT1 fault
+
+
+        let mut mock_word = [0xf,0x0];
+        // let mut read_ignition3 = [0b00110000,0b00000000];
+        // let mut read_ignition4 = [0b00110001,0b00000000];
+        // let mut read_ignition5 = [0b00110001,0b00000000];
+
+        // read all status register
+        // gpio_config.pmic.pmic_cs.set_low();
+        //
+        // spi_pmic.write(&read_all).unwrap();
+        //
+        // let status = spi_pmic.transfer(&mut mock_word).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        //
+        // host::debug!("SPI Check: 0b{:08b} / 0b{:08b}", status[0], status[1]);
+        unsafe { __breakpoint::<0>(); }
+
+        // discard prev
+        gpio_config.pmic.pmic_cs.set_low();
+        spi_pmic.transfer(&mut mock_word).unwrap();
+        gpio_config.pmic.pmic_cs.set_high();
+        timer13.delay_ms(200u32);
+
+        unsafe { __breakpoint::<0>(); }
+
+        debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
+
+
+        // read out0/1 register
+        gpio_config.pmic.pmic_cs.set_low();
+        timer13.delay_us(10u32);
+        spi_pmic.write(&read_out_fault).unwrap();
+        gpio_config.pmic.pmic_cs.set_high();
+        timer13.delay_us(10u32);
+        gpio_config.pmic.pmic_cs.set_low();
+        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
+        gpio_config.pmic.pmic_cs.set_high();
+        timer13.delay_us(100u32);
+        host::debug!("SPI out0: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
+
+        // re-read (status)
+        gpio_config.pmic.pmic_cs.set_low();
+        timer13.delay_us(10u32);
+        spi_pmic.write(&read_all).unwrap();
+        gpio_config.pmic.pmic_cs.set_high();
+        timer13.delay_us(10u32);
+        gpio_config.pmic.pmic_cs.set_low();
+        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
+        gpio_config.pmic.pmic_cs.set_high();
+        timer13.delay_us(100u32);
+        host::debug!("SPI status: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
+
+        // read ignition status
+        gpio_config.pmic.pmic_cs.set_low();
+        timer13.delay_us(10u32);
+        spi_pmic.write(&read_ignition_status).unwrap();
+        gpio_config.pmic.pmic_cs.set_high();
+        timer13.delay_us(10u32);
+        gpio_config.pmic.pmic_cs.set_low();
+        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
+        gpio_config.pmic.pmic_cs.set_high();
+        timer13.delay_us(100u32);
+
+        host::debug!("SPI IGN: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
+
+
+        // gpio_config.pmic.pmic_cs.set_low();
+        // let spi2_result = spi_pmic.transfer(&mut read_ignition2).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // host::debug!("SPI Write iny high: 0b{:08b} / 0b{:08b}", spi2_result[0],spi2_result[1]);
+        //
+        //
+        // timer13.delay_ms(10u32);
+        //
+        // gpio_config.pmic.pmic_cs.set_low();
+        // let spi3_result = spi_pmic.transfer(&mut read_ignition3).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // host::debug!("SPI Write iny low: 0b{:08b} / 0b{:08b}", spi3_result[0],spi3_result[1]);
+        //
+        // timer13.delay_ms(200u32);
+
+        // gpio_config.pmic.pmic_cs.set_low();
+        // spi_pmic.transfer(&mut read_ignition4).unwrap();
+        // let spi4_result = spi_pmic.transfer(&mut read_ignition5).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // host::debug!("SPI INY 0/1 status : 0b{:08b} / 0b{:08b}", spi4_result[0],spi4_result[1]);
 
         return (
             // Initialization of shared resources
@@ -269,7 +373,7 @@ mod app {
                 // Timers:
                 timer,
                 timer3,
-                timer6,
+                timer5,
                 timer13,
 
                 // USB
@@ -432,7 +536,7 @@ mod app {
         });
     }
 
-    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins,stepper_pins ,timer13])]
+    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         let inj_pins = ctx.shared.inj_pins;
         let ign_pins = ctx.shared.ign_pins;

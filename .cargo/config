@@ -9,7 +9,7 @@ rustflags = [
 target = "thumbv7em-none-eabihf"
 
 [alias]
-b = ["build", "--release", "--target", "thumbv7em-none-eabihf", "-Z", "build-std=std,panic_abort", "-Z", "build-std-features=panic_immediate_abort"]
+b = ["build", "--release", "--target", "thumbv7em-none-eabihf"]
 bd = ["build", "--target", "thumbv7em-none-eabihf"]
 
 [env]
