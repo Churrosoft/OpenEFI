@@ -96,6 +96,18 @@
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
 <a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::gpio_legacy::{IgnitionGpioMapping, InjectionGpioMapping, RelayMapping};
 
 <span class="kw">use </span>cortex_m::prelude::{
@@ -104,22 +116,31 @@
 <span class="kw">use </span>stm32f4xx_hal::{pac::TIM13, timer};
 <span class="kw">use </span><span class="kw">crate</span>::app::gpio_legacy::StepperMapping;
 
-<span class="kw">pub fn </span>spark_demo(ecn: <span class="kw-2">&amp;mut </span>IgnitionGpioMapping, tim6: <span class="kw-2">&amp;mut </span>timer::DelayUs&lt;TIM13&gt;) {
-    <span class="kw">for _ in </span><span class="number">0</span>..<span class="number">15 </span>{
+<span class="kw">pub fn </span>spark_demo(ecn: <span class="kw-2">&amp;mut </span>IgnitionGpioMapping, tim13: <span class="kw-2">&amp;mut </span>timer::DelayUs&lt;TIM13&gt;) {
+    <span class="kw">for _ in </span><span class="number">0</span>..<span class="number">10 </span>{
         ecn.ecn_1.set_high();
-        tim6.delay_ms(<span class="number">5u32</span>);
+        tim13.delay_ms(<span class="number">5u32</span>);
         ecn.ecn_1.set_low();
 
+        tim13.delay_ms(<span class="number">10u32</span>);
+
         ecn.ecn_2.set_high();
-        tim6.delay_us(<span class="number">5u32</span>);
+        tim13.delay_us(<span class="number">5u32</span>);
         ecn.ecn_2.set_low();
 
+        tim13.delay_ms(<span class="number">10u32</span>);
+
         ecn.ecn_3.set_high();
-        tim6.delay_us(<span class="number">5u32</span>);
+        tim13.delay_us(<span class="number">5u32</span>);
         ecn.ecn_3.set_low();
+
+        tim13.delay_ms(<span class="number">10u32</span>);
+
         ecn.ecn_4.set_high();
-        tim6.delay_us(<span class="number">5u32</span>);
+        tim13.delay_us(<span class="number">5u32</span>);
         ecn.ecn_4.set_low();
+
+        tim13.delay_ms(<span class="number">25u32</span>);
     }
     ecn.ecn_1.set_low();
     ecn.ecn_2.set_low();
@@ -127,23 +148,26 @@
     ecn.ecn_4.set_low();
 }
 
-<span class="kw">pub fn </span>injector_demo(inj: <span class="kw-2">&amp;mut </span>InjectionGpioMapping, tim6: <span class="kw-2">&amp;mut </span>timer::DelayUs&lt;TIM13&gt;) {
+<span class="kw">pub fn </span>injector_demo(inj: <span class="kw-2">&amp;mut </span>InjectionGpioMapping, tim13: <span class="kw-2">&amp;mut </span>timer::DelayUs&lt;TIM13&gt;) {
     <span class="kw">for _ in </span><span class="number">0</span>..<span class="number">15 </span>{
         inj.iny_1.set_high();
-        tim6.delay_us(<span class="number">320u32</span>);
+        tim13.delay_ms(<span class="number">3u32</span>);
         inj.iny_1.set_low();
 
         inj.iny_2.set_high();
-        tim6.delay_us(<span class="number">320u32</span>);
+        tim13.delay_us(<span class="number">3u32</span>);
         inj.iny_2.set_low();
 
         inj.iny_3.set_high();
-        tim6.delay_us(<span class="number">320u32</span>);
+        tim13.delay_us(<span class="number">3u32</span>);
         inj.iny_3.set_low();
 
         inj.iny_4.set_high();
-        tim6.delay_us(<span class="number">320u32</span>);
+        tim13.delay_us(<span class="number">3u32</span>);
         inj.iny_4.set_low();
+
+        tim13.delay_ms(<span class="number">25u32</span>);
+
     }
 
     inj.iny_1.set_low();
@@ -152,22 +176,22 @@
     inj.iny_4.set_low();
 }
 
-<span class="kw">pub fn </span>external_idle_demo(step_motor: <span class="kw-2">&amp;mut </span>StepperMapping, tim6: <span class="kw-2">&amp;mut </span>timer::DelayUs&lt;TIM13&gt;) {
+<span class="kw">pub fn </span>external_idle_demo(step_motor: <span class="kw-2">&amp;mut </span>StepperMapping, tim15: <span class="kw-2">&amp;mut </span>timer::DelayUs&lt;TIM13&gt;) {
     step_motor.enable.set_low();
     <span class="kw">for _ in </span><span class="number">0</span>..<span class="number">2 </span>{
         step_motor.dir.set_low();
         (<span class="number">0</span>..<span class="number">255</span>).for_each(|<span class="kw">_</span>| {
             step_motor.step.set_high();
-            tim6.delay_ms(<span class="number">1_u32</span>);
+            tim15.delay_ms(<span class="number">1_u32</span>);
             step_motor.step.set_low();
         });
 
-        tim6.delay_ms(<span class="number">100_u32</span>);
+        tim15.delay_ms(<span class="number">100_u32</span>);
 
         step_motor.dir.set_high();
         (<span class="number">0</span>..<span class="number">255</span>).for_each(|<span class="kw">_</span>| {
             step_motor.step.set_high();
-            tim6.delay_ms(<span class="number">1_u32</span>);
+            tim15.delay_ms(<span class="number">1_u32</span>);
             step_motor.step.set_low();
         });
     }

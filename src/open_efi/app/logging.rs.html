@@ -62,24 +62,24 @@
     </span><span class="macro">macro_rules! </span>info {
         (<span class="macro-nonterminal">$fmt</span>:expr $(, $(<span class="macro-nonterminal">$arg</span>:tt)<span class="kw-2">*</span>)<span class="question-mark">?</span>) =&gt; {
 
-            <span class="kw">if </span>(stm32f4xx_hal::pac::DCB::is_debugger_attached()) {
-                <span class="kw">use </span>cortex_m_semihosting::hprintln;
-
-                <span class="macro">hprintln!</span>(<span class="macro">concat!</span>(<span class="string">&quot;[{:0&gt;12.3}] INFO: &quot;</span>, <span class="macro-nonterminal">$fmt</span>), stm32f4xx_hal::pac::DWT::cycle_count() <span class="kw">as </span>f32 / <span class="number">120000000f32</span>, $($(<span class="macro-nonterminal">$arg</span>)<span class="kw-2">*</span>)<span class="question-mark">?</span>);
-            }
-        };
+            <span class="comment">// if (stm32f4xx_hal::pac::DCB::is_debugger_attached()) {
+            //     use cortex_m_semihosting::hprintln;
+            //
+            //     hprintln!(concat!(&quot;[{:0&gt;12.3}] INFO: &quot;, $fmt), stm32f4xx_hal::pac::DWT::cycle_count() as f32 / 120000000f32, $($($arg)*)?);
+            // }
+        </span>};
     }
 
     <span class="attr">#[macro_export]
     </span><span class="macro">macro_rules! </span>error {
         (<span class="macro-nonterminal">$fmt</span>:expr $(, $(<span class="macro-nonterminal">$arg</span>:tt)<span class="kw-2">*</span>)<span class="question-mark">?</span>) =&gt; {
 
-            <span class="kw">if </span>(stm32f4xx_hal::pac::DCB::is_debugger_attached()) {
-                <span class="kw">use </span>cortex_m_semihosting::hprintln;
-
-                <span class="macro">hprintln!</span>(<span class="macro">concat!</span>(<span class="string">&quot;[{:0&gt;12.3}] ERROR: &quot;</span>, <span class="macro-nonterminal">$fmt</span>), stm32f4xx_hal::pac::DWT::cycle_count() <span class="kw">as </span>f32 / <span class="number">120000000f32</span>, $($(<span class="macro-nonterminal">$arg</span>)<span class="kw-2">*</span>)<span class="question-mark">?</span>);
-            }
-        };
+            <span class="comment">// if (stm32f4xx_hal::pac::DCB::is_debugger_attached()) {
+            //     use cortex_m_semihosting::hprintln;
+            //
+            //     hprintln!(concat!(&quot;[{:0&gt;12.3}] ERROR: &quot;, $fmt), stm32f4xx_hal::pac::DWT::cycle_count() as f32 / 120000000f32, $($($arg)*)?);
+            // }
+        </span>};
     }
 
     <span class="kw">pub use </span>debug;
