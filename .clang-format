@@ -1,9 +1,0 @@
-BasedOnStyle: Google
-AlignTrailingComments: 'true'
-AllowShortLambdasOnASingleLine: Inline
-AllowShortLoopsOnASingleLine: 'true'
-NamespaceIndentation: All
-ColumnLimit: 140
-Cpp11BracedListStyle: true
-SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 4
