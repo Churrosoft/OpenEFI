@@ -12,7 +12,7 @@ jobs:
         image: ghcr.io/churrosoft/openefi_docker:main
         credentials:
           username: ${{ github.actor }}
-          password: ${{ secrets.github_token }}  
+          password: ${{ secrets.GH_REPO_TOKEN }}  
     steps:
       - uses: actions/checkout@v3
 
