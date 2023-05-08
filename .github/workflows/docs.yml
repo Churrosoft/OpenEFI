@@ -8,17 +8,17 @@ jobs:
   docs:
     name: docs
     runs-on: "ubuntu-latest"
+    container:
+        image: ghcr.io/churrosoft/openefi_docker:main
+        credentials:
+          username: ${{ github.actor }}
+          password: ${{ secrets.github_token }}  
     steps:
       - uses: actions/checkout@v3
 
       - name: Build docs
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
-        container:
-          image: ghcr.io/churrosoft/openefi_docker:main
-          credentials:
-            username: ${{ github.actor }}
-            password: ${{ secrets.github_token }}
         shell: bash
         run: |
           cd "$GITHUB_WORKSPACE"
