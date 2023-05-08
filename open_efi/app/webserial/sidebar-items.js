@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["SerialError","SerialStatus"],"fn":["finish_message","new_device","process_command","send_message"],"mod":["handle_core","handle_tables"],"struct":["SerialMessage"]};
