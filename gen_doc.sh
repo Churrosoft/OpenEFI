@@ -41,7 +41,7 @@ echo "devdocs.openefi.tech" > CNAME
 ##### Generate the Rust code documentation and log the output.          #####
 echo 'Generating Rust code documentation...'
 cd ..
-~/.cargo/bin/cargo doc --no-deps
+cargo doc --no-deps
 mv target/thumbv7em-none-eabihf/doc/** ./OpenEFI
 cd ./OpenEFI
 
