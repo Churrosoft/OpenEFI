@@ -5,18 +5,19 @@ on:
     branches: [master]
 
 jobs:
-  build:
-    runs-on: "ubuntu-18.04"
-
+  docs:
+    name: docs
+    runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v3
 
-      - name: install Doxygen && deps
-        shell: bash
+      - name: update && install
         run: |
-          sudo apt update
-          sudo apt install -y wget libncurses-dev doxygen doxygen-doc doxygen-latex doxygen-gui graphviz tree git
-        
+          apt update
+          apt install -y curl tree git  build-essential pkg-config libusb-1.0-0-dev libftdi1-dev libudev-dev
+          curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly -y
+          source "$HOME/.cargo/env"
+
       - name: Build docs
         env:
           GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
@@ -24,6 +25,9 @@ jobs:
         run: |
           cd "$GITHUB_WORKSPACE"
           chmod +x ./gen_doc.sh
+          ~/.cargo/bin/rustup target add thumbv7em-none-eabihf
+          ~/.cargo/bin/rustup component add llvm-tools-preview 
+          ~/.cargo/bin/cargo install cargo-binutils cargo-embed cargo-flash cargo-expand
           ./gen_doc.sh "$GH_REPO_TOKEN"
 
       - uses: actions/upload-artifact@v3
