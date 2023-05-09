@@ -23,13 +23,11 @@ jobs:
       - name: Build firmware
         run: cargo b
 
-      - name: create build tag (1/2)
-        run: echo "TEMP_TAG=${BINARY##*/}" >> $GITHUB_ENV
-      - name: create build tag (2/2)
-        run: echo "BUILD_TAG=$(echo ${TEMP_TAG%.*})" >> $GITHUB_ENV
+      - name: create build tag
+        run: echo "BUILD_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: rename build file
-        run: mv target/thumbv7em-none-eabihf/release/open_efi "open_efi_${BUILD_TAG}.bin"
+        run: mv target/thumbv7em-none-eabihf/release/open_efi "OpenEFI_${BUILD_TAG}.bin"
 
       - name: Check if firmware files exits
         run: |

@@ -24,9 +24,3 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           chmod +x ./gen_doc.sh
           ./gen_doc.sh "$GH_REPO_TOKEN"
-
-      - uses: actions/upload-artifact@v3
-        name: Upload docs to artifacts
-        with:
-          name: artifacts
-          path: ./
