@@ -2,7 +2,7 @@
 ################################################################################
 GH_REPO_TOKEN=$1
 GH_REPO_NAME=OpenEFI
-GH_REPO_REF=github.com/openefi/OpenEFI.git
+GH_REPO_REF=github.com/churrosoft/OpenEFI.git
 ################################################################################
 ##### Setup this script and get the current gh-pages branch.               #####
 echo 'Setting up the script...'

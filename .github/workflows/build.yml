@@ -22,7 +22,7 @@ jobs:
 
       - name: clone repo into work folder
         run: |
-          git clone github.com/openefi/OpenEFI.git
+          git clone github.com/churrosoft/OpenEFI.git
           cd OpenEFI
 
       - name: Build firmware
