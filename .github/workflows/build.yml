@@ -20,11 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: clone repo into work folder
-        run: |
-          git clone github.com/churrosoft/OpenEFI.git
-          cd OpenEFI
-
       - name: Build firmware
         run: cargo b
 
