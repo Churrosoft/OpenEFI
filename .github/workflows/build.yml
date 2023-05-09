@@ -9,37 +9,36 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+       GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
+    container:
+       image: ghcr.io/churrosoft/openefi_docker:main
+       credentials:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_REPO_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-
-      - name: Set up Platformio
-        run: pip install -U platformio
-          platformio update
-
-      - name: Pull build deps
-        run: git submodule update --init --recursive
-
-      - name: Remove JSON example files
-        run: rm -r ./lib/json/docs
+      - name: clone repo into work folder
+        run: |
+          git clone github.com/openefi/OpenEFI.git
+          cd OpenEFI
 
       - name: Build firmware
-        run: platformio run
-
-      - name: Check if firmware files exits
-        run: |
-          echo "BINARY=$(find . -type f -name "*.bin")" >> $GITHUB_ENV
-          echo "ELF=$(find . -type f -name "*.elf")" >> $GITHUB_ENV
+        run: cargo b
 
       - name: create build tag (1/2)
         run: echo "TEMP_TAG=${BINARY##*/}" >> $GITHUB_ENV
       - name: create build tag (2/2)
         run: echo "BUILD_TAG=$(echo ${TEMP_TAG%.*})" >> $GITHUB_ENV
+
+      - name: rename build file
+        run: mv target/thumbv7em-none-eabihf/release/open_efi "open_efi_${BUILD_TAG}.bin"
+
+      - name: Check if firmware files exits
+        run: |
+          echo "BINARY=$(find . -type f -name "*.bin")" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v3
         name: Upload firmware files
@@ -47,60 +46,3 @@ jobs:
           name: ${{ env.BUILD_TAG }}
           path: |
             ${{ env.BINARY }}
-            ${{ env.ELF }}
-
-  test_firmware:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install deps (testing)
-        run: |
-          sudo apt update
-          sudo apt install -y nodejs npm wget python3 libx11-6 zsh
-          sudo npm i -g junit-viewer
-          wget https://github.com/xpack-dev-tools/qemu-arm-xpack/releases/download/v2.8.0-11/xpack-qemu-arm-2.8.0-11-linux-x64.tar.gz
-          tar xvf ./xpack-qemu-arm-2.8.0-11-linux-x64.tar.gz
-          chmod +x ./xpack-qemu-arm-2.8.0-11/bin/qemu-system-gnuarmeclipse
-          ./xpack-qemu-arm-2.8.0-11/bin/qemu-system-gnuarmeclipse --version
-          echo "TESTING_CI" >> TESTING_CI
-
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-
-      - name: Install deps (building)
-        run: |
-          pip install -U platformio
-          platformio update
-
-      - name: Pull build deps
-        run: git submodule update --init --recursive
-      
-      - name: Remove JSON example files
-        run: rm -r ./lib/json/docs
-      
-      - name: Run Tests
-        run: platformio test --without-uploading --junit-output-path qemu_report.xml
-
-      - name: Generate Report (HTML)
-        run: |
-          junit-viewer --results=./qemu_report.xml >> openefi_report.html
-
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        with:
-          report_paths: "qemu_report.xml"
-          commit: ${{ github.sha }}
-
-      - uses: actions/upload-artifact@v3
-        name: Upload firmware files
-        if: always()
-        with:
-          name: test reports
-          path: |
-            .pio/build/black_f407vg/firmware.bin
-            openefi_report.html
-            qemu_report.xml
