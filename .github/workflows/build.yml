@@ -24,10 +24,11 @@ jobs:
         run: cargo b
 
       - name: create build tag
-        run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_HASH
+        run: |
+          echo "git_hash=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
       - name: Check Hash
-        run: echo "${{ env.hash }}"
+        run: echo "${{ env.git_hash }}"
 
       - name: rename build file
         run: mv target/thumbv7em-none-eabihf/release/open_efi "OpenEFI_${git_hash}.bin"
