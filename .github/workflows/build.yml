@@ -24,18 +24,23 @@ jobs:
         run: cargo b
 
       - name: create build tag
-        run: echo "BUILD_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_HASH
+
+      - name: Check Hash
+        run: echo "${{ env.hash }}"
 
       - name: rename build file
-        run: mv target/thumbv7em-none-eabihf/release/open_efi "OpenEFI_${BUILD_TAG}.bin"
+        run: mv target/thumbv7em-none-eabihf/release/open_efi "OpenEFI_${git_hash}.bin"
 
       - name: Check if firmware files exits
         run: |
           echo "BINARY=$(find . -type f -name "*.bin")" >> $GITHUB_ENV
+      
+
 
       - uses: actions/upload-artifact@v3
         name: Upload firmware files
         with:
-          name: ${{ env.BUILD_TAG }}
+          name: ${{ env.git_hash }}
           path: |
             ${{ env.BINARY }}
