@@ -36,8 +36,6 @@ jobs:
       - name: Check if firmware files exits
         run: |
           echo "BINARY=$(find . -type f -name "*.bin")" >> $GITHUB_ENV
-      
-
 
       - uses: actions/upload-artifact@v3
         name: Upload firmware files
