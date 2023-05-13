@@ -9,6 +9,7 @@ use panic_halt as _;
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5, TIM7, TIM8_CC])]
 mod app {
     use core::arch::arm::__breakpoint;
+
     use arrayvec::ArrayVec;
     use embedded_hal::spi::{Mode, Phase, Polarity};
     use stm32f4xx_hal::{
@@ -28,6 +29,8 @@ mod app {
     use usbd_webusb::{url_scheme, WebUsb};
     use w25q::series25::FlashInfo;
 
+    use logging::host;
+
     use crate::app::{
         engine::{
             efi_cfg::{EngineConfig, get_default_efi_cfg},
@@ -42,6 +45,8 @@ mod app {
         memory::tables::{SpiT, Tables},
         webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
+    use crate::app::engine::pmic;
+    use crate::app::engine::pmic::PMIC;
 
     pub mod debug;
     pub mod engine;
@@ -52,8 +57,6 @@ mod app {
     pub mod memory;
     pub mod util;
     pub mod webserial;
-
-    use logging::host;
 
     #[shared]
     struct Shared {
@@ -281,7 +284,7 @@ mod app {
         let read_ignition_status = [0b0000_1010, 0b0100_0000]; // OUT0/OUT1 fault
 
 
-        let mut mock_word = [0xf,0x0];
+        let mut mock_word = [0xf, 0x0];
         // let mut read_ignition3 = [0b00110000,0b00000000];
         // let mut read_ignition4 = [0b00110001,0b00000000];
         // let mut read_ignition5 = [0b00110001,0b00000000];
@@ -345,6 +348,9 @@ mod app {
 
         host::debug!("SPI IGN: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
 
+        let mut my_pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
+
+        my_pmic.get_fast_status();
 
         // gpio_config.pmic.pmic_cs.set_low();
         // let spi2_result = spi_pmic.transfer(&mut read_ignition2).unwrap();

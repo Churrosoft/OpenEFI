@@ -8,7 +8,7 @@ use stm32f4xx_hal::{
 };
 use w25q::series25::{Flash, FlashInfo};
 use shared_bus_rtic::SharedBus;
-
+use crate::app::logging::host;
 
 type DataT = [[i32; 17]; 17];
 
@@ -73,6 +73,11 @@ impl TableData {
         let u8buff = [buf[0], buf[1], buf[2], buf[3]];
         let memory_crc = u32::from_le_bytes(u8buff);
         let calculated_crc = crc.update_bytes(&buf[3..]);
+
+        if memory_crc != calculated_crc {
+            host::debug!("Checksum tablas no coinciden {:?}  {:?}", memory_crc,calculated_crc)
+        }
+
 
         {
             self.crc = calculated_crc;
