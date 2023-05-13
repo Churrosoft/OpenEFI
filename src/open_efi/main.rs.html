@@ -590,6 +590,12 @@
 <a href="#590" id="590">590</a>
 <a href="#591" id="591">591</a>
 <a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! examples/locals.rs
 </span><span class="attr">#![feature(proc_macro_hygiene)]
 #![no_main]
@@ -601,6 +607,7 @@
 <span class="attr">#[rtic::app(device = stm32f4xx_hal::pac, peripherals = <span class="bool-val">true</span>, dispatchers = [TIM5, TIM7, TIM8_CC]</span>)]
 <span class="kw">mod </span>app {
     <span class="kw">use </span>core::arch::arm::__breakpoint;
+
     <span class="kw">use </span>arrayvec::ArrayVec;
     <span class="kw">use </span>embedded_hal::spi::{Mode, Phase, Polarity};
     <span class="kw">use </span>stm32f4xx_hal::{
@@ -620,6 +627,8 @@
     <span class="kw">use </span>usbd_webusb::{url_scheme, WebUsb};
     <span class="kw">use </span>w25q::series25::FlashInfo;
 
+    <span class="kw">use </span>logging::host;
+
     <span class="kw">use </span><span class="kw">crate</span>::app::{
         engine::{
             efi_cfg::{EngineConfig, get_default_efi_cfg},
@@ -634,6 +643,8 @@
         memory::tables::{SpiT, Tables},
         webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
+    <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic;
+    <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic::PMIC;
 
     <span class="kw">pub mod </span>debug;
     <span class="kw">pub mod </span>engine;
@@ -644,8 +655,6 @@
     <span class="kw">pub mod </span>memory;
     <span class="kw">pub mod </span>util;
     <span class="kw">pub mod </span>webserial;
-
-    <span class="kw">use </span>logging::host;
 
     <span class="attr">#[shared]
     </span><span class="kw">struct </span>Shared {
@@ -873,7 +882,7 @@
         </span><span class="kw">let </span>read_ignition_status = [<span class="number">0b0000_1010</span>, <span class="number">0b0100_0000</span>]; <span class="comment">// OUT0/OUT1 fault
 
 
-        </span><span class="kw">let </span><span class="kw-2">mut </span>mock_word = [<span class="number">0xf</span>,<span class="number">0x0</span>];
+        </span><span class="kw">let </span><span class="kw-2">mut </span>mock_word = [<span class="number">0xf</span>, <span class="number">0x0</span>];
         <span class="comment">// let mut read_ignition3 = [0b00110000,0b00000000];
         // let mut read_ignition4 = [0b00110001,0b00000000];
         // let mut read_ignition5 = [0b00110001,0b00000000];
@@ -937,6 +946,9 @@
 
         <span class="macro">host::debug!</span>(<span class="string">&quot;SPI IGN: 0b{:08b} /  0b{:08b}&quot;</span>, status2[<span class="number">0</span>], status2[<span class="number">1</span>]);
 
+        <span class="kw">let </span><span class="kw-2">mut </span>my_pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
+
+        my_pmic.get_fast_status();
 
         <span class="comment">// gpio_config.pmic.pmic_cs.set_low();
         // let spi2_result = spi_pmic.transfer(&amp;mut read_ignition2).unwrap();

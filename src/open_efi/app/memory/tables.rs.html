@@ -152,6 +152,11 @@
 <a href="#152" id="152">152</a>
 <a href="#153" id="153">153</a>
 <a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 
 </span><span class="kw">use </span>stm32f4xx_hal::{
@@ -162,7 +167,7 @@
 };
 <span class="kw">use </span>w25q::series25::{Flash, FlashInfo};
 <span class="kw">use </span>shared_bus_rtic::SharedBus;
-
+<span class="kw">use </span><span class="kw">crate</span>::app::logging::host;
 
 <span class="kw">type </span>DataT = [[i32; <span class="number">17</span>]; <span class="number">17</span>];
 
@@ -227,6 +232,11 @@
         </span><span class="kw">let </span>u8buff = [buf[<span class="number">0</span>], buf[<span class="number">1</span>], buf[<span class="number">2</span>], buf[<span class="number">3</span>]];
         <span class="kw">let </span>memory_crc = u32::from_le_bytes(u8buff);
         <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>buf[<span class="number">3</span>..]);
+
+        <span class="kw">if </span>memory_crc != calculated_crc {
+            <span class="macro">host::debug!</span>(<span class="string">&quot;Checksum tablas no coinciden {:?}  {:?}&quot;</span>, memory_crc,calculated_crc)
+        }
+
 
         {
             <span class="self">self</span>.crc = calculated_crc;

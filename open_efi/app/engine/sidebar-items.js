@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["get_degree_time","get_engine_cycle_duration"],"mod":["cpwm","efi_cfg","engine_status","pmic","sensors"]};
+window.SIDEBAR_ITEMS = {"fn":["get_degree_time","get_engine_cycle_duration"],"mod":["cpwm","efi_cfg","engine_status","error","pmic","sensors"]};

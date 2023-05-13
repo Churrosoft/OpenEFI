@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["send_command"]};
+window.SIDEBAR_ITEMS = {"enum":["CoilStatus","Commands","InjectorStatus","Registers"],"fn":["match_ignition_status","match_injector_status"],"struct":["FastCil","FastStatus","FullStatus","PMIC"]};
