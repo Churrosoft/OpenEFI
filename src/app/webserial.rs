@@ -1,16 +1,18 @@
-mod handle_core;
-pub mod handle_tables;
-
-use crate::{
-    app,
-    app::{logging, util},
-};
 use arrayvec::ArrayVec;
 use rtic::Mutex;
 use usb_device::{
     bus::{UsbBus, UsbBusAllocator},
     device::{UsbDevice, UsbDeviceBuilder, UsbVidPid},
 };
+
+use crate::{
+    app,
+    app::{logging, util},
+};
+
+mod handle_core;
+pub mod handle_tables;
+pub mod handle_pmic;
 
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
@@ -39,8 +41,8 @@ pub enum SerialError {
 }
 
 pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
-where
-    B: UsbBus,
+    where
+        B: UsbBus,
 {
     UsbDeviceBuilder::new(bus, UsbVidPid(0x1209, 0xeef1))
         .manufacturer("Churrosoft")
@@ -82,6 +84,7 @@ pub fn process_command(buf: [u8; 128]) {
     match serial_cmd.command & 0xf0 {
         0x00 => handle_core::handler(serial_cmd),
         0x10 => app::table_cdc_callback::spawn(serial_cmd).unwrap(),
+        0x80 => app::pmic_cdc_callback::spawn(serial_cmd).unwrap(),
         0x90 => app::debug_demo::spawn(serial_cmd.command & 0b00001111).unwrap(),
         _ => {
             app::send_message::spawn(
@@ -89,7 +92,7 @@ pub fn process_command(buf: [u8; 128]) {
                 SerialError::UnknownCmd as u8,
                 serial_cmd,
             )
-            .unwrap();
+                .unwrap();
         }
     }
 }

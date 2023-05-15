@@ -12,6 +12,7 @@ mod app {
 
     use arrayvec::ArrayVec;
     use embedded_hal::spi::{Mode, Phase, Polarity};
+    use shared_bus_rtic::SharedBus;
     use stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
         crc32,
@@ -24,6 +25,7 @@ mod app {
         spi::*,
         timer::{self, Event},
     };
+    use stm32f4xx_hal::gpio::{Output, PushPull};
     use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
@@ -46,7 +48,8 @@ mod app {
         webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
     use crate::app::engine::pmic;
-    use crate::app::engine::pmic::PMIC;
+    use crate::app::engine::pmic::{PMIC, PmicT};
+    use crate::app::webserial::handle_pmic;
 
     pub mod debug;
     pub mod engine;
@@ -93,6 +96,7 @@ mod app {
         flash_info: FlashInfo,
         tables: Tables,
         sensors: SensorValues,
+        pmic: PmicT,
     }
 
     #[local]
@@ -348,9 +352,9 @@ mod app {
 
         host::debug!("SPI IGN: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
 
-        let mut my_pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
+        let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
-        my_pmic.get_fast_status();
+        pmic.get_fast_status();
 
         // gpio_config.pmic.pmic_cs.set_low();
         // let spi2_result = spi_pmic.transfer(&mut read_ignition2).unwrap();
@@ -407,6 +411,7 @@ mod app {
                 efi_cfg: _efi_cfg,
                 efi_status: _efi_status,
                 tables: table,
+                pmic,
             },
             // Initialization of task local resources
             Local {
@@ -541,6 +546,19 @@ mod app {
             *spi_lock = false;
         });
     }
+
+    #[task(priority = 2, shared = [spi_lock, pmic])]
+    fn pmic_cdc_callback(ctx: pmic_cdc_callback::Context, serial_cmd: SerialMessage) {
+        let spi_lock = ctx.shared.spi_lock;
+        let pmic = ctx.shared.pmic;
+
+        (spi_lock, pmic).lock(|spi_lock, pmic| {
+            handle_pmic::handler(serial_cmd, pmic);
+            *spi_lock = true;
+            *spi_lock = false;
+        })
+    }
+
 
     #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {

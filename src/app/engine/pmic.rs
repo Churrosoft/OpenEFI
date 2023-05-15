@@ -1,7 +1,13 @@
 use embedded_hal::blocking::spi::Transfer;
 use embedded_hal::digital::v2::OutputPin;
+use shared_bus_rtic::SharedBus;
+use stm32f4xx_hal::gpio;
+use stm32f4xx_hal::gpio::{Output, PushPull};
 
 use crate::app::engine::error::Error;
+use crate::app::memory::tables::SpiT;
+
+pub type PmicT = PMIC<SharedBus<SpiT>, gpio::PA15<Output<PushPull>>>;
 
 #[repr(u8)]
 pub enum Commands {
@@ -29,26 +35,24 @@ pub enum Registers {
     DACRegister = 0b1010_0000,
 }
 
+#[repr(u8)]
 pub enum InjectorStatus {
-    Ok,
+    Ok = 0x00,
     GenericError,
     TLIMFault,
     BatteryShortFault,
     OffOpenFault,
     OnOpenFault,
-    OverVoltageFault,
-    UnderVoltageFault,
     CORError,
 }
 
+#[repr(u8)]
 pub enum CoilStatus {
     Ok,
     GenericError,
     MAXIFault,
     MaxDwellFault,
     OpenSecondaryFault,
-    OverVoltageFault,
-    UnderVoltageFault,
 }
 
 pub struct FullStatus<T> {
