@@ -247,25 +247,26 @@ mod app {
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
-        logging::host::debug!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
+        host::debug!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
 
         // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         _efi_status.rpm = 1500;
 
         calculate_time_isr(&mut _efi_status, &_efi_cfg);
 
-        logging::host::debug!("AF {:?}", _efi_status.injection.air_flow);
+        host::debug!("AF {:?}", _efi_status.injection.air_flow);
 
         // NOTE: con crear el string estaria, no hace falta parsear el objecto de config
-        let mut serialized: serde_json_core::heapless::String<1000> =
-            serde_json_core::to_string(&_efi_cfg).unwrap();
+        let mut serialized: serde_json_core::heapless::String<1000>;
 
         let mut str_lock = false; // NOTE: sesuponeque rtic hace todo el laburo de los locks asi que esto quedaria al pedo
 
         gpio_config.led.led_check.toggle();
         gpio_config.led.led_mil.toggle();
-        debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
-        debug::injector_demo(&mut gpio_config.injection, &mut timer13);
+        // debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
+        // debug::injector_demo(&mut gpio_config.injection, &mut timer13);
+
+
         //  debug::injector_demo(&mut gpio_config.injection, &mut timer13);
         // loop {
         //     debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
@@ -277,18 +278,18 @@ mod app {
         let spi_lock = false;
 
 
-        let mut spi_result = [0x0, 0x0];
-
-        let spi_status = [0b0000_1111, 0b0000_0000]; // SPI status
-        let update_mode = [0b0001_1111, 0b0000_0000];// cambio de modo ignicion => generico
-
-        let read_all = [0b0000_1010, 0b0000_0000];// all status register
-        let read_out_fault = [0b0000_1010, 0b0001_0000]; // OUT0/OUT1 fault
-
-        let read_ignition_status = [0b0000_1010, 0b0100_0000]; // OUT0/OUT1 fault
-
-
-        let mut mock_word = [0xf, 0x0];
+        // let mut spi_result = [0x0, 0x0];
+        //
+        // let spi_status = [0b0000_1111, 0b0000_0000]; // SPI status
+        // let update_mode = [0b0001_1111, 0b0000_0000];// cambio de modo ignicion => generico
+        //
+        // let read_all = [0b0000_1010, 0b0000_0000];// all status register
+        // let read_out_fault = [0b0000_1010, 0b0001_0000]; // OUT0/OUT1 fault
+        //
+        // let read_ignition_status = [0b0000_1010, 0b0100_0000]; // OUT0/OUT1 fault
+        //
+        //
+        // let mut mock_word = [0xf, 0x0];
         // let mut read_ignition3 = [0b00110000,0b00000000];
         // let mut read_ignition4 = [0b00110001,0b00000000];
         // let mut read_ignition5 = [0b00110001,0b00000000];
@@ -302,59 +303,64 @@ mod app {
         // gpio_config.pmic.pmic_cs.set_high();
         //
         // host::debug!("SPI Check: 0b{:08b} / 0b{:08b}", status[0], status[1]);
-        unsafe { __breakpoint::<0>(); }
-
-        // discard prev
-        gpio_config.pmic.pmic_cs.set_low();
-        spi_pmic.transfer(&mut mock_word).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_ms(200u32);
-
-        unsafe { __breakpoint::<0>(); }
-
-        debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
-
-
-        // read out0/1 register
-        gpio_config.pmic.pmic_cs.set_low();
-        timer13.delay_us(10u32);
-        spi_pmic.write(&read_out_fault).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(10u32);
-        gpio_config.pmic.pmic_cs.set_low();
-        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(100u32);
-        host::debug!("SPI out0: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
-
-        // re-read (status)
-        gpio_config.pmic.pmic_cs.set_low();
-        timer13.delay_us(10u32);
-        spi_pmic.write(&read_all).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(10u32);
-        gpio_config.pmic.pmic_cs.set_low();
-        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(100u32);
-        host::debug!("SPI status: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
-
-        // read ignition status
-        gpio_config.pmic.pmic_cs.set_low();
-        timer13.delay_us(10u32);
-        spi_pmic.write(&read_ignition_status).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(10u32);
-        gpio_config.pmic.pmic_cs.set_low();
-        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(100u32);
-
-        host::debug!("SPI IGN: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
+        // unsafe { __breakpoint::<0>(); }
+        //
+        // // discard prev
+        // gpio_config.pmic.pmic_cs.set_low();
+        // spi_pmic.transfer(&mut mock_word).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // timer13.delay_ms(200u32);
+        //
+        // unsafe { __breakpoint::<0>(); }
+        //
+        // debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
+        //
+        //
+        // // read out0/1 register
+        // gpio_config.pmic.pmic_cs.set_low();
+        // timer13.delay_us(10u32);
+        // spi_pmic.write(&read_out_fault).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // timer13.delay_us(10u32);
+        // gpio_config.pmic.pmic_cs.set_low();
+        // let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // timer13.delay_us(100u32);
+        // host::debug!("SPI out0: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
+        //
+        // // re-read (status)
+        // gpio_config.pmic.pmic_cs.set_low();
+        // timer13.delay_us(10u32);
+        // spi_pmic.write(&read_all).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // timer13.delay_us(10u32);
+        // gpio_config.pmic.pmic_cs.set_low();
+        // let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // timer13.delay_us(100u32);
+        // host::debug!("SPI status: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
+        //
+        // // read ignition status
+        // gpio_config.pmic.pmic_cs.set_low();
+        // timer13.delay_us(10u32);
+        // spi_pmic.write(&read_ignition_status).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // timer13.delay_us(10u32);
+        // gpio_config.pmic.pmic_cs.set_low();
+        // let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
+        // gpio_config.pmic.pmic_cs.set_high();
+        // timer13.delay_us(100u32);
+        //
+        // host::debug!("SPI IGN: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
 
         let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
-        pmic.get_fast_status();
+        let data = pmic.get_fast_status();
+        serialized = serde_json_core::to_string(&data).unwrap();
+
+        host::debug!("------");
+        host::debug!("{:?}",serialized);
+        host::debug!("------");
 
         // gpio_config.pmic.pmic_cs.set_low();
         // let spi2_result = spi_pmic.transfer(&mut read_ignition2).unwrap();

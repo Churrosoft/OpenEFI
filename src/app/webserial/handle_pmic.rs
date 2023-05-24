@@ -16,11 +16,19 @@ pub fn handler(
         crc: 0,
     };
 
+    let mut json_payload = [0u8; 350];
+
     match command.command & 0b00001111 {
         // get all status
         0x01 => {
             host::debug!("PMIC: get fast status");
-            pmic_instance.get_fast_status();
+            let data = pmic_instance.get_fast_status();
+            host::debug!("{:?}",data);
+            host::debug!("------------------");
+            // de esto me sirven 300b clavados en el pero de los casos, serian 3 comandos de data
+            let result = serde_json_core::to_slice(&data, &mut json_payload).unwrap();
+            host::debug!("size: {:?}",result);
+
             response_buf.payload[0] = 0xff;
             app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
         }
