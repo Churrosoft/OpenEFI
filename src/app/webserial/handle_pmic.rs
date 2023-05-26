@@ -21,28 +21,45 @@ pub fn handler(
     match command.command & 0b00001111 {
         // get all status
         0x01 => {
-            host::debug!("PMIC: get fast status");
+            host::trace!("PMIC: get fast status");
             let data = pmic_instance.get_fast_status();
+
+            let result = serde_json_core::to_slice(&data, &mut json_payload);
+
             host::debug!("{:?}",data);
             host::debug!("------------------");
-            // de esto me sirven 300b clavados en el pero de los casos, serian 3 comandos de data
-            let result = serde_json_core::to_slice(&data, &mut json_payload).unwrap();
             host::debug!("size: {:?}",result);
 
             response_buf.payload[0] = 0xff;
-            app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+
+            if result.is_ok_and(|s| s > 0) {
+                app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+            }
+            app::send_message::spawn(SerialStatus::Error, SerialError::ParseError as u8, response_buf).unwrap();
         }
         // get injection status
         0x02 => {
-            host::debug!("PMIC: get injection status");
-            pmic_instance.get_injector_status();
-            app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+
+            host::trace!("PMIC: get injection status");
+            let data = pmic_instance.get_injector_status();
+            let result = serde_json_core::to_slice(&data, &mut json_payload);
+
+            if result.is_ok_and(|s| s > 0)  {
+                app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+            }
+
+            app::send_message::spawn(SerialStatus::Error, SerialError::ParseError as u8, response_buf).unwrap();
         }
         // get ignition status
         0x03 => {
-            host::debug!("PMIC: get ignition status");
-            pmic_instance.get_ignition_status();
-            app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+            host::trace!("PMIC: get ignition status");
+            let data = pmic_instance.get_ignition_status();
+            let result = serde_json_core::to_slice(&data, &mut json_payload);
+
+            if result.is_ok_and(|s| s > 0)  {
+                app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+            }
+            app::send_message::spawn(SerialStatus::Error, SerialError::ParseError as u8, response_buf).unwrap();
         }
         _ => {
             app::send_message::spawn(

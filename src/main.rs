@@ -3,6 +3,7 @@
 #![no_main]
 #![no_std]
 #![feature(stdsimd)]
+#![feature(is_some_and)]
 
 use panic_halt as _;
 

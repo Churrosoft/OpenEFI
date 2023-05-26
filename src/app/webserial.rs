@@ -35,6 +35,7 @@ pub enum SerialStatus {
 
 #[repr(u8)]
 pub enum SerialError {
+    ParseError = 0x5f,
     UnknownCmd = 0x7f,
     UnknownTable = 0x8f,
     TableNotLoaded = 0x9f,
