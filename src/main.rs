@@ -5,6 +5,7 @@
 #![feature(stdsimd)]
 #![feature(int_roundings)]
 #![feature(exclusive_range_pattern)]
+#![feature(is_some_and)]
 
 use panic_halt as _;
 
