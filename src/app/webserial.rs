@@ -1,16 +1,18 @@
-mod handle_core;
-pub mod handle_tables;
-
-use crate::{
-    app,
-    app::{logging, util},
-};
 use arrayvec::ArrayVec;
 use rtic::Mutex;
 use usb_device::{
     bus::{UsbBus, UsbBusAllocator},
     device::{UsbDevice, UsbDeviceBuilder, UsbVidPid},
 };
+
+use crate::{
+    app,
+    app::{logging, util},
+};
+
+mod handle_core;
+pub mod handle_tables;
+pub mod handle_pmic;
 
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
@@ -25,22 +27,37 @@ pub struct SerialMessage {
 #[derive(Debug)]
 #[repr(u8)]
 pub enum SerialStatus {
-    Error = 0b00000000,
-    Ok = 0b10000000,
-    DataChunk = 0b11100000,
-    DataChunkEnd = 0b11110000,
+    Error = 0b0000_0000,
+    Ok = 0b0100_0000,
+    UploadOk = 0x7d,
+    DataChunk = 0x7e,
+    DataChunkEnd = 0x7f,
 }
 
 #[repr(u8)]
-pub enum SerialError {
+pub enum SerialCode {
+    None = 0x00,
+
+    FWRequestBootloader = 0x01,
+    FWRebootUnsafe = 0x03,
+
+    ParseError = 0x5f,
     UnknownCmd = 0x7f,
-    UnknownTable = 0x8f,
-    TableNotLoaded = 0x9f,
+
+    // Tables
+    UnknownTable = 51,
+    TableNotLoaded = 50,
+    TableCrcError = 52,
+
+    // PMIC:
+    RequestFastStatus = 60,
+    RequestIgnitionStatus = 61,
+    RequestInjectionStatus = 62,
 }
 
 pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
-where
-    B: UsbBus,
+    where
+        B: UsbBus,
 {
     UsbDeviceBuilder::new(bus, UsbVidPid(0x1209, 0xeef1))
         .manufacturer("Churrosoft")
@@ -82,14 +99,15 @@ pub fn process_command(buf: [u8; 128]) {
     match serial_cmd.command & 0xf0 {
         0x00 => handle_core::handler(serial_cmd),
         0x10 => app::table_cdc_callback::spawn(serial_cmd).unwrap(),
+        0x80 => app::pmic_cdc_callback::spawn(serial_cmd).unwrap(),
         0x90 => app::debug_demo::spawn(serial_cmd.command & 0b00001111).unwrap(),
         _ => {
             app::send_message::spawn(
                 SerialStatus::Error,
-                SerialError::UnknownCmd as u8,
+                SerialCode::UnknownCmd as u8,
                 serial_cmd,
             )
-            .unwrap();
+                .unwrap();
         }
     }
 }

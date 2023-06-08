@@ -1,7 +1,7 @@
 use crate::app::{
     self, logging,
     memory::tables::{FlashT, TableData, Tables},
-    webserial::{SerialError, SerialMessage, SerialStatus},
+    webserial::{SerialCode, SerialMessage, SerialStatus},
 };
 
 use stm32f4xx_hal::crc32::Crc32;
@@ -16,7 +16,7 @@ pub fn handler(
 ) {
     let mut response_buf = SerialMessage {
         protocol: 1,
-        command: command.command,
+        command: 0x10,
         status: 0,
         payload: [0u8; 123],
         crc: 0,
@@ -53,7 +53,7 @@ pub fn handler(
                 _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::UnknownTable as u8,
+                        SerialCode::UnknownTable as u8,
                         response_buf,
                     )
                     .unwrap();
@@ -76,7 +76,7 @@ pub fn handler(
                 _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::UnknownTable as u8,
+                        SerialCode::UnknownTable as u8,
                         response_buf,
                     )
                     .unwrap();
@@ -132,7 +132,7 @@ pub fn handler(
                 _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::UnknownTable as u8,
+                        SerialCode::UnknownTable as u8,
                         response_buf,
                     )
                     .unwrap();
@@ -159,7 +159,7 @@ pub fn handler(
                     if table_data.tps_rpm_ve.is_some() {
                         logging::host::debug!("Table Write - TPS VE");
                         tps_rpm_ve.write_to_memory(flash, flash_info, crc);
-                        app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+                        app::send_message::spawn(SerialStatus::UploadOk, 0, response_buf).unwrap();
                         return;
                     }
 
@@ -167,7 +167,7 @@ pub fn handler(
 
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::TableNotLoaded as u8,
+                        SerialCode::TableNotLoaded as u8,
                         response_buf,
                     )
                     .unwrap();
@@ -176,7 +176,7 @@ pub fn handler(
                 _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::UnknownTable as u8,
+                        SerialCode::UnknownTable as u8,
                         response_buf,
                     )
                     .unwrap();
@@ -187,7 +187,7 @@ pub fn handler(
         _ => {
             app::send_message::spawn(
                 SerialStatus::Error,
-                SerialError::UnknownCmd as u8,
+                SerialCode::UnknownCmd as u8,
                 response_buf,
             )
             .unwrap();

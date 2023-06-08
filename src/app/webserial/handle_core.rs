@@ -1,6 +1,6 @@
 use crate::{
     app,
-    app::webserial::{SerialError, SerialMessage, SerialStatus},
+    app::webserial::{SerialCode, SerialMessage, SerialStatus},
 };
 
 pub fn handler(command: SerialMessage) {
@@ -34,7 +34,7 @@ pub fn handler(command: SerialMessage) {
         _ => {
             app::send_message::spawn(
                 SerialStatus::Error,
-                SerialError::UnknownCmd as u8,
+                SerialCode::UnknownCmd as u8,
                 response_buf,
             )
             .unwrap();

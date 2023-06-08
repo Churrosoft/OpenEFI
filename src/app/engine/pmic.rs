@@ -1,8 +1,15 @@
 use embedded_hal::blocking::spi::Transfer;
 use embedded_hal::digital::v2::OutputPin;
+use shared_bus_rtic::SharedBus;
+use stm32f4xx_hal::gpio;
+use stm32f4xx_hal::gpio::{Output, PushPull};
 
 use crate::app::engine::error::Error;
+use crate::app::memory::tables::SpiT;
+use serde::{ Serialize};
+pub type PmicT = PMIC<SharedBus<SpiT>, gpio::PA15<Output<PushPull>>>;
 
+#[derive(Serialize)]
 #[repr(u8)]
 pub enum Commands {
     ReadRegisters = 0b0000_1010,
@@ -14,6 +21,7 @@ pub enum Commands {
     ClockCalibration,
 }
 
+#[derive(Serialize)]
 #[repr(u8)]
 pub enum Registers {
     AllStatus = 0x0,
@@ -29,28 +37,29 @@ pub enum Registers {
     DACRegister = 0b1010_0000,
 }
 
+#[derive(Serialize,Debug)]
+#[repr(u8)]
 pub enum InjectorStatus {
-    Ok,
+    Ok = 0x00,
     GenericError,
     TLIMFault,
     BatteryShortFault,
     OffOpenFault,
     OnOpenFault,
-    OverVoltageFault,
-    UnderVoltageFault,
     CORError,
 }
 
+#[derive(Serialize,Debug)]
+#[repr(u8)]
 pub enum CoilStatus {
     Ok,
     GenericError,
     MAXIFault,
     MaxDwellFault,
     OpenSecondaryFault,
-    OverVoltageFault,
-    UnderVoltageFault,
 }
 
+#[derive(Serialize, Debug)]
 pub struct FullStatus<T> {
     pub cor: bool,
     pub over_voltage: bool,
@@ -61,6 +70,7 @@ pub struct FullStatus<T> {
     pub cil_4: T,
 }
 
+#[derive(Serialize, Debug)]
 pub struct FastCil<T> {
     pub cil_2: T,
     pub cil_3: T,
@@ -68,6 +78,7 @@ pub struct FastCil<T> {
     pub cil_1: T,
 }
 
+#[derive(Serialize, Debug)]
 pub struct FastStatus {
     pub cor: bool,
     pub over_voltage: bool,

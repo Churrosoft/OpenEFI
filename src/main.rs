@@ -3,6 +3,9 @@
 #![no_main]
 #![no_std]
 #![feature(stdsimd)]
+#![feature(int_roundings)]
+#![feature(exclusive_range_pattern)]
+#![feature(is_some_and)]
 
 use panic_halt as _;
 
@@ -12,6 +15,7 @@ mod app {
 
     use arrayvec::ArrayVec;
     use embedded_hal::spi::{Mode, Phase, Polarity};
+    use shared_bus_rtic::SharedBus;
     use stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
         crc32,
@@ -24,6 +28,7 @@ mod app {
         spi::*,
         timer::{self, Event},
     };
+    use stm32f4xx_hal::gpio::{Output, PushPull};
     use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
@@ -46,7 +51,8 @@ mod app {
         webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
     use crate::app::engine::pmic;
-    use crate::app::engine::pmic::PMIC;
+    use crate::app::engine::pmic::{PMIC, PmicT};
+    use crate::app::webserial::handle_pmic;
 
     pub mod debug;
     pub mod engine;
@@ -79,8 +85,6 @@ mod app {
         usb_web: WebUsb<UsbBusType>,
 
         // core:
-        string: serde_json_core::heapless::String<1000>,
-        str_lock: bool,
         // el implement de "shared_bus_resources" anda para el culo;
         // asi que hago el lock a mano
         spi_lock: bool,
@@ -93,6 +97,7 @@ mod app {
         flash_info: FlashInfo,
         tables: Tables,
         sensors: SensorValues,
+        pmic: PmicT,
     }
 
     #[local]
@@ -219,7 +224,7 @@ mod app {
         );
 
         let spi_bus = shared_bus_rtic::new!(spi2, SpiT );
-        let mut spi_pmic = spi_bus.acquire();
+        let spi_pmic = spi_bus.acquire();
 
         // CRC32:
         let mut crc = crc32::Crc32::new(dp.CRC);
@@ -231,9 +236,6 @@ mod app {
         let flash_info = flash.get_device_info().unwrap();
 
         host::debug!("FLASH: {:?}", id);
-        // logging::host::debug!("FLASH: Size {:?}", flash_info.capacity_kb);
-        // logging::host::debug!("FLASH: Block Count {:?}", flash_info.block_count);
-        // logging::host::debug!("FLASH: Page Count {:?}", flash_info.page_count);
 
         // EFI Setup:
         let mut table = Tables {
@@ -243,135 +245,23 @@ mod app {
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
-        logging::host::debug!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
+        host::debug!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
 
         // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         _efi_status.rpm = 1500;
 
         calculate_time_isr(&mut _efi_status, &_efi_cfg);
 
-        logging::host::debug!("AF {:?}", _efi_status.injection.air_flow);
-
-        // NOTE: con crear el string estaria, no hace falta parsear el objecto de config
-        let mut serialized: serde_json_core::heapless::String<1000> =
-            serde_json_core::to_string(&_efi_cfg).unwrap();
-
-        let mut str_lock = false; // NOTE: sesuponeque rtic hace todo el laburo de los locks asi que esto quedaria al pedo
+        host::debug!("AF {:?}", _efi_status.injection.air_flow);
 
         gpio_config.led.led_check.toggle();
         gpio_config.led.led_mil.toggle();
-        debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
-        debug::injector_demo(&mut gpio_config.injection, &mut timer13);
-        //  debug::injector_demo(&mut gpio_config.injection, &mut timer13);
-        // loop {
-        //     debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
-        // }
-        // debug::injector_demo(&mut gpio_config.injection, &mut timer13);
 
         let sensors = SensorValues::new();
 
         let spi_lock = false;
 
-
-        let mut spi_result = [0x0, 0x0];
-
-        let spi_status = [0b0000_1111, 0b0000_0000]; // SPI status
-        let update_mode = [0b0001_1111, 0b0000_0000];// cambio de modo ignicion => generico
-
-        let read_all = [0b0000_1010, 0b0000_0000];// all status register
-        let read_out_fault = [0b0000_1010, 0b0001_0000]; // OUT0/OUT1 fault
-
-        let read_ignition_status = [0b0000_1010, 0b0100_0000]; // OUT0/OUT1 fault
-
-
-        let mut mock_word = [0xf, 0x0];
-        // let mut read_ignition3 = [0b00110000,0b00000000];
-        // let mut read_ignition4 = [0b00110001,0b00000000];
-        // let mut read_ignition5 = [0b00110001,0b00000000];
-
-        // read all status register
-        // gpio_config.pmic.pmic_cs.set_low();
-        //
-        // spi_pmic.write(&read_all).unwrap();
-        //
-        // let status = spi_pmic.transfer(&mut mock_word).unwrap();
-        // gpio_config.pmic.pmic_cs.set_high();
-        //
-        // host::debug!("SPI Check: 0b{:08b} / 0b{:08b}", status[0], status[1]);
-        unsafe { __breakpoint::<0>(); }
-
-        // discard prev
-        gpio_config.pmic.pmic_cs.set_low();
-        spi_pmic.transfer(&mut mock_word).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_ms(200u32);
-
-        unsafe { __breakpoint::<0>(); }
-
-        debug::spark_demo(&mut gpio_config.ignition, &mut timer13);
-
-
-        // read out0/1 register
-        gpio_config.pmic.pmic_cs.set_low();
-        timer13.delay_us(10u32);
-        spi_pmic.write(&read_out_fault).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(10u32);
-        gpio_config.pmic.pmic_cs.set_low();
-        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(100u32);
-        host::debug!("SPI out0: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
-
-        // re-read (status)
-        gpio_config.pmic.pmic_cs.set_low();
-        timer13.delay_us(10u32);
-        spi_pmic.write(&read_all).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(10u32);
-        gpio_config.pmic.pmic_cs.set_low();
-        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(100u32);
-        host::debug!("SPI status: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
-
-        // read ignition status
-        gpio_config.pmic.pmic_cs.set_low();
-        timer13.delay_us(10u32);
-        spi_pmic.write(&read_ignition_status).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(10u32);
-        gpio_config.pmic.pmic_cs.set_low();
-        let status2 = spi_pmic.transfer(&mut mock_word).unwrap();
-        gpio_config.pmic.pmic_cs.set_high();
-        timer13.delay_us(100u32);
-
-        host::debug!("SPI IGN: 0b{:08b} /  0b{:08b}", status2[0], status2[1]);
-
-        let mut my_pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
-
-        my_pmic.get_fast_status();
-
-        // gpio_config.pmic.pmic_cs.set_low();
-        // let spi2_result = spi_pmic.transfer(&mut read_ignition2).unwrap();
-        // gpio_config.pmic.pmic_cs.set_high();
-        // host::debug!("SPI Write iny high: 0b{:08b} / 0b{:08b}", spi2_result[0],spi2_result[1]);
-        //
-        //
-        // timer13.delay_ms(10u32);
-        //
-        // gpio_config.pmic.pmic_cs.set_low();
-        // let spi3_result = spi_pmic.transfer(&mut read_ignition3).unwrap();
-        // gpio_config.pmic.pmic_cs.set_high();
-        // host::debug!("SPI Write iny low: 0b{:08b} / 0b{:08b}", spi3_result[0],spi3_result[1]);
-        //
-        // timer13.delay_ms(200u32);
-
-        // gpio_config.pmic.pmic_cs.set_low();
-        // spi_pmic.transfer(&mut read_ignition4).unwrap();
-        // let spi4_result = spi_pmic.transfer(&mut read_ignition5).unwrap();
-        // gpio_config.pmic.pmic_cs.set_high();
-        // host::debug!("SPI INY 0/1 status : 0b{:08b} / 0b{:08b}", spi4_result[0],spi4_result[1]);
+        let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
         return (
             // Initialization of shared resources
@@ -396,8 +286,6 @@ mod app {
                 sensors,
 
                 // CORE:
-                string: serialized,
-                str_lock,
                 crc,
                 flash,
                 flash_info,
@@ -407,6 +295,7 @@ mod app {
                 efi_cfg: _efi_cfg,
                 efi_status: _efi_status,
                 tables: table,
+                pmic,
             },
             // Initialization of task local resources
             Local {
@@ -541,6 +430,19 @@ mod app {
             *spi_lock = false;
         });
     }
+
+    #[task(priority = 2, shared = [spi_lock, pmic])]
+    fn pmic_cdc_callback(ctx: pmic_cdc_callback::Context, serial_cmd: SerialMessage) {
+        let spi_lock = ctx.shared.spi_lock;
+        let pmic = ctx.shared.pmic;
+
+        (spi_lock, pmic).lock(|spi_lock, pmic| {
+            handle_pmic::handler(serial_cmd, pmic);
+            *spi_lock = true;
+            *spi_lock = false;
+        })
+    }
+
 
     #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
