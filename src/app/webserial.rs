@@ -27,18 +27,32 @@ pub struct SerialMessage {
 #[derive(Debug)]
 #[repr(u8)]
 pub enum SerialStatus {
-    Error = 0b00000000,
-    Ok = 0b10000000,
-    DataChunk = 0b11100000,
-    DataChunkEnd = 0b11110000,
+    Error = 0b0000_0000,
+    Ok = 0b0100_0000,
+    UploadOk = 0x7d,
+    DataChunk = 0x7e,
+    DataChunkEnd = 0x7f,
 }
 
 #[repr(u8)]
-pub enum SerialError {
+pub enum SerialCode {
+    None = 0x00,
+
+    FWRequestBootloader = 0x01,
+    FWRebootUnsafe = 0x03,
+
     ParseError = 0x5f,
     UnknownCmd = 0x7f,
-    UnknownTable = 0x8f,
-    TableNotLoaded = 0x9f,
+
+    // Tables
+    UnknownTable = 51,
+    TableNotLoaded = 50,
+    TableCrcError = 52,
+
+    // PMIC:
+    RequestFastStatus = 60,
+    RequestIgnitionStatus = 61,
+    RequestInjectionStatus = 62,
 }
 
 pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
@@ -90,7 +104,7 @@ pub fn process_command(buf: [u8; 128]) {
         _ => {
             app::send_message::spawn(
                 SerialStatus::Error,
-                SerialError::UnknownCmd as u8,
+                SerialCode::UnknownCmd as u8,
                 serial_cmd,
             )
                 .unwrap();

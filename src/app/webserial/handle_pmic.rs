@@ -1,6 +1,6 @@
 use crate::app::{
     self, logging::host,
-    webserial::{SerialError, SerialMessage, SerialStatus},
+    webserial::{SerialCode, SerialMessage, SerialStatus},
 };
 use crate::app::engine::pmic::PmicT;
 
@@ -41,7 +41,7 @@ pub fn handler(
         _ => {
             app::send_message::spawn(
                 SerialStatus::Error,
-                SerialError::UnknownCmd as u8,
+                SerialCode::UnknownCmd as u8,
                 response_buf,
             )
                 .unwrap();
@@ -62,5 +62,5 @@ pub fn handler(
         app::send_message::spawn(SerialStatus::DataChunkEnd, 0, response_buf).unwrap();
         return;
     }
-    app::send_message::spawn(SerialStatus::Error, SerialError::ParseError as u8, response_buf).unwrap();
+    app::send_message::spawn(SerialStatus::Error, SerialCode::ParseError as u8, response_buf).unwrap();
 }
