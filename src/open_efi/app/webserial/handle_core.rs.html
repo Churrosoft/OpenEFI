@@ -43,7 +43,7 @@
 <a href="#43" id="43">43</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     app,
-    app::webserial::{SerialError, SerialMessage, SerialStatus},
+    app::webserial::{SerialCode, SerialMessage, SerialStatus},
 };
 
 <span class="kw">pub fn </span>handler(command: SerialMessage) {
@@ -77,7 +77,7 @@
         <span class="kw">_ </span>=&gt; {
             app::send_message::spawn(
                 SerialStatus::Error,
-                SerialError::UnknownCmd <span class="kw">as </span>u8,
+                SerialCode::UnknownCmd <span class="kw">as </span>u8,
                 response_buf,
             )
             .unwrap();

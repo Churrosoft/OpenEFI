@@ -198,7 +198,7 @@
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::{
     <span class="self">self</span>, logging,
     memory::tables::{FlashT, TableData, Tables},
-    webserial::{SerialError, SerialMessage, SerialStatus},
+    webserial::{SerialCode, SerialMessage, SerialStatus},
 };
 
 <span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
@@ -213,7 +213,7 @@
 ) {
     <span class="kw">let </span><span class="kw-2">mut </span>response_buf = SerialMessage {
         protocol: <span class="number">1</span>,
-        command: command.command,
+        command: <span class="number">0x10</span>,
         status: <span class="number">0</span>,
         payload: [<span class="number">0u8</span>; <span class="number">123</span>],
         crc: <span class="number">0</span>,
@@ -250,7 +250,7 @@
                 <span class="kw">_ </span>=&gt; {
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::UnknownTable <span class="kw">as </span>u8,
+                        SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
                     )
                     .unwrap();
@@ -273,7 +273,7 @@
                 <span class="kw">_ </span>=&gt; {
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::UnknownTable <span class="kw">as </span>u8,
+                        SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
                     )
                     .unwrap();
@@ -329,7 +329,7 @@
                 <span class="kw">_ </span>=&gt; {
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::UnknownTable <span class="kw">as </span>u8,
+                        SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
                     )
                     .unwrap();
@@ -356,7 +356,7 @@
                     <span class="kw">if </span>table_data.tps_rpm_ve.is_some() {
                         <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table Write - TPS VE&quot;</span>);
                         tps_rpm_ve.write_to_memory(flash, flash_info, crc);
-                        app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
+                        app::send_message::spawn(SerialStatus::UploadOk, <span class="number">0</span>, response_buf).unwrap();
                         <span class="kw">return</span>;
                     }
 
@@ -364,7 +364,7 @@
 
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::TableNotLoaded <span class="kw">as </span>u8,
+                        SerialCode::TableNotLoaded <span class="kw">as </span>u8,
                         response_buf,
                     )
                     .unwrap();
@@ -373,7 +373,7 @@
                 <span class="kw">_ </span>=&gt; {
                     app::send_message::spawn(
                         SerialStatus::Error,
-                        SerialError::UnknownTable <span class="kw">as </span>u8,
+                        SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
                     )
                     .unwrap();
@@ -384,7 +384,7 @@
         <span class="kw">_ </span>=&gt; {
             app::send_message::spawn(
                 SerialStatus::Error,
-                SerialError::UnknownCmd <span class="kw">as </span>u8,
+                SerialCode::UnknownCmd <span class="kw">as </span>u8,
                 response_buf,
             )
             .unwrap();

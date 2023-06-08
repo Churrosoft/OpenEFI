@@ -195,12 +195,30 @@
 <a href="#195" id="195">195</a>
 <a href="#196" id="196">196</a>
 <a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>embedded_hal::blocking::spi::Transfer;
 <span class="kw">use </span>embedded_hal::digital::v2::OutputPin;
+<span class="kw">use </span>shared_bus_rtic::SharedBus;
+<span class="kw">use </span>stm32f4xx_hal::gpio;
+<span class="kw">use </span>stm32f4xx_hal::gpio::{Output, PushPull};
 
 <span class="kw">use </span><span class="kw">crate</span>::app::engine::error::Error;
+<span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::SpiT;
+<span class="kw">use </span>serde::{ Serialize};
+<span class="kw">pub type </span>PmicT = PMIC&lt;SharedBus&lt;SpiT&gt;, gpio::PA15&lt;Output&lt;PushPull&gt;&gt;&gt;;
 
-<span class="attr">#[repr(u8)]
+<span class="attr">#[derive(Serialize)]
+#[repr(u8)]
 </span><span class="kw">pub enum </span>Commands {
     ReadRegisters = <span class="number">0b0000_1010</span>,
     AllStatus,
@@ -211,7 +229,8 @@
     ClockCalibration,
 }
 
-<span class="attr">#[repr(u8)]
+<span class="attr">#[derive(Serialize)]
+#[repr(u8)]
 </span><span class="kw">pub enum </span>Registers {
     AllStatus = <span class="number">0x0</span>,
     Out01Fault = <span class="number">0b0001_0000</span>,
@@ -226,29 +245,30 @@
     DACRegister = <span class="number">0b1010_0000</span>,
 }
 
-<span class="kw">pub enum </span>InjectorStatus {
-    <span class="prelude-val">Ok</span>,
+<span class="attr">#[derive(Serialize,Debug)]
+#[repr(u8)]
+</span><span class="kw">pub enum </span>InjectorStatus {
+    <span class="prelude-val">Ok </span>= <span class="number">0x00</span>,
     GenericError,
     TLIMFault,
     BatteryShortFault,
     OffOpenFault,
     OnOpenFault,
-    OverVoltageFault,
-    UnderVoltageFault,
     CORError,
 }
 
-<span class="kw">pub enum </span>CoilStatus {
+<span class="attr">#[derive(Serialize,Debug)]
+#[repr(u8)]
+</span><span class="kw">pub enum </span>CoilStatus {
     <span class="prelude-val">Ok</span>,
     GenericError,
     MAXIFault,
     MaxDwellFault,
     OpenSecondaryFault,
-    OverVoltageFault,
-    UnderVoltageFault,
 }
 
-<span class="kw">pub struct </span>FullStatus&lt;T&gt; {
+<span class="attr">#[derive(Serialize, Debug)]
+</span><span class="kw">pub struct </span>FullStatus&lt;T&gt; {
     <span class="kw">pub </span>cor: bool,
     <span class="kw">pub </span>over_voltage: bool,
     <span class="kw">pub </span>under_voltage: bool,
@@ -258,14 +278,16 @@
     <span class="kw">pub </span>cil_4: T,
 }
 
-<span class="kw">pub struct </span>FastCil&lt;T&gt; {
+<span class="attr">#[derive(Serialize, Debug)]
+</span><span class="kw">pub struct </span>FastCil&lt;T&gt; {
     <span class="kw">pub </span>cil_2: T,
     <span class="kw">pub </span>cil_3: T,
     <span class="kw">pub </span>cil_4: T,
     <span class="kw">pub </span>cil_1: T,
 }
 
-<span class="kw">pub struct </span>FastStatus {
+<span class="attr">#[derive(Serialize, Debug)]
+</span><span class="kw">pub struct </span>FastStatus {
     <span class="kw">pub </span>cor: bool,
     <span class="kw">pub </span>over_voltage: bool,
     <span class="kw">pub </span>under_voltage: bool,

@@ -131,19 +131,39 @@
 <a href="#131" id="131">131</a>
 <a href="#132" id="132">132</a>
 <a href="#133" id="133">133</a>
-</pre></div><pre class="rust"><code><span class="kw">mod </span>handle_core;
-<span class="kw">pub mod </span>handle_tables;
-
-<span class="kw">use crate</span>::{
-    app,
-    app::{logging, util},
-};
-<span class="kw">use </span>arrayvec::ArrayVec;
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>arrayvec::ArrayVec;
 <span class="kw">use </span>rtic::Mutex;
 <span class="kw">use </span>usb_device::{
     bus::{UsbBus, UsbBusAllocator},
     device::{UsbDevice, UsbDeviceBuilder, UsbVidPid},
 };
+
+<span class="kw">use crate</span>::{
+    app,
+    app::{logging, util},
+};
+
+<span class="kw">mod </span>handle_core;
+<span class="kw">pub mod </span>handle_tables;
+<span class="kw">pub mod </span>handle_pmic;
 
 <span class="attr">#[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
@@ -158,22 +178,37 @@
 <span class="attr">#[derive(Debug)]
 #[repr(u8)]
 </span><span class="kw">pub enum </span>SerialStatus {
-    Error = <span class="number">0b00000000</span>,
-    <span class="prelude-val">Ok </span>= <span class="number">0b10000000</span>,
-    DataChunk = <span class="number">0b11100000</span>,
-    DataChunkEnd = <span class="number">0b11110000</span>,
+    Error = <span class="number">0b0000_0000</span>,
+    <span class="prelude-val">Ok </span>= <span class="number">0b0100_0000</span>,
+    UploadOk = <span class="number">0x7d</span>,
+    DataChunk = <span class="number">0x7e</span>,
+    DataChunkEnd = <span class="number">0x7f</span>,
 }
 
 <span class="attr">#[repr(u8)]
-</span><span class="kw">pub enum </span>SerialError {
+</span><span class="kw">pub enum </span>SerialCode {
+    <span class="prelude-val">None </span>= <span class="number">0x00</span>,
+
+    FWRequestBootloader = <span class="number">0x01</span>,
+    FWRebootUnsafe = <span class="number">0x03</span>,
+
+    ParseError = <span class="number">0x5f</span>,
     UnknownCmd = <span class="number">0x7f</span>,
-    UnknownTable = <span class="number">0x8f</span>,
-    TableNotLoaded = <span class="number">0x9f</span>,
+
+    <span class="comment">// Tables
+    </span>UnknownTable = <span class="number">51</span>,
+    TableNotLoaded = <span class="number">50</span>,
+    TableCrcError = <span class="number">52</span>,
+
+    <span class="comment">// PMIC:
+    </span>RequestFastStatus = <span class="number">60</span>,
+    RequestIgnitionStatus = <span class="number">61</span>,
+    RequestInjectionStatus = <span class="number">62</span>,
 }
 
 <span class="kw">pub fn </span>new_device&lt;B&gt;(bus: <span class="kw-2">&amp;</span>UsbBusAllocator&lt;B&gt;) -&gt; UsbDevice&lt;<span class="lifetime">&#39;_</span>, B&gt;
-<span class="kw">where
-    </span>B: UsbBus,
+    <span class="kw">where
+        </span>B: UsbBus,
 {
     UsbDeviceBuilder::new(bus, UsbVidPid(<span class="number">0x1209</span>, <span class="number">0xeef1</span>))
         .manufacturer(<span class="string">&quot;Churrosoft&quot;</span>)
@@ -215,14 +250,15 @@
     <span class="kw">match </span>serial_cmd.command &amp; <span class="number">0xf0 </span>{
         <span class="number">0x00 </span>=&gt; handle_core::handler(serial_cmd),
         <span class="number">0x10 </span>=&gt; app::table_cdc_callback::spawn(serial_cmd).unwrap(),
+        <span class="number">0x80 </span>=&gt; app::pmic_cdc_callback::spawn(serial_cmd).unwrap(),
         <span class="number">0x90 </span>=&gt; app::debug_demo::spawn(serial_cmd.command &amp; <span class="number">0b00001111</span>).unwrap(),
         <span class="kw">_ </span>=&gt; {
             app::send_message::spawn(
                 SerialStatus::Error,
-                SerialError::UnknownCmd <span class="kw">as </span>u8,
+                SerialCode::UnknownCmd <span class="kw">as </span>u8,
                 serial_cmd,
             )
-            .unwrap();
+                .unwrap();
         }
     }
 }
