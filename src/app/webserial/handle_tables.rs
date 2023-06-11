@@ -85,7 +85,9 @@ pub fn handler(
             }
 
             for row in table {
-                let mut i = 0;
+                let mut row_index = 0;
+                let mut i = 1;
+                response_buf.payload[0] = row_index;
 
                 for row_number in row {
                     let number_arr: [u8; 4] = i32::to_le_bytes(row_number);
@@ -95,7 +97,7 @@ pub fn handler(
                     response_buf.payload[i + 3] = number_arr[3];
                     i += 4;
                 }
-
+                row_index += 1;
                 app::send_message::spawn(SerialStatus::DataChunk, 0, response_buf).unwrap();
             }
             app::send_message::spawn(SerialStatus::DataChunkEnd, 0, response_buf).unwrap();
@@ -125,7 +127,11 @@ pub fn handler(
                     // TPS RPM VE
                     logging::host::debug!("Table PUT {} - TPS VE", row_index);
                     // TODO: read table if not read prev.
+
                     table_data.tps_rpm_ve.as_mut().unwrap()[row_index] = table_row;
+
+                    logging::host::debug!("UPDATED: {:?}", table_data.tps_rpm_ve.as_mut().unwrap()[row_index]);
+
                     app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
                     return;
                 }
@@ -180,6 +186,42 @@ pub fn handler(
                         response_buf,
                     )
                     .unwrap();
+                    return;
+                }
+            }
+        }
+
+        // Clear selected table
+        0x09 => {
+            match selected_table {
+                0x01 => {
+                    // TPS RPM VE
+                    let mut tps_rpm_ve = TableData {
+                        data: table_data.tps_rpm_ve,
+                        crc: 0,
+                        address: 0x3,
+                        max_x: 17,
+                        max_y: 17,
+                    };
+
+                    tps_rpm_ve.clear(flash, flash_info, crc);
+                    logging::host::debug!("Table Clear TPS/RPM/VE [injection]");
+
+                    app::send_message::spawn(
+                        SerialStatus::Ok,
+                        SerialCode::None as u8,
+                        response_buf,
+                    )
+                        .unwrap();
+                    return;
+                }
+                _ => {
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialCode::UnknownTable as u8,
+                        response_buf,
+                    )
+                        .unwrap();
                     return;
                 }
             }
