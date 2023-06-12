@@ -245,8 +245,6 @@ mod app {
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
-        host::debug!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
-
         // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         _efi_status.rpm = 1500;
 
@@ -260,7 +258,6 @@ mod app {
         let sensors = SensorValues::new();
 
         let spi_lock = false;
-
         let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
         return (
@@ -425,7 +422,6 @@ mod app {
 
         (flash, flash_info, tables, crc, spi_lock).lock(|flash, flash_info, tables, crc, spi_lock| {
             *spi_lock = true;
-            tables.tps_rpm_ve.as_mut().unwrap()[0][0] = 40;
             handle_tables::handler(serial_cmd, flash, flash_info, tables, crc);
             *spi_lock = false;
         });
@@ -444,21 +440,26 @@ mod app {
     }
 
 
-    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13])]
+    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13,flash])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         let inj_pins = ctx.shared.inj_pins;
         let ign_pins = ctx.shared.ign_pins;
         let stepper_pins = ctx.shared.stepper_pins;
         let relay_pins = ctx.shared.relay_pins;
         let timer13 = ctx.shared.timer13;
-
-        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13).lock(
-            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13| match demo_mode {
+        let flash = ctx.shared.flash;
+        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13,flash).lock(
+            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13,flash| match demo_mode {
                 0x0 => debug::spark_demo(ign_pins, timer13),
                 0x1 => debug::injector_demo(inj_pins, timer13),
                 0x2 => debug::external_idle_demo(stepper_pins, timer13),
                 0x3 => debug::relay_demo(relay_pins, timer13),
-                0x4..=u8::MAX => debug::external_idle_demo(stepper_pins, timer13),
+                0x4 => {
+                    host::debug!("Init clear flash");
+                    flash.erase_all();
+                    host::debug!("clear flash done");
+                }
+                0x5..=u8::MAX => debug::external_idle_demo(stepper_pins, timer13),
             },
         )
     }

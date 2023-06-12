@@ -1,11 +1,11 @@
+use stm32f4xx_hal::crc32::Crc32;
+use w25q::series25::FlashInfo;
+
 use crate::app::{
     self, logging,
     memory::tables::{FlashT, TableData, Tables},
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-
-use stm32f4xx_hal::crc32::Crc32;
-use w25q::series25::FlashInfo;
 
 pub fn handler(
     command: SerialMessage,
@@ -22,19 +22,6 @@ pub fn handler(
         crc: 0,
     };
 
-    // reversa:
-    // let a = 4;
-    // let b = 5;
-    // let c = 0;
-    // c = (a << 4);
-    // c = c | b;
-
-    /*  logging::host::debug!(
-        "Table A {} ; B {} ; C {}",
-        command.status & 0b00001111,
-        (command.status & 0b11110000) >> 4,
-        command.command & 0b11110000
-    ); */
     let selected_table = command.status & 0b00001111;
 
     match command.command & 0b00001111 {
@@ -56,7 +43,7 @@ pub fn handler(
                         SerialCode::UnknownTable as u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
                     return;
                 }
             }
@@ -64,12 +51,10 @@ pub fn handler(
         // get X table
         0x02 => {
             #[allow(unused_assignments)]
-            let mut table = [[0i32; 17]; 17];
+                let mut table = [[0i32; 17]; 17];
 
             match selected_table {
                 0x01 => {
-                    // TPS RPM VE
-                    logging::host::debug!("Table get - TPS VE");
                     // TODO: read table if not read prev.
                     table = table_data.tps_rpm_ve.unwrap();
                 }
@@ -79,13 +64,15 @@ pub fn handler(
                         SerialCode::UnknownTable as u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
                     return;
                 }
             }
 
             for row in table {
-                let mut i = 0;
+                let mut row_index = 0;
+                let mut i = 1;
+                response_buf.payload[0] = row_index;
 
                 for row_number in row {
                     let number_arr: [u8; 4] = i32::to_le_bytes(row_number);
@@ -95,7 +82,7 @@ pub fn handler(
                     response_buf.payload[i + 3] = number_arr[3];
                     i += 4;
                 }
-
+                row_index += 1;
                 app::send_message::spawn(SerialStatus::DataChunk, 0, response_buf).unwrap();
             }
             app::send_message::spawn(SerialStatus::DataChunkEnd, 0, response_buf).unwrap();
@@ -105,6 +92,8 @@ pub fn handler(
             let mut row_data = 1;
             let row_index = command.payload[0] as usize;
             let mut table_row = [0i32; 17];
+            #[allow(unused_assignments)]
+                let mut table = [[0i32; 17]; 17];
 
             // FIXME: get max index from correct table
             for matrix_x in 0..17 {
@@ -123,9 +112,10 @@ pub fn handler(
             match selected_table {
                 0x01 => {
                     // TPS RPM VE
-                    logging::host::debug!("Table PUT {} - TPS VE", row_index);
                     // TODO: read table if not read prev.
-                    table_data.tps_rpm_ve.as_mut().unwrap()[row_index] = table_row;
+                    table = table_data.tps_rpm_ve.unwrap();
+                    table[row_index] = table_row;
+                    table_data.tps_rpm_ve = Some(table);
                     app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
                     return;
                 }
@@ -135,7 +125,7 @@ pub fn handler(
                         SerialCode::UnknownTable as u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
                     return;
                 }
             }
@@ -157,7 +147,6 @@ pub fn handler(
                     };
 
                     if table_data.tps_rpm_ve.is_some() {
-                        logging::host::debug!("Table Write - TPS VE");
                         tps_rpm_ve.write_to_memory(flash, flash_info, crc);
                         app::send_message::spawn(SerialStatus::UploadOk, 0, response_buf).unwrap();
                         return;
@@ -170,7 +159,7 @@ pub fn handler(
                         SerialCode::TableNotLoaded as u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
                     return;
                 }
                 _ => {
@@ -179,7 +168,43 @@ pub fn handler(
                         SerialCode::UnknownTable as u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
+                    return;
+                }
+            }
+        }
+
+        // Clear selected table
+        0x09 => {
+            match selected_table {
+                0x01 => {
+                    // TPS RPM VE
+                    let mut tps_rpm_ve = TableData {
+                        data: table_data.tps_rpm_ve,
+                        crc: 0,
+                        address: 0x3,
+                        max_x: 17,
+                        max_y: 17,
+                    };
+
+                    tps_rpm_ve.clear(flash, flash_info, crc);
+                    logging::host::debug!("Table Clear TPS/RPM/VE [injection]");
+
+                    app::send_message::spawn(
+                        SerialStatus::Ok,
+                        SerialCode::None as u8,
+                        response_buf,
+                    )
+                        .unwrap();
+                    return;
+                }
+                _ => {
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialCode::UnknownTable as u8,
+                        response_buf,
+                    )
+                        .unwrap();
                     return;
                 }
             }
@@ -190,7 +215,7 @@ pub fn handler(
                 SerialCode::UnknownCmd as u8,
                 response_buf,
             )
-            .unwrap();
+                .unwrap();
             return;
         }
     }
