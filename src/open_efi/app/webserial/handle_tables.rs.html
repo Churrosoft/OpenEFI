@@ -195,14 +195,39 @@
 <a href="#195" id="195">195</a>
 <a href="#196" id="196">196</a>
 <a href="#197" id="197">197</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::{
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
+<span class="kw">use </span>w25q::series25::FlashInfo;
+
+<span class="kw">use </span><span class="kw">crate</span>::app::{
     <span class="self">self</span>, logging,
     memory::tables::{FlashT, TableData, Tables},
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-
-<span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
-<span class="kw">use </span>w25q::series25::FlashInfo;
 
 <span class="kw">pub fn </span>handler(
     command: SerialMessage,
@@ -219,20 +244,7 @@
         crc: <span class="number">0</span>,
     };
 
-    <span class="comment">// reversa:
-    // let a = 4;
-    // let b = 5;
-    // let c = 0;
-    // c = (a &lt;&lt; 4);
-    // c = c | b;
-
-    /*  logging::host::debug!(
-        &quot;Table A {} ; B {} ; C {}&quot;,
-        command.status &amp; 0b00001111,
-        (command.status &amp; 0b11110000) &gt;&gt; 4,
-        command.command &amp; 0b11110000
-    ); */
-    </span><span class="kw">let </span>selected_table = command.status &amp; <span class="number">0b00001111</span>;
+    <span class="kw">let </span>selected_table = command.status &amp; <span class="number">0b00001111</span>;
 
     <span class="kw">match </span>command.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// table get metadata
@@ -253,7 +265,7 @@
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
                     <span class="kw">return</span>;
                 }
             }
@@ -261,12 +273,10 @@
         <span class="comment">// get X table
         </span><span class="number">0x02 </span>=&gt; {
             <span class="attr">#[allow(unused_assignments)]
-            </span><span class="kw">let </span><span class="kw-2">mut </span>table = [[<span class="number">0i32</span>; <span class="number">17</span>]; <span class="number">17</span>];
+                </span><span class="kw">let </span><span class="kw-2">mut </span>table = [[<span class="number">0i32</span>; <span class="number">17</span>]; <span class="number">17</span>];
 
             <span class="kw">match </span>selected_table {
                 <span class="number">0x01 </span>=&gt; {
-                    <span class="comment">// TPS RPM VE
-                    </span><span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table get - TPS VE&quot;</span>);
                     <span class="comment">// TODO: read table if not read prev.
                     </span>table = table_data.tps_rpm_ve.unwrap();
                 }
@@ -276,13 +286,15 @@
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
                     <span class="kw">return</span>;
                 }
             }
 
             <span class="kw">for </span>row <span class="kw">in </span>table {
-                <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>row_index = <span class="number">0</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">1</span>;
+                response_buf.payload[<span class="number">0</span>] = row_index;
 
                 <span class="kw">for </span>row_number <span class="kw">in </span>row {
                     <span class="kw">let </span>number_arr: [u8; <span class="number">4</span>] = i32::to_le_bytes(row_number);
@@ -292,7 +304,7 @@
                     response_buf.payload[i + <span class="number">3</span>] = number_arr[<span class="number">3</span>];
                     i += <span class="number">4</span>;
                 }
-
+                row_index += <span class="number">1</span>;
                 app::send_message::spawn(SerialStatus::DataChunk, <span class="number">0</span>, response_buf).unwrap();
             }
             app::send_message::spawn(SerialStatus::DataChunkEnd, <span class="number">0</span>, response_buf).unwrap();
@@ -302,6 +314,8 @@
             <span class="kw">let </span><span class="kw-2">mut </span>row_data = <span class="number">1</span>;
             <span class="kw">let </span>row_index = command.payload[<span class="number">0</span>] <span class="kw">as </span>usize;
             <span class="kw">let </span><span class="kw-2">mut </span>table_row = [<span class="number">0i32</span>; <span class="number">17</span>];
+            <span class="attr">#[allow(unused_assignments)]
+                </span><span class="kw">let </span><span class="kw-2">mut </span>table = [[<span class="number">0i32</span>; <span class="number">17</span>]; <span class="number">17</span>];
 
             <span class="comment">// FIXME: get max index from correct table
             </span><span class="kw">for </span>matrix_x <span class="kw">in </span><span class="number">0</span>..<span class="number">17 </span>{
@@ -320,9 +334,10 @@
             <span class="kw">match </span>selected_table {
                 <span class="number">0x01 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
-                    </span><span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table PUT {} - TPS VE&quot;</span>, row_index);
-                    <span class="comment">// TODO: read table if not read prev.
-                    </span>table_data.tps_rpm_ve.as_mut().unwrap()[row_index] = table_row;
+                    // TODO: read table if not read prev.
+                    </span>table = table_data.tps_rpm_ve.unwrap();
+                    table[row_index] = table_row;
+                    table_data.tps_rpm_ve = <span class="prelude-val">Some</span>(table);
                     app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
                     <span class="kw">return</span>;
                 }
@@ -332,7 +347,7 @@
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
                     <span class="kw">return</span>;
                 }
             }
@@ -354,7 +369,6 @@
                     };
 
                     <span class="kw">if </span>table_data.tps_rpm_ve.is_some() {
-                        <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table Write - TPS VE&quot;</span>);
                         tps_rpm_ve.write_to_memory(flash, flash_info, crc);
                         app::send_message::spawn(SerialStatus::UploadOk, <span class="number">0</span>, response_buf).unwrap();
                         <span class="kw">return</span>;
@@ -367,7 +381,7 @@
                         SerialCode::TableNotLoaded <span class="kw">as </span>u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
                     <span class="kw">return</span>;
                 }
                 <span class="kw">_ </span>=&gt; {
@@ -376,7 +390,43 @@
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
                     )
-                    .unwrap();
+                        .unwrap();
+                    <span class="kw">return</span>;
+                }
+            }
+        }
+
+        <span class="comment">// Clear selected table
+        </span><span class="number">0x09 </span>=&gt; {
+            <span class="kw">match </span>selected_table {
+                <span class="number">0x01 </span>=&gt; {
+                    <span class="comment">// TPS RPM VE
+                    </span><span class="kw">let </span><span class="kw-2">mut </span>tps_rpm_ve = TableData {
+                        data: table_data.tps_rpm_ve,
+                        crc: <span class="number">0</span>,
+                        address: <span class="number">0x3</span>,
+                        max_x: <span class="number">17</span>,
+                        max_y: <span class="number">17</span>,
+                    };
+
+                    tps_rpm_ve.clear(flash, flash_info, crc);
+                    <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table Clear TPS/RPM/VE [injection]&quot;</span>);
+
+                    app::send_message::spawn(
+                        SerialStatus::Ok,
+                        SerialCode::None <span class="kw">as </span>u8,
+                        response_buf,
+                    )
+                        .unwrap();
+                    <span class="kw">return</span>;
+                }
+                <span class="kw">_ </span>=&gt; {
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialCode::UnknownTable <span class="kw">as </span>u8,
+                        response_buf,
+                    )
+                        .unwrap();
                     <span class="kw">return</span>;
                 }
             }
@@ -387,7 +437,7 @@
                 SerialCode::UnknownCmd <span class="kw">as </span>u8,
                 response_buf,
             )
-            .unwrap();
+                .unwrap();
             <span class="kw">return</span>;
         }
     }

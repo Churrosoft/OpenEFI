@@ -498,6 +498,7 @@
 <a href="#498" id="498">498</a>
 <a href="#499" id="499">499</a>
 <a href="#500" id="500">500</a>
+<a href="#501" id="501">501</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! examples/locals.rs
 </span><span class="attr">#![feature(proc_macro_hygiene)]
 #![no_main]
@@ -745,8 +746,6 @@
 
         injection_setup(<span class="kw-2">&amp;mut </span>table, <span class="kw-2">&amp;mut </span>flash, <span class="kw-2">&amp;</span>flash_info, <span class="kw-2">&amp;mut </span>crc);
 
-        <span class="macro">host::debug!</span>(<span class="string">&quot;table rpm 2/2: {:?}&quot;</span>, table.tps_rpm_ve.unwrap()[<span class="number">2</span>][<span class="number">2</span>]);
-
         <span class="comment">// REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         </span>_efi_status.rpm = <span class="number">1500</span>;
 
@@ -760,7 +759,6 @@
         <span class="kw">let </span>sensors = SensorValues::new();
 
         <span class="kw">let </span>spi_lock = <span class="bool-val">false</span>;
-
         <span class="kw">let </span><span class="kw-2">mut </span>pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
         <span class="kw">return </span>(
@@ -925,7 +923,6 @@
 
         (flash, flash_info, tables, crc, spi_lock).lock(|flash, flash_info, tables, crc, spi_lock| {
             <span class="kw-2">*</span>spi_lock = <span class="bool-val">true</span>;
-            tables.tps_rpm_ve.as_mut().unwrap()[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">40</span>;
             handle_tables::handler(serial_cmd, flash, flash_info, tables, crc);
             <span class="kw-2">*</span>spi_lock = <span class="bool-val">false</span>;
         });
@@ -944,21 +941,26 @@
     }
 
 
-    <span class="attr">#[task(priority = <span class="number">2</span>, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13]</span>)]
+    <span class="attr">#[task(priority = <span class="number">2</span>, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13,flash]</span>)]
     <span class="kw">fn </span>debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         <span class="kw">let </span>inj_pins = ctx.shared.inj_pins;
         <span class="kw">let </span>ign_pins = ctx.shared.ign_pins;
         <span class="kw">let </span>stepper_pins = ctx.shared.stepper_pins;
         <span class="kw">let </span>relay_pins = ctx.shared.relay_pins;
         <span class="kw">let </span>timer13 = ctx.shared.timer13;
-
-        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13).lock(
-            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13| <span class="kw">match </span>demo_mode {
+        <span class="kw">let </span>flash = ctx.shared.flash;
+        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13,flash).lock(
+            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13,flash| <span class="kw">match </span>demo_mode {
                 <span class="number">0x0 </span>=&gt; debug::spark_demo(ign_pins, timer13),
                 <span class="number">0x1 </span>=&gt; debug::injector_demo(inj_pins, timer13),
                 <span class="number">0x2 </span>=&gt; debug::external_idle_demo(stepper_pins, timer13),
                 <span class="number">0x3 </span>=&gt; debug::relay_demo(relay_pins, timer13),
-                <span class="number">0x4</span>..=u8::MAX =&gt; debug::external_idle_demo(stepper_pins, timer13),
+                <span class="number">0x4 </span>=&gt; {
+                    <span class="macro">host::debug!</span>(<span class="string">&quot;Init clear flash&quot;</span>);
+                    flash.erase_all();
+                    <span class="macro">host::debug!</span>(<span class="string">&quot;clear flash done&quot;</span>);
+                }
+                <span class="number">0x5</span>..=u8::MAX =&gt; debug::external_idle_demo(stepper_pins, timer13),
             },
         )
     }

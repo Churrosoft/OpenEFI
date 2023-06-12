@@ -157,19 +157,41 @@
 <a href="#157" id="157">157</a>
 <a href="#158" id="158">158</a>
 <a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 
-</span><span class="kw">use </span>stm32f4xx_hal::{
+</span><span class="kw">use </span>shared_bus_rtic::SharedBus;
+<span class="kw">use </span>stm32f4xx_hal::{
     crc32::Crc32,
     gpio::{Alternate, Output, Pin},
     pac::SPI2,
     spi::Spi,
 };
 <span class="kw">use </span>w25q::series25::{Flash, FlashInfo};
-<span class="kw">use </span>shared_bus_rtic::SharedBus;
+
 <span class="kw">use </span><span class="kw">crate</span>::app::logging::host;
 
-<span class="kw">type </span>DataT = [[i32; <span class="number">17</span>]; <span class="number">17</span>];
+<span class="kw">pub type </span>DataT = [[i32; <span class="number">17</span>]; <span class="number">17</span>];
 
 <span class="kw">pub struct </span>Tables {
     <span class="kw">pub </span>tps_rpm_ve: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
@@ -195,7 +217,7 @@
     <span class="bool-val">false</span>,
 &gt;;
 
-<span class="kw">pub type </span>FlashT = Flash&lt;SharedBus&lt;SpiT&gt;,  Pin&lt;<span class="string">&#39;E&#39;</span>, <span class="number">13</span>, Output&gt;&gt;;
+<span class="kw">pub type </span>FlashT = Flash&lt;SharedBus&lt;SpiT&gt;, Pin&lt;<span class="string">&#39;E&#39;</span>, <span class="number">13</span>, Output&gt;&gt;;
 
 <span class="kw">impl </span>TableData {
     <span class="kw">pub fn </span>read_from_memory(
@@ -206,8 +228,8 @@
     ) -&gt; <span class="prelude-ty">Option</span>&lt;DataT&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>vv_32 = [[<span class="number">0i32</span>; <span class="number">17</span>]; <span class="number">17</span>];
         <span class="kw">let </span>read_address = fi.sector_to_page(<span class="kw-2">&amp;</span><span class="self">self</span>.address) * (fi.page_size <span class="kw">as </span>u32);
-        <span class="kw">let </span><span class="kw-2">mut </span>datarow = <span class="number">3</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>buf: [u8; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">3</span>] = [<span class="number">0</span>; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">3</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>datarow = <span class="number">4</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>buf: [u8; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">4</span>] = [<span class="number">0</span>; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">4</span>];
 
         {
             flash.read(read_address, <span class="kw-2">&amp;mut </span>buf).unwrap();
@@ -227,11 +249,13 @@
                 datarow += <span class="number">4</span>;
             }
         }
-
+        <span class="macro">host::debug!</span>(<span class="string">&quot;U8_BUF {:?}&quot;</span>,<span class="kw-2">&amp;</span>buf[..<span class="number">10</span>]);
         <span class="comment">// CRC Check
         </span><span class="kw">let </span>u8buff = [buf[<span class="number">0</span>], buf[<span class="number">1</span>], buf[<span class="number">2</span>], buf[<span class="number">3</span>]];
         <span class="kw">let </span>memory_crc = u32::from_le_bytes(u8buff);
-        <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>buf[<span class="number">3</span>..]);
+
+        crc.init();
+        <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>buf[<span class="number">4</span>..]);
 
         <span class="kw">if </span>memory_crc != calculated_crc {
             <span class="macro">host::debug!</span>(<span class="string">&quot;Checksum tablas no coinciden {:?}  {:?}&quot;</span>, memory_crc,calculated_crc)
@@ -247,8 +271,8 @@
     }
 
     <span class="kw">pub fn </span>write_to_memory(<span class="kw-2">&amp;</span><span class="self">self</span>, flash: <span class="kw-2">&amp;mut </span>FlashT, fi: <span class="kw-2">&amp;</span>FlashInfo, crc: <span class="kw-2">&amp;mut </span>Crc32) {
-        <span class="kw">let </span><span class="kw-2">mut </span>buf: [u8; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">3</span>] = [<span class="number">0</span>; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">3</span>];
-        <span class="kw">let </span><span class="kw-2">mut </span>datarow = <span class="number">3</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>buf: [u8; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">4</span>] = [<span class="number">0</span>; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">4</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>datarow = <span class="number">4</span>;
 
         <span class="kw">for </span>matrix_y <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.max_y {
             <span class="kw">for </span>matrix_x <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.max_x {
@@ -263,8 +287,8 @@
             }
         }
 
-        <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>buf[<span class="number">3</span>..]);
-
+        crc.init();
+        <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>buf[<span class="number">4</span>..]);
         <span class="kw">let </span>crc_arr: [u8; <span class="number">4</span>] = u32::to_le_bytes(calculated_crc);
 
         buf[<span class="number">0</span>] = crc_arr[<span class="number">0</span>];
@@ -274,16 +298,14 @@
 
         {
             <span class="kw">let </span>write_address = fi.sector_to_page(<span class="kw-2">&amp;</span><span class="self">self</span>.address) * (fi.page_size <span class="kw">as </span>u32);
-
             flash.erase_sectors(write_address, <span class="number">1</span>).unwrap();
-
             flash.write_bytes(write_address, <span class="kw-2">&amp;mut </span>buf).unwrap();
         }
     }
 
     <span class="kw">pub fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>, crc: <span class="kw-2">&amp;mut </span>Crc32, crc_val: u32) -&gt; bool {
         <span class="kw">let </span><span class="kw-2">mut </span>buf: [u8; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17</span>] = [<span class="number">0</span>; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17</span>];
-        <span class="kw">let </span><span class="kw-2">mut </span>datarow = <span class="number">3</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>datarow = <span class="number">0</span>;
 
         <span class="kw">for </span>matrix_y <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.max_y {
             <span class="kw">for </span>matrix_x <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.max_x {
@@ -299,8 +321,28 @@
         }
 
         {
-            <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>buf[<span class="number">3</span>..]);
+            crc.init();
+            <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>buf);
             <span class="kw">return </span>calculated_crc == crc_val;
+        }
+    }
+
+    <span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flash: <span class="kw-2">&amp;mut </span>FlashT, fi: <span class="kw-2">&amp;</span>FlashInfo, crc: <span class="kw-2">&amp;mut </span>Crc32 ) {
+        <span class="kw">let </span><span class="kw-2">mut </span>buf: [u8; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">4</span>] = [<span class="number">0</span>; <span class="number">4 </span>* <span class="number">17 </span>* <span class="number">17 </span>+ <span class="number">4</span>];
+
+        crc.init();
+        <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>buf[<span class="number">4</span>..]);
+        <span class="kw">let </span>crc_arr: [u8; <span class="number">4</span>] = u32::to_le_bytes(calculated_crc);
+
+        buf[<span class="number">0</span>] = crc_arr[<span class="number">0</span>];
+        buf[<span class="number">1</span>] = crc_arr[<span class="number">1</span>];
+        buf[<span class="number">2</span>] = crc_arr[<span class="number">2</span>];
+        buf[<span class="number">3</span>] = crc_arr[<span class="number">3</span>];
+
+        {
+            <span class="kw">let </span>write_address = fi.sector_to_page(<span class="kw-2">&amp;</span><span class="self">self</span>.address) * (fi.page_size <span class="kw">as </span>u32);
+            flash.erase_sectors(write_address, <span class="number">1</span>).unwrap();
+            flash.write_bytes(write_address, <span class="kw-2">&amp;mut </span>buf).unwrap();
         }
     }
 
