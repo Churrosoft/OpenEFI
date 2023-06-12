@@ -11,7 +11,7 @@ use w25q::series25::{Flash, FlashInfo};
 
 use crate::app::logging::host;
 
-type DataT = [[i32; 17]; 17];
+pub type DataT = [[i32; 17]; 17];
 
 pub struct Tables {
     pub tps_rpm_ve: Option<DataT>,
@@ -109,8 +109,6 @@ impl TableData {
 
         crc.init();
         let calculated_crc = crc.update_bytes(&buf[4..]);
-        host::debug!("NEW CRC {:?}", calculated_crc);
-
         let crc_arr: [u8; 4] = u32::to_le_bytes(calculated_crc);
 
         buf[0] = crc_arr[0];
@@ -120,9 +118,7 @@ impl TableData {
 
         {
             let write_address = fi.sector_to_page(&self.address) * (fi.page_size as u32);
-
             flash.erase_sectors(write_address, 1).unwrap();
-
             flash.write_bytes(write_address, &mut buf).unwrap();
         }
     }
@@ -153,12 +149,9 @@ impl TableData {
 
     pub fn clear(&mut self, flash: &mut FlashT, fi: &FlashInfo, crc: &mut Crc32 ) {
         let mut buf: [u8; 4 * 17 * 17 + 4] = [0; 4 * 17 * 17 + 4];
-        buf.fill(0x0);
 
         crc.init();
         let calculated_crc = crc.update_bytes(&buf[4..]);
-        host::debug!("NEW CRC [Clear table] {:?}", calculated_crc);
-        host::debug!("clear data {:?}", &buf[..10]);
         let crc_arr: [u8; 4] = u32::to_le_bytes(calculated_crc);
 
         buf[0] = crc_arr[0];
@@ -168,9 +161,7 @@ impl TableData {
 
         {
             let write_address = fi.sector_to_page(&self.address) * (fi.page_size as u32);
-
             flash.erase_sectors(write_address, 1).unwrap();
-
             flash.write_bytes(write_address, &mut buf).unwrap();
         }
     }

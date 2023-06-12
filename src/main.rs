@@ -245,8 +245,6 @@ mod app {
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
-        host::debug!("table rpm 2/2: {:?}", table.tps_rpm_ve.unwrap()[2][2]);
-
         // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         _efi_status.rpm = 1500;
 
@@ -418,13 +416,12 @@ mod app {
     fn table_cdc_callback(ctx: table_cdc_callback::Context, serial_cmd: SerialMessage) {
         let flash = ctx.shared.flash;
         let flash_info = ctx.shared.flash_info;
-        let mut tables = ctx.shared.tables;
+        let tables = ctx.shared.tables;
         let crc = ctx.shared.crc;
         let spi_lock = ctx.shared.spi_lock;
 
         (flash, flash_info, tables, crc, spi_lock).lock(|flash, flash_info, tables, crc, spi_lock| {
             *spi_lock = true;
-            // tables.tps_rpm_ve.as_mut().unwrap()[0][0] = 40;
             handle_tables::handler(serial_cmd, flash, flash_info, tables, crc);
             *spi_lock = false;
         });
