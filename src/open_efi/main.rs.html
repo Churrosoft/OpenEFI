@@ -499,6 +499,7 @@
 <a href="#499" id="499">499</a>
 <a href="#500" id="500">500</a>
 <a href="#501" id="501">501</a>
+<a href="#502" id="502">502</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! examples/locals.rs
 </span><span class="attr">#![feature(proc_macro_hygiene)]
 #![no_main]
@@ -742,6 +743,7 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>table = Tables {
             tps_rpm_ve: <span class="prelude-val">None</span>,
             injector_delay: <span class="prelude-val">None</span>,
+            load_tps_deg: <span class="prelude-val">None</span>,
         };
 
         injection_setup(<span class="kw-2">&amp;mut </span>table, <span class="kw-2">&amp;mut </span>flash, <span class="kw-2">&amp;</span>flash_info, <span class="kw-2">&amp;mut </span>crc);

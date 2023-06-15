@@ -178,6 +178,9 @@
 <a href="#178" id="178">178</a>
 <a href="#179" id="179">179</a>
 <a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 
 </span><span class="kw">use </span>shared_bus_rtic::SharedBus;
@@ -194,8 +197,11 @@
 <span class="kw">pub type </span>DataT = [[i32; <span class="number">17</span>]; <span class="number">17</span>];
 
 <span class="kw">pub struct </span>Tables {
-    <span class="kw">pub </span>tps_rpm_ve: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
+    <span class="comment">// injection
+    </span><span class="kw">pub </span>tps_rpm_ve: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
     <span class="kw">pub </span>injector_delay: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
+    <span class="comment">//ignition
+    </span><span class="kw">pub </span>load_tps_deg: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
 }
 
 <span class="kw">pub struct </span>TableData {

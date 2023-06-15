@@ -58,6 +58,17 @@
 <a href="#58" id="58">58</a>
 <a href="#59" id="59">59</a>
 <a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
 <span class="kw">use </span>w25q::series25::FlashInfo;
 
@@ -85,9 +96,20 @@
         max_x: <span class="number">8</span>,
         max_y: <span class="number">8</span>,
     };
+
+    <span class="comment">//TODO: move to ignition module
+    </span><span class="kw">let </span><span class="kw-2">mut </span>load_tps_deg = TableData {
+        data: <span class="prelude-val">None</span>,
+        crc: <span class="number">0</span>,
+        address: <span class="number">0x5</span>,
+        max_x: <span class="number">17</span>,
+        max_y: <span class="number">17</span>,
+    };
+
     {
         table.tps_rpm_ve = tps_rpm_ve.read_from_memory(flash, <span class="kw-2">&amp;</span>fi, crc);
         table.injector_delay = injector_delay.read_from_memory(flash, <span class="kw-2">&amp;</span>fi, crc);
+        table.load_tps_deg = load_tps_deg.read_from_memory(flash, <span class="kw-2">&amp;</span>fi, crc);
     }
 }
 
