@@ -8,7 +8,8 @@ pub fn handler(command: SerialMessage) {
         protocol: 1,
         command: command.command,
         status: 0,
-        payload: [0u8; 123],
+        code: 0,
+        payload: [0u8; 122],
         crc: 0,
     };
 

@@ -12,7 +12,8 @@ pub fn handler(
         protocol: 1,
         command: command.command,
         status: 0,
-        payload: [0u8; 123],
+        code: 0,
+        payload: [0u8; 122],
         crc: 0,
     };
 
@@ -50,11 +51,11 @@ pub fn handler(
     }
 
     if result.is_ok_and(|s| s > 0) {
-        let command_count = result.unwrap().div_ceil(123);
+        let command_count = result.unwrap().div_ceil(122);
 
         for i in 0..command_count {
-            let from = i * 123;
-            let to = from + 123;
+            let from = i * 122;
+            let to = from + 122;
             response_buf.payload.copy_from_slice(&json_payload[from..to]);
             app::send_message::spawn(SerialStatus::DataChunk, 0, response_buf).unwrap();
             response_buf.payload.fill(0x0);

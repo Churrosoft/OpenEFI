@@ -17,12 +17,13 @@ pub fn handler(
     let mut response_buf = SerialMessage {
         protocol: 1,
         command: 0x10,
+        code: 0,
         status: 0,
-        payload: [0u8; 123],
+        payload: [0u8; 122],
         crc: 0,
     };
 
-    let selected_table = command.status & 0b00001111;
+    let selected_table = command.code;
 
     match command.command & 0b00001111 {
         // table get metadata
@@ -37,12 +38,12 @@ pub fn handler(
                     response_buf.payload[1] = 17;
                     logging::host::debug!("Table get metadata - TPS VE");
                 }
-                0x02 => {
+                0x10 => {
                     // TPS / LOAD / DEG (ignition)
                     response_buf.payload[0] = 17;
                     response_buf.payload[1] = 17;
                 }
-                _ => {
+                0x2..0x9 | _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable as u8,
@@ -63,11 +64,11 @@ pub fn handler(
                     // TODO: read table if not read prev.
                     table = table_data.tps_rpm_ve.unwrap();
                 }
-                0x02 => {
+                0x10 => {
                     // TODO: read table if not read prev.
                     table = table_data.load_tps_deg.unwrap();
                 }
-                _ => {
+                0x2..0x9 | _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable as u8,
@@ -128,7 +129,7 @@ pub fn handler(
                     app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
                     return;
                 }
-                0x02 => {
+                0x10 => {
                     // TPS RPM VE
                     // TODO: read table if not read prev.
                     table = table_data.load_tps_deg.unwrap();
@@ -137,7 +138,8 @@ pub fn handler(
                     app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
                     return;
                 }
-                _ => {
+                0x2..0x9 | _ => {
+                    logging::host::debug!("error on get");
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable as u8,
@@ -181,7 +183,7 @@ pub fn handler(
                     return;
                 }
 
-                0x02 => {
+                0x10 => {
                     // TPS RPM VE
                     let tps_rpm_ve = TableData {
                         data: table_data.load_tps_deg,
@@ -208,7 +210,9 @@ pub fn handler(
                     return;
                 }
 
-                _ => {
+                0x2..0x9 | _ => {
+
+                    logging::host::debug!("error on write");
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable as u8,
@@ -244,7 +248,28 @@ pub fn handler(
                         .unwrap();
                     return;
                 }
-                _ => {
+                0x10 => {
+                    // TPS RPM VE
+                    let mut tps_rpm_ve = TableData {
+                        data: table_data.load_tps_deg,
+                        crc: 0,
+                        address: 0x3,
+                        max_x: 17,
+                        max_y: 17,
+                    };
+
+                    tps_rpm_ve.clear(flash, flash_info, crc);
+                    logging::host::debug!("Table Clear LOAD/TPS/DEG [ignition]");
+
+                    app::send_message::spawn(
+                        SerialStatus::Ok,
+                        SerialCode::None as u8,
+                        response_buf,
+                    )
+                        .unwrap();
+                    return;
+                }
+                0x2..0x9 | _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable as u8,

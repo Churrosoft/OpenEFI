@@ -20,7 +20,8 @@ pub struct SerialMessage {
     pub protocol: u8,
     pub command: u8,
     pub status: u8,
-    pub payload: [u8; 123],
+    pub code: u8,
+    pub payload: [u8; 122],
     pub crc: u16,
 }
 
@@ -29,9 +30,9 @@ pub struct SerialMessage {
 pub enum SerialStatus {
     Error = 0b0000_0000,
     Ok = 0b0100_0000,
-    UploadOk = 0x7d,
-    DataChunk = 0x7e,
-    DataChunkEnd = 0x7f,
+    UploadOk = 0x7c,
+    DataChunk = 0x7d,
+    DataChunkEnd = 0x7e,
 }
 
 #[repr(u8)]
@@ -71,24 +72,26 @@ pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
 }
 
 pub fn process_command(buf: [u8; 128]) {
-    let mut payload = [0u8; 123];
-    payload.copy_from_slice(&buf[3..126]);
+    let mut payload = [0u8; 122];
+    payload.copy_from_slice(&buf[4..126]);
 
     let crc = ((buf[126] as u16) << 8) | (buf[127] as u16);
 
     let serial_cmd = SerialMessage {
         protocol: buf[0],
         status: buf[1],
-        command: buf[2],
+        code: buf[2],
+        command: buf[3],
         payload,
         crc,
     };
 
     logging::host::debug!(
-        "CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - CRC:  {}",
+        "CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n Code {}\n - CRC:  {}",
         serial_cmd.protocol,
         serial_cmd.command,
         serial_cmd.status,
+        serial_cmd.code,
         crc
     );
 
@@ -116,6 +119,7 @@ pub fn finish_message(message: SerialMessage) -> [u8; 128] {
     let mut message_buf = ArrayVec::<u8, 128>::new();
     message_buf.push(message.protocol);
     message_buf.push(message.status);
+    message_buf.push(message.code);
     message_buf.push(message.command);
     message_buf.try_extend_from_slice(&message.payload).unwrap();
     // Add empty CRC
@@ -143,7 +147,8 @@ pub(crate) fn send_message(
     code: u8,
     mut message: SerialMessage,
 ) {
-    message.status = (status as u8) | code;
+    message.status = status as u8;
+    message.code = code;
 
     ctx.shared.usb_cdc.lock(|cdc| {
         cdc.write(&finish_message(message)).unwrap();
