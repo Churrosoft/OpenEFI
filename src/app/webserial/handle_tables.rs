@@ -32,10 +32,15 @@ pub fn handler(
 
             match selected_table {
                 0x01 => {
-                    // TPS RPM VE
+                    // TPS RPM VE (injection)
                     response_buf.payload[0] = 17;
                     response_buf.payload[1] = 17;
                     logging::host::debug!("Table get metadata - TPS VE");
+                }
+                0x02 => {
+                    // TPS / LOAD / DEG (ignition)
+                    response_buf.payload[0] = 17;
+                    response_buf.payload[1] = 17;
                 }
                 _ => {
                     app::send_message::spawn(
@@ -57,6 +62,10 @@ pub fn handler(
                 0x01 => {
                     // TODO: read table if not read prev.
                     table = table_data.tps_rpm_ve.unwrap();
+                }
+                0x02 => {
+                    // TODO: read table if not read prev.
+                    table = table_data.load_tps_deg.unwrap();
                 }
                 _ => {
                     app::send_message::spawn(
@@ -119,6 +128,15 @@ pub fn handler(
                     app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
                     return;
                 }
+                0x02 => {
+                    // TPS RPM VE
+                    // TODO: read table if not read prev.
+                    table = table_data.load_tps_deg.unwrap();
+                    table[row_index] = table_row;
+                    table_data.load_tps_deg = Some(table);
+                    app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+                    return;
+                }
                 _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,
@@ -162,6 +180,34 @@ pub fn handler(
                         .unwrap();
                     return;
                 }
+
+                0x02 => {
+                    // TPS RPM VE
+                    let tps_rpm_ve = TableData {
+                        data: table_data.load_tps_deg,
+                        crc: 0,
+                        address: 0x3,
+                        max_x: 17,
+                        max_y: 17,
+                    };
+
+                    if table_data.load_tps_deg.is_some() {
+                        tps_rpm_ve.write_to_memory(flash, flash_info, crc);
+                        app::send_message::spawn(SerialStatus::UploadOk, 0, response_buf).unwrap();
+                        return;
+                    }
+
+                    logging::host::debug!("Table Write TableNotLoaded - LOAD TPS DEG");
+
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialCode::TableNotLoaded as u8,
+                        response_buf,
+                    )
+                        .unwrap();
+                    return;
+                }
+
                 _ => {
                     app::send_message::spawn(
                         SerialStatus::Error,

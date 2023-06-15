@@ -25,9 +25,20 @@ pub fn injection_setup(table: &mut Tables, flash: &mut FlashT, fi: &FlashInfo, c
         max_x: 8,
         max_y: 8,
     };
+
+    //TODO: move to ignition module
+    let mut load_tps_deg = TableData {
+        data: None,
+        crc: 0,
+        address: 0x5,
+        max_x: 17,
+        max_y: 17,
+    };
+
     {
         table.tps_rpm_ve = tps_rpm_ve.read_from_memory(flash, &fi, crc);
         table.injector_delay = injector_delay.read_from_memory(flash, &fi, crc);
+        table.load_tps_deg = load_tps_deg.read_from_memory(flash, &fi, crc);
     }
 }
 

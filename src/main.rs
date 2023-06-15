@@ -241,6 +241,7 @@ mod app {
         let mut table = Tables {
             tps_rpm_ve: None,
             injector_delay: None,
+            load_tps_deg: None,
         };
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);

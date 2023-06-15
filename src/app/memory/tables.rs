@@ -14,8 +14,11 @@ use crate::app::logging::host;
 pub type DataT = [[i32; 17]; 17];
 
 pub struct Tables {
+    // injection
     pub tps_rpm_ve: Option<DataT>,
     pub injector_delay: Option<DataT>,
+    //ignition
+    pub load_tps_deg: Option<DataT>,
 }
 
 pub struct TableData {
