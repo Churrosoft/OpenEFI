@@ -266,6 +266,31 @@
 <a href="#266" id="266">266</a>
 <a href="#267" id="267">267</a>
 <a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
 <span class="kw">use </span>w25q::series25::FlashInfo;
 
@@ -285,12 +310,13 @@
     <span class="kw">let </span><span class="kw-2">mut </span>response_buf = SerialMessage {
         protocol: <span class="number">1</span>,
         command: <span class="number">0x10</span>,
+        code: <span class="number">0</span>,
         status: <span class="number">0</span>,
-        payload: [<span class="number">0u8</span>; <span class="number">123</span>],
+        payload: [<span class="number">0u8</span>; <span class="number">122</span>],
         crc: <span class="number">0</span>,
     };
 
-    <span class="kw">let </span>selected_table = command.status &amp; <span class="number">0b00001111</span>;
+    <span class="kw">let </span>selected_table = command.code;
 
     <span class="kw">match </span>command.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// table get metadata
@@ -305,12 +331,12 @@
                     response_buf.payload[<span class="number">1</span>] = <span class="number">17</span>;
                     <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table get metadata - TPS VE&quot;</span>);
                 }
-                <span class="number">0x02 </span>=&gt; {
+                <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TPS / LOAD / DEG (ignition)
                     </span>response_buf.payload[<span class="number">0</span>] = <span class="number">17</span>;
                     response_buf.payload[<span class="number">1</span>] = <span class="number">17</span>;
                 }
-                <span class="kw">_ </span>=&gt; {
+                <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
@@ -331,11 +357,11 @@
                     <span class="comment">// TODO: read table if not read prev.
                     </span>table = table_data.tps_rpm_ve.unwrap();
                 }
-                <span class="number">0x02 </span>=&gt; {
+                <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TODO: read table if not read prev.
                     </span>table = table_data.load_tps_deg.unwrap();
                 }
-                <span class="kw">_ </span>=&gt; {
+                <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
@@ -396,7 +422,7 @@
                     app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
                     <span class="kw">return</span>;
                 }
-                <span class="number">0x02 </span>=&gt; {
+                <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
                     // TODO: read table if not read prev.
                     </span>table = table_data.load_tps_deg.unwrap();
@@ -405,7 +431,8 @@
                     app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
                     <span class="kw">return</span>;
                 }
-                <span class="kw">_ </span>=&gt; {
+                <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
+                    <span class="macro">logging::host::debug!</span>(<span class="string">&quot;error on get&quot;</span>);
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
@@ -449,7 +476,7 @@
                     <span class="kw">return</span>;
                 }
 
-                <span class="number">0x02 </span>=&gt; {
+                <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
                     </span><span class="kw">let </span>tps_rpm_ve = TableData {
                         data: table_data.load_tps_deg,
@@ -476,7 +503,9 @@
                     <span class="kw">return</span>;
                 }
 
-                <span class="kw">_ </span>=&gt; {
+                <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
+
+                    <span class="macro">logging::host::debug!</span>(<span class="string">&quot;error on write&quot;</span>);
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
@@ -512,7 +541,28 @@
                         .unwrap();
                     <span class="kw">return</span>;
                 }
-                <span class="kw">_ </span>=&gt; {
+                <span class="number">0x10 </span>=&gt; {
+                    <span class="comment">// TPS RPM VE
+                    </span><span class="kw">let </span><span class="kw-2">mut </span>tps_rpm_ve = TableData {
+                        data: table_data.load_tps_deg,
+                        crc: <span class="number">0</span>,
+                        address: <span class="number">0x3</span>,
+                        max_x: <span class="number">17</span>,
+                        max_y: <span class="number">17</span>,
+                    };
+
+                    tps_rpm_ve.clear(flash, flash_info, crc);
+                    <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table Clear LOAD/TPS/DEG [ignition]&quot;</span>);
+
+                    app::send_message::spawn(
+                        SerialStatus::Ok,
+                        SerialCode::None <span class="kw">as </span>u8,
+                        response_buf,
+                    )
+                        .unwrap();
+                    <span class="kw">return</span>;
+                }
+                <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,

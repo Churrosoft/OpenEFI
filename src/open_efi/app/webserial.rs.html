@@ -149,6 +149,11 @@
 <a href="#149" id="149">149</a>
 <a href="#150" id="150">150</a>
 <a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>arrayvec::ArrayVec;
 <span class="kw">use </span>rtic::Mutex;
 <span class="kw">use </span>usb_device::{
@@ -171,7 +176,8 @@
     <span class="kw">pub </span>protocol: u8,
     <span class="kw">pub </span>command: u8,
     <span class="kw">pub </span>status: u8,
-    <span class="kw">pub </span>payload: [u8; <span class="number">123</span>],
+    <span class="kw">pub </span>code: u8,
+    <span class="kw">pub </span>payload: [u8; <span class="number">122</span>],
     <span class="kw">pub </span>crc: u16,
 }
 
@@ -180,9 +186,9 @@
 </span><span class="kw">pub enum </span>SerialStatus {
     Error = <span class="number">0b0000_0000</span>,
     <span class="prelude-val">Ok </span>= <span class="number">0b0100_0000</span>,
-    UploadOk = <span class="number">0x7d</span>,
-    DataChunk = <span class="number">0x7e</span>,
-    DataChunkEnd = <span class="number">0x7f</span>,
+    UploadOk = <span class="number">0x7c</span>,
+    DataChunk = <span class="number">0x7d</span>,
+    DataChunkEnd = <span class="number">0x7e</span>,
 }
 
 <span class="attr">#[repr(u8)]
@@ -222,24 +228,26 @@
 }
 
 <span class="kw">pub fn </span>process_command(buf: [u8; <span class="number">128</span>]) {
-    <span class="kw">let </span><span class="kw-2">mut </span>payload = [<span class="number">0u8</span>; <span class="number">123</span>];
-    payload.copy_from_slice(<span class="kw-2">&amp;</span>buf[<span class="number">3</span>..<span class="number">126</span>]);
+    <span class="kw">let </span><span class="kw-2">mut </span>payload = [<span class="number">0u8</span>; <span class="number">122</span>];
+    payload.copy_from_slice(<span class="kw-2">&amp;</span>buf[<span class="number">4</span>..<span class="number">126</span>]);
 
     <span class="kw">let </span>crc = ((buf[<span class="number">126</span>] <span class="kw">as </span>u16) &lt;&lt; <span class="number">8</span>) | (buf[<span class="number">127</span>] <span class="kw">as </span>u16);
 
     <span class="kw">let </span>serial_cmd = SerialMessage {
         protocol: buf[<span class="number">0</span>],
         status: buf[<span class="number">1</span>],
-        command: buf[<span class="number">2</span>],
+        code: buf[<span class="number">2</span>],
+        command: buf[<span class="number">3</span>],
         payload,
         crc,
     };
 
     <span class="macro">logging::host::debug!</span>(
-        <span class="string">&quot;CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - CRC:  {}&quot;</span>,
+        <span class="string">&quot;CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n Code {}\n - CRC:  {}&quot;</span>,
         serial_cmd.protocol,
         serial_cmd.command,
         serial_cmd.status,
+        serial_cmd.code,
         crc
     );
 
@@ -267,6 +275,7 @@
     <span class="kw">let </span><span class="kw-2">mut </span>message_buf = ArrayVec::&lt;u8, <span class="number">128</span>&gt;::new();
     message_buf.push(message.protocol);
     message_buf.push(message.status);
+    message_buf.push(message.code);
     message_buf.push(message.command);
     message_buf.try_extend_from_slice(<span class="kw-2">&amp;</span>message.payload).unwrap();
     <span class="comment">// Add empty CRC
@@ -294,7 +303,8 @@
     code: u8,
     <span class="kw-2">mut </span>message: SerialMessage,
 ) {
-    message.status = (status <span class="kw">as </span>u8) | code;
+    message.status = status <span class="kw">as </span>u8;
+    message.code = code;
 
     ctx.shared.usb_cdc.lock(|cdc| {
         cdc.write(<span class="kw-2">&amp;</span>finish_message(message)).unwrap();

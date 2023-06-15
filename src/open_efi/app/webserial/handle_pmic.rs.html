@@ -64,6 +64,7 @@
 <a href="#64" id="64">64</a>
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::{
     <span class="self">self</span>, logging::host,
     webserial::{SerialCode, SerialMessage, SerialStatus},
@@ -78,7 +79,8 @@
         protocol: <span class="number">1</span>,
         command: command.command,
         status: <span class="number">0</span>,
-        payload: [<span class="number">0u8</span>; <span class="number">123</span>],
+        code: <span class="number">0</span>,
+        payload: [<span class="number">0u8</span>; <span class="number">122</span>],
         crc: <span class="number">0</span>,
     };
 
@@ -116,11 +118,11 @@
     }
 
     <span class="kw">if </span>result.is_ok_and(|s| s &gt; <span class="number">0</span>) {
-        <span class="kw">let </span>command_count = result.unwrap().div_ceil(<span class="number">123</span>);
+        <span class="kw">let </span>command_count = result.unwrap().div_ceil(<span class="number">122</span>);
 
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..command_count {
-            <span class="kw">let </span>from = i * <span class="number">123</span>;
-            <span class="kw">let </span>to = from + <span class="number">123</span>;
+            <span class="kw">let </span>from = i * <span class="number">122</span>;
+            <span class="kw">let </span>to = from + <span class="number">122</span>;
             response_buf.payload.copy_from_slice(<span class="kw-2">&amp;</span>json_payload[from..to]);
             app::send_message::spawn(SerialStatus::DataChunk, <span class="number">0</span>, response_buf).unwrap();
             response_buf.payload.fill(<span class="number">0x0</span>);
