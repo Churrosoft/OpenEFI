@@ -17,3 +17,5 @@ arm-none-eabi-gdb -nx --batch \
   -ex 'compare-sections' \
   -ex 'kill' \
 ./target/thumbv7em-none-eabihf/release/open_efi 
+
+git rev-list HEAD --count

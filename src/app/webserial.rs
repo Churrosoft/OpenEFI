@@ -13,6 +13,7 @@ use crate::{
 mod handle_core;
 pub mod handle_tables;
 pub mod handle_pmic;
+pub mod handle_engine;
 
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
@@ -62,7 +63,7 @@ pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
 {
     UsbDeviceBuilder::new(bus, UsbVidPid(0x1209, 0xeef1))
         .manufacturer("Churrosoft")
-        .product("OpenEFI | uEFI v3.4.0")
+        .product("OpenEFI | uEFI v3.4.x")
         .serial_number(util::get_serial_str())
         .device_release(0x0200)
         .self_powered(false)
@@ -87,7 +88,7 @@ pub fn process_command(buf: [u8; 128]) {
     };
 
     logging::host::debug!(
-        "CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n Code {}\n - CRC:  {}",
+        "CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - Code {}\n - CRC:  {}",
         serial_cmd.protocol,
         serial_cmd.command,
         serial_cmd.status,
@@ -102,6 +103,15 @@ pub fn process_command(buf: [u8; 128]) {
     match serial_cmd.command & 0xf0 {
         0x00 => handle_core::handler(serial_cmd),
         0x10 => app::table_cdc_callback::spawn(serial_cmd).unwrap(),
+        0x20 => { /* TODO: injection */ }
+        0x30 => { /* TODO: ignition */ }
+        0x40 => { /* TODO: DTC */ }
+        0x50 => { /* TODO: Dashboard / RealTime Data */ }
+        0x60 => {
+            /* TODO: General engine configuration */
+            app::engine_cdc_callback::spawn(serial_cmd).unwrap()
+        }
+        0x70 => { /* TODO: Debug console */ }
         0x80 => app::pmic_cdc_callback::spawn(serial_cmd).unwrap(),
         0x90 => app::debug_demo::spawn(serial_cmd.command & 0b00001111).unwrap(),
         _ => {

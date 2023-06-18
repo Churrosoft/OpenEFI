@@ -72,7 +72,6 @@ impl TableData {
                 datarow += 4;
             }
         }
-        host::debug!("U8_BUF {:?}",&buf[..10]);
         // CRC Check
         let u8buff = [buf[0], buf[1], buf[2], buf[3]];
         let memory_crc = u32::from_le_bytes(u8buff);

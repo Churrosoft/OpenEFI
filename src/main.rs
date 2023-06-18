@@ -15,6 +15,7 @@ mod app {
 
     use arrayvec::ArrayVec;
     use embedded_hal::spi::{Mode, Phase, Polarity};
+    use rtic::mutex_prelude::TupleExt05;
     use shared_bus_rtic::SharedBus;
     use stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
@@ -52,7 +53,7 @@ mod app {
     };
     use crate::app::engine::pmic;
     use crate::app::engine::pmic::{PMIC, PmicT};
-    use crate::app::webserial::handle_pmic;
+    use crate::app::webserial::{handle_engine, handle_pmic};
 
     pub mod debug;
     pub mod engine;
@@ -434,12 +435,28 @@ mod app {
         let pmic = ctx.shared.pmic;
 
         (spi_lock, pmic).lock(|spi_lock, pmic| {
-            handle_pmic::handler(serial_cmd, pmic);
             *spi_lock = true;
+            handle_pmic::handler(serial_cmd, pmic);
             *spi_lock = false;
         })
     }
 
+    #[task(priority = 2, shared = [spi_lock,  flash, flash_info,efi_cfg,crc])]
+    fn engine_cdc_callback(ctx:engine_cdc_callback::Context, serial_cmd:SerialMessage){
+
+        let spi_lock = ctx.shared.spi_lock;
+        let flash = ctx.shared.flash;
+        let flash_info = ctx.shared.flash_info;
+        let efi_cfg = ctx.shared.efi_cfg;
+        let crc = ctx.shared.crc;
+
+        (spi_lock,flash,flash_info,efi_cfg,crc).lock(|spi_lock,flash,flash_info,efi_cfg,crc| {
+            *spi_lock = true;
+            handle_engine::handler(flash, flash_info, crc, efi_cfg, serial_cmd);
+            *spi_lock = false;
+        })
+
+    }
 
     #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13,flash])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {

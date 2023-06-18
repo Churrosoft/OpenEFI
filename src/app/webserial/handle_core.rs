@@ -2,7 +2,6 @@ use crate::{
     app,
     app::webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-
 pub fn handler(command: SerialMessage) {
     let mut response_buf = SerialMessage {
         protocol: 1,
@@ -13,7 +12,7 @@ pub fn handler(command: SerialMessage) {
         crc: 0,
     };
 
-    match command.command {
+    match command.command & 0b00001111 {
         0x01 => {
             response_buf.payload[0] = 1; // BOARD TYPE
 
