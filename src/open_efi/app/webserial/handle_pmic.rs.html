@@ -66,8 +66,8 @@
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::{
-    <span class="self">self</span>, logging::host,
-    webserial::{SerialCode, SerialMessage, SerialStatus},
+    <span class="self">self</span>, <span class="comment">// logging::host,
+    </span>webserial::{SerialCode, SerialMessage, SerialStatus},
 };
 <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic::PmicT;
 
@@ -90,20 +90,20 @@
     <span class="kw">match </span>command.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// get all status
         </span><span class="number">0x01 </span>=&gt; {
-            <span class="macro">host::trace!</span>(<span class="string">&quot;PMIC: get fast status&quot;</span>);
-            <span class="kw">let </span>data = pmic_instance.get_fast_status();
+            <span class="comment">// host::trace!(&quot;PMIC: get fast status&quot;);
+            </span><span class="kw">let </span>data = pmic_instance.get_fast_status();
             result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>data, <span class="kw-2">&amp;mut </span>json_payload);
         }
         <span class="comment">// get injection status
         </span><span class="number">0x02 </span>=&gt; {
-            <span class="macro">host::trace!</span>(<span class="string">&quot;PMIC: get injection status&quot;</span>);
-            <span class="kw">let </span>data = pmic_instance.get_injector_status();
+            <span class="comment">// host::trace!(&quot;PMIC: get injection status&quot;);
+            </span><span class="kw">let </span>data = pmic_instance.get_injector_status();
             result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>data, <span class="kw-2">&amp;mut </span>json_payload);
         }
         <span class="comment">// get ignition status
         </span><span class="number">0x03 </span>=&gt; {
-            <span class="macro">host::trace!</span>(<span class="string">&quot;PMIC: get ignition status&quot;</span>);
-            <span class="kw">let </span>data = pmic_instance.get_ignition_status();
+            <span class="comment">// host::trace!(&quot;PMIC: get ignition status&quot;);
+            </span><span class="kw">let </span>data = pmic_instance.get_ignition_status();
             result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>data, <span class="kw-2">&amp;mut </span>json_payload);
         }
         <span class="kw">_ </span>=&gt; {

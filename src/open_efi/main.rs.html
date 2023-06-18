@@ -500,6 +500,23 @@
 <a href="#500" id="500">500</a>
 <a href="#501" id="501">501</a>
 <a href="#502" id="502">502</a>
+<a href="#503" id="503">503</a>
+<a href="#504" id="504">504</a>
+<a href="#505" id="505">505</a>
+<a href="#506" id="506">506</a>
+<a href="#507" id="507">507</a>
+<a href="#508" id="508">508</a>
+<a href="#509" id="509">509</a>
+<a href="#510" id="510">510</a>
+<a href="#511" id="511">511</a>
+<a href="#512" id="512">512</a>
+<a href="#513" id="513">513</a>
+<a href="#514" id="514">514</a>
+<a href="#515" id="515">515</a>
+<a href="#516" id="516">516</a>
+<a href="#517" id="517">517</a>
+<a href="#518" id="518">518</a>
+<a href="#519" id="519">519</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! examples/locals.rs
 </span><span class="attr">#![feature(proc_macro_hygiene)]
 #![no_main]
@@ -517,6 +534,7 @@
 
     <span class="kw">use </span>arrayvec::ArrayVec;
     <span class="kw">use </span>embedded_hal::spi::{Mode, Phase, Polarity};
+    <span class="kw">use </span>rtic::mutex_prelude::TupleExt05;
     <span class="kw">use </span>shared_bus_rtic::SharedBus;
     <span class="kw">use </span>stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
@@ -554,7 +572,7 @@
     };
     <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic;
     <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic::{PMIC, PmicT};
-    <span class="kw">use </span><span class="kw">crate</span>::app::webserial::handle_pmic;
+    <span class="kw">use </span><span class="kw">crate</span>::app::webserial::{handle_engine, handle_pmic};
 
     <span class="kw">pub mod </span>debug;
     <span class="kw">pub mod </span>engine;
@@ -936,12 +954,28 @@
         <span class="kw">let </span>pmic = ctx.shared.pmic;
 
         (spi_lock, pmic).lock(|spi_lock, pmic| {
-            handle_pmic::handler(serial_cmd, pmic);
             <span class="kw-2">*</span>spi_lock = <span class="bool-val">true</span>;
+            handle_pmic::handler(serial_cmd, pmic);
             <span class="kw-2">*</span>spi_lock = <span class="bool-val">false</span>;
         })
     }
 
+    <span class="attr">#[task(priority = <span class="number">2</span>, shared = [spi_lock,  flash, flash_info,efi_cfg,crc]</span>)]
+    <span class="kw">fn </span>engine_cdc_callback(ctx:engine_cdc_callback::Context, serial_cmd:SerialMessage){
+
+        <span class="kw">let </span>spi_lock = ctx.shared.spi_lock;
+        <span class="kw">let </span>flash = ctx.shared.flash;
+        <span class="kw">let </span>flash_info = ctx.shared.flash_info;
+        <span class="kw">let </span>efi_cfg = ctx.shared.efi_cfg;
+        <span class="kw">let </span>crc = ctx.shared.crc;
+
+        (spi_lock,flash,flash_info,efi_cfg,crc).lock(|spi_lock,flash,flash_info,efi_cfg,crc| {
+            <span class="kw-2">*</span>spi_lock = <span class="bool-val">true</span>;
+            handle_engine::handler(flash, flash_info, crc, efi_cfg, serial_cmd);
+            <span class="kw-2">*</span>spi_lock = <span class="bool-val">false</span>;
+        })
+
+    }
 
     <span class="attr">#[task(priority = <span class="number">2</span>, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13,flash]</span>)]
     <span class="kw">fn </span>debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
