@@ -517,6 +517,16 @@
 <a href="#517" id="517">517</a>
 <a href="#518" id="518">518</a>
 <a href="#519" id="519">519</a>
+<a href="#520" id="520">520</a>
+<a href="#521" id="521">521</a>
+<a href="#522" id="522">522</a>
+<a href="#523" id="523">523</a>
+<a href="#524" id="524">524</a>
+<a href="#525" id="525">525</a>
+<a href="#526" id="526">526</a>
+<a href="#527" id="527">527</a>
+<a href="#528" id="528">528</a>
+<a href="#529" id="529">529</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! examples/locals.rs
 </span><span class="attr">#![feature(proc_macro_hygiene)]
 #![no_main]
@@ -572,7 +582,7 @@
     };
     <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic;
     <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic::{PMIC, PmicT};
-    <span class="kw">use </span><span class="kw">crate</span>::app::webserial::{handle_engine, handle_pmic};
+    <span class="kw">use </span><span class="kw">crate</span>::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
 
     <span class="kw">pub mod </span>debug;
     <span class="kw">pub mod </span>engine;
@@ -587,7 +597,7 @@
     <span class="attr">#[shared]
     </span><span class="kw">struct </span>Shared {
         <span class="comment">// Timers:
-        </span>timer5: timer::CounterUs&lt;TIM5&gt;,
+        </span>timer5: timer::CounterMs&lt;TIM5&gt;,
         timer13: timer::DelayUs&lt;TIM13&gt;,
         timer: timer::CounterMs&lt;TIM2&gt;,
         timer3: timer::CounterUs&lt;TIM3&gt;,
@@ -672,7 +682,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>timer3: timer::CounterUs&lt;TIM3&gt; = dp.TIM3.counter_us(<span class="kw-2">&amp;</span>clocks);
 
         <span class="comment">// NOTE: timer para delays en hilos
-        </span><span class="kw">let </span><span class="kw-2">mut </span>timer5: timer::CounterUs&lt;TIM5&gt; = dp.TIM5.counter_us(<span class="kw-2">&amp;</span>clocks);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>timer5: timer::CounterMs&lt;TIM5&gt; = dp.TIM5.counter_ms(<span class="kw-2">&amp;</span>clocks);
 
         <span class="comment">// NOTE: para task de sensores
         </span><span class="kw">let </span><span class="kw-2">mut </span>timer13: timer::DelayUs&lt;TIM13&gt; = dp.TIM13.delay_us(<span class="kw-2">&amp;</span>clocks);
@@ -832,8 +842,9 @@
     <span class="attr">#[idle]
     </span><span class="kw">fn </span>idle(<span class="kw">_</span>: idle::Context) -&gt; ! {
         <span class="kw">loop </span>{
-            cortex_m::asm::wfi();
-        }
+            sensors_callback::spawn().unwrap();
+            <span class="comment">//cortex_m::asm::wfi();
+        </span>}
     }
 
     <span class="comment">//TODO: reciclar para encendido
@@ -960,24 +971,33 @@
         })
     }
 
-    <span class="attr">#[task(priority = <span class="number">2</span>, shared = [spi_lock,  flash, flash_info,efi_cfg,crc]</span>)]
-    <span class="kw">fn </span>engine_cdc_callback(ctx:engine_cdc_callback::Context, serial_cmd:SerialMessage){
-
+    <span class="attr">#[task(priority = <span class="number">2</span>, shared = [spi_lock, flash, flash_info, efi_cfg, crc]</span>)]
+    <span class="kw">fn </span>engine_cdc_callback(ctx: engine_cdc_callback::Context, serial_cmd: SerialMessage) {
         <span class="kw">let </span>spi_lock = ctx.shared.spi_lock;
         <span class="kw">let </span>flash = ctx.shared.flash;
         <span class="kw">let </span>flash_info = ctx.shared.flash_info;
         <span class="kw">let </span>efi_cfg = ctx.shared.efi_cfg;
         <span class="kw">let </span>crc = ctx.shared.crc;
 
-        (spi_lock,flash,flash_info,efi_cfg,crc).lock(|spi_lock,flash,flash_info,efi_cfg,crc| {
+        (spi_lock, flash, flash_info, efi_cfg, crc).lock(|spi_lock, flash, flash_info, efi_cfg, crc| {
             <span class="kw-2">*</span>spi_lock = <span class="bool-val">true</span>;
             handle_engine::handler(flash, flash_info, crc, efi_cfg, serial_cmd);
             <span class="kw-2">*</span>spi_lock = <span class="bool-val">false</span>;
         })
-
     }
 
-    <span class="attr">#[task(priority = <span class="number">2</span>, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13,flash]</span>)]
+    <span class="attr">#[task(priority = <span class="number">2</span>, shared = [efi_status, sensors, crc]</span>)]
+    <span class="kw">fn </span>realtime_data_cdc_callback(ctx: realtime_data_cdc_callback::Context, serial_cmd: SerialMessage) {
+        <span class="kw">let </span>efi_status = ctx.shared.efi_status;
+        <span class="kw">let </span>sensors = ctx.shared.sensors;
+        <span class="kw">let </span>crc = ctx.shared.crc;
+
+        (crc, efi_status, sensors).lock(|crc, efi_status, sensors| {
+            handle_realtime_data::handler(crc, efi_status, sensors, serial_cmd);
+        })
+    }
+
+    <span class="attr">#[task(priority = <span class="number">2</span>, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13, flash]</span>)]
     <span class="kw">fn </span>debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         <span class="kw">let </span>inj_pins = ctx.shared.inj_pins;
         <span class="kw">let </span>ign_pins = ctx.shared.ign_pins;
@@ -985,8 +1005,8 @@
         <span class="kw">let </span>relay_pins = ctx.shared.relay_pins;
         <span class="kw">let </span>timer13 = ctx.shared.timer13;
         <span class="kw">let </span>flash = ctx.shared.flash;
-        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13,flash).lock(
-            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13,flash| <span class="kw">match </span>demo_mode {
+        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash).lock(
+            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash| <span class="kw">match </span>demo_mode {
                 <span class="number">0x0 </span>=&gt; debug::spark_demo(ign_pins, timer13),
                 <span class="number">0x1 </span>=&gt; debug::injector_demo(inj_pins, timer13),
                 <span class="number">0x2 </span>=&gt; debug::external_idle_demo(stepper_pins, timer13),
@@ -1001,7 +1021,7 @@
         )
     }
 
-    <span class="attr">#[task(binds = TIM6_DAC, priority = <span class="number">5</span>, local = [analog_pins, adc]</span>, shared = [sensors])]
+    <span class="attr">#[task(local = [analog_pins, adc]</span>, shared = [sensors])]
     <span class="kw">fn </span>sensors_callback(ctx: sensors_callback::Context) {
         <span class="kw">let </span><span class="kw-2">mut </span>sensors = ctx.shared.sensors;
         <span class="kw">let </span>adc_pins = ctx.local.analog_pins;
@@ -1009,7 +1029,7 @@
 
         sensors.lock(|sensors| {
             sensors.update(
-                get_sensor_raw(SensorTypes::AirTemp, adc_pins, adc),
+                <span class="number">2500</span>,
                 SensorTypes::AirTemp,
             );
 

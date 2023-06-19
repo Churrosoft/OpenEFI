@@ -54,7 +54,15 @@
 <a href="#54" id="54">54</a>
 <a href="#55" id="55">55</a>
 <a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
 </pre></div><pre class="rust"><code><span class="attr">#[allow(non_camel_case_types)]
+#[repr(u8)]
+#[derive(Debug)]
 </span><span class="kw">pub enum </span>__rpm_status {
     STOPPED = <span class="number">0</span>, <span class="comment">// &lt; 50
     </span>SPIN_UP,     <span class="comment">// &gt; 50
@@ -63,6 +71,8 @@
 </span>}
 
 <span class="comment">// #[allow(non_camel_case_types)]
+</span><span class="attr">#[repr(u8)]
+#[derive(Debug)]
 </span><span class="kw">pub enum </span>InjectionStatus {
     FuelCutoff = <span class="number">0</span>,
     FullLoad,
@@ -70,6 +80,7 @@
 }
 
 <span class="attr">#[allow(non_snake_case)]
+#[derive(Debug)]
 </span><span class="kw">pub struct </span>InjectionInfo {
     <span class="kw">pub </span>targetAFR: f32,
     <span class="kw">pub </span>injection_bank_1_time: f32,
@@ -82,7 +93,8 @@
     <span class="kw">pub </span>injection_status: InjectionStatus,
 }
 
-<span class="kw">pub struct </span>EngineStatus {
+<span class="attr">#[derive(Debug)]
+</span><span class="kw">pub struct </span>EngineStatus {
     <span class="kw">pub </span>injection: InjectionInfo,
     <span class="kw">pub </span>cycle_tick: u32,
     <span class="kw">pub </span>cycle_duration: f32,
