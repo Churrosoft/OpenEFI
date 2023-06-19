@@ -14,6 +14,7 @@ mod handle_core;
 pub mod handle_tables;
 pub mod handle_pmic;
 pub mod handle_engine;
+pub mod handle_realtime_data;
 
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
@@ -87,14 +88,14 @@ pub fn process_command(buf: [u8; 128]) {
         crc,
     };
 
-    logging::host::debug!(
-        "CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - Code {}\n - CRC:  {}",
-        serial_cmd.protocol,
-        serial_cmd.command,
-        serial_cmd.status,
-        serial_cmd.code,
-        crc
-    );
+    // logging::host::debug!(
+    //     "CDC Message:\n - Proto {}\n - Commd {}\n - Statu {}\n - Code {}\n - CRC:  {}",
+    //     serial_cmd.protocol,
+    //     serial_cmd.command,
+    //     serial_cmd.status,
+    //     serial_cmd.code,
+    //     crc
+    // );
 
     if serial_cmd.protocol != 1 {
         return;
@@ -106,11 +107,8 @@ pub fn process_command(buf: [u8; 128]) {
         0x20 => { /* TODO: injection */ }
         0x30 => { /* TODO: ignition */ }
         0x40 => { /* TODO: DTC */ }
-        0x50 => { /* TODO: Dashboard / RealTime Data */ }
-        0x60 => {
-            /* TODO: General engine configuration */
-            app::engine_cdc_callback::spawn(serial_cmd).unwrap()
-        }
+        0x50 => app::realtime_data_cdc_callback::spawn(serial_cmd).unwrap(),
+        0x60 => app::engine_cdc_callback::spawn(serial_cmd).unwrap(),
         0x70 => { /* TODO: Debug console */ }
         0x80 => app::pmic_cdc_callback::spawn(serial_cmd).unwrap(),
         0x90 => app::debug_demo::spawn(serial_cmd.command & 0b00001111).unwrap(),

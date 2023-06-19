@@ -53,7 +53,7 @@ mod app {
     };
     use crate::app::engine::pmic;
     use crate::app::engine::pmic::{PMIC, PmicT};
-    use crate::app::webserial::{handle_engine, handle_pmic};
+    use crate::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
 
     pub mod debug;
     pub mod engine;
@@ -68,7 +68,7 @@ mod app {
     #[shared]
     struct Shared {
         // Timers:
-        timer5: timer::CounterUs<TIM5>,
+        timer5: timer::CounterMs<TIM5>,
         timer13: timer::DelayUs<TIM13>,
         timer: timer::CounterMs<TIM2>,
         timer3: timer::CounterUs<TIM3>,
@@ -153,7 +153,7 @@ mod app {
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
 
         // NOTE: timer para delays en hilos
-        let mut timer5: timer::CounterUs<TIM5> = dp.TIM5.counter_us(&clocks);
+        let mut timer5: timer::CounterMs<TIM5> = dp.TIM5.counter_ms(&clocks);
 
         // NOTE: para task de sensores
         let mut timer13: timer::DelayUs<TIM13> = dp.TIM13.delay_us(&clocks);
@@ -313,7 +313,8 @@ mod app {
     #[idle]
     fn idle(_: idle::Context) -> ! {
         loop {
-            cortex_m::asm::wfi();
+            sensors_callback::spawn().unwrap();
+            //cortex_m::asm::wfi();
         }
     }
 
@@ -441,24 +442,33 @@ mod app {
         })
     }
 
-    #[task(priority = 2, shared = [spi_lock,  flash, flash_info,efi_cfg,crc])]
-    fn engine_cdc_callback(ctx:engine_cdc_callback::Context, serial_cmd:SerialMessage){
-
+    #[task(priority = 2, shared = [spi_lock, flash, flash_info, efi_cfg, crc])]
+    fn engine_cdc_callback(ctx: engine_cdc_callback::Context, serial_cmd: SerialMessage) {
         let spi_lock = ctx.shared.spi_lock;
         let flash = ctx.shared.flash;
         let flash_info = ctx.shared.flash_info;
         let efi_cfg = ctx.shared.efi_cfg;
         let crc = ctx.shared.crc;
 
-        (spi_lock,flash,flash_info,efi_cfg,crc).lock(|spi_lock,flash,flash_info,efi_cfg,crc| {
+        (spi_lock, flash, flash_info, efi_cfg, crc).lock(|spi_lock, flash, flash_info, efi_cfg, crc| {
             *spi_lock = true;
             handle_engine::handler(flash, flash_info, crc, efi_cfg, serial_cmd);
             *spi_lock = false;
         })
-
     }
 
-    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13,flash])]
+    #[task(priority = 2, shared = [efi_status, sensors, crc])]
+    fn realtime_data_cdc_callback(ctx: realtime_data_cdc_callback::Context, serial_cmd: SerialMessage) {
+        let efi_status = ctx.shared.efi_status;
+        let sensors = ctx.shared.sensors;
+        let crc = ctx.shared.crc;
+
+        (crc, efi_status, sensors).lock(|crc, efi_status, sensors| {
+            handle_realtime_data::handler(crc, efi_status, sensors, serial_cmd);
+        })
+    }
+
+    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13, flash])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         let inj_pins = ctx.shared.inj_pins;
         let ign_pins = ctx.shared.ign_pins;
@@ -466,8 +476,8 @@ mod app {
         let relay_pins = ctx.shared.relay_pins;
         let timer13 = ctx.shared.timer13;
         let flash = ctx.shared.flash;
-        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13,flash).lock(
-            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13,flash| match demo_mode {
+        (inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash).lock(
+            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash| match demo_mode {
                 0x0 => debug::spark_demo(ign_pins, timer13),
                 0x1 => debug::injector_demo(inj_pins, timer13),
                 0x2 => debug::external_idle_demo(stepper_pins, timer13),
@@ -482,7 +492,7 @@ mod app {
         )
     }
 
-    #[task(binds = TIM6_DAC, priority = 5, local = [analog_pins, adc], shared = [sensors])]
+    #[task(local = [analog_pins, adc], shared = [sensors])]
     fn sensors_callback(ctx: sensors_callback::Context) {
         let mut sensors = ctx.shared.sensors;
         let adc_pins = ctx.local.analog_pins;
@@ -490,7 +500,7 @@ mod app {
 
         sensors.lock(|sensors| {
             sensors.update(
-                get_sensor_raw(SensorTypes::AirTemp, adc_pins, adc),
+                2500,
                 SensorTypes::AirTemp,
             );
 

@@ -1,4 +1,6 @@
 #[allow(non_camel_case_types)]
+#[repr(u8)]
+#[derive(Debug)]
 pub enum __rpm_status {
     STOPPED = 0, // < 50
     SPIN_UP,     // > 50
@@ -7,6 +9,8 @@ pub enum __rpm_status {
 }
 
 // #[allow(non_camel_case_types)]
+#[repr(u8)]
+#[derive(Debug)]
 pub enum InjectionStatus {
     FuelCutoff = 0,
     FullLoad,
@@ -14,6 +18,7 @@ pub enum InjectionStatus {
 }
 
 #[allow(non_snake_case)]
+#[derive(Debug)]
 pub struct InjectionInfo {
     pub targetAFR: f32,
     pub injection_bank_1_time: f32,
@@ -26,6 +31,7 @@ pub struct InjectionInfo {
     pub injection_status: InjectionStatus,
 }
 
+#[derive(Debug)]
 pub struct EngineStatus {
     pub injection: InjectionInfo,
     pub cycle_tick: u32,

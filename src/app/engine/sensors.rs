@@ -34,9 +34,9 @@ impl SensorValues {
         SensorValues {
             map: 0.0f32,
             tps: 0.0f32,
-            cooltan_temp: 0.0f32,
+            cooltan_temp: 45.69f32,
             air_temp: 0.0f32,
-            batt: 0.0f32,
+            batt: 13.42f32,
             raw_map: 0.0f32,
             raw_tps: 0.0f32,
             raw_temp: 0.0f32,
