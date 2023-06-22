@@ -1,0 +1,12 @@
+{
+	"name": "Codespaces Rust Starter",
+	"extensions": [
+		"matklad.rust-analyzer",
+		"serayuzgur.crates",
+	],
+	"dockerFile": "Dockerfile",
+	"settings": {
+		"editor.formatOnSave": true,
+		"terminal.integrated.shell.linux": "/usr/bin/zsh"
+	}
+}
