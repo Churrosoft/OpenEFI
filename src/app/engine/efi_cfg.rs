@@ -35,6 +35,12 @@ pub struct EngineConfig {
     pub engine: Engine,
 }
 
+impl EngineConfig {
+    pub fn new()->EngineConfig{
+        get_default_efi_cfg()
+    }
+}
+
 pub fn get_default_efi_cfg() -> EngineConfig {
     let cfg = EngineConfig {
         ready: false,
