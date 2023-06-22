@@ -64,6 +64,12 @@
 <a href="#64" id="64">64</a>
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="attr">#[derive(Serialize, Deserialize, Debug)]
@@ -99,6 +105,12 @@
     <span class="kw">pub </span>ready: bool,
     <span class="kw">pub </span>injection: InjectionConfig,
     <span class="kw">pub </span>engine: Engine,
+}
+
+<span class="kw">impl </span>EngineConfig {
+    <span class="kw">pub fn </span>new()-&gt;EngineConfig{
+        get_default_efi_cfg()
+    }
 }
 
 <span class="kw">pub fn </span>get_default_efi_cfg() -&gt; EngineConfig {

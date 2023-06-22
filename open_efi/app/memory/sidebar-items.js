@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["tables"]};
+window.SIDEBAR_ITEMS = {"mod":["efi_cfg","tables"]};

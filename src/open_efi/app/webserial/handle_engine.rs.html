@@ -61,6 +61,29 @@
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
 <span class="kw">use </span>w25q::series25::FlashInfo;
 
@@ -69,15 +92,20 @@
     memory::tables::{FlashT, TableData, Tables},
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-<span class="kw">use </span><span class="kw">crate</span>::app::engine::efi_cfg::EngineConfig;
+<span class="comment">//use crate::app::engine::efi_cfg::EngineConfig;
+</span><span class="kw">use </span><span class="kw">crate</span>::app::memory::efi_cfg;
 
 <span class="kw">use </span><span class="kw">crate</span>::app::logging::host;
+<span class="kw">use </span>serde_json_core::heapless::Vec;
+<span class="kw">use </span>serde::{Serialize, Deserialize};
+<span class="kw">use </span>postcard::{from_bytes, to_vec};
+<span class="kw">use </span><span class="kw">crate</span>::app::engine::efi_cfg::EngineConfig;
 
 <span class="kw">pub fn </span>handler(
     flash: <span class="kw-2">&amp;mut </span>FlashT,
     flash_info: <span class="kw-2">&amp;mut </span>FlashInfo,
     crc: <span class="kw-2">&amp;mut </span>Crc32,
-    efi_cfg: <span class="kw-2">&amp;mut </span>EngineConfig,
+    cfg: <span class="kw-2">&amp;mut </span>EngineConfig,
     command: SerialMessage) {
     <span class="kw">let </span><span class="kw-2">mut </span>response_buf = SerialMessage {
         protocol: <span class="number">1</span>,
@@ -89,13 +117,24 @@
     };
 
     <span class="kw">let </span><span class="kw-2">mut </span>json_payload = [<span class="number">0u8</span>; <span class="number">3500</span>];
-    <span class="kw">let </span>result;
+    <span class="kw">let </span><span class="kw-2">mut </span>result;
 
     <span class="kw">match </span>command.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// read engine cfg:
         </span><span class="number">0x01 </span>=&gt; {
             <span class="macro">host::trace!</span>(<span class="string">&quot;read engine cfg&quot;</span>);
-            result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>efi_cfg, <span class="kw-2">&amp;mut </span>json_payload);
+            result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>cfg, <span class="kw-2">&amp;mut </span>json_payload);
+        }
+        <span class="number">0x02 </span>=&gt;{
+            <span class="comment">//TODO: se puede controlar el caso de que falle la grabacion
+            </span>cfg.save(flash,flash_info,crc);
+            app::send_message::spawn(
+                SerialStatus::Ok,
+                SerialCode::None <span class="kw">as </span>u8,
+                response_buf,
+            )
+                .unwrap();
+            <span class="kw">return</span>;
         }
         <span class="kw">_ </span>=&gt; {
             <span class="macro">host::trace!</span>(<span class="string">&quot;engine cfg webserial error&quot;</span>);
@@ -120,6 +159,13 @@
             response_buf.payload.fill(<span class="number">0x0</span>);
         }
         app::send_message::spawn(SerialStatus::DataChunkEnd, <span class="number">0</span>, response_buf).unwrap();
+
+        <span class="kw">let </span>output: Vec&lt;u8, <span class="number">800</span>&gt; = to_vec(<span class="kw-2">&amp;</span>cfg).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>cfg_new = EngineConfig::new();
+        cfg_new = from_bytes(<span class="kw-2">&amp;</span>output).unwrap();
+        result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>cfg_new, <span class="kw-2">&amp;mut </span>json_payload);
+        <span class="macro">host::trace!</span>(<span class="string">&quot;struct =&gt; bytes =&gt; struct =&gt; json result {:?}&quot;</span>,result);
+
         <span class="kw">return</span>;
     }
     app::send_message::spawn(SerialStatus::Error, SerialCode::ParseError <span class="kw">as </span>u8, response_buf).unwrap();
