@@ -5,7 +5,7 @@ rustup default nightly
 rustup target add thumbv7em-none-eabihf
 rustup component add llvm-tools-preview
  
-cargo install cargo-binutils cargo-embed cargo-flash cargo-expand
+# cargo install cargo-binutils cargo-embed cargo-flash cargo-expand
 ## setup and install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 cp -R /root/.oh-my-zsh /home/$USERNAME

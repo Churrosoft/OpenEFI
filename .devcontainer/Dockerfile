@@ -1,5 +1,5 @@
 FROM alpine:3.14
-RUN apk add --no-cache git curl build-base gcc alpine-sdk eudev-dev libusb-dev libusb linux-headers bash curl zsh
+RUN apk add --no-cache git curl build-base gcc alpine-sdk eudev-dev libusb-dev libusb linux-headers bash curl zsh libressl-dev libftdi1-dev
 
 ENV RUSTUP_HOME=/rust
 ENV CARGO_HOME=/cargo 
