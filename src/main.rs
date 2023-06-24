@@ -132,6 +132,9 @@ mod app {
         // ADC
         let mut adc = Adc::adc1(dp.ADC1, true, AdcConfig::default());
 
+        adc.enable();
+        adc.calibrate();
+
         // configure CKP/CMP Pin for Interrupts
         let mut ckp = gpio_config.ckp;
         let mut syscfg = dp.SYSCFG.constrain();
@@ -326,6 +329,7 @@ mod app {
             .lock(|tim| tim.clear_interrupt(Event::Update));
 
         ctx.shared.led.lock(|l| l.led_0.toggle());
+        sensors_callback::spawn().unwrap();
     }
 
     #[task(binds = TIM3, local = [], shared = [timer3, led, tables])]
@@ -493,7 +497,7 @@ mod app {
     }
 
     #[task(local = [analog_pins, adc], shared = [sensors])]
-    fn sensors_callback(ctx: sensors_callback::Context) {
+    fn sensors_callback(mut ctx: sensors_callback::Context) {
         let mut sensors = ctx.shared.sensors;
         let adc_pins = ctx.local.analog_pins;
         let adc = ctx.local.adc;
