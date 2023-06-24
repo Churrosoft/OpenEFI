@@ -1,12 +1,23 @@
 {
 	"name": "Codespaces Rust Starter",
-	"extensions": [
-		"matklad.rust-analyzer",
-		"serayuzgur.crates",
-	],
-	"dockerFile": "Dockerfile",
-	"settings": {
-		"editor.formatOnSave": true,
-		"terminal.integrated.shell.linux": "/usr/bin/zsh"
-	}
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"matklad.rust-analyzer",
+				"serayuzgur.crates",
+				"rust-lang.rust-analyzer",
+				"dracula-theme.theme-dracula"
+			],
+			"settings": {
+				"editor.formatOnSave": true,
+				"terminal.integrated.profiles.linux": {
+					"zsh": {
+						"path": "/bin/zsh"
+					}
+				},
+				"terminal.integrated.defaultProfile.linux": "zsh"
+			}
+		}
+	},
+	"dockerFile": "Dockerfile"
 }
