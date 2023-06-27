@@ -544,12 +544,8 @@
 
 <span class="attr">#[rtic::app(device = stm32f4xx_hal::pac, peripherals = <span class="bool-val">true</span>, dispatchers = [TIM5, TIM7, TIM8_CC]</span>)]
 <span class="kw">mod </span>app {
-    <span class="kw">use </span>core::arch::arm::__breakpoint;
-
     <span class="kw">use </span>arrayvec::ArrayVec;
     <span class="kw">use </span>embedded_hal::spi::{Mode, Phase, Polarity};
-    <span class="kw">use </span>rtic::mutex_prelude::TupleExt05;
-    <span class="kw">use </span>shared_bus_rtic::SharedBus;
     <span class="kw">use </span>stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
         crc32,
@@ -584,7 +580,7 @@
         memory::tables::{SpiT, Tables},
         webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
-    <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic;
+
     <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic::{PMIC, PmicT};
     <span class="kw">use </span><span class="kw">crate</span>::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
 
@@ -793,9 +789,9 @@
         gpio_config.led.led_check.toggle();
         gpio_config.led.led_mil.toggle();
 
-        <span class="kw">let </span>sensors = SensorValues::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>sensors = SensorValues::new();
 
-        <span class="kw">let </span>spi_lock = <span class="bool-val">false</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>spi_lock = <span class="bool-val">false</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
         <span class="kw">return </span>(
@@ -862,7 +858,6 @@
             .lock(|tim| tim.clear_interrupt(Event::Update));
 
         ctx.shared.led.lock(|l| l.led_0.toggle());
-        sensors_callback::spawn().unwrap();
     }
 
     <span class="attr">#[task(binds = TIM3, local = []</span>, shared = [timer3, led, tables])]
@@ -1029,7 +1024,7 @@
         )
     }
 
-    <span class="attr">#[task(local = [analog_pins, adc]</span>, shared = [sensors])]
+    <span class="attr">#[task(priority = <span class="number">8</span>, local = [analog_pins, adc]</span>, shared = [sensors])]
     <span class="kw">fn </span>sensors_callback(<span class="kw-2">mut </span>ctx: sensors_callback::Context) {
         <span class="kw">let </span><span class="kw-2">mut </span>sensors = ctx.shared.sensors;
         <span class="kw">let </span>adc_pins = ctx.local.analog_pins;
@@ -1037,7 +1032,7 @@
 
         sensors.lock(|sensors| {
             sensors.update(
-                <span class="number">2500</span>,
+                get_sensor_raw(SensorTypes::AirTemp, adc_pins, adc),
                 SensorTypes::AirTemp,
             );
 
@@ -1053,6 +1048,11 @@
 
             sensors.update(
                 get_sensor_raw(SensorTypes::CooltanTemp, adc_pins, adc),
+                SensorTypes::CooltanTemp,
+            );
+
+            sensors.update(
+                get_sensor_raw(SensorTypes::BatteryVoltage, adc_pins, adc),
                 SensorTypes::CooltanTemp,
             );
         })

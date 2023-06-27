@@ -87,7 +87,21 @@
 <a href="#87" id="87">87</a>
 <a href="#88" id="88">88</a>
 <a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::gpio_legacy::ADCMapping;
+<span class="kw">use </span>micromath::F32Ext;
+
 <span class="kw">use </span>stm32f4xx_hal::{
     adc::{config::SampleTime, Adc},
     pac::ADC1,
@@ -103,7 +117,8 @@
     BatteryVoltage,
 }
 
-<span class="kw">pub struct </span>SensorValues {
+<span class="attr">#[derive(Debug)]
+</span><span class="kw">pub struct </span>SensorValues {
     <span class="kw">pub </span>map: f32,
     <span class="kw">pub </span>tps: f32,
     <span class="kw">pub </span>cooltan_temp: f32,
@@ -126,7 +141,8 @@
             cooltan_temp: <span class="number">45.69f32</span>,
             air_temp: <span class="number">0.0f32</span>,
             batt: <span class="number">13.42f32</span>,
-            raw_map: <span class="number">0.0f32</span>,
+            <span class="comment">// valores en raw son en bits del ADC; luego se pasan a mV
+            </span>raw_map: <span class="number">0.0f32</span>,
             raw_tps: <span class="number">0.0f32</span>,
             raw_temp: <span class="number">0.0f32</span>,
             raw_air_temp: <span class="number">0.0f32</span>,
@@ -140,6 +156,14 @@
             SensorTypes::AirTemp =&gt; {
                 <span class="self">self</span>.raw_air_temp = EMA_LP_ALPHA * (raw_value <span class="kw">as </span>f32)
                     + (<span class="number">1.0 </span>- EMA_LP_ALPHA) * (<span class="self">self</span>.raw_air_temp <span class="kw">as </span>f32);
+
+                <span class="comment">// Ford ECC-IV type sensor
+                // TODO: make configurable
+                // FIXME: esta para el recontra culo la cuenta
+                </span><span class="kw">let </span>result = <span class="number">143.73f32 </span>* <span class="number">0.99936f32</span>.powf(<span class="self">self</span>.raw_air_temp);
+
+                <span class="self">self</span>.air_temp = result;
+
             }
             SensorTypes::CooltanTemp =&gt; {
                 <span class="self">self</span>.raw_temp = EMA_LP_ALPHA * (raw_value <span class="kw">as </span>f32)
@@ -174,6 +198,6 @@
     adc_pins.mux_c.set_state(((c &amp; (<span class="number">1 </span>&lt;&lt; <span class="number">2</span>)) != <span class="number">0</span>).into());
     <span class="kw">let </span>sample = adc.convert(<span class="kw-2">&amp;</span>adc_pins.analog_in, SampleTime::Cycles_480);
 
-    <span class="kw">return </span>sample;
+    <span class="kw">return </span>adc.sample_to_millivolts(sample);
 }
 </code></pre></div></section></main></body></html>
