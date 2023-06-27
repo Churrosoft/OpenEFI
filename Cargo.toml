@@ -41,6 +41,7 @@ serde-json-core = "0.5.0"
 panic-semihosting = "0.6.0"
 shared-bus-rtic = "0.2.2"
 postcard = "1.0.4"
+micromath = "2.0.0"
 
 [dependencies.stm32f4xx-hal]
 version = "0.14.0"

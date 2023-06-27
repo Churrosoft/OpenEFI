@@ -11,12 +11,8 @@ use panic_halt as _;
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5, TIM7, TIM8_CC])]
 mod app {
-    use core::arch::arm::__breakpoint;
-
     use arrayvec::ArrayVec;
     use embedded_hal::spi::{Mode, Phase, Polarity};
-    use rtic::mutex_prelude::TupleExt05;
-    use shared_bus_rtic::SharedBus;
     use stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
         crc32,
@@ -51,7 +47,7 @@ mod app {
         memory::tables::{SpiT, Tables},
         webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
-    use crate::app::engine::pmic;
+
     use crate::app::engine::pmic::{PMIC, PmicT};
     use crate::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
 
@@ -260,9 +256,9 @@ mod app {
         gpio_config.led.led_check.toggle();
         gpio_config.led.led_mil.toggle();
 
-        let sensors = SensorValues::new();
+        let mut sensors = SensorValues::new();
 
-        let spi_lock = false;
+        let mut spi_lock = false;
         let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
         return (
@@ -329,7 +325,6 @@ mod app {
             .lock(|tim| tim.clear_interrupt(Event::Update));
 
         ctx.shared.led.lock(|l| l.led_0.toggle());
-        sensors_callback::spawn().unwrap();
     }
 
     #[task(binds = TIM3, local = [], shared = [timer3, led, tables])]
@@ -496,7 +491,7 @@ mod app {
         )
     }
 
-    #[task(local = [analog_pins, adc], shared = [sensors])]
+    #[task(priority = 8, local = [analog_pins, adc], shared = [sensors])]
     fn sensors_callback(mut ctx: sensors_callback::Context) {
         let mut sensors = ctx.shared.sensors;
         let adc_pins = ctx.local.analog_pins;
@@ -504,7 +499,7 @@ mod app {
 
         sensors.lock(|sensors| {
             sensors.update(
-                2500,
+                get_sensor_raw(SensorTypes::AirTemp, adc_pins, adc),
                 SensorTypes::AirTemp,
             );
 
@@ -520,6 +515,11 @@ mod app {
 
             sensors.update(
                 get_sensor_raw(SensorTypes::CooltanTemp, adc_pins, adc),
+                SensorTypes::CooltanTemp,
+            );
+
+            sensors.update(
+                get_sensor_raw(SensorTypes::BatteryVoltage, adc_pins, adc),
                 SensorTypes::CooltanTemp,
             );
         })

@@ -1,4 +1,6 @@
 use crate::app::gpio_legacy::ADCMapping;
+use micromath::F32Ext;
+
 use stm32f4xx_hal::{
     adc::{config::SampleTime, Adc},
     pac::ADC1,
@@ -14,6 +16,7 @@ pub enum SensorTypes {
     BatteryVoltage,
 }
 
+#[derive(Debug)]
 pub struct SensorValues {
     pub map: f32,
     pub tps: f32,
@@ -37,6 +40,7 @@ impl SensorValues {
             cooltan_temp: 45.69f32,
             air_temp: 0.0f32,
             batt: 13.42f32,
+            // valores en raw son en bits del ADC; luego se pasan a mV
             raw_map: 0.0f32,
             raw_tps: 0.0f32,
             raw_temp: 0.0f32,
@@ -51,6 +55,14 @@ impl SensorValues {
             SensorTypes::AirTemp => {
                 self.raw_air_temp = EMA_LP_ALPHA * (raw_value as f32)
                     + (1.0 - EMA_LP_ALPHA) * (self.raw_air_temp as f32);
+
+                // Ford ECC-IV type sensor
+                // TODO: make configurable
+                // FIXME: esta para el recontra culo la cuenta
+                let result = 143.73f32 * 0.99936f32.powf(self.raw_air_temp);
+
+                self.air_temp = result;
+
             }
             SensorTypes::CooltanTemp => {
                 self.raw_temp = EMA_LP_ALPHA * (raw_value as f32)
@@ -85,5 +97,5 @@ pub fn get_sensor_raw(
     adc_pins.mux_c.set_state(((c & (1 << 2)) != 0).into());
     let sample = adc.convert(&adc_pins.analog_in, SampleTime::Cycles_480);
 
-    return sample;
+    return adc.sample_to_millivolts(sample);
 }
