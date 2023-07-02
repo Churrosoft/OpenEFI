@@ -54,7 +54,7 @@ pub fn calculate_time_isr(es: &mut EngineStatus, ecfg: &EngineConfig) {
     bank_a_time += alpha_n::calculate_injection_fuel(es, &ecfg);
     bank_a_time += alpha_n::calculate_correction_time();
     bank_a_time += injectors::get_base_time(&ecfg.injection.injector);
-    bank_a_time += injectors::get_battery_correction();
+    bank_a_time += injectors::get_battery_correction(&bank_a_time,&ecfg.injection.injector);
     bank_a_time += injectors::get_wall_wetting_correction();
     bank_a_time += injectors::get_pressure_correction();
 

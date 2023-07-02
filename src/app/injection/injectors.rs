@@ -1,14 +1,17 @@
 #![allow(dead_code)]
 
-use crate::app::engine::{efi_cfg::InjectorConfig, engine_status::InjectionInfo};
+use crate::app::engine::{efi_cfg::InjectionConfig, efi_cfg::InjectorConfig, engine_status::InjectionInfo};
 
 pub fn get_base_time(cfg: &InjectorConfig) -> f32 {
     return cfg.on_time - cfg.on_time;
 }
 
-pub fn get_battery_correction() -> f32 {
+pub fn get_battery_correction(base_time: &f32, cfg: &InjectorConfig) -> f32 {
     // esto iria con una tabla
-    1.0
+
+    let correction = cfg.battery_correction.map_or(1.0f32,|table| (table[0][0] / 100) as f32);
+
+    base_time * correction
 }
 
 pub fn get_pressure_correction() -> f32 {

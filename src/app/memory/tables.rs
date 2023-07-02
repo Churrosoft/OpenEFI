@@ -12,11 +12,16 @@ use w25q::series25::{Flash, FlashInfo};
 use crate::app::logging::host;
 
 pub type DataT = [[i32; 17]; 17];
+pub type PlotData = [[i32; 2]; 10];
 
 pub struct Tables {
     // injection
     pub tps_rpm_ve: Option<DataT>,
     pub injector_delay: Option<DataT>,
+    pub vbat_correction: Option<PlotData>,
+    pub wue: Option<PlotData>,
+    pub ase_taper: Option<PlotData>,
+    pub ase_intensity: Option<PlotData>,
     //ignition
     pub load_tps_deg: Option<DataT>,
 }

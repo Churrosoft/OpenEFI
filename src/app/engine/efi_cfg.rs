@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use crate::app::memory::tables::{DataT};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Engine {
@@ -16,6 +17,8 @@ pub struct InjectorConfig {
     pub fuel_density: f32,
     pub on_time: f32,
     pub off_time: f32,
+
+    pub battery_correction: Option<DataT>,
 }
 
 #[allow(non_snake_case)]
@@ -64,6 +67,8 @@ pub fn get_default_efi_cfg() -> EngineConfig {
                 // https://documents.holley.com/techlibrary_terminatorxv2injectordata.pdf
                 on_time: 750.0,
                 off_time: 250.0,
+                // tabla correccion por bateria:
+                battery_correction: None,
             },
         },
     };
