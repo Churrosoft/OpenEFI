@@ -125,7 +125,7 @@
     </span>bank_a_time += alpha_n::calculate_injection_fuel(es, <span class="kw-2">&amp;</span>ecfg);
     bank_a_time += alpha_n::calculate_correction_time();
     bank_a_time += injectors::get_base_time(<span class="kw-2">&amp;</span>ecfg.injection.injector);
-    bank_a_time += injectors::get_battery_correction();
+    bank_a_time += injectors::get_battery_correction(<span class="kw-2">&amp;</span>bank_a_time,<span class="kw-2">&amp;</span>ecfg.injection.injector);
     bank_a_time += injectors::get_wall_wetting_correction();
     bank_a_time += injectors::get_pressure_correction();
 

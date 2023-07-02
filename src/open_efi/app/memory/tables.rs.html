@@ -180,6 +180,11 @@
 <a href="#180" id="180">180</a>
 <a href="#181" id="181">181</a>
 <a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 
 </span><span class="kw">use </span>shared_bus_rtic::SharedBus;
@@ -194,11 +199,16 @@
 <span class="kw">use </span><span class="kw">crate</span>::app::logging::host;
 
 <span class="kw">pub type </span>DataT = [[i32; <span class="number">17</span>]; <span class="number">17</span>];
+<span class="kw">pub type </span>PlotData = [[i32; <span class="number">2</span>]; <span class="number">10</span>];
 
 <span class="kw">pub struct </span>Tables {
     <span class="comment">// injection
     </span><span class="kw">pub </span>tps_rpm_ve: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
     <span class="kw">pub </span>injector_delay: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
+    <span class="kw">pub </span>vbat_correction: <span class="prelude-ty">Option</span>&lt;PlotData&gt;,
+    <span class="kw">pub </span>wue: <span class="prelude-ty">Option</span>&lt;PlotData&gt;,
+    <span class="kw">pub </span>ase_taper: <span class="prelude-ty">Option</span>&lt;PlotData&gt;,
+    <span class="kw">pub </span>ase_intensity: <span class="prelude-ty">Option</span>&lt;PlotData&gt;,
     <span class="comment">//ignition
     </span><span class="kw">pub </span>load_tps_deg: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
 }

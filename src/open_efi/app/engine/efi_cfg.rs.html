@@ -70,7 +70,13 @@
 <a href="#70" id="70">70</a>
 <a href="#71" id="71">71</a>
 <a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::{DataT};
 
 <span class="attr">#[derive(Serialize, Deserialize, Debug)]
 </span><span class="kw">pub struct </span>Engine {
@@ -88,6 +94,8 @@
     <span class="kw">pub </span>fuel_density: f32,
     <span class="kw">pub </span>on_time: f32,
     <span class="kw">pub </span>off_time: f32,
+
+    <span class="kw">pub </span>battery_correction: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
 }
 
 <span class="attr">#[allow(non_snake_case)]
@@ -136,6 +144,8 @@
                 // https://documents.holley.com/techlibrary_terminatorxv2injectordata.pdf
                 </span>on_time: <span class="number">750.0</span>,
                 off_time: <span class="number">250.0</span>,
+                <span class="comment">// tabla correccion por bateria:
+                </span>battery_correction: <span class="prelude-val">None</span>,
             },
         },
     };

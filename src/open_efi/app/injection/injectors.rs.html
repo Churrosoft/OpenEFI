@@ -36,18 +36,24 @@
 <a href="#36" id="36">36</a>
 <a href="#37" id="37">37</a>
 <a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
+<a href="#41" id="41">41</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 
-</span><span class="kw">use </span><span class="kw">crate</span>::app::engine::{efi_cfg::InjectorConfig, engine_status::InjectionInfo};
+</span><span class="kw">use </span><span class="kw">crate</span>::app::engine::{efi_cfg::InjectionConfig, efi_cfg::InjectorConfig, engine_status::InjectionInfo};
 
 <span class="kw">pub fn </span>get_base_time(cfg: <span class="kw-2">&amp;</span>InjectorConfig) -&gt; f32 {
     <span class="kw">return </span>cfg.on_time - cfg.on_time;
 }
 
-<span class="kw">pub fn </span>get_battery_correction() -&gt; f32 {
+<span class="kw">pub fn </span>get_battery_correction(base_time: <span class="kw-2">&amp;</span>f32, cfg: <span class="kw-2">&amp;</span>InjectorConfig) -&gt; f32 {
     <span class="comment">// esto iria con una tabla
-    </span><span class="number">1.0
-</span>}
+
+    </span><span class="kw">let </span>correction = cfg.battery_correction.map_or(<span class="number">1.0f32</span>,|table| (table[<span class="number">0</span>][<span class="number">0</span>] / <span class="number">100</span>) <span class="kw">as </span>f32);
+
+    base_time * correction
+}
 
 <span class="kw">pub fn </span>get_pressure_correction() -&gt; f32 {
     <span class="comment">// por ahora solo disponible en OpenEFI no en uEFI por falta de canales
