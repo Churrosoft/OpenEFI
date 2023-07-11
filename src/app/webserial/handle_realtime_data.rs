@@ -1,12 +1,10 @@
 use stm32f4xx_hal::crc32::Crc32;
-use w25q::series25::FlashInfo;
 
 use crate::app::{
     self,
-    memory::tables::{FlashT, TableData, Tables},
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-use crate::app::engine::efi_cfg::EngineConfig;
+
 use crate::app::engine::engine_status::EngineStatus;
 use crate::app::engine::sensors::SensorValues;
 
@@ -82,6 +80,10 @@ pub fn handler(
             // base fuel
             number_arr = i32::to_le_bytes(fmt_data(efi_status.injection.base_fuel));
             response_buf.payload[88..92].copy_from_slice(&number_arr);
+
+            crc.init();
+            let crc = crc.update_bytes(&response_buf.payload[..118]);
+            response_buf.payload[118..122].copy_from_slice(&crc.to_le_bytes());
         }
         _ => {
             host::trace!("realtime data webserial error");

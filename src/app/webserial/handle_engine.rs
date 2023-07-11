@@ -3,15 +3,12 @@ use w25q::series25::FlashInfo;
 
 use crate::app::{
     self,
-    memory::tables::{FlashT, TableData, Tables},
+    memory::tables::{FlashT},
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-//use crate::app::engine::efi_cfg::EngineConfig;
-use crate::app::memory::efi_cfg;
 
 use crate::app::logging::host;
 use serde_json_core::heapless::Vec;
-use serde::{Serialize, Deserialize};
 use postcard::{from_bytes, to_vec};
 use crate::app::engine::efi_cfg::EngineConfig;
 
@@ -75,8 +72,7 @@ pub fn handler(
         app::send_message::spawn(SerialStatus::DataChunkEnd, 0, response_buf).unwrap();
 
         let output: Vec<u8, 800> = to_vec(&cfg).unwrap();
-        let mut cfg_new = EngineConfig::new();
-        cfg_new = from_bytes(&output).unwrap();
+        let mut cfg_new:EngineConfig = from_bytes(&output).unwrap();
         result = serde_json_core::to_slice(&cfg_new, &mut json_payload);
         host::trace!("struct => bytes => struct => json result {:?}",result);
 

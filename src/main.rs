@@ -1,11 +1,12 @@
-//! examples/locals.rs
 #![feature(proc_macro_hygiene)]
 #![no_main]
 #![no_std]
 #![feature(stdsimd)]
 #![feature(int_roundings)]
 #![feature(exclusive_range_pattern)]
+#![allow(stable_features)]
 #![feature(is_some_and)]
+#![allow(unused_mut)]
 
 use panic_halt as _;
 
@@ -20,12 +21,11 @@ mod app {
         gpio::{Edge, Input},
         otg_fs,
         otg_fs::{USB, UsbBusType},
-        pac::{ADC1, TIM13, TIM2, TIM3, TIM5},
+        pac::{ADC1, TIM13, TIM2, TIM3},
         prelude::*,
         spi::*,
         timer::{self, Event},
     };
-    use stm32f4xx_hal::gpio::{Output, PushPull};
     use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
     use usbd_serial::SerialPort;
     use usbd_webusb::{url_scheme, WebUsb};
@@ -64,7 +64,6 @@ mod app {
     #[shared]
     struct Shared {
         // Timers:
-        timer5: timer::CounterMs<TIM5>,
         timer13: timer::DelayUs<TIM13>,
         timer: timer::CounterMs<TIM2>,
         timer3: timer::CounterUs<TIM3>,
@@ -151,8 +150,6 @@ mod app {
         let mut timer: timer::CounterMs<TIM2> = dp.TIM2.counter_ms(&clocks);
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
 
-        // NOTE: timer para delays en hilos
-        let mut timer5: timer::CounterMs<TIM5> = dp.TIM5.counter_ms(&clocks);
 
         // NOTE: para task de sensores
         let mut timer13: timer::DelayUs<TIM13> = dp.TIM13.delay_us(&clocks);
@@ -160,9 +157,6 @@ mod app {
         //  TIM5, TIM7, TIM4
 
         timer.start((150).millis()).unwrap();
-
-        // TODO: revisar cual es el mejor periodo
-        timer5.start((150).millis()).unwrap();
 
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
@@ -242,6 +236,11 @@ mod app {
             tps_rpm_ve: None,
             injector_delay: None,
             load_tps_deg: None,
+            // get not implemented
+            vbat_correction: None,
+            wue: None,
+            ase_taper: None,
+            ase_intensity: None,
         };
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
@@ -267,7 +266,6 @@ mod app {
                 // Timers:
                 timer,
                 timer3,
-                timer5,
                 timer13,
 
                 // USB
@@ -475,6 +473,7 @@ mod app {
         let relay_pins = ctx.shared.relay_pins;
         let timer13 = ctx.shared.timer13;
         let flash = ctx.shared.flash;
+
         (inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash).lock(
             |inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash| match demo_mode {
                 0x0 => debug::spark_demo(ign_pins, timer13),
@@ -483,7 +482,7 @@ mod app {
                 0x3 => debug::relay_demo(relay_pins, timer13),
                 0x4 => {
                     host::debug!("Init clear flash");
-                    flash.erase_all();
+                    let _ = flash.erase_all();
                     host::debug!("clear flash done");
                 }
                 0x5..=u8::MAX => debug::external_idle_demo(stepper_pins, timer13),

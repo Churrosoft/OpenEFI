@@ -7,7 +7,7 @@ use usb_device::{
 
 use crate::{
     app,
-    app::{logging, util},
+    app::util,
 };
 
 mod handle_core;

@@ -80,9 +80,9 @@ pub fn handler(
             }
 
             for row in table {
-                let mut row_index = 0;
+                let mut _row_index = 0;
                 let mut i = 1;
-                response_buf.payload[0] = row_index;
+                response_buf.payload[0] = _row_index;
 
                 for row_number in row {
                     let number_arr: [u8; 4] = i32::to_le_bytes(row_number);
@@ -92,7 +92,7 @@ pub fn handler(
                     response_buf.payload[i + 3] = number_arr[3];
                     i += 4;
                 }
-                row_index += 1;
+                _row_index += 1;
                 app::send_message::spawn(SerialStatus::DataChunk, 0, response_buf).unwrap();
             }
             app::send_message::spawn(SerialStatus::DataChunkEnd, 0, response_buf).unwrap();

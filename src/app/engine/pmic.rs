@@ -125,10 +125,10 @@ impl<SPI: Transfer<u8>, CS: OutputPin> PMIC<SPI, CS> {
         let mut result_word = [0xf, 0x0];
         let mut spi_payload = [command as u8, payload];
 
-        self.cs.set_low();
-        self.spi.transfer(&mut spi_payload);
+        let _ = self.cs.set_low();
+        let _ = self.spi.transfer(&mut spi_payload);
         let result_data = self.spi.transfer(&mut mock_word);
-        self.cs.set_high();
+        let _ = self.cs.set_high();
 
         //FIXME: esto le genera infartos a mas de un catolico de rust
         // https://doc.rust-lang.org/std/result/#extracting-contained-values

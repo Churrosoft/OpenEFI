@@ -1,15 +1,23 @@
 #![allow(dead_code)]
 
-use crate::app::engine::{efi_cfg::InjectionConfig, efi_cfg::InjectorConfig, engine_status::InjectionInfo};
+use crate::app::engine::{efi_cfg::InjectorConfig, engine_status::InjectionInfo};
 
 pub fn get_base_time(cfg: &InjectorConfig) -> f32 {
     return cfg.on_time - cfg.on_time;
 }
 
 pub fn get_battery_correction(base_time: &f32, cfg: &InjectorConfig) -> f32 {
-    // esto iria con una tabla
+    // TODO: get battery voltage from engine_status (now 1420)
+    let correction = cfg.battery_correction.map_or(1.0f32, |table|
+        {
+            let vbat_index = table.get(1).unwrap_or(&[0, 0]).into_iter().position(|vbat| vbat <= &1420);
 
-    let correction = cfg.battery_correction.map_or(1.0f32,|table| (table[0][0] / 100) as f32);
+            if vbat_index.is_some() {
+                let table_correction_value = &table[0][vbat_index.unwrap_or(10000)];
+                return (table_correction_value / 10000) as f32;
+            }
+            return 1.0f32;
+        });
 
     base_time * correction
 }

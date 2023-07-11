@@ -1,5 +1,4 @@
 use postcard::{from_bytes, to_vec};
-use serde::{Deserialize, Serialize};
 use serde_json_core::heapless::Vec;
 use stm32f4xx_hal::crc32::Crc32;
 use w25q::series25::FlashInfo;
@@ -50,8 +49,7 @@ impl EngineConfig {
         }
 
         {
-            let mut memory_config = EngineConfig::new();
-            memory_config = from_bytes(&read_buff).unwrap();
+            let mut memory_config:EngineConfig = from_bytes(&read_buff).unwrap();
 
             self.injection = memory_config.injection;
             self.engine = memory_config.engine;

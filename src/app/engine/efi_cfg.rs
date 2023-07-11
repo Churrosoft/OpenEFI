@@ -1,7 +1,6 @@
-use serde::{Deserialize, Serialize};
-use crate::app::memory::tables::{DataT};
+use crate::app::memory::tables::{PlotData};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct Engine {
     pub cilinder_count: u8,
     pub displacement: u32,
@@ -9,7 +8,7 @@ pub struct Engine {
     pub ckp_missing_tooth: u32,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct InjectorConfig {
     pub flow_cc_min: f32,
     pub injector_count: u8,
@@ -18,11 +17,11 @@ pub struct InjectorConfig {
     pub on_time: f32,
     pub off_time: f32,
 
-    pub battery_correction: Option<DataT>,
+    pub battery_correction: Option<PlotData>,
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct InjectionConfig {
     pub target_lambda: f32,
     pub target_stoich: f32,
@@ -31,7 +30,7 @@ pub struct InjectionConfig {
     pub injector: InjectorConfig,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct EngineConfig {
     pub ready: bool,
     pub injection: InjectionConfig,
