@@ -74,11 +74,9 @@
 <a href="#74" id="74">74</a>
 <a href="#75" id="75">75</a>
 <a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>serde::{Deserialize, Serialize};
-<span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::{DataT};
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::{PlotData};
 
-<span class="attr">#[derive(Serialize, Deserialize, Debug)]
+<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug)]
 </span><span class="kw">pub struct </span>Engine {
     <span class="kw">pub </span>cilinder_count: u8,
     <span class="kw">pub </span>displacement: u32,
@@ -86,7 +84,7 @@
     <span class="kw">pub </span>ckp_missing_tooth: u32,
 }
 
-<span class="attr">#[derive(Serialize, Deserialize, Debug)]
+<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug)]
 </span><span class="kw">pub struct </span>InjectorConfig {
     <span class="kw">pub </span>flow_cc_min: f32,
     <span class="kw">pub </span>injector_count: u8,
@@ -95,11 +93,11 @@
     <span class="kw">pub </span>on_time: f32,
     <span class="kw">pub </span>off_time: f32,
 
-    <span class="kw">pub </span>battery_correction: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
+    <span class="kw">pub </span>battery_correction: <span class="prelude-ty">Option</span>&lt;PlotData&gt;,
 }
 
 <span class="attr">#[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
 </span><span class="kw">pub struct </span>InjectionConfig {
     <span class="kw">pub </span>target_lambda: f32,
     <span class="kw">pub </span>target_stoich: f32,
@@ -108,7 +106,7 @@
     <span class="kw">pub </span>injector: InjectorConfig,
 }
 
-<span class="attr">#[derive(Serialize, Deserialize, Debug)]
+<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug)]
 </span><span class="kw">pub struct </span>EngineConfig {
     <span class="kw">pub </span>ready: bool,
     <span class="kw">pub </span>injection: InjectionConfig,

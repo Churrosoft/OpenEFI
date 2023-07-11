@@ -530,15 +530,15 @@
 <a href="#530" id="530">530</a>
 <a href="#531" id="531">531</a>
 <a href="#532" id="532">532</a>
-<a href="#533" id="533">533</a>
-</pre></div><pre class="rust"><code><span class="doccomment">//! examples/locals.rs
-</span><span class="attr">#![feature(proc_macro_hygiene)]
+</pre></div><pre class="rust"><code><span class="attr">#![feature(proc_macro_hygiene)]
 #![no_main]
 #![no_std]
 #![feature(stdsimd)]
 #![feature(int_roundings)]
 #![feature(exclusive_range_pattern)]
+#![allow(stable_features)]
 #![feature(is_some_and)]
+#![allow(unused_mut)]
 
 </span><span class="kw">use </span>panic_halt <span class="kw">as _</span>;
 
@@ -553,12 +553,11 @@
         gpio::{Edge, Input},
         otg_fs,
         otg_fs::{USB, UsbBusType},
-        pac::{ADC1, TIM13, TIM2, TIM3, TIM5},
+        pac::{ADC1, TIM13, TIM2, TIM3},
         prelude::<span class="kw-2">*</span>,
         spi::<span class="kw-2">*</span>,
         timer::{<span class="self">self</span>, Event},
     };
-    <span class="kw">use </span>stm32f4xx_hal::gpio::{Output, PushPull};
     <span class="kw">use </span>usb_device::{bus::UsbBusAllocator, device::UsbDevice};
     <span class="kw">use </span>usbd_serial::SerialPort;
     <span class="kw">use </span>usbd_webusb::{url_scheme, WebUsb};
@@ -597,8 +596,7 @@
     <span class="attr">#[shared]
     </span><span class="kw">struct </span>Shared {
         <span class="comment">// Timers:
-        </span>timer5: timer::CounterMs&lt;TIM5&gt;,
-        timer13: timer::DelayUs&lt;TIM13&gt;,
+        </span>timer13: timer::DelayUs&lt;TIM13&gt;,
         timer: timer::CounterMs&lt;TIM2&gt;,
         timer3: timer::CounterUs&lt;TIM3&gt;,
 
@@ -684,8 +682,6 @@
         <span class="kw">let </span><span class="kw-2">mut </span>timer: timer::CounterMs&lt;TIM2&gt; = dp.TIM2.counter_ms(<span class="kw-2">&amp;</span>clocks);
         <span class="kw">let </span><span class="kw-2">mut </span>timer3: timer::CounterUs&lt;TIM3&gt; = dp.TIM3.counter_us(<span class="kw-2">&amp;</span>clocks);
 
-        <span class="comment">// NOTE: timer para delays en hilos
-        </span><span class="kw">let </span><span class="kw-2">mut </span>timer5: timer::CounterMs&lt;TIM5&gt; = dp.TIM5.counter_ms(<span class="kw-2">&amp;</span>clocks);
 
         <span class="comment">// NOTE: para task de sensores
         </span><span class="kw">let </span><span class="kw-2">mut </span>timer13: timer::DelayUs&lt;TIM13&gt; = dp.TIM13.delay_us(<span class="kw-2">&amp;</span>clocks);
@@ -693,9 +689,6 @@
         <span class="comment">//  TIM5, TIM7, TIM4
 
         </span>timer.start((<span class="number">150</span>).millis()).unwrap();
-
-        <span class="comment">// TODO: revisar cual es el mejor periodo
-        </span>timer5.start((<span class="number">150</span>).millis()).unwrap();
 
         <span class="comment">// Set up to generate interrupt when timer expires
         </span>timer.listen(Event::Update);
@@ -775,6 +768,11 @@
             tps_rpm_ve: <span class="prelude-val">None</span>,
             injector_delay: <span class="prelude-val">None</span>,
             load_tps_deg: <span class="prelude-val">None</span>,
+            <span class="comment">// get not implemented
+            </span>vbat_correction: <span class="prelude-val">None</span>,
+            wue: <span class="prelude-val">None</span>,
+            ase_taper: <span class="prelude-val">None</span>,
+            ase_intensity: <span class="prelude-val">None</span>,
         };
 
         injection_setup(<span class="kw-2">&amp;mut </span>table, <span class="kw-2">&amp;mut </span>flash, <span class="kw-2">&amp;</span>flash_info, <span class="kw-2">&amp;mut </span>crc);
@@ -800,7 +798,6 @@
                 <span class="comment">// Timers:
                 </span>timer,
                 timer3,
-                timer5,
                 timer13,
 
                 <span class="comment">// USB
@@ -1008,6 +1005,7 @@
         <span class="kw">let </span>relay_pins = ctx.shared.relay_pins;
         <span class="kw">let </span>timer13 = ctx.shared.timer13;
         <span class="kw">let </span>flash = ctx.shared.flash;
+
         (inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash).lock(
             |inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash| <span class="kw">match </span>demo_mode {
                 <span class="number">0x0 </span>=&gt; debug::spark_demo(ign_pins, timer13),
@@ -1016,7 +1014,7 @@
                 <span class="number">0x3 </span>=&gt; debug::relay_demo(relay_pins, timer13),
                 <span class="number">0x4 </span>=&gt; {
                     <span class="macro">host::debug!</span>(<span class="string">&quot;Init clear flash&quot;</span>);
-                    flash.erase_all();
+                    <span class="kw">let _ </span>= flash.erase_all();
                     <span class="macro">host::debug!</span>(<span class="string">&quot;clear flash done&quot;</span>);
                 }
                 <span class="number">0x5</span>..=u8::MAX =&gt; debug::external_idle_demo(stepper_pins, timer13),

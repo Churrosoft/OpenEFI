@@ -373,9 +373,9 @@
             }
 
             <span class="kw">for </span>row <span class="kw">in </span>table {
-                <span class="kw">let </span><span class="kw-2">mut </span>row_index = <span class="number">0</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>_row_index = <span class="number">0</span>;
                 <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">1</span>;
-                response_buf.payload[<span class="number">0</span>] = row_index;
+                response_buf.payload[<span class="number">0</span>] = _row_index;
 
                 <span class="kw">for </span>row_number <span class="kw">in </span>row {
                     <span class="kw">let </span>number_arr: [u8; <span class="number">4</span>] = i32::to_le_bytes(row_number);
@@ -385,7 +385,7 @@
                     response_buf.payload[i + <span class="number">3</span>] = number_arr[<span class="number">3</span>];
                     i += <span class="number">4</span>;
                 }
-                row_index += <span class="number">1</span>;
+                _row_index += <span class="number">1</span>;
                 app::send_message::spawn(SerialStatus::DataChunk, <span class="number">0</span>, response_buf).unwrap();
             }
             app::send_message::spawn(SerialStatus::DataChunkEnd, <span class="number">0</span>, response_buf).unwrap();

@@ -57,10 +57,7 @@
 <a href="#57" id="57">57</a>
 <a href="#58" id="58">58</a>
 <a href="#59" id="59">59</a>
-<a href="#60" id="60">60</a>
-<a href="#61" id="61">61</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>postcard::{from_bytes, to_vec};
-<span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>serde_json_core::heapless::Vec;
 <span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
 <span class="kw">use </span>w25q::series25::FlashInfo;
@@ -111,8 +108,7 @@
         }
 
         {
-            <span class="kw">let </span><span class="kw-2">mut </span>memory_config = EngineConfig::new();
-            memory_config = from_bytes(<span class="kw-2">&amp;</span>read_buff).unwrap();
+            <span class="kw">let </span><span class="kw-2">mut </span>memory_config:EngineConfig = from_bytes(<span class="kw-2">&amp;</span>read_buff).unwrap();
 
             <span class="self">self</span>.injection = memory_config.injection;
             <span class="self">self</span>.engine = memory_config.engine;

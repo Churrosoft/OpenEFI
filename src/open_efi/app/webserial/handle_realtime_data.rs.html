@@ -96,15 +96,15 @@
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
 <a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
-<span class="kw">use </span>w25q::series25::FlashInfo;
 
 <span class="kw">use </span><span class="kw">crate</span>::app::{
     <span class="self">self</span>,
-    memory::tables::{FlashT, TableData, Tables},
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-<span class="kw">use </span><span class="kw">crate</span>::app::engine::efi_cfg::EngineConfig;
+
 <span class="kw">use </span><span class="kw">crate</span>::app::engine::engine_status::EngineStatus;
 <span class="kw">use </span><span class="kw">crate</span>::app::engine::sensors::SensorValues;
 
@@ -180,6 +180,10 @@
             <span class="comment">// base fuel
             </span>number_arr = i32::to_le_bytes(fmt_data(efi_status.injection.base_fuel));
             response_buf.payload[<span class="number">88</span>..<span class="number">92</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
+
+            crc.init();
+            <span class="kw">let </span>crc = crc.update_bytes(<span class="kw-2">&amp;</span>response_buf.payload[..<span class="number">118</span>]);
+            response_buf.payload[<span class="number">118</span>..<span class="number">122</span>].copy_from_slice(<span class="kw-2">&amp;</span>crc.to_le_bytes());
         }
         <span class="kw">_ </span>=&gt; {
             <span class="macro">host::trace!</span>(<span class="string">&quot;realtime data webserial error&quot;</span>);

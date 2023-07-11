@@ -333,10 +333,10 @@
         <span class="kw">let </span><span class="kw-2">mut </span>result_word = [<span class="number">0xf</span>, <span class="number">0x0</span>];
         <span class="kw">let </span><span class="kw-2">mut </span>spi_payload = [command <span class="kw">as </span>u8, payload];
 
-        <span class="self">self</span>.cs.set_low();
-        <span class="self">self</span>.spi.transfer(<span class="kw-2">&amp;mut </span>spi_payload);
+        <span class="kw">let _ </span>= <span class="self">self</span>.cs.set_low();
+        <span class="kw">let _ </span>= <span class="self">self</span>.spi.transfer(<span class="kw-2">&amp;mut </span>spi_payload);
         <span class="kw">let </span>result_data = <span class="self">self</span>.spi.transfer(<span class="kw-2">&amp;mut </span>mock_word);
-        <span class="self">self</span>.cs.set_high();
+        <span class="kw">let _ </span>= <span class="self">self</span>.cs.set_high();
 
         <span class="comment">//FIXME: esto le genera infartos a mas de un catolico de rust
         // https://doc.rust-lang.org/std/result/#extracting-contained-values

@@ -80,24 +80,17 @@
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
 <a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
 <span class="kw">use </span>w25q::series25::FlashInfo;
 
 <span class="kw">use </span><span class="kw">crate</span>::app::{
     <span class="self">self</span>,
-    memory::tables::{FlashT, TableData, Tables},
+    memory::tables::{FlashT},
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-<span class="comment">//use crate::app::engine::efi_cfg::EngineConfig;
-</span><span class="kw">use </span><span class="kw">crate</span>::app::memory::efi_cfg;
 
 <span class="kw">use </span><span class="kw">crate</span>::app::logging::host;
 <span class="kw">use </span>serde_json_core::heapless::Vec;
-<span class="kw">use </span>serde::{Serialize, Deserialize};
 <span class="kw">use </span>postcard::{from_bytes, to_vec};
 <span class="kw">use </span><span class="kw">crate</span>::app::engine::efi_cfg::EngineConfig;
 
@@ -161,8 +154,7 @@
         app::send_message::spawn(SerialStatus::DataChunkEnd, <span class="number">0</span>, response_buf).unwrap();
 
         <span class="kw">let </span>output: Vec&lt;u8, <span class="number">800</span>&gt; = to_vec(<span class="kw-2">&amp;</span>cfg).unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>cfg_new = EngineConfig::new();
-        cfg_new = from_bytes(<span class="kw-2">&amp;</span>output).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>cfg_new:EngineConfig = from_bytes(<span class="kw-2">&amp;</span>output).unwrap();
         result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>cfg_new, <span class="kw-2">&amp;mut </span>json_payload);
         <span class="macro">host::trace!</span>(<span class="string">&quot;struct =&gt; bytes =&gt; struct =&gt; json result {:?}&quot;</span>,result);
 
