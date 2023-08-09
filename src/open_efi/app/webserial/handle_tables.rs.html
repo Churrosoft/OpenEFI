@@ -291,6 +291,40 @@
 <a href="#291" id="291">291</a>
 <a href="#292" id="292">292</a>
 <a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
 <span class="kw">use </span>w25q::series25::FlashInfo;
 
@@ -422,6 +456,14 @@
                     app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
                     <span class="kw">return</span>;
                 }
+                <span class="number">0x02 </span>=&gt; {
+                    <span class="comment">// TPS RPM AFR
+                    </span>table = table_data.tps_rpm_afr.unwrap();
+                    table[row_index] = table_row;
+                    table_data.tps_rpm_afr = <span class="prelude-val">Some</span>(table);
+                    app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
+                    <span class="kw">return</span>;
+                }
                 <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
                     // TODO: read table if not read prev.
@@ -431,7 +473,7 @@
                     app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
                     <span class="kw">return</span>;
                 }
-                <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
+                <span class="number">0x3</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
                     <span class="macro">logging::host::debug!</span>(<span class="string">&quot;error on get&quot;</span>);
                     app::send_message::spawn(
                         SerialStatus::Error,
@@ -475,6 +517,32 @@
                         .unwrap();
                     <span class="kw">return</span>;
                 }
+                <span class="number">0x02 </span>=&gt; {
+                    <span class="comment">// TPS RPM AFR
+                    </span><span class="kw">let </span>tps_rpm_ve = TableData {
+                        data: table_data.tps_rpm_afr,
+                        crc: <span class="number">0</span>,
+                        address: <span class="number">0x3</span>,
+                        max_x: <span class="number">17</span>,
+                        max_y: <span class="number">17</span>,
+                    };
+
+                    <span class="kw">if </span>table_data.tps_rpm_ve.is_some() {
+                        tps_rpm_ve.write_to_memory(flash, flash_info, crc);
+                        app::send_message::spawn(SerialStatus::UploadOk, <span class="number">0</span>, response_buf).unwrap();
+                        <span class="kw">return</span>;
+                    }
+
+                    <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table Write TableNotLoaded - TPS AFR&quot;</span>);
+
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialCode::TableNotLoaded <span class="kw">as </span>u8,
+                        response_buf,
+                    )
+                        .unwrap();
+                    <span class="kw">return</span>;
+                }
 
                 <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
@@ -503,7 +571,7 @@
                     <span class="kw">return</span>;
                 }
 
-                <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
+                <span class="number">0x3</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
 
                     <span class="macro">logging::host::debug!</span>(<span class="string">&quot;error on write&quot;</span>);
                     app::send_message::spawn(

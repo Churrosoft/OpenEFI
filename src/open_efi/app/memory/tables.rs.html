@@ -185,6 +185,7 @@
 <a href="#185" id="185">185</a>
 <a href="#186" id="186">186</a>
 <a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 
 </span><span class="kw">use </span>shared_bus_rtic::SharedBus;
@@ -204,6 +205,7 @@
 <span class="kw">pub struct </span>Tables {
     <span class="comment">// injection
     </span><span class="kw">pub </span>tps_rpm_ve: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
+    <span class="kw">pub </span>tps_rpm_afr: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
     <span class="kw">pub </span>injector_delay: <span class="prelude-ty">Option</span>&lt;DataT&gt;,
     <span class="kw">pub </span>vbat_correction: <span class="prelude-ty">Option</span>&lt;PlotData&gt;,
     <span class="kw">pub </span>wue: <span class="prelude-ty">Option</span>&lt;PlotData&gt;,
