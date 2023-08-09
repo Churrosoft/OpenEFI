@@ -129,6 +129,14 @@ pub fn handler(
                     app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
                     return;
                 }
+                0x02 => {
+                    // TPS RPM AFR
+                    table = table_data.tps_rpm_afr.unwrap();
+                    table[row_index] = table_row;
+                    table_data.tps_rpm_afr = Some(table);
+                    app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
+                    return;
+                }
                 0x10 => {
                     // TPS RPM VE
                     // TODO: read table if not read prev.
@@ -138,7 +146,7 @@ pub fn handler(
                     app::send_message::spawn(SerialStatus::Ok, 0, response_buf).unwrap();
                     return;
                 }
-                0x2..0x9 | _ => {
+                0x3..0x9 | _ => {
                     logging::host::debug!("error on get");
                     app::send_message::spawn(
                         SerialStatus::Error,
@@ -182,6 +190,32 @@ pub fn handler(
                         .unwrap();
                     return;
                 }
+                0x02 => {
+                    // TPS RPM AFR
+                    let tps_rpm_ve = TableData {
+                        data: table_data.tps_rpm_afr,
+                        crc: 0,
+                        address: 0x3,
+                        max_x: 17,
+                        max_y: 17,
+                    };
+
+                    if table_data.tps_rpm_ve.is_some() {
+                        tps_rpm_ve.write_to_memory(flash, flash_info, crc);
+                        app::send_message::spawn(SerialStatus::UploadOk, 0, response_buf).unwrap();
+                        return;
+                    }
+
+                    logging::host::debug!("Table Write TableNotLoaded - TPS AFR");
+
+                    app::send_message::spawn(
+                        SerialStatus::Error,
+                        SerialCode::TableNotLoaded as u8,
+                        response_buf,
+                    )
+                        .unwrap();
+                    return;
+                }
 
                 0x10 => {
                     // TPS RPM VE
@@ -210,7 +244,7 @@ pub fn handler(
                     return;
                 }
 
-                0x2..0x9 | _ => {
+                0x3..0x9 | _ => {
 
                     logging::host::debug!("error on write");
                     app::send_message::spawn(

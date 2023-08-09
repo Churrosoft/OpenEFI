@@ -234,6 +234,7 @@ mod app {
         // EFI Setup:
         let mut table = Tables {
             tps_rpm_ve: None,
+            tps_rpm_afr: None,
             injector_delay: None,
             load_tps_deg: None,
             // get not implemented

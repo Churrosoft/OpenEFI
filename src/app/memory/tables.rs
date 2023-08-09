@@ -17,6 +17,7 @@ pub type PlotData = [[i32; 2]; 10];
 pub struct Tables {
     // injection
     pub tps_rpm_ve: Option<DataT>,
+    pub tps_rpm_afr: Option<DataT>,
     pub injector_delay: Option<DataT>,
     pub vbat_correction: Option<PlotData>,
     pub wue: Option<PlotData>,
