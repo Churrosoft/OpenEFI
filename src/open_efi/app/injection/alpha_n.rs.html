@@ -54,24 +54,37 @@
 <a href="#54" id="54">54</a>
 <a href="#55" id="55">55</a>
 <a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::app::engine::{
     efi_cfg::EngineConfig, engine_status::EngineStatus, get_engine_cycle_duration,
 };
+<span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::{DataT, Tables};
 
 <span class="kw">use </span><span class="kw">super</span>::injectors::fuel_mass_to_time;
 
 <span class="kw">const </span>STD_AIR_PRES: f32 = <span class="number">101.325f32</span>;
 <span class="kw">const </span>STD_AIR_TEMP: f32 = <span class="number">293.15f32</span>;
-<span class="kw">const </span>AIR_R: f32 = <span class="number">8.31446261815324f32 </span>/ <span class="number">28.9647f32</span>;
+<span class="kw">const </span>AIR_R: f32 = <span class="number">8.31445f32 </span>/ <span class="number">28.965f32</span>;
 
-<span class="kw">pub fn </span>calculate_injection_fuel(es: <span class="kw-2">&amp;mut </span>EngineStatus, ecfg: <span class="kw-2">&amp;</span>EngineConfig) -&gt; f32 {
-    <span class="kw">if </span>es.rpm == <span class="number">0 </span>{
+<span class="kw">pub fn </span>calculate_injection_fuel(es: <span class="kw-2">&amp;mut </span>EngineStatus, ecfg: <span class="kw-2">&amp;</span>EngineConfig, tables: <span class="kw-2">&amp;mut </span>Tables) -&gt; f32 {
+    <span class="kw">if </span>es.rpm == <span class="number">0 </span>|| !ecfg.ready {
         <span class="kw">return </span><span class="number">0.0</span>;
     }
 
-    <span class="kw">let </span>ve = get_ve();
+    <span class="kw">let </span>ve = get_ve(es, tables.tps_rpm_ve);
     <span class="kw">let </span>air_mass = get_air_mass(ve, ecfg.engine.cilinder_count, ecfg.engine.displacement);
 
     <span class="kw">let </span>lambda = ecfg.injection.target_lambda;
@@ -100,14 +113,25 @@
     <span class="number">0.0
 </span>}
 
-<span class="kw">pub fn </span>get_air_mass(ve: f32, engine_cilinders: u8, engine_displacement: u32) -&gt; f32 {
+<span class="comment">// esta funcion es solo para alphaN, cuando implemente speed-density o maf se puede migrar modificando las constantes
+</span><span class="kw">pub fn </span>get_air_mass(ve: f32, engine_cilinders: u8, engine_displacement: u32) -&gt; f32 {
     <span class="kw">let </span>full_cycle: f32 =
         (ve / <span class="number">10000.0</span>) * (engine_displacement <span class="kw">as </span>f32 * STD_AIR_PRES / (AIR_R * STD_AIR_TEMP));
 
     full_cycle / engine_cilinders <span class="kw">as </span>f32
 }
 
-<span class="kw">pub fn </span>get_ve() -&gt; f32 {
-    <span class="number">4.4
-</span>}
+<span class="comment">// en este caso se revisa RPM y % del TPS
+</span><span class="kw">pub fn </span>get_ve(es: <span class="kw-2">&amp;</span>EngineStatus, ve_table: <span class="prelude-ty">Option</span>&lt;DataT&gt;) -&gt; f32 {
+    <span class="kw">if </span>es.rpm == <span class="number">0 </span>|| ve_table.is_none() {
+        <span class="kw">return </span><span class="number">0.0</span>;
+    }
+
+    <span class="comment">//data[0].into_iter().position(|x| x &lt;= 307200)
+    </span><span class="kw">let </span>table = ve_table.unwrap();
+    <span class="kw">let </span>rpm_index = table[<span class="number">0</span>].into_iter().position(|x| x &lt;= es.rpm);
+    <span class="kw">let </span>load_index = table.into_iter().position(|y| y[<span class="number">0</span>] &lt;= es.sensors.tps <span class="kw">as </span>i32);
+
+    <span class="kw">return </span>table[load_index.unwrap_or(<span class="number">0</span>)][rpm_index.unwrap_or(<span class="number">0</span>)] <span class="kw">as </span>f32 / <span class="number">100.0</span>;
+}
 </code></pre></div></section></main></body></html>

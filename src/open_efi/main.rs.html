@@ -531,14 +531,18 @@
 <a href="#531" id="531">531</a>
 <a href="#532" id="532">532</a>
 <a href="#533" id="533">533</a>
-</pre></div><pre class="rust"><code><span class="attr">#![feature(proc_macro_hygiene)]
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+</pre></div><pre class="rust"><code><span class="attr">#![feature(exclusive_range_pattern)]
+#![feature(proc_macro_hygiene)]
+#![feature(int_roundings)]
+#![feature(is_some_and)]
+#![feature(stdsimd)]
+
 #![no_main]
 #![no_std]
-#![feature(stdsimd)]
-#![feature(int_roundings)]
-#![feature(exclusive_range_pattern)]
+
 #![allow(stable_features)]
-#![feature(is_some_and)]
 #![allow(unused_mut)]
 
 </span><span class="kw">use </span>panic_halt <span class="kw">as _</span>;
@@ -580,7 +584,6 @@
         memory::tables::{SpiT, Tables},
         webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
-
     <span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic::{PMIC, PmicT};
     <span class="kw">use </span><span class="kw">crate</span>::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
 
@@ -614,8 +617,6 @@
         usb_web: WebUsb&lt;UsbBusType&gt;,
 
         <span class="comment">// core:
-        // el implement de &quot;shared_bus_resources&quot; anda para el culo;
-        // asi que hago el lock a mano
         </span>spi_lock: bool,
         crc: Crc32,
 
@@ -746,7 +747,7 @@
                 gpio_config.spi_mosi,
             ),
             mode,
-            (<span class="number">3</span>).MHz(),
+            (<span class="number">30</span>).MHz(),
             <span class="kw-2">&amp;</span>clocks,
         );
 
@@ -758,11 +759,9 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>flash = w25q::series25::Flash::init(spi_bus.acquire(), gpio_config.memory_cs).unwrap();
 
-        <span class="kw">let </span>id = flash.read_jedec_id().unwrap();
+        <span class="comment">// let id = flash.read_jedec_id().unwrap();
 
-        <span class="kw">let </span>flash_info = flash.get_device_info().unwrap();
-
-        <span class="macro">host::debug!</span>(<span class="string">&quot;FLASH: {:?}&quot;</span>, id);
+        </span><span class="kw">let </span>flash_info = flash.get_device_info().unwrap();
 
         <span class="comment">// EFI Setup:
         </span><span class="kw">let </span><span class="kw-2">mut </span>table = Tables {
@@ -786,10 +785,10 @@
 
         <span class="macro">host::debug!</span>(<span class="string">&quot;AF {:?}&quot;</span>, _efi_status.injection.air_flow);
 
-        gpio_config.led.led_check.toggle();
-        gpio_config.led.led_mil.toggle();
+        <span class="comment">// gpio_config.led.led_check.toggle();
+        // gpio_config.led.led_mil.toggle();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>sensors = SensorValues::new();
+        </span><span class="kw">let </span><span class="kw-2">mut </span>sensors = SensorValues::new();
 
         <span class="kw">let </span><span class="kw-2">mut </span>spi_lock = <span class="bool-val">false</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
@@ -1024,9 +1023,10 @@
         )
     }
 
-    <span class="attr">#[task(priority = <span class="number">8</span>, local = [analog_pins, adc]</span>, shared = [sensors])]
+    <span class="attr">#[task(priority = <span class="number">8</span>, local = [analog_pins, adc]</span>, shared = [sensors, efi_status])]
     <span class="kw">fn </span>sensors_callback(<span class="kw-2">mut </span>ctx: sensors_callback::Context) {
         <span class="kw">let </span><span class="kw-2">mut </span>sensors = ctx.shared.sensors;
+        <span class="kw">let </span><span class="kw-2">mut </span>engine_status = ctx.shared.efi_status;
         <span class="kw">let </span>adc_pins = ctx.local.analog_pins;
         <span class="kw">let </span>adc = ctx.local.adc;
 
@@ -1055,7 +1055,11 @@
                 get_sensor_raw(SensorTypes::BatteryVoltage, adc_pins, adc),
                 SensorTypes::CooltanTemp,
             );
-        })
+        });
+
+        (sensors, engine_status).lock(|sensors, engine_status| {
+            engine_status.sensors = <span class="kw-2">*</span>sensors;
+        });
     }
 
     <span class="comment">// prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs

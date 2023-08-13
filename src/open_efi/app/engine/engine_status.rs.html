@@ -60,7 +60,13 @@
 <a href="#60" id="60">60</a>
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
-</pre></div><pre class="rust"><code><span class="attr">#[allow(non_camel_case_types)]
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::engine::sensors::SensorValues;
+
+<span class="attr">#[allow(non_camel_case_types)]
 #[repr(u8)]
 #[derive(Debug)]
 </span><span class="kw">pub enum </span>__rpm_status {
@@ -100,10 +106,12 @@
     <span class="kw">pub </span>cycle_duration: f32,
     <span class="kw">pub </span>cycle_status: __rpm_status,
     <span class="kw">pub </span>rpm: i32,
+    <span class="kw">pub </span>sensors: SensorValues,
 }
 
 <span class="kw">pub fn </span>get_default_engine_status() -&gt; EngineStatus {
     <span class="kw">let </span>status = EngineStatus {
+        sensors: SensorValues::new(),
         injection: InjectionInfo {
             targetAFR: <span class="number">0.0</span>,
             injection_bank_1_time: <span class="number">0.0</span>,
