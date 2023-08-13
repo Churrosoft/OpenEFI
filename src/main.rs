@@ -1,11 +1,13 @@
+#![feature(exclusive_range_pattern)]
 #![feature(proc_macro_hygiene)]
+#![feature(int_roundings)]
+#![feature(is_some_and)]
+#![feature(stdsimd)]
+
 #![no_main]
 #![no_std]
-#![feature(stdsimd)]
-#![feature(int_roundings)]
-#![feature(exclusive_range_pattern)]
+
 #![allow(stable_features)]
-#![feature(is_some_and)]
 #![allow(unused_mut)]
 
 use panic_halt as _;
@@ -47,7 +49,6 @@ mod app {
         memory::tables::{SpiT, Tables},
         webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
-
     use crate::app::engine::pmic::{PMIC, PmicT};
     use crate::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
 
@@ -81,8 +82,6 @@ mod app {
         usb_web: WebUsb<UsbBusType>,
 
         // core:
-        // el implement de "shared_bus_resources" anda para el culo;
-        // asi que hago el lock a mano
         spi_lock: bool,
         crc: Crc32,
 
@@ -213,7 +212,7 @@ mod app {
                 gpio_config.spi_mosi,
             ),
             mode,
-            (3).MHz(),
+            (30).MHz(),
             &clocks,
         );
 
@@ -225,11 +224,9 @@ mod app {
 
         let mut flash = w25q::series25::Flash::init(spi_bus.acquire(), gpio_config.memory_cs).unwrap();
 
-        let id = flash.read_jedec_id().unwrap();
+        // let id = flash.read_jedec_id().unwrap();
 
         let flash_info = flash.get_device_info().unwrap();
-
-        host::debug!("FLASH: {:?}", id);
 
         // EFI Setup:
         let mut table = Tables {
@@ -253,8 +250,8 @@ mod app {
 
         host::debug!("AF {:?}", _efi_status.injection.air_flow);
 
-        gpio_config.led.led_check.toggle();
-        gpio_config.led.led_mil.toggle();
+        // gpio_config.led.led_check.toggle();
+        // gpio_config.led.led_mil.toggle();
 
         let mut sensors = SensorValues::new();
 
@@ -491,9 +488,10 @@ mod app {
         )
     }
 
-    #[task(priority = 8, local = [analog_pins, adc], shared = [sensors])]
+    #[task(priority = 8, local = [analog_pins, adc], shared = [sensors, efi_status])]
     fn sensors_callback(mut ctx: sensors_callback::Context) {
         let mut sensors = ctx.shared.sensors;
+        let mut engine_status = ctx.shared.efi_status;
         let adc_pins = ctx.local.analog_pins;
         let adc = ctx.local.adc;
 
@@ -522,7 +520,11 @@ mod app {
                 get_sensor_raw(SensorTypes::BatteryVoltage, adc_pins, adc),
                 SensorTypes::CooltanTemp,
             );
-        })
+        });
+
+        (sensors, engine_status).lock(|sensors, engine_status| {
+            engine_status.sensors = *sensors;
+        });
     }
 
     // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs

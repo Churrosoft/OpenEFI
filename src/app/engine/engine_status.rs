@@ -1,3 +1,5 @@
+use crate::app::engine::sensors::SensorValues;
+
 #[allow(non_camel_case_types)]
 #[repr(u8)]
 #[derive(Debug)]
@@ -38,10 +40,12 @@ pub struct EngineStatus {
     pub cycle_duration: f32,
     pub cycle_status: __rpm_status,
     pub rpm: i32,
+    pub sensors: SensorValues,
 }
 
 pub fn get_default_engine_status() -> EngineStatus {
     let status = EngineStatus {
+        sensors: SensorValues::new(),
         injection: InjectionInfo {
             targetAFR: 0.0,
             injection_bank_1_time: 0.0,

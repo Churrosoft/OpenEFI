@@ -75,6 +75,10 @@ impl SensorValues {
             SensorTypes::TPS => {
                 self.raw_tps = EMA_LP_ALPHA * (raw_value as f32)
                     + (1.0 - EMA_LP_ALPHA) * (self.raw_tps as f32);
+
+                // SDUBTUD: tan fácil iba a ser?
+                let result = (24.6914 * self.raw_tps - 11.11f32).clamp(0f32,100f32);
+                self.tps = result;
             }
             SensorTypes::BatteryVoltage => {
                 self.raw_batt = EMA_LP_ALPHA * (raw_value as f32)
