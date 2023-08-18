@@ -16,7 +16,7 @@ pub enum SensorTypes {
     BatteryVoltage,
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Copy)]
 pub struct SensorValues {
     pub map: f32,
     pub tps: f32,
@@ -36,7 +36,7 @@ impl SensorValues {
     pub fn new() -> SensorValues {
         SensorValues {
             map: 0.0f32,
-            tps: 0.0f32,
+            tps: 20.0f32,
             cooltan_temp: 45.69f32,
             air_temp: 0.0f32,
             batt: 13.42f32,
@@ -83,6 +83,8 @@ impl SensorValues {
             SensorTypes::BatteryVoltage => {
                 self.raw_batt = EMA_LP_ALPHA * (raw_value as f32)
                     + (1.0 - EMA_LP_ALPHA) * (self.raw_batt as f32);
+
+                self.batt = 14.2;
             }
         }
     }

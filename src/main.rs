@@ -194,7 +194,7 @@ mod app {
         let cdc_buff = ArrayVec::<u8, 128>::new();
 
         // EFI Related:
-        let mut _efi_cfg = get_default_efi_cfg();
+        let mut efi_cfg = get_default_efi_cfg();
         let mut _efi_status = get_default_engine_status();
 
         // SPI:
@@ -241,14 +241,21 @@ mod app {
             ase_intensity: None,
         };
 
+         efi_cfg.read(&mut flash, &flash_info, &mut crc);
+
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
         // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         _efi_status.rpm = 1500;
 
-        calculate_time_isr(&mut _efi_status, &_efi_cfg);
+        calculate_time_isr(&mut _efi_status, &efi_cfg,&mut table);
 
-        host::debug!("AF {:?}", _efi_status.injection.air_flow);
+        host::debug!("AirFlow {:?} g/s", _efi_status.injection.air_flow);
+        host::debug!("AF/r {:?}", _efi_status.injection.targetAFR);
+        host::debug!("Base Fuel {:?} cm3", _efi_status.injection.base_fuel);
+        host::debug!("Base Air {:?} cm3", _efi_status.injection.base_air);
+        host::debug!("Time {:?} mS", _efi_status.injection.injection_bank_1_time);
+
 
         // gpio_config.led.led_check.toggle();
         // gpio_config.led.led_mil.toggle();
@@ -286,7 +293,7 @@ mod app {
                 spi_lock,
 
                 // EFI Related
-                efi_cfg: _efi_cfg,
+                efi_cfg,
                 efi_status: _efi_status,
                 tables: table,
                 pmic,
@@ -518,8 +525,9 @@ mod app {
 
             sensors.update(
                 get_sensor_raw(SensorTypes::BatteryVoltage, adc_pins, adc),
-                SensorTypes::CooltanTemp,
+                SensorTypes::BatteryVoltage,
             );
+
         });
 
         (sensors, engine_status).lock(|sensors, engine_status| {

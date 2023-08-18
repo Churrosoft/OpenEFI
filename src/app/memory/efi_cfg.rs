@@ -10,7 +10,7 @@ use crate::app::memory::tables::FlashT;
 const ENGINE_CONFIG_MEMORY_ADDRESS: u32 = 0;
 
 impl EngineConfig {
-    pub fn save(&mut self, flash: &mut FlashT, flash_info: &mut FlashInfo, crc: &mut Crc32) {
+    pub fn save(&mut self, flash: &mut FlashT, flash_info: &FlashInfo, crc: &mut Crc32) {
         //TODO: ajustar tamaño del vector
         let mut output: Vec<u8, 800> = to_vec(&self).unwrap();
 
@@ -27,7 +27,7 @@ impl EngineConfig {
             flash.write_bytes(write_address, &mut output).unwrap();
         }
     }
-    pub fn read(&mut self, flash: &mut FlashT, flash_info: &mut FlashInfo, crc: &mut Crc32) {
+    pub fn read(&mut self, flash: &mut FlashT, flash_info: &FlashInfo, crc: &mut Crc32) {
         // TODO: tirar error en caso de que la palme el crc
 
         let mut read_buff: [u8; 800] = [0; 800];
@@ -45,7 +45,9 @@ impl EngineConfig {
         let memory_crc = u32::from_le_bytes(crc_buff);
 
         if memory_crc != calculated_crc {
-            host::debug!("Checksum config no coincide {:?}  {:?}", memory_crc,calculated_crc)
+            self.ready = true;
+            host::debug!("Checksum config no coincide {:?}  {:?}", memory_crc,calculated_crc);
+            return;
         }
 
         {

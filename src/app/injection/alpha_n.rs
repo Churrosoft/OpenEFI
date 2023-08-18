@@ -3,6 +3,7 @@
 use crate::app::engine::{
     efi_cfg::EngineConfig, engine_status::EngineStatus, get_engine_cycle_duration,
 };
+use crate::app::logging::host;
 use crate::app::memory::tables::{DataT, Tables};
 
 use super::injectors::fuel_mass_to_time;
@@ -59,10 +60,9 @@ pub fn get_ve(es: &EngineStatus, ve_table: Option<DataT>) -> f32 {
         return 0.0;
     }
 
-    //data[0].into_iter().position(|x| x <= 307200)
     let table = ve_table.unwrap();
-    let rpm_index = table[0].into_iter().position(|x| x <= es.rpm);
-    let load_index = table.into_iter().position(|y| y[0] <= es.sensors.tps as i32);
+    let rpm_index = table[0].into_iter().position(|x| x >= (es.rpm * 100)).unwrap_or(1).clamp(1, 17);
+    let load_index = table.into_iter().rposition(|y| y[0] >= es.sensors.tps as i32).unwrap_or(1).clamp(1, 17);
 
-    return table[load_index.unwrap_or(0)][rpm_index.unwrap_or(0)] as f32 / 100.0;
+    return table[load_index][rpm_index] as f32 / 100.0;
 }

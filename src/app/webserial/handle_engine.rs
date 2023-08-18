@@ -33,7 +33,7 @@ pub fn handler(
     match command.command & 0b00001111 {
         // read engine cfg:
         0x01 => {
-            host::trace!("read engine cfg");
+            // host::trace!("read engine cfg");
             result = serde_json_core::to_slice(&cfg, &mut json_payload);
         }
         0x02 =>{

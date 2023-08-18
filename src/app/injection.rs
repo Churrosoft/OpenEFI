@@ -51,7 +51,7 @@ pub fn injection_setup(table: &mut Tables, flash: &mut FlashT, fi: &FlashInfo, c
     }
 }
 
-pub fn calculate_time_isr(es: &mut EngineStatus, ecfg: &EngineConfig) {
+pub fn calculate_time_isr(es: &mut EngineStatus, ecfg: &EngineConfig,tables: &mut Tables) {
     let mut bank_a_time: f32 = 0.0;
     {
         // desactivar inyeccion mientras se calcula el tiempo nuevo
@@ -60,10 +60,10 @@ pub fn calculate_time_isr(es: &mut EngineStatus, ecfg: &EngineConfig) {
 
     // TODO: revisar RPM::status para que en SPIN_UP/CRANK tengan tiempos fijos desde la memoria flash
 
-    bank_a_time += alpha_n::calculate_injection_fuel(es, &ecfg);
+    bank_a_time += alpha_n::calculate_injection_fuel(es, &ecfg, tables);
     bank_a_time += alpha_n::calculate_correction_time();
     bank_a_time += injectors::get_base_time(&ecfg.injection.injector);
-    bank_a_time += injectors::get_battery_correction(&bank_a_time,&ecfg.injection.injector);
+    bank_a_time += injectors::get_battery_correction(&bank_a_time, &ecfg.injection.injector, &es.sensors);
     bank_a_time += injectors::get_wall_wetting_correction();
     bank_a_time += injectors::get_pressure_correction();
 

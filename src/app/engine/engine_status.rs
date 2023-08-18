@@ -15,6 +15,7 @@ pub enum __rpm_status {
 #[derive(Debug)]
 pub enum InjectionStatus {
     FuelCutoff = 0,
+    FuelIdle,
     FullLoad,
     FuelAcc,
 }
