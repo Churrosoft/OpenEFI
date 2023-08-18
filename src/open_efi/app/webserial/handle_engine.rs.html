@@ -115,8 +115,8 @@
     <span class="kw">match </span>command.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// read engine cfg:
         </span><span class="number">0x01 </span>=&gt; {
-            <span class="macro">host::trace!</span>(<span class="string">&quot;read engine cfg&quot;</span>);
-            result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>cfg, <span class="kw-2">&amp;mut </span>json_payload);
+            <span class="comment">// host::trace!(&quot;read engine cfg&quot;);
+            </span>result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>cfg, <span class="kw-2">&amp;mut </span>json_payload);
         }
         <span class="number">0x02 </span>=&gt;{
             <span class="comment">//TODO: se puede controlar el caso de que falle la grabacion

@@ -533,6 +533,14 @@
 <a href="#533" id="533">533</a>
 <a href="#534" id="534">534</a>
 <a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
 </pre></div><pre class="rust"><code><span class="attr">#![feature(exclusive_range_pattern)]
 #![feature(proc_macro_hygiene)]
 #![feature(int_roundings)]
@@ -729,7 +737,7 @@
         <span class="kw">let </span>cdc_buff = ArrayVec::&lt;u8, <span class="number">128</span>&gt;::new();
 
         <span class="comment">// EFI Related:
-        </span><span class="kw">let </span><span class="kw-2">mut </span>_efi_cfg = get_default_efi_cfg();
+        </span><span class="kw">let </span><span class="kw-2">mut </span>efi_cfg = get_default_efi_cfg();
         <span class="kw">let </span><span class="kw-2">mut </span>_efi_status = get_default_engine_status();
 
         <span class="comment">// SPI:
@@ -776,14 +784,21 @@
             ase_intensity: <span class="prelude-val">None</span>,
         };
 
+         efi_cfg.read(<span class="kw-2">&amp;mut </span>flash, <span class="kw-2">&amp;</span>flash_info, <span class="kw-2">&amp;mut </span>crc);
+
         injection_setup(<span class="kw-2">&amp;mut </span>table, <span class="kw-2">&amp;mut </span>flash, <span class="kw-2">&amp;</span>flash_info, <span class="kw-2">&amp;mut </span>crc);
 
         <span class="comment">// REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         </span>_efi_status.rpm = <span class="number">1500</span>;
 
-        calculate_time_isr(<span class="kw-2">&amp;mut </span>_efi_status, <span class="kw-2">&amp;</span>_efi_cfg);
+        calculate_time_isr(<span class="kw-2">&amp;mut </span>_efi_status, <span class="kw-2">&amp;</span>efi_cfg,<span class="kw-2">&amp;mut </span>table);
 
-        <span class="macro">host::debug!</span>(<span class="string">&quot;AF {:?}&quot;</span>, _efi_status.injection.air_flow);
+        <span class="macro">host::debug!</span>(<span class="string">&quot;AirFlow {:?} g/s&quot;</span>, _efi_status.injection.air_flow);
+        <span class="macro">host::debug!</span>(<span class="string">&quot;AF/r {:?}&quot;</span>, _efi_status.injection.targetAFR);
+        <span class="macro">host::debug!</span>(<span class="string">&quot;Base Fuel {:?} cm3&quot;</span>, _efi_status.injection.base_fuel);
+        <span class="macro">host::debug!</span>(<span class="string">&quot;Base Air {:?} cm3&quot;</span>, _efi_status.injection.base_air);
+        <span class="macro">host::debug!</span>(<span class="string">&quot;Time {:?} mS&quot;</span>, _efi_status.injection.injection_bank_1_time);
+
 
         <span class="comment">// gpio_config.led.led_check.toggle();
         // gpio_config.led.led_mil.toggle();
@@ -821,7 +836,7 @@
                 spi_lock,
 
                 <span class="comment">// EFI Related
-                </span>efi_cfg: _efi_cfg,
+                </span>efi_cfg,
                 efi_status: _efi_status,
                 tables: table,
                 pmic,
@@ -1053,8 +1068,9 @@
 
             sensors.update(
                 get_sensor_raw(SensorTypes::BatteryVoltage, adc_pins, adc),
-                SensorTypes::CooltanTemp,
+                SensorTypes::BatteryVoltage,
             );
+
         });
 
         (sensors, engine_status).lock(|sensors, engine_status| {

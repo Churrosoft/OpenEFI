@@ -71,6 +71,7 @@
 </span><span class="kw">use </span><span class="kw">crate</span>::app::engine::{
     efi_cfg::EngineConfig, engine_status::EngineStatus, get_engine_cycle_duration,
 };
+<span class="kw">use </span><span class="kw">crate</span>::app::logging::host;
 <span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::{DataT, Tables};
 
 <span class="kw">use </span><span class="kw">super</span>::injectors::fuel_mass_to_time;
@@ -127,11 +128,10 @@
         <span class="kw">return </span><span class="number">0.0</span>;
     }
 
-    <span class="comment">//data[0].into_iter().position(|x| x &lt;= 307200)
-    </span><span class="kw">let </span>table = ve_table.unwrap();
-    <span class="kw">let </span>rpm_index = table[<span class="number">0</span>].into_iter().position(|x| x &lt;= es.rpm);
-    <span class="kw">let </span>load_index = table.into_iter().position(|y| y[<span class="number">0</span>] &lt;= es.sensors.tps <span class="kw">as </span>i32);
+    <span class="kw">let </span>table = ve_table.unwrap();
+    <span class="kw">let </span>rpm_index = table[<span class="number">0</span>].into_iter().position(|x| x &gt;= (es.rpm * <span class="number">100</span>)).unwrap_or(<span class="number">1</span>).clamp(<span class="number">1</span>, <span class="number">17</span>);
+    <span class="kw">let </span>load_index = table.into_iter().rposition(|y| y[<span class="number">0</span>] &gt;= es.sensors.tps <span class="kw">as </span>i32).unwrap_or(<span class="number">1</span>).clamp(<span class="number">1</span>, <span class="number">17</span>);
 
-    <span class="kw">return </span>table[load_index.unwrap_or(<span class="number">0</span>)][rpm_index.unwrap_or(<span class="number">0</span>)] <span class="kw">as </span>f32 / <span class="number">100.0</span>;
+    <span class="kw">return </span>table[load_index][rpm_index] <span class="kw">as </span>f32 / <span class="number">100.0</span>;
 }
 </code></pre></div></section></main></body></html>

@@ -103,6 +103,8 @@
 <a href="#103" id="103">103</a>
 <a href="#104" id="104">104</a>
 <a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::gpio_legacy::ADCMapping;
 <span class="kw">use </span>micromath::F32Ext;
 
@@ -121,7 +123,7 @@
     BatteryVoltage,
 }
 
-<span class="attr">#[derive(Debug)]
+<span class="attr">#[derive(Debug,Clone,Copy)]
 </span><span class="kw">pub struct </span>SensorValues {
     <span class="kw">pub </span>map: f32,
     <span class="kw">pub </span>tps: f32,
@@ -141,7 +143,7 @@
     <span class="kw">pub fn </span>new() -&gt; SensorValues {
         SensorValues {
             map: <span class="number">0.0f32</span>,
-            tps: <span class="number">0.0f32</span>,
+            tps: <span class="number">20.0f32</span>,
             cooltan_temp: <span class="number">45.69f32</span>,
             air_temp: <span class="number">0.0f32</span>,
             batt: <span class="number">13.42f32</span>,
@@ -188,6 +190,8 @@
             SensorTypes::BatteryVoltage =&gt; {
                 <span class="self">self</span>.raw_batt = EMA_LP_ALPHA * (raw_value <span class="kw">as </span>f32)
                     + (<span class="number">1.0 </span>- EMA_LP_ALPHA) * (<span class="self">self</span>.raw_batt <span class="kw">as </span>f32);
+
+                <span class="self">self</span>.batt = <span class="number">14.2</span>;
             }
         }
     }

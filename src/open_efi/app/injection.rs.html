@@ -131,7 +131,7 @@
     }
 }
 
-<span class="kw">pub fn </span>calculate_time_isr(es: <span class="kw-2">&amp;mut </span>EngineStatus, ecfg: <span class="kw-2">&amp;</span>EngineConfig) {
+<span class="kw">pub fn </span>calculate_time_isr(es: <span class="kw-2">&amp;mut </span>EngineStatus, ecfg: <span class="kw-2">&amp;</span>EngineConfig,tables: <span class="kw-2">&amp;mut </span>Tables) {
     <span class="kw">let </span><span class="kw-2">mut </span>bank_a_time: f32 = <span class="number">0.0</span>;
     {
         <span class="comment">// desactivar inyeccion mientras se calcula el tiempo nuevo
@@ -140,10 +140,10 @@
 
     <span class="comment">// TODO: revisar RPM::status para que en SPIN_UP/CRANK tengan tiempos fijos desde la memoria flash
 
-    </span>bank_a_time += alpha_n::calculate_injection_fuel(es, <span class="kw-2">&amp;</span>ecfg);
+    </span>bank_a_time += alpha_n::calculate_injection_fuel(es, <span class="kw-2">&amp;</span>ecfg, tables);
     bank_a_time += alpha_n::calculate_correction_time();
     bank_a_time += injectors::get_base_time(<span class="kw-2">&amp;</span>ecfg.injection.injector);
-    bank_a_time += injectors::get_battery_correction(<span class="kw-2">&amp;</span>bank_a_time,<span class="kw-2">&amp;</span>ecfg.injection.injector);
+    bank_a_time += injectors::get_battery_correction(<span class="kw-2">&amp;</span>bank_a_time, <span class="kw-2">&amp;</span>ecfg.injection.injector, <span class="kw-2">&amp;</span>es.sensors);
     bank_a_time += injectors::get_wall_wetting_correction();
     bank_a_time += injectors::get_pressure_correction();
 
