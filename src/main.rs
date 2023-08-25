@@ -15,42 +15,48 @@ use panic_halt as _;
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5, TIM7, TIM8_CC])]
 mod app {
     use arrayvec::ArrayVec;
-    use embedded_hal::spi::{Mode, Phase, Polarity};
+    use cortex_m::delay::Delay;
+    use embedded_hal::spi::{ Mode, Phase, Polarity };
     use stm32f4xx_hal::{
-        adc::{Adc, config::AdcConfig},
+        adc::{ Adc, config::AdcConfig },
         crc32,
         crc32::Crc32,
-        gpio::{Edge, Input},
+        gpio::{ Edge, Input },
         otg_fs,
-        otg_fs::{USB, UsbBusType},
-        pac::{ADC1, TIM13, TIM2, TIM3},
+        otg_fs::{ USB, UsbBusType },
+        pac::{ ADC1, TIM13, TIM2, TIM3 ,TIM4},
         prelude::*,
         spi::*,
-        timer::{self, Event},
+        timer::{ self, Event },
     };
-    use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
+    use usb_device::{ bus::UsbBusAllocator, device::UsbDevice };
     use usbd_serial::SerialPort;
-    use usbd_webusb::{url_scheme, WebUsb};
+    use usbd_webusb::{ url_scheme, WebUsb };
     use w25q::series25::FlashInfo;
 
     use logging::host;
 
     use crate::app::{
         engine::{
-            efi_cfg::{EngineConfig, get_default_efi_cfg},
-            engine_status::{EngineStatus, get_default_engine_status},
-            sensors::{get_sensor_raw, SensorTypes, SensorValues},
+            efi_cfg::{ EngineConfig, get_default_efi_cfg },
+            engine_status::{ EngineStatus, get_default_engine_status },
+            sensors::{ get_sensor_raw, SensorTypes, SensorValues },
         },
         gpio_legacy::{
-            ADCMapping, AuxIoMapping, IgnitionGpioMapping, init_gpio, InjectionGpioMapping,
-            RelayMapping, StepperMapping,
+            ADCMapping,
+            AuxIoMapping,
+            IgnitionGpioMapping,
+            init_gpio,
+            InjectionGpioMapping,
+            RelayMapping,
+            StepperMapping,
         },
-        injection::{calculate_time_isr, injection_setup},
-        memory::tables::{SpiT, Tables},
-        webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
+        injection::{ calculate_time_isr, injection_setup },
+        memory::tables::{ SpiT, Tables },
+        webserial::{ handle_tables, send_message, SerialMessage, SerialStatus },
     };
-    use crate::app::engine::pmic::{PMIC, PmicT};
-    use crate::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
+    use crate::app::engine::pmic::{ PMIC, PmicT };
+    use crate::app::webserial::{ handle_engine, handle_pmic, handle_realtime_data };
 
     pub mod debug;
     pub mod engine;
@@ -65,10 +71,12 @@ mod app {
     #[shared]
     struct Shared {
         // Timers:
-        timer13: timer::DelayUs<TIM13>,
-        timer: timer::CounterMs<TIM2>,
+        delay: Delay,
+        timer: timer::CounterUs<TIM2>,
         timer3: timer::CounterUs<TIM3>,
-
+        timer4: timer::CounterUs<TIM4>,
+        timer13: timer::DelayUs<TIM13>,
+     
         // Core I/O
         led: gpio_legacy::LedGpioMapping,
         inj_pins: InjectionGpioMapping,
@@ -104,14 +112,18 @@ mod app {
         ckp: stm32f4xx_hal::gpio::PC6<Input>,
         adc: Adc<ADC1>,
         analog_pins: ADCMapping,
-    }
 
+        total_rpm: u128,
+        ckp_ticks: [u32; 128],
+        ckp_index: usize,
+    }
 
     #[init(local = [USB_BUS: Option < UsbBusAllocator < UsbBusType >> = None])]
     fn init(mut ctx: init::Context) -> (Shared, Local, init::Monotonics) {
         let mut dp = ctx.device;
 
         ctx.core.DWT.enable_cycle_counter();
+
         // TODO: Disable this in release builds
         host::debug!("Hello :)");
 
@@ -139,18 +151,19 @@ mod app {
 
         // Configure and obtain handle for delay abstraction
         let rcc = dp.RCC.constrain();
-        let clocks = rcc
-            .cfgr
-            .use_hse((25).MHz())
-            .sysclk((120).MHz())
-            .require_pll48clk()
-            .freeze();
+        let clocks = rcc.cfgr.use_hse((25).MHz()).sysclk((120).MHz()).require_pll48clk().freeze();
 
-        let mut timer: timer::CounterMs<TIM2> = dp.TIM2.counter_ms(&clocks);
+        // NOTE: para delays debugs/etc
+        let mut delay = cortex_m::delay::Delay::new(ctx.core.SYST, 120000000);
+
+        // timer Tiempo inyeccion
+        let mut timer: timer::CounterUs<TIM2> = dp.TIM2.counter_us(&clocks);
+        // timer tiempo de ignicion
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
+        // timer CPWM
+        let mut timer4: timer::CounterUs<TIM4> = dp.TIM4.counter_us(&clocks);
 
-
-        // NOTE: para task de sensores
+        // timer uso generico
         let mut timer13: timer::DelayUs<TIM13> = dp.TIM13.delay_us(&clocks);
 
         //  TIM5, TIM7, TIM4
@@ -181,12 +194,13 @@ mod app {
             *usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
         }
 
-        let usb_cdc =
-            unsafe { SerialPort::new_with_store(usb_bus.as_ref().unwrap(), __USB_RX, __USB_TX) };
+        let usb_cdc = unsafe {
+            SerialPort::new_with_store(usb_bus.as_ref().unwrap(), __USB_RX, __USB_TX)
+        };
         let usb_web = WebUsb::new(
             usb_bus.as_ref().unwrap(),
             url_scheme::HTTPS,
-            "tuner.openefi.tech",
+            "tuner.openefi.tech"
         );
 
         let usb_dev = webserial::new_device(usb_bus.as_ref().unwrap());
@@ -206,23 +220,21 @@ mod app {
 
         let spi2 = Spi::new(
             dp.SPI2,
-            (
-                gpio_config.spi_sck,
-                gpio_config.spi_miso,
-                gpio_config.spi_mosi,
-            ),
+            (gpio_config.spi_sck, gpio_config.spi_miso, gpio_config.spi_mosi),
             mode,
             (30).MHz(),
-            &clocks,
+            &clocks
         );
 
-        let spi_bus = shared_bus_rtic::new!(spi2, SpiT );
+        let spi_bus = shared_bus_rtic::new!(spi2, SpiT);
         let spi_pmic = spi_bus.acquire();
 
         // CRC32:
         let mut crc = crc32::Crc32::new(dp.CRC);
 
-        let mut flash = w25q::series25::Flash::init(spi_bus.acquire(), gpio_config.memory_cs).unwrap();
+        let mut flash = w25q::series25::Flash
+            ::init(spi_bus.acquire(), gpio_config.memory_cs)
+            .unwrap();
 
         // let id = flash.read_jedec_id().unwrap();
 
@@ -241,21 +253,20 @@ mod app {
             ase_intensity: None,
         };
 
-         efi_cfg.read(&mut flash, &flash_info, &mut crc);
+        efi_cfg.read(&mut flash, &flash_info, &mut crc);
 
         injection_setup(&mut table, &mut flash, &flash_info, &mut crc);
 
         // REMOVE: solo lo estoy hardcodeando aca para probar el AlphaN
         _efi_status.rpm = 1500;
 
-        calculate_time_isr(&mut _efi_status, &efi_cfg,&mut table);
+        calculate_time_isr(&mut _efi_status, &efi_cfg, &mut table);
 
         host::debug!("AirFlow {:?} g/s", _efi_status.injection.air_flow);
         host::debug!("AF/r {:?}", _efi_status.injection.targetAFR);
         host::debug!("Base Fuel {:?} cm3", _efi_status.injection.base_fuel);
         host::debug!("Base Air {:?} cm3", _efi_status.injection.base_air);
         host::debug!("Time {:?} mS", _efi_status.injection.injection_bank_1_time);
-
 
         // gpio_config.led.led_check.toggle();
         // gpio_config.led.led_mil.toggle();
@@ -265,12 +276,22 @@ mod app {
         let mut spi_lock = false;
         let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
+
+        // RPM & sinc calc:
+
+        let mut total_rpm = 0;
+
+        let mut ckp_ticks: [u32; 128] = [0; 128];
+        let mut ckp_index = 0;
+
         return (
             // Initialization of shared resources
             Shared {
                 // Timers:
+                delay,
                 timer,
                 timer3,
+                timer4,
                 timer13,
 
                 // USB
@@ -305,6 +326,9 @@ mod app {
                 cdc_input_buffer: cdc_buff,
                 adc,
                 analog_pins: gpio_config.adc,
+                total_rpm,
+                ckp_ticks,
+                ckp_index,
             },
             // Move the monotonic timer to the RTIC run-time, this enables
             // scheduling
@@ -323,9 +347,7 @@ mod app {
     //TODO: reciclar para encendido
     #[task(binds = TIM2, priority = 1, local = [], shared = [timer, timer3, led])]
     fn timer2_exp(mut ctx: timer2_exp::Context) {
-        ctx.shared
-            .timer
-            .lock(|tim| tim.clear_interrupt(Event::Update));
+        ctx.shared.timer.lock(|tim| tim.clear_interrupt(Event::Update));
 
         ctx.shared.led.lock(|l| l.led_0.toggle());
     }
@@ -342,9 +364,9 @@ mod app {
 
     // EXTI9_5_IRQn para los pines ckp/cmp
     #[task(
-    binds = EXTI9_5,
-    local = [ckp],
-    shared = [led, efi_status, flash_info, efi_cfg, timer, timer3]
+        binds = EXTI9_5,
+        local = [ckp,total_rpm,ckp_ticks,ckp_index,],
+        shared = [led, efi_status, flash_info, efi_cfg, timer, timer3,timer4]
     )]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
         ctx.shared.efi_status.lock(|es| {
@@ -354,22 +376,42 @@ mod app {
         let efi_cfg = ctx.shared.efi_cfg;
         let efi_status = ctx.shared.efi_status;
 
+        // local:
+        let mut total_rpm = ctx.local.total_rpm;
+        let mut ckp_ticks = ctx.local.ckp_ticks;
+        let mut ckp_index = ctx.local.ckp_index;
+
+        let mut now_tick = 0;
+
         // calculo de RPM && led
         (efi_cfg, efi_status, ctx.shared.led, ctx.shared.timer3).lock(
             |efi_cfg, efi_status, led, timer3| {
-                if efi_status.cycle_tick
-                    >= efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
+                if
+                    efi_status.cycle_tick >=
+                    efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
                 {
                     led.led_2.set_low();
                     // FIXME: por ahora solo prendo el led una vez por vuelta, luego lo hago funcionar con el primer cilindro
                     timer3.start((50000).micros()).unwrap();
                     efi_status.cycle_tick = 0;
+
+                    *total_rpm += 1;
                 }
-            },
+            }
         );
 
-        cpwm_callback::spawn().unwrap();
+        ctx.shared.timer4.lock(|t4| {now_tick = t4.now().ticks();});
 
+        ckp_ticks[*ckp_index] = now_tick;
+
+        cpwm_callback::spawn(*total_rpm).unwrap();
+
+        if *ckp_index < 127 {
+            *ckp_index = 0;
+            ckp_ticks.fill(0);
+        }else{
+            *ckp_index += 1;
+        }
         // Obtain access to the peripheral and Clear Interrupt Pending Flag
         ctx.local.ckp.clear_interrupt_pending_bit();
     }
@@ -380,7 +422,7 @@ mod app {
 
         ctx.shared.usb_cdc.lock(|cdc| {
             // USB dev poll only in the interrupt handler
-            (ctx.shared.usb_web, ).lock(|web| {
+            (ctx.shared.usb_web,).lock(|web| {
                 if device.poll(&mut [web, cdc]) {
                     let mut buf = [0u8; 64];
 
@@ -391,7 +433,7 @@ mod app {
                                 ctx.local.cdc_input_buffer.push(buf[i]);
                                 if ctx.local.cdc_input_buffer.is_full() {
                                     webserial::process_command(
-                                        ctx.local.cdc_input_buffer.take().into_inner().unwrap(),
+                                        ctx.local.cdc_input_buffer.take().into_inner().unwrap()
                                     );
 
                                     ctx.local.cdc_input_buffer.clear();
@@ -413,7 +455,7 @@ mod app {
             ctx: send_message::Context,
             status: SerialStatus,
             code: u8,
-            mut message: SerialMessage,
+            mut message: SerialMessage
         );
     }
 
@@ -452,15 +494,20 @@ mod app {
         let efi_cfg = ctx.shared.efi_cfg;
         let crc = ctx.shared.crc;
 
-        (spi_lock, flash, flash_info, efi_cfg, crc).lock(|spi_lock, flash, flash_info, efi_cfg, crc| {
-            *spi_lock = true;
-            handle_engine::handler(flash, flash_info, crc, efi_cfg, serial_cmd);
-            *spi_lock = false;
-        })
+        (spi_lock, flash, flash_info, efi_cfg, crc).lock(
+            |spi_lock, flash, flash_info, efi_cfg, crc| {
+                *spi_lock = true;
+                handle_engine::handler(flash, flash_info, crc, efi_cfg, serial_cmd);
+                *spi_lock = false;
+            }
+        )
     }
 
     #[task(priority = 2, shared = [efi_status, sensors, crc])]
-    fn realtime_data_cdc_callback(ctx: realtime_data_cdc_callback::Context, serial_cmd: SerialMessage) {
+    fn realtime_data_cdc_callback(
+        ctx: realtime_data_cdc_callback::Context,
+        serial_cmd: SerialMessage
+    ) {
         let efi_status = ctx.shared.efi_status;
         let sensors = ctx.shared.sensors;
         let crc = ctx.shared.crc;
@@ -470,7 +517,10 @@ mod app {
         })
     }
 
-    #[task(priority = 2, shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13, flash])]
+    #[task(
+        priority = 2,
+        shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13, flash]
+    )]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         let inj_pins = ctx.shared.inj_pins;
         let ign_pins = ctx.shared.ign_pins;
@@ -480,18 +530,20 @@ mod app {
         let flash = ctx.shared.flash;
 
         (inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash).lock(
-            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash| match demo_mode {
-                0x0 => debug::spark_demo(ign_pins, timer13),
-                0x1 => debug::injector_demo(inj_pins, timer13),
-                0x2 => debug::external_idle_demo(stepper_pins, timer13),
-                0x3 => debug::relay_demo(relay_pins, timer13),
-                0x4 => {
-                    host::debug!("Init clear flash");
-                    let _ = flash.erase_all();
-                    host::debug!("clear flash done");
+            |inj_pins, ign_pins, stepper_pins, relay_pins, timer13, flash| {
+                match demo_mode {
+                    0x0 => debug::spark_demo(ign_pins, timer13),
+                    0x1 => debug::injector_demo(inj_pins, timer13),
+                    0x2 => debug::external_idle_demo(stepper_pins, timer13),
+                    0x3 => debug::relay_demo(relay_pins, timer13),
+                    0x4 => {
+                        host::debug!("Init clear flash");
+                        let _ = flash.erase_all();
+                        host::debug!("clear flash done");
+                    }
+                    0x5..=u8::MAX => debug::external_idle_demo(stepper_pins, timer13),
                 }
-                0x5..=u8::MAX => debug::external_idle_demo(stepper_pins, timer13),
-            },
+            }
         )
     }
 
@@ -505,29 +557,22 @@ mod app {
         sensors.lock(|sensors| {
             sensors.update(
                 get_sensor_raw(SensorTypes::AirTemp, adc_pins, adc),
-                SensorTypes::AirTemp,
+                SensorTypes::AirTemp
             );
 
-            sensors.update(
-                get_sensor_raw(SensorTypes::TPS, adc_pins, adc),
-                SensorTypes::TPS,
-            );
+            sensors.update(get_sensor_raw(SensorTypes::TPS, adc_pins, adc), SensorTypes::TPS);
 
-            sensors.update(
-                get_sensor_raw(SensorTypes::MAP, adc_pins, adc),
-                SensorTypes::MAP,
-            );
+            sensors.update(get_sensor_raw(SensorTypes::MAP, adc_pins, adc), SensorTypes::MAP);
 
             sensors.update(
                 get_sensor_raw(SensorTypes::CooltanTemp, adc_pins, adc),
-                SensorTypes::CooltanTemp,
+                SensorTypes::CooltanTemp
             );
 
             sensors.update(
                 get_sensor_raw(SensorTypes::BatteryVoltage, adc_pins, adc),
-                SensorTypes::BatteryVoltage,
+                SensorTypes::BatteryVoltage
             );
-
         });
 
         (sensors, engine_status).lock(|sensors, engine_status| {
@@ -537,7 +582,11 @@ mod app {
 
     // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
     #[task(priority = 10, shared = [efi_status, flash_info, efi_cfg, timer, timer3])]
-    fn cpwm_callback(mut _ctx: cpwm_callback::Context) {
+    fn cpwm_callback(mut _ctx: cpwm_callback::Context,total_rpm :u128) {
+        // skip first 30 rotations
+        if total_rpm < 30 {
+
+        }
         // TODO: cpwm if;
     }
 }
