@@ -20,9 +20,12 @@ la plataforma se ejecuta desde un STM32F103, conocido como "bluepill", para faci
 ### Como generar los binarios:
 se necesitan las siguientes herramientas:
 
-    make
-    arm-none-eabi-gcc 
-    arm-none-eabi-newlib
+    GNU Arm Embedded Toolchain
+    sudo dnf install gcc systemd-devel ncurses-devel ncurses-compat-libs
+    rustup override set nightly
+    rustup target add thumbv7em-none-eabihf
+    rustup component add llvm-tools-preview arm-none-eabi-newlib
+    cargo install cargo-binutils cargo-embed cargo-flash cargo-expand
 
 pasos para grabar el firmware:
 

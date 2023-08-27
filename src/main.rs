@@ -12,35 +12,35 @@
 
 use panic_halt as _;
 
-#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM5, TIM7, TIM8_CC])]
+#[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM4, TIM7, TIM8_CC])]
 mod app {
     use arrayvec::ArrayVec;
     use cortex_m::delay::Delay;
-    use embedded_hal::spi::{ Mode, Phase, Polarity };
+    use embedded_hal::spi::{Mode, Phase, Polarity};
     use stm32f4xx_hal::{
-        adc::{ Adc, config::AdcConfig },
+        adc::{Adc, config::AdcConfig},
         crc32,
         crc32::Crc32,
-        gpio::{ Edge, Input },
+        gpio::{Edge, Input},
         otg_fs,
-        otg_fs::{ USB, UsbBusType },
-        pac::{ ADC1, TIM13, TIM2, TIM3 ,TIM4},
+        otg_fs::{USB, UsbBusType},
+        pac::{ADC1, TIM13, TIM2, TIM3, TIM5},
         prelude::*,
         spi::*,
-        timer::{ self, Event },
+        timer::{self, Event},
     };
-    use usb_device::{ bus::UsbBusAllocator, device::UsbDevice };
+    use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
     use usbd_serial::SerialPort;
-    use usbd_webusb::{ url_scheme, WebUsb };
+    use usbd_webusb::{url_scheme, WebUsb};
     use w25q::series25::FlashInfo;
 
     use logging::host;
 
     use crate::app::{
         engine::{
-            efi_cfg::{ EngineConfig, get_default_efi_cfg },
-            engine_status::{ EngineStatus, get_default_engine_status },
-            sensors::{ get_sensor_raw, SensorTypes, SensorValues },
+            efi_cfg::{EngineConfig, get_default_efi_cfg},
+            engine_status::{EngineStatus, get_default_engine_status},
+            sensors::{get_sensor_raw, SensorTypes, SensorValues},
         },
         gpio_legacy::{
             ADCMapping,
@@ -51,12 +51,13 @@ mod app {
             RelayMapping,
             StepperMapping,
         },
-        injection::{ calculate_time_isr, injection_setup },
-        memory::tables::{ SpiT, Tables },
-        webserial::{ handle_tables, send_message, SerialMessage, SerialStatus },
+        injection::{calculate_time_isr, injection_setup},
+        memory::tables::{SpiT, Tables},
+        webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
     };
-    use crate::app::engine::pmic::{ PMIC, PmicT };
-    use crate::app::webserial::{ handle_engine, handle_pmic, handle_realtime_data };
+    use crate::app::engine::efi_cfg::VRSensor;
+    use crate::app::engine::pmic::{PMIC, PmicT};
+    use crate::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
 
     pub mod debug;
     pub mod engine;
@@ -74,9 +75,9 @@ mod app {
         delay: Delay,
         timer: timer::CounterUs<TIM2>,
         timer3: timer::CounterUs<TIM3>,
-        timer4: timer::CounterUs<TIM4>,
+        timer4: timer::CounterUs<TIM5>,
         timer13: timer::DelayUs<TIM13>,
-     
+
         // Core I/O
         led: gpio_legacy::LedGpioMapping,
         inj_pins: InjectionGpioMapping,
@@ -113,9 +114,25 @@ mod app {
         adc: Adc<ADC1>,
         analog_pins: ADCMapping,
 
-        total_rpm: u128,
+        start_revolution: u128,
         ckp_ticks: [u32; 128],
         ckp_index: usize,
+        ckp_last_tick: u32,
+        ckp_avg_time: u32,
+
+        // TODO: todo esto tendria que ir en EngineStatus
+        // NEWWW
+        ckp_current_time: u32,
+        ckp_current_gap: u32,
+        ckp_target_gap: u32,
+        ckp_is_missing_tooth: bool,
+        ckp_tooth_last_minus_one_tooth_time: u32,
+        ckp_tooth_last_time: u32,
+        ckp_tooth_current_count: u32,
+        ckp_tooth_one_time: u32,
+        ckp_tooth_one_minus_one_time: u32,
+        ckp_has_sync: bool,
+        ckp_sync_loss_counter: u128,
     }
 
     #[init(local = [USB_BUS: Option < UsbBusAllocator < UsbBusType >> = None])]
@@ -125,7 +142,7 @@ mod app {
         ctx.core.DWT.enable_cycle_counter();
 
         // TODO: Disable this in release builds
-        host::debug!("Hello :)");
+        host::debug!("Hello v1 :)");
 
         let gpio_a = dp.GPIOA.split();
         let gpio_b = dp.GPIOB.split();
@@ -144,10 +161,9 @@ mod app {
         // configure CKP/CMP Pin for Interrupts
         let mut ckp = gpio_config.ckp;
         let mut syscfg = dp.SYSCFG.constrain();
-
+        host::debug!("init gpio");
         ckp.make_interrupt_source(&mut syscfg);
-        ckp.trigger_on_edge(&mut dp.EXTI, Edge::Rising);
-        ckp.enable_interrupt(&mut dp.EXTI);
+        ckp.trigger_on_edge(&mut dp.EXTI, Edge::Falling);
 
         // Configure and obtain handle for delay abstraction
         let rcc = dp.RCC.constrain();
@@ -161,20 +177,21 @@ mod app {
         // timer tiempo de ignicion
         let mut timer3: timer::CounterUs<TIM3> = dp.TIM3.counter_us(&clocks);
         // timer CPWM
-        let mut timer4: timer::CounterUs<TIM4> = dp.TIM4.counter_us(&clocks);
+        let mut timer4: timer::CounterUs<TIM5> = dp.TIM5.counter_us(&clocks);
 
         // timer uso generico
         let mut timer13: timer::DelayUs<TIM13> = dp.TIM13.delay_us(&clocks);
 
         //  TIM5, TIM7, TIM4
-
+        host::debug!("init timers");
         timer.start((150).millis()).unwrap();
 
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
         timer3.listen(Event::Update);
         timer13.listen(Event::Update);
-
+        // timer4.start((70).minutes()).unwrap();
+        timer4.start(1_000_000_u32.micros()).unwrap();
         // Init USB
         let usb = USB {
             usb_global: dp.OTG_FS_GLOBAL,
@@ -188,7 +205,7 @@ mod app {
         static mut EP_MEMORY: [u32; 1024] = [0; 1024];
         static mut __USB_TX: [u8; 4000] = [0; 4000];
         static mut __USB_RX: [u8; 128] = [0; 128];
-
+        host::debug!("init usb");
         let usb_bus = ctx.local.USB_BUS;
         unsafe {
             *usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
@@ -200,7 +217,7 @@ mod app {
         let usb_web = WebUsb::new(
             usb_bus.as_ref().unwrap(),
             url_scheme::HTTPS,
-            "tuner.openefi.tech"
+            "tuner.openefi.tech",
         );
 
         let usb_dev = webserial::new_device(usb_bus.as_ref().unwrap());
@@ -223,7 +240,7 @@ mod app {
             (gpio_config.spi_sck, gpio_config.spi_miso, gpio_config.spi_mosi),
             mode,
             (30).MHz(),
-            &clocks
+            &clocks,
         );
 
         let spi_bus = shared_bus_rtic::new!(spi2, SpiT);
@@ -231,10 +248,8 @@ mod app {
 
         // CRC32:
         let mut crc = crc32::Crc32::new(dp.CRC);
-
-        let mut flash = w25q::series25::Flash
-            ::init(spi_bus.acquire(), gpio_config.memory_cs)
-            .unwrap();
+        host::debug!("init flash");
+        let mut flash = w25q::series25::Flash::init(spi_bus.acquire(), gpio_config.memory_cs).unwrap();
 
         // let id = flash.read_jedec_id().unwrap();
 
@@ -279,10 +294,36 @@ mod app {
 
         // RPM & sinc calc:
 
-        let mut total_rpm = 0;
+        let mut start_revolution = 0;
 
         let mut ckp_ticks: [u32; 128] = [0; 128];
         let mut ckp_index = 0;
+
+
+        let tick_init = timer4.now().ticks();
+        timer13.delay_us(1000u16);
+        let tick_end = timer4.now().ticks();
+        host::debug!("Time {:?} mS, Init: {:?} , End {:?}", tick_end-tick_init,tick_init,tick_end);
+
+
+        let mut ckp_last_tick = 0;
+        let mut ckp_avg_time = 0;
+
+        // new ckp sinc vars:
+
+        let mut ckp_current_time = 0;
+        let mut ckp_current_gap = 0;
+        let mut ckp_target_gap = 0;
+        let mut ckp_is_missing_tooth = false;
+        let mut ckp_tooth_last_time = 0;
+        let mut ckp_tooth_one_time = 0;
+        let mut ckp_tooth_last_minus_one_tooth_time = 0;
+        let mut ckp_tooth_current_count = 0;
+        let mut ckp_tooth_one_minus_one_time = 0; // creo que se usa para las rpm
+        let mut ckp_has_sync = false;
+        let mut ckp_sync_loss_counter = 0;
+
+        ckp.enable_interrupt(&mut dp.EXTI);
 
         return (
             // Initialization of shared resources
@@ -326,9 +367,24 @@ mod app {
                 cdc_input_buffer: cdc_buff,
                 adc,
                 analog_pins: gpio_config.adc,
-                total_rpm,
+                start_revolution,
                 ckp_ticks,
                 ckp_index,
+                ckp_last_tick,
+                ckp_avg_time,
+
+                //new rpm
+                ckp_current_time,
+                ckp_current_gap,
+                ckp_target_gap,
+                ckp_is_missing_tooth,
+                ckp_tooth_last_time,
+                ckp_tooth_one_time,
+                ckp_tooth_last_minus_one_tooth_time,
+                ckp_tooth_current_count,
+                ckp_has_sync,
+                ckp_sync_loss_counter,
+                ckp_tooth_one_minus_one_time,
             },
             // Move the monotonic timer to the RTIC run-time, this enables
             // scheduling
@@ -340,7 +396,10 @@ mod app {
     fn idle(_: idle::Context) -> ! {
         loop {
             sensors_callback::spawn().unwrap();
-            //cortex_m::asm::wfi();
+            // cortex_m::asm::wfi();
+
+            // TODO: add similar stall control of speeduino
+            // https://github.com/noisymime/speeduino/blob/master/speeduino/speeduino.ino#L146
         }
     }
 
@@ -362,55 +421,121 @@ mod app {
         ctx.shared.led.lock(|l| l.led_2.set_high());
     }
 
-    // EXTI9_5_IRQn para los pines ckp/cmp
-    #[task(
-        binds = EXTI9_5,
-        local = [ckp,total_rpm,ckp_ticks,ckp_index,],
-        shared = [led, efi_status, flash_info, efi_cfg, timer, timer3,timer4]
-    )]
+    // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
+    #[task(binds = EXTI9_5,
+    local = [
+            ckp, start_revolution, ckp_current_time, ckp_current_gap, ckp_target_gap,
+            ckp_is_missing_tooth, ckp_tooth_last_minus_one_tooth_time, ckp_tooth_current_count,
+            ckp_has_sync, ckp_sync_loss_counter, ckp_tooth_last_time,ckp_tooth_one_time,
+            ckp_tooth_one_minus_one_time
+    ],
+    shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4])]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
-        ctx.shared.efi_status.lock(|es| {
-            es.cycle_tick += 1;
-        });
+        let mut efi_cfg = ctx.shared.efi_cfg;
+        let mut efi_status = ctx.shared.efi_status;
 
-        let efi_cfg = ctx.shared.efi_cfg;
-        let efi_status = ctx.shared.efi_status;
+        let mut ckp = VRSensor::new();
 
-        // local:
-        let mut total_rpm = ctx.local.total_rpm;
-        let mut ckp_ticks = ctx.local.ckp_ticks;
-        let mut ckp_index = ctx.local.ckp_index;
+        let mut rpm = 0;
 
-        let mut now_tick = 0;
+        efi_cfg.lock(|cfg| { ckp = cfg.engine.ckp });
+        efi_status.lock(|status|{ rpm=status.rpm });
 
-        // calculo de RPM && led
-        (efi_cfg, efi_status, ctx.shared.led, ctx.shared.timer3).lock(
-            |efi_cfg, efi_status, led, timer3| {
-                if
-                    efi_status.cycle_tick >=
-                    efi_cfg.engine.ckp_tooth_count - efi_cfg.engine.ckp_missing_tooth
-                {
-                    led.led_2.set_low();
-                    // FIXME: por ahora solo prendo el led una vez por vuelta, luego lo hago funcionar con el primer cilindro
-                    timer3.start((50000).micros()).unwrap();
-                    efi_status.cycle_tick = 0;
+        let mut ckp_current_time = ctx.local.ckp_current_time;
+        let mut ckp_current_gap = ctx.local.ckp_current_gap;
+        let mut ckp_target_gap = ctx.local.ckp_target_gap;
+        let mut ckp_is_missing_tooth = ctx.local.ckp_is_missing_tooth;
+        let mut ckp_tooth_last_minus_one_tooth_time = ctx.local.ckp_tooth_last_minus_one_tooth_time;
+        let mut ckp_tooth_one_time = ctx.local.ckp_tooth_one_time;
+        let mut ckp_tooth_last_time = ctx.local.ckp_tooth_last_time;
+        let mut ckp_tooth_current_count = ctx.local.ckp_tooth_current_count;
+        let mut ckp_has_sync = ctx.local.ckp_has_sync;
+        let mut ckp_sync_loss_counter = ctx.local.ckp_sync_loss_counter;
+        let mut ckp_start_revolution = ctx.local.start_revolution;
+        let mut ckp_tooth_one_minus_one_time = ctx.local.ckp_tooth_one_minus_one_time;
 
-                    *total_rpm += 1;
+        ctx.shared.timer4.lock(|t4| { *ckp_current_time = t4.now().ticks(); });
+
+        *ckp_current_gap = *ckp_current_time - *ckp_tooth_last_time;
+
+        if *ckp_current_gap >= ckp.trigger_filter_time {
+            *ckp_tooth_current_count += 1;
+            ctx.shared.led.lock(|l| { l.led_check.toggle() });
+
+            if *ckp_tooth_last_time > 0 && *ckp_tooth_last_minus_one_tooth_time > 0 {
+                *ckp_is_missing_tooth = false;
+
+                /*
+                  Performance Optimisation:
+                  Only need to try and detect the missing tooth if:
+                  1. WE don't have sync yet
+                  2. We have sync and are in the final 1/4 of the wheel (Missing tooth will/should never occur in the first 3/4)
+                  3. RPM is under 2000. This is to ensure that we don't interfere with strange timing when cranking or idling. Optimisation not really required at these speeds anyway
+                */
+                if *ckp_has_sync == false || rpm < 2000  || *ckp_tooth_current_count >= (3 * ckp.trigger_actual_teeth >> 2){
+                    //Begin the missing tooth detection
+                    //If the time between the current tooth and the last is greater than 1.5x the time between the last tooth and the tooth before that, we make the assertion that we must be at the first tooth after the gap
+                    if ckp.missing_tooth == 1 {
+                        //Multiply by 1.5 (Checks for a gap 1.5x greater than the last one) (Uses bitshift to multiply by 3 then divide by 2. Much faster than multiplying by 1.5)
+                        *ckp_target_gap = (3 * (*ckp_tooth_last_time - *ckp_tooth_last_minus_one_tooth_time)) >> 1;
+                    } else {
+                        //Multiply by 2 (Checks for a gap 2x greater than the last one)
+                        *ckp_target_gap  = ((*ckp_tooth_last_time - *ckp_tooth_last_minus_one_tooth_time)) * ckp.missing_tooth;
+                    }
+
+                    // initial startup, missing one time
+                    if *ckp_tooth_last_time  == 0 || *ckp_tooth_last_minus_one_tooth_time == 0  {
+                        *ckp_target_gap = 0;
+                    }
+
+                    if (*ckp_current_gap > *ckp_target_gap ) || (*ckp_tooth_current_count > ckp.trigger_actual_teeth) {
+                        //Missing tooth detected
+                        *ckp_is_missing_tooth = true;
+
+                        // FIXME: remove
+                        ctx.shared.led.lock(|l| { l.led_2.set_low() });
+                        ctx.shared.timer3.lock(|timer3|{timer3.start((5000).micros()).unwrap();});
+
+                        if *ckp_tooth_current_count < ckp.trigger_actual_teeth {
+                            // This occurs when we're at tooth #1, but haven't seen all the other teeth. This indicates a signal issue so we flag lost sync so this will attempt to resync on the next revolution.
+                            *ckp_has_sync = false;
+                            *ckp_sync_loss_counter +=1;
+                        }
+                        //This is to handle a special case on startup where sync can be obtained and the system immediately thinks the revs have jumped:
+                        else {
+
+                            if *ckp_has_sync {
+                                *ckp_start_revolution +=1;
+                            }else{
+                                *ckp_start_revolution = 0;
+                            }
+
+                            *ckp_tooth_current_count = 1;
+
+                            // tiempo entre vuelta completa
+                            *ckp_tooth_one_minus_one_time = *ckp_tooth_one_time;
+                            *ckp_tooth_one_time = *ckp_current_time;
+
+                            // TODO: hay mas checks aca cuando es con inyección secuencial
+                            *ckp_has_sync = true;
+                            //This is used to prevent a condition where serious intermittent signals (Eg someone furiously plugging the sensor wire in and out) can leave the filter in an unrecoverable state
+                            efi_cfg.lock(|ec| { ec.engine.ckp.trigger_filter_time = 0; });
+                            *ckp_tooth_last_minus_one_tooth_time = *ckp_tooth_last_time;
+                            *ckp_tooth_last_time = *ckp_current_time;
+                        }
+
+                    }
                 }
+
+                if !*ckp_is_missing_tooth {
+                    efi_cfg.lock(|ec| { ec.engine.ckp.trigger_filter_time = *ckp_current_gap >> 2; });
+                    *ckp_tooth_last_minus_one_tooth_time = 0;
+                }
+            } else {
+                // initial startup
+                *ckp_tooth_last_minus_one_tooth_time = *ckp_tooth_last_time;
+                *ckp_tooth_last_time = *ckp_current_time;
             }
-        );
-
-        ctx.shared.timer4.lock(|t4| {now_tick = t4.now().ticks();});
-
-        ckp_ticks[*ckp_index] = now_tick;
-
-        cpwm_callback::spawn(*total_rpm).unwrap();
-
-        if *ckp_index < 127 {
-            *ckp_index = 0;
-            ckp_ticks.fill(0);
-        }else{
-            *ckp_index += 1;
         }
         // Obtain access to the peripheral and Clear Interrupt Pending Flag
         ctx.local.ckp.clear_interrupt_pending_bit();
@@ -422,7 +547,7 @@ mod app {
 
         ctx.shared.usb_cdc.lock(|cdc| {
             // USB dev poll only in the interrupt handler
-            (ctx.shared.usb_web,).lock(|web| {
+            (ctx.shared.usb_web, ).lock(|web| {
                 if device.poll(&mut [web, cdc]) {
                     let mut buf = [0u8; 64];
 
@@ -455,7 +580,7 @@ mod app {
             ctx: send_message::Context,
             status: SerialStatus,
             code: u8,
-            mut message: SerialMessage
+            mut message: SerialMessage,
         );
     }
 
@@ -506,7 +631,7 @@ mod app {
     #[task(priority = 2, shared = [efi_status, sensors, crc])]
     fn realtime_data_cdc_callback(
         ctx: realtime_data_cdc_callback::Context,
-        serial_cmd: SerialMessage
+        serial_cmd: SerialMessage,
     ) {
         let efi_status = ctx.shared.efi_status;
         let sensors = ctx.shared.sensors;
@@ -517,10 +642,8 @@ mod app {
         })
     }
 
-    #[task(
-        priority = 2,
-        shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13, flash]
-    )]
+    #[task(priority = 2,
+    shared = [inj_pins, ign_pins, aux_pins, relay_pins, stepper_pins, timer13, flash])]
     fn debug_demo(ctx: debug_demo::Context, demo_mode: u8) {
         let inj_pins = ctx.shared.inj_pins;
         let ign_pins = ctx.shared.ign_pins;
@@ -557,7 +680,7 @@ mod app {
         sensors.lock(|sensors| {
             sensors.update(
                 get_sensor_raw(SensorTypes::AirTemp, adc_pins, adc),
-                SensorTypes::AirTemp
+                SensorTypes::AirTemp,
             );
 
             sensors.update(get_sensor_raw(SensorTypes::TPS, adc_pins, adc), SensorTypes::TPS);
@@ -566,12 +689,12 @@ mod app {
 
             sensors.update(
                 get_sensor_raw(SensorTypes::CooltanTemp, adc_pins, adc),
-                SensorTypes::CooltanTemp
+                SensorTypes::CooltanTemp,
             );
 
             sensors.update(
                 get_sensor_raw(SensorTypes::BatteryVoltage, adc_pins, adc),
-                SensorTypes::BatteryVoltage
+                SensorTypes::BatteryVoltage,
             );
         });
 
@@ -582,10 +705,10 @@ mod app {
 
     // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
     #[task(priority = 10, shared = [efi_status, flash_info, efi_cfg, timer, timer3])]
-    fn cpwm_callback(mut _ctx: cpwm_callback::Context,total_rpm :u128) {
+    fn cpwm_callback(mut _ctx: cpwm_callback::Context, start_revolution: u128, rpm_ticks: [u32; 128]) {
         // skip first 30 rotations
-        if total_rpm < 30 {
-
+        if start_revolution > 3 {
+            //  host::debug!("RPM data {:?}",rpm_ticks[0]);
         }
         // TODO: cpwm if;
     }
