@@ -297,6 +297,7 @@ dependencies = [
  "serde-json-core",
  "shared-bus-rtic",
  "stm32f4xx-hal",
+ "systick-monotonic",
  "usb-device",
  "usbd-serial",
  "usbd-webusb",

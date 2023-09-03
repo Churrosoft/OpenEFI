@@ -15,8 +15,8 @@ use panic_halt as _;
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM4, TIM7, TIM8_CC])]
 mod app {
     use arrayvec::ArrayVec;
-    use cortex_m::delay::Delay;
     use embedded_hal::spi::{Mode, Phase, Polarity};
+    use rtic::Mutex;
     use stm32f4xx_hal::{
         adc::{Adc, config::AdcConfig},
         crc32,
@@ -58,6 +58,7 @@ mod app {
     use crate::app::engine::efi_cfg::VRSensor;
     use crate::app::engine::pmic::{PMIC, PmicT};
     use crate::app::webserial::{handle_engine, handle_pmic, handle_realtime_data};
+    use systick_monotonic::{Systick};
 
     pub mod debug;
     pub mod engine;
@@ -72,7 +73,7 @@ mod app {
     #[shared]
     struct Shared {
         // Timers:
-        delay: Delay,
+        // delay: Delay,
         timer: timer::CounterUs<TIM2>,
         timer3: timer::CounterUs<TIM3>,
         timer4: timer::CounterUs<TIM5>,
@@ -102,6 +103,9 @@ mod app {
         tables: Tables,
         sensors: SensorValues,
         pmic: PmicT,
+
+        // CKP/SYNC
+        ckp_tooth_last_time: u32,
     }
 
     #[local]
@@ -127,7 +131,7 @@ mod app {
         ckp_target_gap: u32,
         ckp_is_missing_tooth: bool,
         ckp_tooth_last_minus_one_tooth_time: u32,
-        ckp_tooth_last_time: u32,
+        ckp_tooth_last_time: u32, // esta se comparte con el loop para detectar stall
         ckp_tooth_current_count: u32,
         ckp_tooth_one_time: u32,
         ckp_tooth_one_minus_one_time: u32,
@@ -135,9 +139,13 @@ mod app {
         ckp_sync_loss_counter: u128,
     }
 
+    #[monotonic(binds = SysTick, default = true)]
+    type MyMono = Systick<100_000>; // 100_000 Hz / 0.01 ms granularity
+
     #[init(local = [USB_BUS: Option < UsbBusAllocator < UsbBusType >> = None])]
     fn init(mut ctx: init::Context) -> (Shared, Local, init::Monotonics) {
         let mut dp = ctx.device;
+        let systick = ctx.core.SYST;
 
         ctx.core.DWT.enable_cycle_counter();
 
@@ -169,8 +177,11 @@ mod app {
         let rcc = dp.RCC.constrain();
         let clocks = rcc.cfgr.use_hse((25).MHz()).sysclk((120).MHz()).require_pll48clk().freeze();
 
+        // Initialize the monotonic
+        let mono = Systick::new(systick, 120_000_000);
+
         // NOTE: para delays debugs/etc
-        let mut delay = cortex_m::delay::Delay::new(ctx.core.SYST, 120000000);
+        // let mut delay = cortex_m::delay::Delay::new(systick, 120000000);
 
         // timer Tiempo inyeccion
         let mut timer: timer::CounterUs<TIM2> = dp.TIM2.counter_us(&clocks);
@@ -316,6 +327,7 @@ mod app {
         let mut ckp_target_gap = 0;
         let mut ckp_is_missing_tooth = false;
         let mut ckp_tooth_last_time = 0;
+        let mut ckp_tooth_last_time_2 = 0;
         let mut ckp_tooth_one_time = 0;
         let mut ckp_tooth_last_minus_one_tooth_time = 0;
         let mut ckp_tooth_current_count = 0;
@@ -329,7 +341,7 @@ mod app {
             // Initialization of shared resources
             Shared {
                 // Timers:
-                delay,
+                // delay,
                 timer,
                 timer3,
                 timer4,
@@ -359,6 +371,9 @@ mod app {
                 efi_status: _efi_status,
                 tables: table,
                 pmic,
+
+                //CKP/SYNC
+                ckp_tooth_last_time: ckp_tooth_last_time_2,
             },
             // Initialization of task local resources
             Local {
@@ -388,7 +403,7 @@ mod app {
             },
             // Move the monotonic timer to the RTIC run-time, this enables
             // scheduling
-            init::Monotonics(),
+            init::Monotonics(mono),
         );
     }
 
@@ -396,30 +411,30 @@ mod app {
     fn idle(_: idle::Context) -> ! {
         loop {
             sensors_callback::spawn().unwrap();
+            motor_checks::spawn().unwrap();
             // cortex_m::asm::wfi();
-
-            // TODO: add similar stall control of speeduino
-            // https://github.com/noisymime/speeduino/blob/master/speeduino/speeduino.ino#L146
         }
     }
 
+
+
     //TODO: reciclar para encendido
-    #[task(binds = TIM2, priority = 1, local = [], shared = [timer, timer3, led])]
-    fn timer2_exp(mut ctx: timer2_exp::Context) {
-        ctx.shared.timer.lock(|tim| tim.clear_interrupt(Event::Update));
-
-        ctx.shared.led.lock(|l| l.led_0.toggle());
-    }
-
+    // #[task(binds = TIM2, priority = 1, local = [], shared = [timer, timer3, led])]
+    // fn timer2_exp(mut ctx: timer2_exp::Context) {
+    //     ctx.shared.timer.lock(|tim| tim.clear_interrupt(Event::Update));
+    //
+    //     ctx.shared.led.lock(|l| l.led_0.toggle());
+    // }
+    //
     #[task(binds = TIM3, local = [], shared = [timer3, led, tables])]
-    fn timer3_exp(mut ctx: timer3_exp::Context) {
-        ctx.shared.timer3.lock(|tim| {
-            tim.clear_interrupt(Event::Update);
-            tim.cancel().unwrap();
-        });
+     fn timer3_exp(mut ctx: timer3_exp::Context) {
+         ctx.shared.timer3.lock(|tim| {
+             tim.clear_interrupt(Event::Update);
+             tim.cancel().unwrap();
+         });
 
-        ctx.shared.led.lock(|l| l.led_2.set_high());
-    }
+         ctx.shared.led.lock(|l| l.led_2.set_high());
+     }
 
     // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
     #[task(binds = EXTI9_5,
@@ -429,7 +444,7 @@ mod app {
             ckp_has_sync, ckp_sync_loss_counter, ckp_tooth_last_time,ckp_tooth_one_time,
             ckp_tooth_one_minus_one_time
     ],
-    shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4])]
+    shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4, ckp_tooth_last_time])]
     fn ckp_trigger(mut ctx: ckp_trigger::Context) {
         let mut efi_cfg = ctx.shared.efi_cfg;
         let mut efi_status = ctx.shared.efi_status;
@@ -522,6 +537,7 @@ mod app {
                             efi_cfg.lock(|ec| { ec.engine.ckp.trigger_filter_time = 0; });
                             *ckp_tooth_last_minus_one_tooth_time = *ckp_tooth_last_time;
                             *ckp_tooth_last_time = *ckp_current_time;
+                            ctx.shared.ckp_tooth_last_time.lock(|ckp_t|{ *ckp_t = *ckp_current_time });
                         }
 
                     }
@@ -535,6 +551,7 @@ mod app {
                 // initial startup
                 *ckp_tooth_last_minus_one_tooth_time = *ckp_tooth_last_time;
                 *ckp_tooth_last_time = *ckp_current_time;
+                ctx.shared.ckp_tooth_last_time.lock(|ckp_t|{ *ckp_t = *ckp_current_time });
             }
         }
         // Obtain access to the peripheral and Clear Interrupt Pending Flag
@@ -703,13 +720,26 @@ mod app {
         });
     }
 
-    // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
-    #[task(priority = 10, shared = [efi_status, flash_info, efi_cfg, timer, timer3])]
-    fn cpwm_callback(mut _ctx: cpwm_callback::Context, start_revolution: u128, rpm_ticks: [u32; 128]) {
-        // skip first 30 rotations
-        if start_revolution > 3 {
-            //  host::debug!("RPM data {:?}",rpm_ticks[0]);
-        }
-        // TODO: cpwm if;
+    // TODO: add similar stall control of speeduino
+    // https://github.com/noisymime/speeduino/blob/master/speeduino/speeduino.ino#L146
+    #[task(shared=[efi_cfg,ckp_tooth_last_time])]
+    fn motor_checks( mut ctx: motor_checks::Context){
+        let mut efi_cfg = ctx.shared.efi_cfg;
+        let mut ckp_tooth_last_time = ctx.shared.ckp_tooth_last_time;
+        (efi_cfg,ckp_tooth_last_time).lock(|cfg,ckp_tooth_last_time|{
+
+            cfg.engine.ckp.max_stall_time;
+
+        });
     }
+
+    // prioridad? si; task para manejar el pwm de los inyectores; exportar luego a cpwm.rs
+    // #[task(priority = 10, shared = [efi_status, flash_info, efi_cfg, timer, timer3])]
+    // fn cpwm_callback(mut _ctx: cpwm_callback::Context, start_revolution: u128, rpm_ticks: [u32; 128]) {
+    //     // skip first 30 rotations
+    //     if start_revolution > 3 {
+    //         //  host::debug!("RPM data {:?}",rpm_ticks[0]);
+    //     }
+    //     // TODO: cpwm if;
+    // }
 }
