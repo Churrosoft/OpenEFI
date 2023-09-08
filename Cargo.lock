@@ -288,6 +288,7 @@ dependencies = [
  "cortex-m-rtic",
  "cortex-m-semihosting",
  "embedded-hal 0.2.7",
+ "fugit",
  "micromath",
  "numtoa",
  "panic-halt",
