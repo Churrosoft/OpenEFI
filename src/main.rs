@@ -16,8 +16,9 @@ use panic_halt as _;
 use rtic;
 //::app;
 use rtic_monotonics::systick::*;
-use stm32f4xx_hal::gpio::{Output, PushPull, PC13, PC14};
-
+use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
+use usbd_serial::SerialPort;
+use usbd_webusb::{url_scheme, WebUsb};
 use stm32f4xx_hal::{
     adc::{Adc, config::AdcConfig},
     crc32,
@@ -32,24 +33,60 @@ use stm32f4xx_hal::{
 };
 
 //wip
-mod app;
-
-use crate::app::{
-    gpio_legacy::{init_gpio, LedGpioMapping},
-    logging::host,
-};
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM4, TIM7, TIM8_CC])]
-mod open_efi {
+mod app {
+    use arrayvec::ArrayVec;
     use super::*;
+
+    pub mod debug;
+    pub mod engine;
+    pub mod gpio;
+    pub mod gpio_legacy;
+    pub mod injection;
+    pub mod logging;
+    pub mod memory;
+    pub mod util;
+    pub mod webserial;
+    pub mod tasks;
+
+    use crate::app::{
+        engine::{
+            efi_cfg::{EngineConfig, get_default_efi_cfg},
+            engine_status::{EngineStatus, get_default_engine_status},
+            sensors::{get_sensor_raw, SensorTypes, SensorValues},
+        },
+        gpio_legacy::{
+            ADCMapping,
+            AuxIoMapping,
+            IgnitionGpioMapping,
+            init_gpio,
+            LedGpioMapping,
+            InjectionGpioMapping,
+            RelayMapping,
+            StepperMapping,
+        },
+        injection::{calculate_time_isr, injection_setup},
+        memory::tables::{SpiT, Tables},
+        webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
+        // tasks::{engine::ckp_trigger, engine::motor_checks, ignition::ignition_schedule}
+    };
+
+    use logging::host;
 
     #[shared]
     struct Shared {
         led: LedGpioMapping,
+
+        // USB:
+        usb_cdc: SerialPort<'static, UsbBusType, [u8; 128], [u8; 4000]>,
+        usb_web: WebUsb<UsbBusType>,
     }
 
     #[local]
     struct Local {
+        usb_dev: UsbDevice<'static, UsbBusType>,
+        cdc_input_buffer: ArrayVec<u8, 128>,
         state: bool,
         state2: bool,
     }
@@ -69,7 +106,8 @@ mod open_efi {
             .cfgr
             .use_hse(25.MHz())
             .sysclk(120.MHz())
-            .require_pll48clk();
+            .require_pll48clk()
+            .freeze();
 
         let gpio_a = device.GPIOA.split();
         let gpio_b = device.GPIOB.split();
@@ -92,11 +130,81 @@ mod open_efi {
         ckp.make_interrupt_source(&mut syscfg);
         ckp.trigger_on_edge(&mut device.EXTI, Edge::Falling);
 
+
+        // configure the timers
+
+        // timer Tiempo inyeccion
+        let mut timer: timer::CounterUs<TIM2> = device.TIM2.counter_us(&_clocks);
+        // timer tiempo de ignicion
+        let mut timer3: timer::CounterUs<TIM3> = device.TIM3.counter_us(&_clocks);
+        // timer CPWM
+        let mut timer4: timer::CounterUs<TIM5> = device.TIM5.counter_us(&_clocks);
+
+        // timer uso generico
+        let mut timer13: timer::DelayUs<TIM13> = device.TIM13.delay_us(&_clocks);
+
+        //  TIM5, TIM7, TIM4
+        host::debug!("init timers");
+        timer.start((150).millis()).unwrap();
+
+        // Set up to generate interrupt when timer expires
+        timer.listen(Event::Update);
+        timer3.listen(Event::Update);
+        timer13.listen(Event::Update);
+        // timer4.start((70).minutes()).unwrap();
+        timer4.start(1_000_000_u32.micros()).unwrap();
+
+
+        // Init USB
+        // let usb = USB {
+        //     usb_global: device.OTG_FS_GLOBAL,
+        //     usb_device: device.OTG_FS_DEVICE,
+        //     usb_pwrclk: device.OTG_FS_PWRCLK,
+        //     // pin_dm: gpio_config.usb_dp,
+        //     // pin_dp: Dp::from(gpio_config.usb_dm),
+        //     hclk: _clocks.hclk(),
+        // };
+
+        let usb = USB::new(
+            (device.OTG_FS_GLOBAL, device.OTG_FS_DEVICE, device.OTG_FS_PWRCLK),
+            (gpio_config.usb_dp, gpio_config.usb_dm),
+            &_clocks,
+        );
+
+        static mut EP_MEMORY: [u32; 1024] = [0; 1024];
+        static mut __USB_TX: [u8; 4000] = [0; 4000];
+        static mut __USB_RX: [u8; 128] = [0; 128];
+        host::debug!("init usb");
+        let mut usb_bus = None;
+        unsafe {
+            usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
+        }
+
+        let usb_cdc = unsafe {
+            SerialPort::new_with_store(usb_bus.as_ref().unwrap(), __USB_RX, __USB_TX)
+        };
+        let usb_web = WebUsb::new(
+            usb_bus.as_ref().unwrap(),
+            url_scheme::HTTPS,
+            "tuner.openefi.tech",
+        );
+
+        let cdc_buff = ArrayVec::<u8, 128>::new();
+
+        let usb_dev = webserial::new_device(usb_bus.as_ref().unwrap());
+
         // Schedule the blinking task
         blink::spawn().ok();
         blink2::spawn().ok();
 
-        (Shared { led: gpio_config.led }, Local { state: false, state2: false })
+        (Shared { led: gpio_config.led,
+            // USB
+            usb_cdc,
+            usb_web,
+        }, Local {
+            usb_dev,
+            cdc_input_buffer: cdc_buff,
+            state: false, state2: false })
     }
 
     #[task(local = [state], shared = [led])]
@@ -126,4 +234,16 @@ mod open_efi {
             Systick::delay(50.millis()).await;
         }
     }
-}
+
+    // Externally defined tasks
+    extern "Rust" {
+        // Low-priority task to send back replies via the serial port. , capacity = 30
+        #[task(shared = [usb_cdc], priority = 2)]
+        async fn send_message(
+            ctx: send_message::Context,
+            status: SerialStatus,
+            code: u8,
+            mut message: SerialMessage,
+        );
+    }
+    }
