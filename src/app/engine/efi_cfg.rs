@@ -1,11 +1,22 @@
 use crate::app::memory::tables::{PlotData};
 
+#[derive(serde::Serialize, serde::Deserialize, Debug,Copy,Clone)]
+pub struct VRSensor {
+    pub trigger_tooth_angle: f32,
+    pub tooth_count: u32,
+    pub trigger_filter_time: u32,
+    pub missing_tooth: u32,
+    pub trigger_actual_teeth: u32,
+    pub sync_tooth_count: u32,
+    pub max_stall_time: u32,
+}
+
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct Engine {
-    pub cilinder_count: u8,
+    pub cylinder_count: u8,
     pub displacement: u32,
-    pub ckp_tooth_count: u32,
-    pub ckp_missing_tooth: u32,
+    pub max_rpm: u32,
+    pub ckp: VRSensor,
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
@@ -43,14 +54,37 @@ impl EngineConfig {
     }
 }
 
+
+impl VRSensor{
+    pub fn new()->VRSensor{
+        VRSensor{
+            trigger_tooth_angle: 0.0,
+            tooth_count: 0,
+            trigger_filter_time: 0,
+            missing_tooth: 0,
+            trigger_actual_teeth: 0,
+            sync_tooth_count: 0,
+            max_stall_time: 0,
+        }
+    }
+}
+
 pub fn get_default_efi_cfg() -> EngineConfig {
-    let cfg = EngineConfig {
+    let mut cfg = EngineConfig {
         ready: false,
         engine: Engine {
-            cilinder_count: 4,
+            cylinder_count: 4,
             displacement: 1596,
-            ckp_tooth_count: 60,
-            ckp_missing_tooth: 2,
+            max_rpm: 7000,
+            ckp:VRSensor{
+                trigger_tooth_angle: 0.0,
+                tooth_count: 60,
+                trigger_filter_time: 0,
+                missing_tooth: 1,
+                trigger_actual_teeth: 0,
+                sync_tooth_count: 0,
+                max_stall_time: 0,
+            },
         },
         injection: InjectionConfig {
             target_lambda: 1.1,
@@ -72,5 +106,36 @@ pub fn get_default_efi_cfg() -> EngineConfig {
         },
     };
 
+    //The number of physical teeth on the wheel. Doing this here saves us a calculation each time in the interrupt
+    cfg.engine.ckp.trigger_actual_teeth = cfg.engine.ckp.tooth_count - cfg.engine.ckp.missing_tooth;
+
+    //The number of degrees that passes from tooth to tooth
+    cfg.engine.ckp.trigger_tooth_angle = 360f32 / cfg.engine.ckp.tooth_count as f32;
+
+    //Trigger filter time is the shortest possible time (in uS) that there can be between crank teeth (ie at max RPM). Any pulses that occur faster than this time will be discarded as noise
+    cfg.engine.ckp.trigger_filter_time = 1000000 / (cfg.engine.max_rpm / 60 * cfg.engine.ckp.tooth_count );
+
+    //Minimum 50rpm. (3333uS is the time per degree at 50rpm)
+    cfg.engine.ckp.max_stall_time = (3333f32 * cfg.engine.ckp.trigger_tooth_angle * (cfg.engine.ckp.missing_tooth + 1) as f32) as u32;
+
+    //50% of the total teeth.
+    cfg.engine.ckp.sync_tooth_count = cfg.engine.ckp.tooth_count / 2;
+
     return cfg;
 }
+
+
+// por ahora con 25% supongo que estoy, o sino apagado
+
+// /**
+//  * Sets the new filter time based on the current settings.
+//  * This ONLY works for even spaced decoders.
+//  */
+// static inline void setFilter(unsigned long curGap)
+// {
+// if(configPage4.triggerFilter == 0) { triggerFilterTime = 0; } //trigger filter is turned off.
+// else if(configPage4.triggerFilter == 1) { triggerFilterTime = curGap >> 2; } //Lite filter level is 25% of previous gap
+// else if(configPage4.triggerFilter == 2) { triggerFilterTime = curGap >> 1; } //Medium filter level is 50% of previous gap
+// else if (configPage4.triggerFilter == 3) { triggerFilterTime = (curGap * 3) >> 2; } //Aggressive filter level is 75% of previous gap
+// else { triggerFilterTime = 0; } //trigger filter is turned off.
+// }

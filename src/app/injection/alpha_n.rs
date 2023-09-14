@@ -18,7 +18,7 @@ pub fn calculate_injection_fuel(es: &mut EngineStatus, ecfg: &EngineConfig, tabl
     }
 
     let ve = get_ve(es, tables.tps_rpm_ve);
-    let air_mass = get_air_mass(ve, ecfg.engine.cilinder_count, ecfg.engine.displacement);
+    let air_mass = get_air_mass(ve, ecfg.engine.cylinder_count, ecfg.engine.displacement);
 
     let lambda = ecfg.injection.target_lambda;
     let stoich = ecfg.injection.target_stoich;
@@ -28,7 +28,7 @@ pub fn calculate_injection_fuel(es: &mut EngineStatus, ecfg: &EngineConfig, tabl
     let base_fuel = air_mass / afr;
 
     {
-        es.injection.air_flow = (air_mass * ecfg.engine.cilinder_count as f32
+        es.injection.air_flow = (air_mass * ecfg.engine.cylinder_count as f32
             / get_engine_cycle_duration(es.rpm))
             * 3600000.0
             / 1000.0;
