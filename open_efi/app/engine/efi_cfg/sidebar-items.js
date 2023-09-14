@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["get_default_efi_cfg"],"struct":["Engine","EngineConfig","InjectionConfig","InjectorConfig"]};
+window.SIDEBAR_ITEMS = {"fn":["get_default_efi_cfg"],"struct":["Engine","EngineConfig","InjectionConfig","InjectorConfig","VRSensor"]};

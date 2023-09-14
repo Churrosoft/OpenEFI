@@ -86,7 +86,7 @@
     }
 
     <span class="kw">let </span>ve = get_ve(es, tables.tps_rpm_ve);
-    <span class="kw">let </span>air_mass = get_air_mass(ve, ecfg.engine.cilinder_count, ecfg.engine.displacement);
+    <span class="kw">let </span>air_mass = get_air_mass(ve, ecfg.engine.cylinder_count, ecfg.engine.displacement);
 
     <span class="kw">let </span>lambda = ecfg.injection.target_lambda;
     <span class="kw">let </span>stoich = ecfg.injection.target_stoich;
@@ -96,7 +96,7 @@
     <span class="kw">let </span>base_fuel = air_mass / afr;
 
     {
-        es.injection.air_flow = (air_mass * ecfg.engine.cilinder_count <span class="kw">as </span>f32
+        es.injection.air_flow = (air_mass * ecfg.engine.cylinder_count <span class="kw">as </span>f32
             / get_engine_cycle_duration(es.rpm))
             * <span class="number">3600000.0
             </span>/ <span class="number">1000.0</span>;
