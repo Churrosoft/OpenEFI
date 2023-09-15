@@ -13,31 +13,34 @@
 
 
 use panic_halt as _;
-use rtic;
-//::app;
-use rtic_monotonics::systick::*;
-use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
-use usbd_serial::SerialPort;
-use usbd_webusb::{url_scheme, WebUsb};
-use stm32f4xx_hal::{
-    adc::{Adc, config::AdcConfig},
-    crc32,
-    crc32::Crc32,
-    gpio::{Edge, Input},
-    otg_fs,
-    otg_fs::{USB, UsbBusType},
-    pac::{ADC1, TIM13, TIM2, TIM3, TIM5},
-    prelude::*,
-    spi::*,
-    timer::{self, Event},
-};
-
 //wip
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM4, TIM7, TIM8_CC])]
 mod app {
+
+    use rtic;
+    //::app;
+    use rtic_monotonics::systick::*;
     use arrayvec::ArrayVec;
-    use super::*;
+    use embedded_hal::spi::{Mode, Phase, Polarity};
+    use rtic::Mutex;
+    use stm32f4xx_hal::{
+        adc::{Adc, config::AdcConfig},
+        crc32,
+        crc32::Crc32,
+        gpio::{Edge, Input},
+        otg_fs,
+        otg_fs::{USB, UsbBusType},
+        pac::{ADC1, TIM13, TIM2, TIM3, TIM5},
+        prelude::*,
+        spi::*,
+        timer::{self, Event},
+    };
+    use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
+    use usbd_serial::SerialPort;
+    use usbd_webusb::{url_scheme, WebUsb};
+
+    //use super::*;
 
     pub mod debug;
     pub mod engine;
@@ -68,7 +71,7 @@ mod app {
         },
         injection::{calculate_time_isr, injection_setup},
         memory::tables::{SpiT, Tables},
-        webserial::{handle_tables, send_message, SerialMessage, SerialStatus},
+        webserial::{handle_tables,SerialMessage, SerialStatus,finish_message},
         // tasks::{engine::ckp_trigger, engine::motor_checks, ignition::ignition_schedule}
     };
 
@@ -91,8 +94,8 @@ mod app {
         state2: bool,
     }
 
-    #[init]
-    fn init(cx: init::Context) -> (Shared, Local) {
+    #[init(local = [USB_BUS: Option < UsbBusAllocator < UsbBusType >> = None])]
+     fn init(cx: init::Context) -> (Shared, Local) {
         // Setup clocks
         //let mut flash = cx.device.FLASH.constrain();
         let mut device = cx.device;
@@ -154,30 +157,23 @@ mod app {
         // timer4.start((70).minutes()).unwrap();
         timer4.start(1_000_000_u32.micros()).unwrap();
 
-
         // Init USB
-        // let usb = USB {
-        //     usb_global: device.OTG_FS_GLOBAL,
-        //     usb_device: device.OTG_FS_DEVICE,
-        //     usb_pwrclk: device.OTG_FS_PWRCLK,
-        //     // pin_dm: gpio_config.usb_dp,
-        //     // pin_dp: Dp::from(gpio_config.usb_dm),
-        //     hclk: _clocks.hclk(),
-        // };
-
-        let usb = USB::new(
-            (device.OTG_FS_GLOBAL, device.OTG_FS_DEVICE, device.OTG_FS_PWRCLK),
-            (gpio_config.usb_dp, gpio_config.usb_dm),
-            &_clocks,
-        );
+        let usb = USB {
+            usb_global: device.OTG_FS_GLOBAL,
+            usb_device: device.OTG_FS_DEVICE,
+            usb_pwrclk: device.OTG_FS_PWRCLK,
+            pin_dm: gpio_config.usb_dp,
+            pin_dp: gpio_config.usb_dm,
+            hclk: _clocks.hclk(),
+        };
 
         static mut EP_MEMORY: [u32; 1024] = [0; 1024];
         static mut __USB_TX: [u8; 4000] = [0; 4000];
         static mut __USB_RX: [u8; 128] = [0; 128];
         host::debug!("init usb");
-        let mut usb_bus = None;
+        let usb_bus = cx.local.USB_BUS;
         unsafe {
-            usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
+            *usb_bus = Some(otg_fs::UsbBus::new(usb, &mut EP_MEMORY));
         }
 
         let usb_cdc = unsafe {
@@ -189,9 +185,9 @@ mod app {
             "tuner.openefi.tech",
         );
 
-        let cdc_buff = ArrayVec::<u8, 128>::new();
-
         let usb_dev = webserial::new_device(usb_bus.as_ref().unwrap());
+
+        let cdc_buff = ArrayVec::<u8, 128>::new();
 
         // Schedule the blinking task
         blink::spawn().ok();
@@ -235,15 +231,32 @@ mod app {
         }
     }
 
+    #[task(shared = [usb_cdc], priority = 2)]
+    async fn send_message(
+        mut ctx: send_message::Context,
+        status: SerialStatus,
+        code: u8,
+        mut message: SerialMessage,
+    ) {
+        message.status = status as u8;
+        message.code = code;
+
+        ctx.shared.usb_cdc.lock(|cdc| {
+            cdc.write(&finish_message(message)).unwrap();
+        });
+        Systick::delay(50.millis()).await;
+    }
+
+
     // Externally defined tasks
     extern "Rust" {
         // Low-priority task to send back replies via the serial port. , capacity = 30
-        #[task(shared = [usb_cdc], priority = 2)]
-        async fn send_message(
-            ctx: send_message::Context,
-            status: SerialStatus,
-            code: u8,
-            mut message: SerialMessage,
-        );
+        // #[task(shared = [usb_cdc], priority = 2)]
+        // async fn send_message(
+        //     ctx: send_message::Context,
+        //     status: SerialStatus,
+        //     code: u8,
+        //     mut message: SerialMessage,
+        // );
     }
     }

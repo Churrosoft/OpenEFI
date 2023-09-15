@@ -38,11 +38,11 @@ pub struct TableData {
 
 pub type SpiT = Spi<
     SPI2,
-    /*(
+    (
         Pin<'B', 10, Alternate<5>>,
         Pin<'B', 14, Alternate<5>>,
         Pin<'B', 15, Alternate<5>>,
-    ),*/
+    ),
     false,
 >;
 

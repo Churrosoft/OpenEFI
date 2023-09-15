@@ -150,7 +150,7 @@ pub fn finish_message(message: SerialMessage) -> [u8; 128] {
 
 // Send a message via web serial.
 pub(crate) fn send_message(
-    mut ctx: app::send_message::Context,
+    mut ctx: app::send_message::Context<'_>,
     status: SerialStatus,
     code: u8,
     mut message: SerialMessage,
