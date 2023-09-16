@@ -1,4 +1,4 @@
-use rtic_sync::channel::Sender;
+// use rtic_sync::channel::Sender;
 use crate::{
     app,
     app::webserial::{SerialCode, SerialMessage, SerialStatus},

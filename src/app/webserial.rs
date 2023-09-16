@@ -1,6 +1,6 @@
 use arrayvec::ArrayVec;
 use rtic::Mutex;
-use rtic_sync::channel::Sender;
+// use rtic_sync::channel::Sender;
 use usb_device::{
     bus::{UsbBus, UsbBusAllocator},
     device::{UsbDevice, UsbDeviceBuilder, UsbVidPid},

@@ -56,7 +56,7 @@ use crate::app::{
     memory::tables::{SpiT, Tables},
     logging::host,
     webserial::{handle_engine, handle_pmic, handle_realtime_data,handle_tables, send_message, SerialMessage, SerialStatus,finish_message},
-    // tasks::{engine::ckp_trigger, engine::motor_checks, ignition::ignition_schedule}
+    tasks::{engine::ckp_trigger, engine::motor_checks, ignition::ignition_schedule}
 };
 
 // use panic_halt as _;
@@ -64,7 +64,7 @@ use panic_semihosting as _;
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM4, TIM7, TIM8_CC])]
 mod app {
     use super::*;
-    use rtic_sync::{channel::*, make_channel};
+    // use rtic_sync::{channel::*, make_channel};
     pub mod debug;
     pub mod engine;
     pub mod gpio;
@@ -307,8 +307,8 @@ mod app {
 
         let mut ckp_status = VRStatus::new();
 
-      //  let (cdc_sender, cdc_receiver) = make_channel!(u32, CDC_CAPACITY);
-        static mut cdc_channel:Channel<u32,8> = Channel::new();
+        // let (cdc_sender, cdc_receiver) = make_channel!(u32, CDC_CAPACITY);
+        //  static mut cdc_channel:Channel<u32,8> = Channel::new();
 
         // let (cdc_sender,cdc_receiver) = unsafe {cdc_channel.split()};
         // let cdc_s = cdc_sender.clone();
@@ -555,17 +555,6 @@ mod app {
     }
 
 
-    // #[idle]
-    // async fn idle(_: idle::Context) -> ! {
-    //     loop {
-    //         sensors_callback::spawn().unwrap();
-    //         // motor_checks::spawn().unwrap();
-    //         // cortex_m::asm::wfi();
-    //         Systick::delay(50.millis()).await;
-    //     }
-    // }
-
-
     //TODO: reciclar para encendido
     #[task(binds = TIM2, priority = 1, local = [], shared = [timer, timer3, led])]
      fn timer2_exp(mut ctx: timer2_exp::Context) {
@@ -634,30 +623,39 @@ mod app {
         );
 
         // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
-        // #[task(binds = EXTI9_5,
-        //     local = [ckp],
-        //     shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4, ckp, ign_pins]
-        // )]
-        // fn ckp_trigger(ctx: ckp_trigger::Context);
-        //
-        // #[task(
-        //     shared = [led, efi_status, efi_cfg, timer3, timer4, ckp, ign_pins],
-        //     priority = 1
-        // )]
-        // async fn ignition_schedule(ctx: ignition_schedule::Context);
+        #[task(binds = EXTI9_5,
+            local = [ckp],
+            shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4, ckp, ign_pins]
+        )]
+        fn ckp_trigger(ctx: ckp_trigger::Context);
 
-        // #[task(shared = [efi_cfg, ckp, timer4, efi_status,ignition_running], priority = 1)]
-        // async fn motor_checks(ctx: motor_checks::Context);
+        #[task(
+            shared = [led, efi_status, efi_cfg, timer3, timer4, ckp, ign_pins],
+            priority = 1
+        )]
+        async fn ignition_schedule(ctx: ignition_schedule::Context);
+
+        #[task(shared = [efi_cfg, ckp, timer4, efi_status,ignition_running], priority = 1)]
+        async fn motor_checks(ctx: motor_checks::Context);
 
     }
 
-    #[task(shared = [usb_cdc], priority = 2)]
-    async fn webserial_sender(mut ctx:webserial_sender::Context, mut receiver: Receiver<'static, SerialMessage, CDC_CAPACITY>){
-        while let Ok(message) = receiver.recv().await {
-            ctx.shared.usb_cdc.lock(|cdc| {
-                cdc.write(&finish_message(message)).unwrap();
-            });
+    // #[task(shared = [usb_cdc], priority = 2)]
+    // async fn webserial_sender(mut ctx:webserial_sender::Context, mut receiver: Receiver<'static, SerialMessage, CDC_CAPACITY>){
+    //     while let Ok(message) = receiver.recv().await {
+    //         ctx.shared.usb_cdc.lock(|cdc| {
+    //             cdc.write(&finish_message(message)).unwrap();
+    //         });
+    //     }
+    // }
+
+    #[task(priority = 2)]
+    async fn engine_loop(ctx: engine_loop::Context){
+        loop {
+            motor_checks::spawn().unwrap();
+            Systick::delay(10.micros()).await;
         }
+
     }
 
 //     #[idle]
