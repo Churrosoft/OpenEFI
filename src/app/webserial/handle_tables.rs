@@ -57,8 +57,8 @@ pub fn handler(
         // get X table
         0x02 => {
             #[allow(unused_assignments)]
-                let mut table = [[0i32; 17]; 17];
-
+            let mut table = [[0i32; 17]; 17];
+            logging::host::debug!("Table get");
             match selected_table {
                 0x01 => {
                     // TODO: read table if not read prev.

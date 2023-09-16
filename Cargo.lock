@@ -308,9 +308,11 @@ dependencies = [
  "micromath",
  "numtoa",
  "panic-halt",
+ "panic-semihosting",
  "postcard",
  "rtic",
  "rtic-monotonics",
+ "rtic-sync",
  "serde",
  "serde-json-core",
  "shared-bus-rtic",
@@ -326,6 +328,16 @@ name = "panic-halt"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de96540e0ebde571dc55c73d60ef407c653844e6f9a1e2fdbd40c07b9252d812"
+
+[[package]]
+name = "panic-semihosting"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee8a3e1233d9073d76a870223512ce4eeea43c067a94a445c13bd6d792d7b1ab"
+dependencies = [
+ "cortex-m",
+ "cortex-m-semihosting",
+]
 
 [[package]]
 name = "pin-project-lite"
@@ -457,6 +469,17 @@ dependencies = [
  "cortex-m",
  "fugit",
  "rtic-time",
+]
+
+[[package]]
+name = "rtic-sync"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "adc586db4c7ee4a85482ebb0542f34ffaee16bd8b8c552081f07492f531aca9f"
+dependencies = [
+ "critical-section",
+ "heapless",
+ "rtic-common",
 ]
 
 [[package]]
