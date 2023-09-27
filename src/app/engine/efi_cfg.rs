@@ -123,19 +123,3 @@ pub fn get_default_efi_cfg() -> EngineConfig {
 
     return cfg;
 }
-
-
-// por ahora con 25% supongo que estoy, o sino apagado
-
-// /**
-//  * Sets the new filter time based on the current settings.
-//  * This ONLY works for even spaced decoders.
-//  */
-// static inline void setFilter(unsigned long curGap)
-// {
-// if(configPage4.triggerFilter == 0) { triggerFilterTime = 0; } //trigger filter is turned off.
-// else if(configPage4.triggerFilter == 1) { triggerFilterTime = curGap >> 2; } //Lite filter level is 25% of previous gap
-// else if(configPage4.triggerFilter == 2) { triggerFilterTime = curGap >> 1; } //Medium filter level is 50% of previous gap
-// else if (configPage4.triggerFilter == 3) { triggerFilterTime = (curGap * 3) >> 2; } //Aggressive filter level is 75% of previous gap
-// else { triggerFilterTime = 0; } //trigger filter is turned off.
-// }

@@ -5,9 +5,9 @@ use stm32f4xx_hal::gpio;
 use stm32f4xx_hal::gpio::{Output, PushPull};
 
 use crate::app::engine::error::Error;
-use crate::app::memory::tables::SpiT;
+use crate::app::gpio::ISPI;
 use serde::{ Serialize};
-pub type PmicT = PMIC<SharedBus<SpiT>, gpio::PA15<Output<PushPull>>>;
+pub type PmicT = PMIC<SharedBus<ISPI>, gpio::PA15<Output<PushPull>>>;
 
 #[derive(Serialize)]
 #[repr(u8)]

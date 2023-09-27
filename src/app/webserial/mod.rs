@@ -1,6 +1,6 @@
 use arrayvec::ArrayVec;
 use rtic::Mutex;
-// use rtic_sync::channel::Sender;
+use rtic_sync::channel::Sender;
 use usb_device::{
     bus::{UsbBus, UsbBusAllocator},
     device::{UsbDevice, UsbDeviceBuilder, UsbVidPid},
@@ -11,7 +11,7 @@ use crate::{
     app::util,
 };
 
-mod handle_core;
+pub mod handle_core;
 pub mod handle_tables;
 pub mod handle_pmic;
 pub mod handle_engine;
@@ -74,7 +74,7 @@ pub fn new_device<B>(bus: &UsbBusAllocator<B>) -> UsbDevice<'_, B>
         .build()
 }
 
-pub fn process_command(buf: [u8; 128] /*, mut webserial_sender: &mut Sender<SerialMessage, 20>*/) {
+pub fn process_command(buf: [u8; 128] , mut webserial_sender: &mut Sender<SerialMessage, 30>) {
     let mut payload = [0u8; 122];
     payload.copy_from_slice(&buf[4..126]);
 
@@ -103,8 +103,8 @@ pub fn process_command(buf: [u8; 128] /*, mut webserial_sender: &mut Sender<Seri
     }
 
     match serial_cmd.command & 0xf0 {
-        0x00 => handle_core::handler(serial_cmd/*,webserial_sender*/),
-        // 0x10 => app::table_cdc_callback::spawn(serial_cmd).unwrap(),
+        0x00 => handle_core::handler(serial_cmd, webserial_sender),
+        0x10 => app::table_cdc_callback::spawn(serial_cmd).unwrap(),
         0x20 => { /* TODO: injection */ }
         0x30 => { /* TODO: ignition */ }
         0x40 => { /* TODO: DTC */ }
@@ -116,8 +116,8 @@ pub fn process_command(buf: [u8; 128] /*, mut webserial_sender: &mut Sender<Seri
         _ => {
             serial_cmd.status = SerialStatus::Error as u8;
             serial_cmd.code = SerialCode::UnknownCmd as u8;
-           // webserial_sender.try_send(serial_cmd).ok();
-           // app::send_message::spawn(serial_cmd).unwrap();
+            // webserial_sender.try_send(serial_cmd).ok();
+            // app::send_message::spawn(serial_cmd).unwrap();
         }
     }
 }
@@ -150,8 +150,8 @@ pub fn finish_message(message: SerialMessage) -> [u8; 128] {
 // Send a message via web serial.
 pub(crate) async fn send_message(
     mut ctx: app::send_message::Context<'_>,
-       status: SerialStatus,
-       code: u8,
+    status: SerialStatus,
+    code: u8,
     mut message: SerialMessage,
 ) {
     message.status = status as u8;

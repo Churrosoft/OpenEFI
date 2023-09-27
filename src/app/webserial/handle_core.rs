@@ -1,9 +1,9 @@
-// use rtic_sync::channel::Sender;
+use rtic_sync::channel::Sender;
 use crate::{
     app,
     app::webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-pub fn handler(command: SerialMessage/*, mut webserial_sender: &mut Sender<SerialMessage, 20>*/) {
+pub fn handler(command: SerialMessage, mut webserial_sender: &mut Sender<SerialMessage, 30>) {
     let mut response_buf = SerialMessage {
         protocol: 1,
         command: command.command,
@@ -32,14 +32,14 @@ pub fn handler(command: SerialMessage/*, mut webserial_sender: &mut Sender<Seria
 
             response_buf.status = SerialStatus::Ok as u8;
             response_buf.code = 0;
-            // webserial_sender.try_send(response_buf).ok();
-            // app::send_message::spawn(response_buf).unwrap();
+            webserial_sender.try_send(response_buf).ok();
+            // app::send_message::spawn(SerialStatus::Ok,0,response_buf).unwrap();
         }
         _ => {
             response_buf.status = SerialStatus::Error as u8;
             response_buf.code = SerialCode::UnknownCmd as u8;
             // webserial_sender.try_send(response_buf).ok();
-            //app::send_message::spawn(response_buf).unwrap();
+            app::send_message::spawn(SerialStatus::Error,SerialCode::UnknownCmd as u8 ,response_buf).unwrap();
         }
     };
 }

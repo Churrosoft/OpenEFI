@@ -86,39 +86,6 @@ pub fn get_cranking_rpm(trigger: &mut VRStatus, trigger_config: &VRSensor) -> u3
     return temp_rpm;
 }
 
-//
-// int getCrankAngle_missingTooth(void)
-// {
-// //This is the current angle ATDC the engine is at. This is the last known position based on what tooth was last 'seen'. It is only accurate to the resolution of the trigger wheel (Eg 36-1 is 10 degrees)
-// unsigned long tempToothLastToothTime;
-// int tempToothCurrentCount;
-// bool tempRevolutionOne;
-// //Grab some variables that are used in the trigger code and assign them to temp variables.
-// noInterrupts();
-// tempToothCurrentCount = toothCurrentCount;
-// tempRevolutionOne = revolutionOne;
-// tempToothLastToothTime = toothLastToothTime;
-// interrupts();
-//
-// int crankAngle = ((tempToothCurrentCount - 1) * triggerToothAngle) + configPage4.triggerAngle;
-//
-// //Sequential check (simply sets whether we're on the first or 2nd revolution of the cycle)
-// if ( (tempRevolutionOne == true) && (configPage4.TrigSpeed == CRANK_SPEED) ) { crankAngle += 360; }
-//
-// lastCrankAngleCalc = micros();
-// elapsedTime = (lastCrankAngleCalc - tempToothLastToothTime);
-// crankAngle += timeToAngle(elapsedTime, CRANKMATH_METHOD_INTERVAL_REV);
-//
-// if (crankAngle >= 720) { crankAngle -= 720; }
-// else if (crankAngle > CRANK_ANGLE_MAX) { crankAngle -= CRANK_ANGLE_MAX; }
-// if (crankAngle < 0) { crankAngle += CRANK_ANGLE_MAX; }
-//
-// return crankAngle;
-// }
-
-//cpu_tick -> us
-
-
 pub fn angle_to_time(trigger: &VRStatus, angle: &u32) -> i32 {
     // por ahora la estimacion de tiempo mas simple
     return ((*angle * trigger.revolution_time) / 360) as i32;

@@ -298,7 +298,7 @@ checksum = "6aa2c4e539b869820a2b82e1aef6ff40aa85e65decdd5185e83fb4b1249cd00f"
 
 [[package]]
 name = "open_efi"
-version = "3.4.531"
+version = "3.4.532"
 dependencies = [
  "arrayvec",
  "cortex-m",
@@ -308,10 +308,10 @@ dependencies = [
  "micromath",
  "numtoa",
  "panic-halt",
- "panic-semihosting",
  "postcard",
  "rtic",
  "rtic-monotonics",
+ "rtic-sync",
  "serde",
  "serde-json-core",
  "shared-bus-rtic",
@@ -327,16 +327,6 @@ name = "panic-halt"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de96540e0ebde571dc55c73d60ef407c653844e6f9a1e2fdbd40c07b9252d812"
-
-[[package]]
-name = "panic-semihosting"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee8a3e1233d9073d76a870223512ce4eeea43c067a94a445c13bd6d792d7b1ab"
-dependencies = [
- "cortex-m",
- "cortex-m-semihosting",
-]
 
 [[package]]
 name = "pin-project-lite"
@@ -471,6 +461,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "rtic-sync"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "adc586db4c7ee4a85482ebb0542f34ffaee16bd8b8c552081f07492f531aca9f"
+dependencies = [
+ "critical-section",
+ "heapless",
+ "rtic-common",
+]
+
+[[package]]
 name = "rtic-time"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -560,7 +561,7 @@ checksum = "4eca7ac642d82aa35b60049a6eccb4be6be75e599bd2e9adb5f875a737654af2"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.33",
+ "syn 2.0.37",
 ]
 
 [[package]]
@@ -639,9 +640,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.33"
+version = "2.0.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9caece70c63bfba29ec2fed841a09851b14a235c60010fa4de58089b6c025668"
+checksum = "7303ef2c05cd654186cb250d29049a24840ca25d2747c25c0381c8d9e2f582e8"
 dependencies = [
  "proc-macro2",
  "quote",
