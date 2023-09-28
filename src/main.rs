@@ -80,7 +80,7 @@ mod app {
         webserial::{
             handle_engine,
             handle_pmic,
-            handle_realtime_data,
+            handle_realtime_data::realtime_data_cdc_callback,
             handle_tables::table_cdc_callback,
             send_message,
             SerialMessage,
@@ -130,12 +130,6 @@ mod app {
         ignition_running: bool,
     }
 
-
-    #[derive(Debug, Copy, Clone)]
-    pub struct testData {
-      value:  [u8; 4],
-    }
-
     #[local]
     struct Local {
         usb_dev: UsbDevice<'static, UsbBusType>,
@@ -151,8 +145,8 @@ mod app {
         // TODO: Remove
         state: bool,
         state2: bool,
-        sender: Sender<'static, testData, CAPACITY>,
         table_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
+        real_time_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
     }
 
     const CAPACITY: usize = 5;
@@ -323,14 +317,9 @@ mod app {
         blink::spawn().ok();
         blink2::spawn().ok();
 
-        let (s, r) = make_channel!(testData, CAPACITY);
         let (cdc_sender, cdc_receiver) = make_channel!(SerialMessage, CDC_BUFF_CAPACITY);
 
-        receiver::spawn(r).unwrap();
         cdc_receiver::spawn(cdc_receiver).unwrap();
-
-        sender1::spawn(s.clone()).unwrap();
-        // sender2::spawn(s.clone()).unwrap();
 
         (Shared {
             // Timers:
@@ -373,7 +362,7 @@ mod app {
             usb_dev,
             cdc_input_buffer: cdc_buff,
             table_sender: cdc_sender.clone(),
-            sender: s.clone(),
+            real_time_sender: cdc_sender.clone(),
             adc,
             ckp,
             analog_pins: gpio_config.adc,
@@ -398,10 +387,9 @@ mod app {
     }
 
 
-    #[task(binds = OTG_FS, local = [usb_dev, cdc_input_buffer/*,cdc_output*/], shared = [usb_cdc, usb_web, cdc_sender])]
+    #[task(binds = OTG_FS, local = [usb_dev, cdc_input_buffer], shared = [usb_cdc, usb_web, cdc_sender])]
     fn usb_handler(mut ctx: usb_handler::Context) {
         let device = ctx.local.usb_dev;
-        // let mut cdc_output = ctx.local.cdc_output;
 
         ctx.shared.usb_cdc.lock(|cdc| {
             // USB dev poll only in the interrupt handler
@@ -444,7 +432,8 @@ mod app {
 
         #[task(local=[table_sender], shared = [flash_info, efi_cfg, tables, crc, flash, spi_lock])]
         async fn table_cdc_callback(ctx: table_cdc_callback::Context, serial_cmd: SerialMessage);
-
+        #[task(shared = [efi_status, sensors, crc])]
+        async fn realtime_data_cdc_callback(ctx: realtime_data_cdc_callback::Context, serial_cmd: SerialMessage);
         // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
         // #[task(binds = EXTI9_5,
         // local = [ckp],
@@ -468,51 +457,13 @@ mod app {
         async fn blink2(cx: blink2::Context);
     }
 
-    #[task]
-    async fn receiver(_c: receiver::Context, mut receiver: Receiver<'static, testData, CAPACITY>) {
-        while let Ok(val) = receiver.recv().await {
-            debug!("Receiver got: {:?}", val.value);
-        }
-    }
-
     #[task(shared = [usb_cdc])]
     async fn cdc_receiver(mut ctx: cdc_receiver::Context, mut receiver: Receiver<'static, SerialMessage, CDC_BUFF_CAPACITY>) {
         while let Ok(message) = receiver.recv().await {
             ctx.shared.usb_cdc.lock(|cdc| {
-                debug!("Receiver got: {}", message.payload[0]);
+                // debug!("Receiver got: {}", message.payload[0]);
                 cdc.write(&finish_message(message)).unwrap();
             });
         }
-    }
-
-
-    #[task]
-    async fn sender1(_c: sender1::Context, mut sender: Sender<'static, testData, CAPACITY>) {
-        debug!("Sender 1 sending");
-        let testdata = testData{
-            value: [0,1,2,3],
-        };
-
-        sender.send(testdata).await.unwrap();
-    }
-
-    #[task]
-    async fn sender2(_c: sender2::Context, mut sender: Sender<'static, testData, CAPACITY>) {
-        debug!("Sender 2 sending: 2");
-        let testdata = testData{
-            value: [0,2,0,0],
-        };
-
-        sender.send(testdata).await.unwrap();
-    }
-
-    #[task]
-    async fn sender3(_c: sender3::Context, mut sender: Sender<'static, testData, CAPACITY>) {
-        debug!("Sender 3 sending: 3");
-        let testdata = testData{
-            value: [0,3,0,0],
-        };
-
-        sender.send(testdata).await.unwrap();
     }
 }

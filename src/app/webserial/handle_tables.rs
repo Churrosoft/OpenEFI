@@ -99,7 +99,7 @@ pub(crate) async fn table_cdc_callback(mut ctx: app::table_cdc_callback::Context
                 response_buf.status = SerialStatus::DataChunk as u8;
                 response_buf.code = 0;
                 cdc_sender.send(response_buf.clone()).await.unwrap();
-                Systick::delay(10.millis()).await;
+               Systick::delay(10.millis()).await;
             }
 
             response_buf.status = SerialStatus::DataChunkEnd as u8;
