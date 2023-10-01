@@ -1,6 +1,6 @@
 [package]
 name = "open_efi"
-version = "3.4.534"
+version = "3.4.535"
 edition = "2021"
 authors = ["Ramiro Bou <ramiro@churrosoft.ar>", "Diego Frenoux <diego@churrosoft.ar>"]
 license = "MIT"

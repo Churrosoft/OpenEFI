@@ -76,7 +76,7 @@ mod app {
         memory::tables::{SpiT, Tables},
         logging::host,
         webserial::{
-            handle_engine,
+            handle_engine::engine_cdc_callback,
             handle_pmic::pmic_cdc_callback,
             handle_realtime_data::realtime_data_cdc_callback,
             handle_tables::table_cdc_callback,
@@ -148,6 +148,7 @@ mod app {
         table_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
         real_time_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
         pmic_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
+        engine_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
     }
 
     const CAPACITY: usize = 5;
@@ -368,6 +369,7 @@ mod app {
             table_sender: cdc_sender.clone(),
             real_time_sender: cdc_sender.clone(),
             pmic_sender: cdc_sender.clone(),
+            engine_sender: cdc_sender.clone(),
 
             adc,
             ckp,
@@ -443,6 +445,9 @@ mod app {
 
         #[task(local=[pmic_sender], shared = [efi_status, pmic, crc])]
         async fn pmic_cdc_callback(ctx: pmic_cdc_callback::Context, serial_cmd: SerialMessage);
+
+        #[task(local=[engine_sender], shared = [flash,flash_info,efi_cfg, crc])]
+        async fn engine_cdc_callback(ctx: engine_cdc_callback::Context, serial_cmd: SerialMessage);
 
         // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
         // #[task(binds = EXTI9_5,
