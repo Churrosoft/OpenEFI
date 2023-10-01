@@ -31,6 +31,7 @@ pub async fn realtime_data_cdc_callback(mut ctx: app::realtime_data_cdc_callback
             // RPM:
             number_arr = i32::to_le_bytes(ctx.shared.efi_status.lock(|es| es.rpm));
             response_buf.payload[..2].copy_from_slice(&number_arr[2..]);
+
             // TPS:
             number_arr = i32::to_le_bytes(fmt_data(ctx.shared.sensors.lock(|sns| sns.tps)));
             response_buf.payload[2..6].copy_from_slice(&number_arr);
@@ -63,7 +64,6 @@ pub async fn realtime_data_cdc_callback(mut ctx: app::realtime_data_cdc_callback
 
             // 20b to injection:
             number_arr = i32::to_le_bytes(fmt_data(ctx.shared.efi_status.lock(|es| es.injection.injection_bank_1_time)));
-
             response_buf.payload[80..84].copy_from_slice(&number_arr);
 
             // base air
@@ -80,16 +80,24 @@ pub async fn realtime_data_cdc_callback(mut ctx: app::realtime_data_cdc_callback
                     let crc = crc.update_bytes(&response_buf.payload[..118]);
                     response_buf.payload[118..122].copy_from_slice(&crc.to_le_bytes());
                 });
+
+            response_buf.status = SerialStatus::Ok as u8;
+            response_buf.code = 0;
+
+            let _ = ctx.local.real_time_sender.send(response_buf).await;
+            return;
         }
         _ => {
-            host::trace!("realtime data webserial error");
-            app::send_message::spawn(
-                SerialStatus::Error,
-                SerialCode::UnknownCmd as u8,
-                response_buf,
-            ).unwrap();
+            response_buf.status = SerialStatus::Error as u8;
+            response_buf.code = SerialCode::UnknownCmd as u8;
+
+            let _ = ctx.local.real_time_sender.send(response_buf).await;
             return;
         }
     };
-    app::send_message::spawn(SerialStatus::Error, SerialCode::ParseError as u8, response_buf).unwrap();
+
+    response_buf.status = SerialStatus::Error as u8;
+    response_buf.code = SerialCode::ParseError as u8;
+
+    let _ = ctx.local.real_time_sender.send(response_buf).await;
 }

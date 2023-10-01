@@ -27,7 +27,7 @@ use stm32f4xx_hal::{
     adc::{Adc, config::AdcConfig},
     crc32,
     crc32::Crc32,
-    gpio::{Edge, Input, PC13, PC14, Output, PushPull},
+    gpio::{Edge, Input},
     otg_fs,
     otg_fs::{USB, UsbBusType},
     pac::{ADC1, TIM13, TIM2, TIM3, TIM5},
@@ -38,8 +38,6 @@ use stm32f4xx_hal::{
 
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM4, TIM7, TIM8_CC])]
 mod app {
-    use stm32f4xx_hal::adc::Adc;
-    use stm32f4xx_hal::adc::config::AdcConfig;
     use super::*;
 
     mod my_module;
@@ -79,7 +77,7 @@ mod app {
         logging::host,
         webserial::{
             handle_engine,
-            handle_pmic,
+            handle_pmic::pmic_cdc_callback,
             handle_realtime_data::realtime_data_cdc_callback,
             handle_tables::table_cdc_callback,
             send_message,
@@ -145,8 +143,11 @@ mod app {
         // TODO: Remove
         state: bool,
         state2: bool,
+
+        // WebSerial:
         table_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
         real_time_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
+        pmic_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
     }
 
     const CAPACITY: usize = 5;
@@ -359,10 +360,15 @@ mod app {
             ckp: ckp_status,
             ignition_running: false,
         }, Local {
+            // USB
             usb_dev,
             cdc_input_buffer: cdc_buff,
+
+            // Serial
             table_sender: cdc_sender.clone(),
             real_time_sender: cdc_sender.clone(),
+            pmic_sender: cdc_sender.clone(),
+
             adc,
             ckp,
             analog_pins: gpio_config.adc,
@@ -432,8 +438,12 @@ mod app {
 
         #[task(local=[table_sender], shared = [flash_info, efi_cfg, tables, crc, flash, spi_lock])]
         async fn table_cdc_callback(ctx: table_cdc_callback::Context, serial_cmd: SerialMessage);
-        #[task(shared = [efi_status, sensors, crc])]
+        #[task(local=[real_time_sender], shared = [efi_status, sensors, crc])]
         async fn realtime_data_cdc_callback(ctx: realtime_data_cdc_callback::Context, serial_cmd: SerialMessage);
+
+        #[task(local=[pmic_sender], shared = [efi_status, pmic, crc])]
+        async fn pmic_cdc_callback(ctx: pmic_cdc_callback::Context, serial_cmd: SerialMessage);
+
         // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
         // #[task(binds = EXTI9_5,
         // local = [ckp],
@@ -461,7 +471,6 @@ mod app {
     async fn cdc_receiver(mut ctx: cdc_receiver::Context, mut receiver: Receiver<'static, SerialMessage, CDC_BUFF_CAPACITY>) {
         while let Ok(message) = receiver.recv().await {
             ctx.shared.usb_cdc.lock(|cdc| {
-                // debug!("Receiver got: {}", message.payload[0]);
                 cdc.write(&finish_message(message)).unwrap();
             });
         }

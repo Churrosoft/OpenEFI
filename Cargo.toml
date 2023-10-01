@@ -1,6 +1,6 @@
 [package]
 name = "open_efi"
-version = "3.4.532"
+version = "3.4.534"
 edition = "2021"
 authors = ["Ramiro Bou <ramiro@churrosoft.ar>", "Diego Frenoux <diego@churrosoft.ar>"]
 license = "MIT"
@@ -39,7 +39,7 @@ usb-device = "0.2.9"
 usbd-serial = "0.1.1"
 usbd-webusb = "1.0.2"
 
-w25q = "0.2.6"
+w25q = "0.2.9"
 
 serde = { version = "1.0.152", default-features = false, features = ["derive"] }
 serde-json-core = "0.5.0"

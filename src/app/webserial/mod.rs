@@ -108,16 +108,14 @@ pub fn process_command(buf: [u8; 128] , mut webserial_sender: &mut Sender<Serial
         0x20 => { /* TODO: injection */ }
         0x30 => { /* TODO: ignition */ }
         0x40 => { /* TODO: DTC */ }
-        //0x50 => app::realtime_data_cdc_callback::spawn(serial_cmd).unwrap(),
+        0x50 => app::realtime_data_cdc_callback::spawn(serial_cmd).unwrap(),
         //0x60 => app::engine_cdc_callback::spawn(serial_cmd).unwrap(),
         0x70 => { /* TODO: Debug console */ }
-        //0x80 => app::pmic_cdc_callback::spawn(serial_cmd).unwrap(),
+        0x80 => app::pmic_cdc_callback::spawn(serial_cmd).unwrap(),
         //0x90 => app::debug_demo::spawn(serial_cmd.command & 0b00001111).unwrap(),
         _ => {
-            serial_cmd.status = SerialStatus::Error as u8;
-            serial_cmd.code = SerialCode::UnknownCmd as u8;
-            // webserial_sender.try_send(serial_cmd).ok();
-            // app::send_message::spawn(serial_cmd).unwrap();
+            webserial_sender.try_send(serial_cmd).ok();
+            //app::send_message::spawn(SerialStatus::Error ,SerialCode::UnknownCmd as u8,serial_cmd).unwrap();
         }
     }
 }
