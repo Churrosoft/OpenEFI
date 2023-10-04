@@ -80,7 +80,7 @@ pub fn get_cranking_rpm(trigger: &mut VRStatus, trigger_config: &VRSensor) -> u3
             }
             trigger.revolution_time = revolution_time;
         }
-    }else{return 0;}
+    } else { return 0; }
     trigger.last_rpm = temp_rpm;
 
     return temp_rpm;
@@ -97,9 +97,7 @@ pub fn time_to_angle(trigger: &VRStatus, time: &u32) -> i32 {
 }
 
 pub fn get_crank_angle(trigger: &mut VRStatus, trigger_config: &VRSensor, cpu_tick: u32) -> i32 {
-
-    //TODO: move to const
-    let CRANK_ANGLE_MAX = 360;
+    const CRANK_ANGLE_MAX: i32 = 360;
 
     //Number of teeth that have passed since tooth 1, multiplied by the angle each tooth represents, plus the angle that tooth 1 is ATDC. This gives accuracy only to the nearest tooth.
     let mut crank_angle = ((trigger.tooth_current_count - 1) as f32 * trigger_config.trigger_tooth_angle) as i32 + 20;

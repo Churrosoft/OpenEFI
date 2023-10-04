@@ -12,13 +12,13 @@
 #![allow(stable_features)]
 #![allow(unused_mut)]
 
-
-use panic_halt as _;
 use rtic;
 use rtic_monotonics::systick::*;
 use rtic_sync::{channel::*, make_channel};
+
 use w25q::series25::FlashInfo;
 use arrayvec::ArrayVec;
+
 use usb_device::{bus::UsbBusAllocator, device::UsbDevice};
 use usbd_serial::SerialPort;
 use usbd_webusb::{url_scheme, WebUsb};
@@ -36,8 +36,47 @@ use stm32f4xx_hal::{
     timer::{self, Event},
 };
 
+use panic_halt as _;
+
 #[rtic::app(device = stm32f4xx_hal::pac, peripherals = true, dispatchers = [TIM4, TIM7, TIM8_CC])]
 mod app {
+    use my_module::blink2;
+
+    use crate::app::{
+        engine::{
+            cpwm::VRStatus,
+            efi_cfg::{EngineConfig, get_default_efi_cfg},
+            engine_status::{EngineStatus, get_default_engine_status},
+            pmic::{PMIC, PmicT},
+            sensors::{get_sensor_raw, SensorTypes, SensorValues},
+        },
+        gpio::{
+            ADCMapping,
+            AuxIoMapping,
+            IgnitionGpioMapping,
+            init_gpio,
+            InjectionGpioMapping,
+            LedGpioMapping,
+            RelayMapping,
+            StepperMapping,
+        },
+        injection::{calculate_time_isr, injection_setup},
+        logging::host,
+        memory::tables::{SpiT, Tables},
+        webserial::{
+            finish_message,
+            handle_engine::engine_cdc_callback,
+            handle_pmic::pmic_cdc_callback,
+            handle_realtime_data::realtime_data_cdc_callback,
+            handle_tables::table_cdc_callback,
+            send_message,
+            SerialMessage,
+            SerialStatus,
+        },
+        tasks::{engine::ckp_checks/* , engine::motor_checks,  ignition::ignition_schedule */}
+    };
+    use crate::app::tasks::engine::ckp_trigger;
+
     use super::*;
 
     mod my_module;
@@ -49,44 +88,8 @@ mod app {
     pub mod memory;
     pub mod util;
     pub mod webserial;
-    // pub mod tasks;
+    pub mod tasks;
 
-
-    use my_module::blink2;
-
-    use crate::app::{
-        engine::{
-            efi_cfg::{EngineConfig, get_default_efi_cfg},
-            engine_status::{EngineStatus, get_default_engine_status},
-            sensors::{get_sensor_raw, SensorTypes, SensorValues},
-            cpwm::VRStatus,
-            pmic::{PMIC, PmicT},
-        },
-        gpio::{
-            LedGpioMapping,
-            AuxIoMapping,
-            ADCMapping,
-            IgnitionGpioMapping,
-            init_gpio,
-            InjectionGpioMapping,
-            RelayMapping,
-            StepperMapping,
-        },
-        injection::{calculate_time_isr, injection_setup},
-        memory::tables::{SpiT, Tables},
-        logging::host,
-        webserial::{
-            handle_engine::engine_cdc_callback,
-            handle_pmic::pmic_cdc_callback,
-            handle_realtime_data::realtime_data_cdc_callback,
-            handle_tables::table_cdc_callback,
-            send_message,
-            SerialMessage,
-            SerialStatus,
-            finish_message,
-        },
-        // tasks::{engine::ckp_trigger, engine::motor_checks, ignition::ignition_schedule}
-    };
 
     #[shared]
     struct Shared {
@@ -150,8 +153,6 @@ mod app {
         pmic_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
         engine_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
     }
-
-    const CAPACITY: usize = 5;
     const CDC_BUFF_CAPACITY: usize = 30;
 
     #[init(local = [USB_BUS: Option < UsbBusAllocator < UsbBusType >> = None])]
@@ -438,32 +439,31 @@ mod app {
             message: SerialMessage,
         );
 
-        #[task(local=[table_sender], shared = [flash_info, efi_cfg, tables, crc, flash, spi_lock])]
+        #[task(local = [table_sender], shared = [flash_info, efi_cfg, tables, crc, flash, spi_lock])]
         async fn table_cdc_callback(ctx: table_cdc_callback::Context, serial_cmd: SerialMessage);
-        #[task(local=[real_time_sender], shared = [efi_status, sensors, crc])]
+        #[task(local = [real_time_sender], shared = [efi_status, sensors, crc])]
         async fn realtime_data_cdc_callback(ctx: realtime_data_cdc_callback::Context, serial_cmd: SerialMessage);
 
-        #[task(local=[pmic_sender], shared = [efi_status, pmic, crc])]
+        #[task(local = [pmic_sender], shared = [efi_status, pmic, crc])]
         async fn pmic_cdc_callback(ctx: pmic_cdc_callback::Context, serial_cmd: SerialMessage);
 
-        #[task(local=[engine_sender], shared = [flash,flash_info,efi_cfg, crc])]
+        #[task(local = [engine_sender], shared = [flash, flash_info, efi_cfg, crc])]
         async fn engine_cdc_callback(ctx: engine_cdc_callback::Context, serial_cmd: SerialMessage);
 
         // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
-        // #[task(binds = EXTI9_5,
-        // local = [ckp],
-        // shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4, ckp, ign_pins]
-        // )]
-        // fn ckp_trigger(ctx: ckp_trigger::Context);
+        #[task(binds = EXTI9_5, local = [ckp], shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4, ckp, ign_pins], priority = 5)]
+        fn ckp_trigger(ctx: ckp_trigger::Context);
+        #[task(shared = [efi_cfg, ckp, timer4, efi_status, ignition_running], priority = 4)]
+        async fn ckp_checks(ctx: ckp_checks::Context);
+
+
         //
         // #[task(
         // shared = [led, efi_status, efi_cfg, timer3, timer4, ckp, ign_pins],
-        // priority = 1
+        // priority = 4
         // )]
         // async fn ignition_schedule(ctx: ignition_schedule::Context);
         //
-        // #[task(shared = [efi_cfg, ckp, timer4, efi_status,ignition_running], priority = 1)]
-        // async fn motor_checks(ctx: motor_checks::Context);
     }
 
     // Externally defined tasks

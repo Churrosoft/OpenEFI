@@ -2,6 +2,7 @@
 use rtic::Mutex;
 use rtic::mutex_prelude::TupleExt04;
 use stm32f4xx_hal::gpio::ExtiPin;
+use rtic_monotonics::systick::*;
 use crate::{
     app,
 };
@@ -18,9 +19,6 @@ pub(crate) fn ckp_trigger(mut ctx: app::ckp_trigger::Context) {
 
     let mut ckp = VRSensor::new();
     let mut rpm = 0;
-
-    let mut ecn = ctx.shared.ign_pins;
-    let mut timer3 = ctx.shared.timer3;
 
     // lock previo y libero los recursos que no se vuelven a usar para otra cosa aca adentro
     efi_cfg.lock(|cfg| { ckp = cfg.engine.ckp });
@@ -52,7 +50,7 @@ pub(crate) fn ckp_trigger(mut ctx: app::ckp_trigger::Context) {
                         ckp_status.target_gap = (3 * (ckp_status.tooth_last_time - ckp_status.tooth_last_minus_one_tooth_time)) >> 1;
                     } else {
                         //Multiply by 2 (Checks for a gap 2x greater than the last one)
-                        ckp_status.target_gap = ((ckp_status.tooth_last_time - ckp_status.tooth_last_minus_one_tooth_time)) * ckp.missing_tooth;
+                        ckp_status.target_gap = (ckp_status.tooth_last_time - ckp_status.tooth_last_minus_one_tooth_time) * ckp.missing_tooth;
                     }
 
                     // initial startup, missing one time
@@ -63,19 +61,6 @@ pub(crate) fn ckp_trigger(mut ctx: app::ckp_trigger::Context) {
                     if (ckp_status.current_gap > ckp_status.target_gap) || (ckp_status.tooth_current_count > ckp.trigger_actual_teeth) {
                         //Missing tooth detected
                         ckp_status.is_missing_tooth = true;
-
-                        // FIXME: remove
-                        if rpm > 30 {}
-
-                        // ctx.shared.led.lock(|l| { l.led_2.set_low() });
-                        // (ecn, timer3).lock(|ecn, timer3| {
-                        //     ecn.ecn_1.set_high();
-                        //     ecn.ecn_2.set_high();
-                        //     ecn.ecn_3.set_high();
-                        //     ecn.ecn_4.set_high();
-                        //     timer3.start((1200).micros()).unwrap();
-                        // });
-                        //ctx.shared.timer3.lock(|timer3| { });
 
                         if ckp_status.tooth_current_count < ckp.trigger_actual_teeth {
                             // This occurs when we're at tooth #1, but haven't seen all the other teeth. This indicates a signal issue so we flag lost sync so this will attempt to resync on the next revolution.
@@ -127,7 +112,7 @@ pub(crate) fn ckp_trigger(mut ctx: app::ckp_trigger::Context) {
 
 // TODO: add similar stall control of speeduino
 // https://github.com/noisymime/speeduino/blob/master/speeduino/speeduino.ino#L146
-pub(crate) async fn motor_checks(mut ctx:  app::motor_checks::Context<'_>) {
+pub(crate) async fn ckp_checks(mut ctx:  app::ckp_checks::Context<'_>) {
     let mut efi_cfg = ctx.shared.efi_cfg;
     let mut ckp = ctx.shared.ckp;
     let mut efi_status = ctx.shared.efi_status;
@@ -164,20 +149,21 @@ pub(crate) async fn motor_checks(mut ctx:  app::motor_checks::Context<'_>) {
 
             // ignition timing:
             let mut crank_angle = get_crank_angle(ckp, &cfg.engine.ckp, cycle_time);
-            let mut CRANK_ANGLE_MAX_IGN = 720; //ponele? no entendi bien como se setea dependiendo el tipo de encendido/cilindros
+            const CRANK_ANGLE_MAX_IGN: i32 = 720; //ponele? no entendi bien como se setea dependiendo el tipo de encendido/cilindros
             while crank_angle > CRANK_ANGLE_MAX_IGN { crank_angle -= CRANK_ANGLE_MAX_IGN; } // SDUBTUD: no entendi para que es esto pero quien soy para cuestionar a speeduino
 
             let dwell_angle = 20; //TODO: get from table
             let dwell_time = angle_to_time(ckp,&dwell_angle);
 
-            if !*ignition_running /* && get_cranking_rpm(ckp, &cfg.engine.ckp) != 0*/{
-                *ignition_running = true;
-                //seteamos nuevo triggerrr
-                // let dwell_ticks = (120_000_000 / 100_000) * dwell_time as u64;
-                // let dwell_duration = Duration::<u64, 1, 100_000>::from_ticks(dwell_ticks);
-                // SDUBTUD: si esto anda es de puro milagro
-                // app::ignition_trigger::spawn_after(dwell_duration).unwrap();
-            }
+            // tiene que ser task externa
+            // if !*ignition_running /* && get_cranking_rpm(ckp, &cfg.engine.ckp) != 0*/{
+            //     *ignition_running = true;
+            //     //seteamos nuevo triggerrr
+            //     // let dwell_ticks = (120_000_000 / 100_000) * dwell_time as u64;
+            //     // let dwell_duration = Duration::<u64, 1, 100_000>::from_ticks(dwell_ticks);
+            //     // SDUBTUD: si esto anda es de puro milagro
+            //     // app::ignition_trigger::spawn_after(dwell_duration).unwrap();
+            // }
 
             // esto se usa para iny
             get_crank_angle(ckp, &cfg.engine.ckp, cycle_time);
@@ -186,4 +172,6 @@ pub(crate) async fn motor_checks(mut ctx:  app::motor_checks::Context<'_>) {
         }
         cfg.engine.ckp.max_stall_time;
     });
+
+    Systick::delay(100.micros()).await;
 }
