@@ -98,15 +98,15 @@
 <a href="#98" id="98">98</a>
 <a href="#99" id="99">99</a>
 <a href="#100" id="100">100</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>rtic::Mutex;
 
 <span class="kw">use </span><span class="kw">crate</span>::app::{
     <span class="self">self</span>,
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-
-<span class="kw">use </span><span class="kw">crate</span>::app::engine::engine_status::EngineStatus;
-<span class="kw">use </span><span class="kw">crate</span>::app::engine::sensors::SensorValues;
 
 <span class="kw">use </span><span class="kw">crate</span>::app::logging::host;
 
@@ -114,14 +114,10 @@
     (number * <span class="number">100.0</span>) <span class="kw">as </span>i32
 }
 
-<span class="kw">pub fn </span>handler(
-    crc: <span class="kw-2">&amp;mut </span>Crc32,
-    efi_status: <span class="kw-2">&amp;</span>EngineStatus,
-    efi_sensors: <span class="kw-2">&amp;</span>SensorValues,
-    command: SerialMessage) {
+<span class="kw">pub async fn </span>realtime_data_cdc_callback(<span class="kw-2">mut </span>ctx: app::realtime_data_cdc_callback::Context&lt;<span class="lifetime">&#39;_</span>&gt;, serial_cmd: SerialMessage) {
     <span class="kw">let </span><span class="kw-2">mut </span>response_buf = SerialMessage {
         protocol: <span class="number">1</span>,
-        command: command.command,
+        command: serial_cmd.command,
         status: <span class="number">0</span>,
         code: <span class="number">0</span>,
         payload: [<span class="number">0u8</span>; <span class="number">122</span>],
@@ -129,34 +125,34 @@
     };
 
     <span class="kw">let </span><span class="kw-2">mut </span>number_arr: [u8; <span class="number">4</span>];
-    <span class="kw">match </span>command.command &amp; <span class="number">0b00001111 </span>{
+    <span class="kw">match </span>serial_cmd.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// read dashboard Data:
         </span><span class="number">0x01 </span>=&gt; {
             <span class="macro">host::trace!</span>(<span class="string">&quot;read dashboard cfg&quot;</span>);
         }
         <span class="number">0x02 </span>=&gt; {
             <span class="comment">// RPM:
-            </span>number_arr = i32::to_le_bytes(efi_status.rpm);
+            </span>number_arr = i32::to_le_bytes(ctx.shared.efi_status.lock(|es| es.rpm));
             response_buf.payload[..<span class="number">2</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr[<span class="number">2</span>..]);
 
             <span class="comment">// TPS:
-            </span>number_arr = i32::to_le_bytes(fmt_data(efi_sensors.tps));
+            </span>number_arr = i32::to_le_bytes(fmt_data(ctx.shared.sensors.lock(|sns| sns.tps)));
             response_buf.payload[<span class="number">2</span>..<span class="number">6</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
 
             <span class="comment">// MAP:
-            </span>number_arr = i32::to_le_bytes(fmt_data(efi_sensors.map));
+            </span>number_arr = i32::to_le_bytes(fmt_data(ctx.shared.sensors.lock(|sns| sns.map)));
             response_buf.payload[<span class="number">6</span>..<span class="number">10</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
 
             <span class="comment">// TEMP:
-            </span>number_arr = i32::to_le_bytes(fmt_data(efi_sensors.cooltan_temp));
+            </span>number_arr = i32::to_le_bytes(fmt_data(ctx.shared.sensors.lock(|sns| sns.cooltan_temp)));
             response_buf.payload[<span class="number">10</span>..<span class="number">14</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
 
             <span class="comment">// IAT:
-            </span>number_arr = i32::to_le_bytes(fmt_data(efi_sensors.air_temp));
+            </span>number_arr = i32::to_le_bytes(fmt_data(ctx.shared.sensors.lock(|sns| sns.air_temp)));
             response_buf.payload[<span class="number">14</span>..<span class="number">18</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
 
             <span class="comment">// VBAT:
-            </span>number_arr = i32::to_le_bytes(fmt_data(efi_sensors.batt));
+            </span>number_arr = i32::to_le_bytes(fmt_data(ctx.shared.sensors.lock(|sns| sns.batt)));
             response_buf.payload[<span class="number">18</span>..<span class="number">22</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
 
             <span class="comment">// // LMB
@@ -170,32 +166,42 @@
             // response_buf.payload[60..84].copy_from_slice(&amp;number_arr);
 
             // 20b to injection:
-            </span>number_arr = i32::to_le_bytes(fmt_data(efi_status.injection.injection_bank_1_time));
+            </span>number_arr = i32::to_le_bytes(fmt_data(ctx.shared.efi_status.lock(|es| es.injection.injection_bank_1_time)));
             response_buf.payload[<span class="number">80</span>..<span class="number">84</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
 
             <span class="comment">// base air
-            </span>number_arr = i32::to_le_bytes(fmt_data(efi_status.injection.base_air));
+            </span>number_arr = i32::to_le_bytes(fmt_data(ctx.shared.efi_status.lock(|es| es.injection.base_air)));
             response_buf.payload[<span class="number">84</span>..<span class="number">88</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
 
             <span class="comment">// base fuel
-            </span>number_arr = i32::to_le_bytes(fmt_data(efi_status.injection.base_fuel));
+            </span>number_arr = i32::to_le_bytes(fmt_data(ctx.shared.efi_status.lock(|es| es.injection.base_fuel)));
             response_buf.payload[<span class="number">88</span>..<span class="number">92</span>].copy_from_slice(<span class="kw-2">&amp;</span>number_arr);
 
-            crc.init();
-            <span class="kw">let </span>crc = crc.update_bytes(<span class="kw-2">&amp;</span>response_buf.payload[..<span class="number">118</span>]);
-            response_buf.payload[<span class="number">118</span>..<span class="number">122</span>].copy_from_slice(<span class="kw-2">&amp;</span>crc.to_le_bytes());
+            ctx.shared.crc.lock(|crc|
+                {
+                    crc.init();
+                    <span class="kw">let </span>crc = crc.update_bytes(<span class="kw-2">&amp;</span>response_buf.payload[..<span class="number">118</span>]);
+                    response_buf.payload[<span class="number">118</span>..<span class="number">122</span>].copy_from_slice(<span class="kw-2">&amp;</span>crc.to_le_bytes());
+                });
+
+            response_buf.status = SerialStatus::Ok <span class="kw">as </span>u8;
+            response_buf.code = <span class="number">0</span>;
+
+            <span class="kw">let _ </span>= ctx.local.real_time_sender.send(response_buf).<span class="kw">await</span>;
+            <span class="kw">return</span>;
         }
         <span class="kw">_ </span>=&gt; {
-            <span class="macro">host::trace!</span>(<span class="string">&quot;realtime data webserial error&quot;</span>);
-            app::send_message::spawn(
-                SerialStatus::Error,
-                SerialCode::UnknownCmd <span class="kw">as </span>u8,
-                response_buf,
-            )
-                .unwrap();
+            response_buf.status = SerialStatus::Error <span class="kw">as </span>u8;
+            response_buf.code = SerialCode::UnknownCmd <span class="kw">as </span>u8;
+
+            <span class="kw">let _ </span>= ctx.local.real_time_sender.send(response_buf).<span class="kw">await</span>;
             <span class="kw">return</span>;
         }
     };
-    app::send_message::spawn(SerialStatus::Error, SerialCode::ParseError <span class="kw">as </span>u8, response_buf).unwrap();
+
+    response_buf.status = SerialStatus::Error <span class="kw">as </span>u8;
+    response_buf.code = SerialCode::ParseError <span class="kw">as </span>u8;
+
+    <span class="kw">let _ </span>= ctx.local.real_time_sender.send(response_buf).<span class="kw">await</span>;
 }
 </code></pre></div></section></main></body></html>

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["spawn"],"struct":["Context","SharedResources"]};
+window.SIDEBAR_ITEMS = {"fn":["spawn"],"struct":["Context","LocalResources","SharedResources"]};

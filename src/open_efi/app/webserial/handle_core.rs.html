@@ -41,11 +41,12 @@
 <a href="#41" id="41">41</a>
 <a href="#42" id="42">42</a>
 <a href="#43" id="43">43</a>
-</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    app,
+</pre></div><pre class="rust"><code><span class="kw">use </span>rtic_sync::channel::Sender;
+<span class="kw">use crate</span>::{
     app::webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-<span class="kw">pub fn </span>handler(command: SerialMessage) {
+
+<span class="kw">pub fn </span>handler(command: SerialMessage, <span class="kw-2">mut </span>webserial_sender: <span class="kw-2">&amp;mut </span>Sender&lt;SerialMessage, <span class="number">30</span>&gt;) {
     <span class="kw">let </span><span class="kw-2">mut </span>response_buf = SerialMessage {
         protocol: <span class="number">1</span>,
         command: command.command,
@@ -72,15 +73,14 @@
             response_buf.payload[<span class="number">5</span>] = ((efi_ver_patch &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xFF</span>) <span class="kw">as </span>u8;
             response_buf.payload[<span class="number">6</span>] = (efi_ver_patch &amp; <span class="number">0xFF</span>) <span class="kw">as </span>u8;
 
-            app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
+            response_buf.status = SerialStatus::Ok <span class="kw">as </span>u8;
+            response_buf.code = <span class="number">0</span>;
+            webserial_sender.try_send(response_buf).ok();
         }
         <span class="kw">_ </span>=&gt; {
-            app::send_message::spawn(
-                SerialStatus::Error,
-                SerialCode::UnknownCmd <span class="kw">as </span>u8,
-                response_buf,
-            )
-            .unwrap();
+            response_buf.status = SerialStatus::Error <span class="kw">as </span>u8;
+            response_buf.code = SerialCode::UnknownCmd <span class="kw">as </span>u8;
+            webserial_sender.try_send(response_buf).ok();
         }
     };
 }

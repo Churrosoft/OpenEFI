@@ -123,25 +123,9 @@
 <a href="#123" id="123">123</a>
 <a href="#124" id="124">124</a>
 <a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
-<a href="#130" id="130">130</a>
-<a href="#131" id="131">131</a>
-<a href="#132" id="132">132</a>
-<a href="#133" id="133">133</a>
-<a href="#134" id="134">134</a>
-<a href="#135" id="135">135</a>
-<a href="#136" id="136">136</a>
-<a href="#137" id="137">137</a>
-<a href="#138" id="138">138</a>
-<a href="#139" id="139">139</a>
-<a href="#140" id="140">140</a>
-<a href="#141" id="141">141</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::{PlotData};
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::PlotData;
 
-<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug,Copy,Clone)]
+<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 </span><span class="kw">pub struct </span>VRSensor {
     <span class="kw">pub </span>trigger_tooth_angle: f32,
     <span class="kw">pub </span>tooth_count: u32,
@@ -152,7 +136,7 @@
     <span class="kw">pub </span>max_stall_time: u32,
 }
 
-<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug)]
+<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 </span><span class="kw">pub struct </span>Engine {
     <span class="kw">pub </span>cylinder_count: u8,
     <span class="kw">pub </span>displacement: u32,
@@ -160,7 +144,7 @@
     <span class="kw">pub </span>ckp: VRSensor,
 }
 
-<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug)]
+<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 </span><span class="kw">pub struct </span>InjectorConfig {
     <span class="kw">pub </span>flow_cc_min: f32,
     <span class="kw">pub </span>injector_count: u8,
@@ -173,7 +157,7 @@
 }
 
 <span class="attr">#[allow(non_snake_case)]
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 </span><span class="kw">pub struct </span>InjectionConfig {
     <span class="kw">pub </span>target_lambda: f32,
     <span class="kw">pub </span>target_stoich: f32,
@@ -182,7 +166,7 @@
     <span class="kw">pub </span>injector: InjectorConfig,
 }
 
-<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug)]
+<span class="attr">#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 </span><span class="kw">pub struct </span>EngineConfig {
     <span class="kw">pub </span>ready: bool,
     <span class="kw">pub </span>injection: InjectionConfig,
@@ -190,15 +174,15 @@
 }
 
 <span class="kw">impl </span>EngineConfig {
-    <span class="kw">pub fn </span>new()-&gt;EngineConfig{
+    <span class="kw">pub fn </span>new() -&gt; EngineConfig {
         get_default_efi_cfg()
     }
 }
 
 
-<span class="kw">impl </span>VRSensor{
-    <span class="kw">pub fn </span>new()-&gt;VRSensor{
-        VRSensor{
+<span class="kw">impl </span>VRSensor {
+    <span class="kw">pub fn </span>new() -&gt; VRSensor {
+        VRSensor {
             trigger_tooth_angle: <span class="number">0.0</span>,
             tooth_count: <span class="number">0</span>,
             trigger_filter_time: <span class="number">0</span>,
@@ -217,7 +201,7 @@
             cylinder_count: <span class="number">4</span>,
             displacement: <span class="number">1596</span>,
             max_rpm: <span class="number">7000</span>,
-            ckp:VRSensor{
+            ckp: VRSensor {
                 trigger_tooth_angle: <span class="number">0.0</span>,
                 tooth_count: <span class="number">60</span>,
                 trigger_filter_time: <span class="number">0</span>,
@@ -254,7 +238,7 @@
     </span>cfg.engine.ckp.trigger_tooth_angle = <span class="number">360f32 </span>/ cfg.engine.ckp.tooth_count <span class="kw">as </span>f32;
 
     <span class="comment">//Trigger filter time is the shortest possible time (in uS) that there can be between crank teeth (ie at max RPM). Any pulses that occur faster than this time will be discarded as noise
-    </span>cfg.engine.ckp.trigger_filter_time = <span class="number">1000000 </span>/ (cfg.engine.max_rpm / <span class="number">60 </span>* cfg.engine.ckp.tooth_count );
+    </span>cfg.engine.ckp.trigger_filter_time = <span class="number">1000000 </span>/ (cfg.engine.max_rpm / <span class="number">60 </span>* cfg.engine.ckp.tooth_count);
 
     <span class="comment">//Minimum 50rpm. (3333uS is the time per degree at 50rpm)
     </span>cfg.engine.ckp.max_stall_time = (<span class="number">3333f32 </span>* cfg.engine.ckp.trigger_tooth_angle * (cfg.engine.ckp.missing_tooth + <span class="number">1</span>) <span class="kw">as </span>f32) <span class="kw">as </span>u32;
@@ -264,20 +248,4 @@
 
     <span class="kw">return </span>cfg;
 }
-
-
-<span class="comment">// por ahora con 25% supongo que estoy, o sino apagado
-
-// /**
-//  * Sets the new filter time based on the current settings.
-//  * This ONLY works for even spaced decoders.
-//  */
-// static inline void setFilter(unsigned long curGap)
-// {
-// if(configPage4.triggerFilter == 0) { triggerFilterTime = 0; } //trigger filter is turned off.
-// else if(configPage4.triggerFilter == 1) { triggerFilterTime = curGap &gt;&gt; 2; } //Lite filter level is 25% of previous gap
-// else if(configPage4.triggerFilter == 2) { triggerFilterTime = curGap &gt;&gt; 1; } //Medium filter level is 50% of previous gap
-// else if (configPage4.triggerFilter == 3) { triggerFilterTime = (curGap * 3) &gt;&gt; 2; } //Aggressive filter level is 75% of previous gap
-// else { triggerFilterTime = 0; } //trigger filter is turned off.
-// }
-</span></code></pre></div></section></main></body></html>
+</code></pre></div></section></main></body></html>

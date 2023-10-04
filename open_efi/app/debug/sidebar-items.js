@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["external_idle_demo","injector_demo","relay_demo","spark_demo"]};

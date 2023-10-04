@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["init_gpio"],"struct":["GpioMapping"]};
+window.SIDEBAR_ITEMS = {"fn":["init_gpio"],"struct":["ADCMapping","AuxIoMapping","GpioMapping","IgnitionGpioMapping","InjectionGpioMapping","LedGpioMapping","PMICGpioMapping","RelayMapping","StepperMapping"],"type":["ISPI"]};

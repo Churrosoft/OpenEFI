@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["Context","LocalResources","Monotonics"]};
+window.SIDEBAR_ITEMS = {"struct":["Context","LocalResources"]};

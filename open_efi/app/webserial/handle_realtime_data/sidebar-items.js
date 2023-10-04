@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["fmt_data","handler"]};
+window.SIDEBAR_ITEMS = {"fn":["fmt_data","realtime_data_cdc_callback"]};

@@ -117,41 +117,6 @@
 <a href="#117" id="117">117</a>
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
-<a href="#130" id="130">130</a>
-<a href="#131" id="131">131</a>
-<a href="#132" id="132">132</a>
-<a href="#133" id="133">133</a>
-<a href="#134" id="134">134</a>
-<a href="#135" id="135">135</a>
-<a href="#136" id="136">136</a>
-<a href="#137" id="137">137</a>
-<a href="#138" id="138">138</a>
-<a href="#139" id="139">139</a>
-<a href="#140" id="140">140</a>
-<a href="#141" id="141">141</a>
-<a href="#142" id="142">142</a>
-<a href="#143" id="143">143</a>
-<a href="#144" id="144">144</a>
-<a href="#145" id="145">145</a>
-<a href="#146" id="146">146</a>
-<a href="#147" id="147">147</a>
-<a href="#148" id="148">148</a>
-<a href="#149" id="149">149</a>
-<a href="#150" id="150">150</a>
-<a href="#151" id="151">151</a>
-<a href="#152" id="152">152</a>
-<a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::engine::efi_cfg::VRSensor;
 
 <span class="kw">pub struct </span>VRStatus {
@@ -234,46 +199,13 @@
             }
             trigger.revolution_time = revolution_time;
         }
-    }<span class="kw">else</span>{<span class="kw">return </span><span class="number">0</span>;}
+    } <span class="kw">else </span>{ <span class="kw">return </span><span class="number">0</span>; }
     trigger.last_rpm = temp_rpm;
 
     <span class="kw">return </span>temp_rpm;
 }
 
-<span class="comment">//
-// int getCrankAngle_missingTooth(void)
-// {
-// //This is the current angle ATDC the engine is at. This is the last known position based on what tooth was last &#39;seen&#39;. It is only accurate to the resolution of the trigger wheel (Eg 36-1 is 10 degrees)
-// unsigned long tempToothLastToothTime;
-// int tempToothCurrentCount;
-// bool tempRevolutionOne;
-// //Grab some variables that are used in the trigger code and assign them to temp variables.
-// noInterrupts();
-// tempToothCurrentCount = toothCurrentCount;
-// tempRevolutionOne = revolutionOne;
-// tempToothLastToothTime = toothLastToothTime;
-// interrupts();
-//
-// int crankAngle = ((tempToothCurrentCount - 1) * triggerToothAngle) + configPage4.triggerAngle;
-//
-// //Sequential check (simply sets whether we&#39;re on the first or 2nd revolution of the cycle)
-// if ( (tempRevolutionOne == true) &amp;&amp; (configPage4.TrigSpeed == CRANK_SPEED) ) { crankAngle += 360; }
-//
-// lastCrankAngleCalc = micros();
-// elapsedTime = (lastCrankAngleCalc - tempToothLastToothTime);
-// crankAngle += timeToAngle(elapsedTime, CRANKMATH_METHOD_INTERVAL_REV);
-//
-// if (crankAngle &gt;= 720) { crankAngle -= 720; }
-// else if (crankAngle &gt; CRANK_ANGLE_MAX) { crankAngle -= CRANK_ANGLE_MAX; }
-// if (crankAngle &lt; 0) { crankAngle += CRANK_ANGLE_MAX; }
-//
-// return crankAngle;
-// }
-
-//cpu_tick -&gt; us
-
-
-</span><span class="kw">pub fn </span>angle_to_time(trigger: <span class="kw-2">&amp;</span>VRStatus, angle: <span class="kw-2">&amp;</span>u32) -&gt; i32 {
+<span class="kw">pub fn </span>angle_to_time(trigger: <span class="kw-2">&amp;</span>VRStatus, angle: <span class="kw-2">&amp;</span>u32) -&gt; i32 {
     <span class="comment">// por ahora la estimacion de tiempo mas simple
     </span><span class="kw">return </span>((<span class="kw-2">*</span>angle * trigger.revolution_time) / <span class="number">360</span>) <span class="kw">as </span>i32;
 }
@@ -284,9 +216,7 @@
 }
 
 <span class="kw">pub fn </span>get_crank_angle(trigger: <span class="kw-2">&amp;mut </span>VRStatus, trigger_config: <span class="kw-2">&amp;</span>VRSensor, cpu_tick: u32) -&gt; i32 {
-
-    <span class="comment">//TODO: move to const
-    </span><span class="kw">let </span>CRANK_ANGLE_MAX = <span class="number">360</span>;
+    <span class="kw">const </span>CRANK_ANGLE_MAX: i32 = <span class="number">360</span>;
 
     <span class="comment">//Number of teeth that have passed since tooth 1, multiplied by the angle each tooth represents, plus the angle that tooth 1 is ATDC. This gives accuracy only to the nearest tooth.
     </span><span class="kw">let </span><span class="kw-2">mut </span>crank_angle = ((trigger.tooth_current_count - <span class="number">1</span>) <span class="kw">as </span>f32 * trigger_config.trigger_tooth_angle) <span class="kw">as </span>i32 + <span class="number">20</span>;

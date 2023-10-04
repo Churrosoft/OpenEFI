@@ -112,7 +112,7 @@
         }
 
         {
-            <span class="kw">let </span><span class="kw-2">mut </span>memory_config:EngineConfig = from_bytes(<span class="kw-2">&amp;</span>read_buff).unwrap();
+            <span class="kw">let </span><span class="kw-2">mut </span>memory_config: EngineConfig = from_bytes(<span class="kw-2">&amp;</span>read_buff).unwrap();
 
             <span class="self">self</span>.injection = memory_config.injection;
             <span class="self">self</span>.engine = memory_config.engine;

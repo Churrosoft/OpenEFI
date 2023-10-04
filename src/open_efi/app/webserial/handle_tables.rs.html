@@ -325,7 +325,23 @@
 <a href="#325" id="325">325</a>
 <a href="#326" id="326">326</a>
 <a href="#327" id="327">327</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>rtic::Mutex;
+<span class="kw">use </span>rtic::mutex_prelude::{TupleExt03, TupleExt06};
+<span class="kw">use </span>rtic_monotonics::systick::<span class="kw-2">*</span>;
+<span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
 <span class="kw">use </span>w25q::series25::FlashInfo;
 
 <span class="kw">use </span><span class="kw">crate</span>::app::{
@@ -334,13 +350,14 @@
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
 
-<span class="kw">pub fn </span>handler(
-    command: SerialMessage,
-    flash: <span class="kw-2">&amp;mut </span>FlashT,
-    flash_info: <span class="kw-2">&amp;mut </span>FlashInfo,
-    table_data: <span class="kw-2">&amp;mut </span>Tables,
-    crc: <span class="kw-2">&amp;mut </span>Crc32,
-) {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async fn </span>table_cdc_callback(<span class="kw-2">mut </span>ctx: app::table_cdc_callback::Context&lt;<span class="lifetime">&#39;_</span>&gt;, command: SerialMessage) {
+    <span class="kw">let </span>flash = ctx.shared.flash;
+    <span class="kw">let </span>flash_info = ctx.shared.flash_info;
+    <span class="kw">let </span><span class="kw-2">mut </span>tables = ctx.shared.tables;
+    <span class="kw">let </span>crc = ctx.shared.crc;
+    <span class="kw">let </span><span class="kw-2">mut </span>cdc_sender = ctx.local.table_sender;
+
+
     <span class="kw">let </span><span class="kw-2">mut </span>response_buf = SerialMessage {
         protocol: <span class="number">1</span>,
         command: <span class="number">0x10</span>,
@@ -351,6 +368,7 @@
     };
 
     <span class="kw">let </span>selected_table = command.code;
+
 
     <span class="kw">match </span>command.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// table get metadata
@@ -375,33 +393,31 @@
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
             }
         }
         <span class="comment">// get X table
         </span><span class="number">0x02 </span>=&gt; {
-            <span class="attr">#[allow(unused_assignments)]
-                </span><span class="kw">let </span><span class="kw-2">mut </span>table = [[<span class="number">0i32</span>; <span class="number">17</span>]; <span class="number">17</span>];
-
+            <span class="kw">let </span><span class="kw-2">mut </span>table = [[<span class="number">0i32</span>; <span class="number">17</span>]; <span class="number">17</span>];
+            <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table get&quot;</span>);
             <span class="kw">match </span>selected_table {
                 <span class="number">0x01 </span>=&gt; {
                     <span class="comment">// TODO: read table if not read prev.
-                    </span>table = table_data.tps_rpm_ve.unwrap();
+                    </span>table = tables.lock(|table_data| table_data.tps_rpm_ve.unwrap_or(table));
                 }
                 <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TODO: read table if not read prev.
-                    </span>table = table_data.load_tps_deg.unwrap();
+                    </span>table = tables.lock(|table_data| table_data.load_tps_deg.unwrap_or(table));
                 }
                 <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
+                    <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table unkown get&quot;</span>);
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
             }
@@ -420,17 +436,24 @@
                     i += <span class="number">4</span>;
                 }
                 _row_index += <span class="number">1</span>;
-                app::send_message::spawn(SerialStatus::DataChunk, <span class="number">0</span>, response_buf).unwrap();
+                response_buf.status = SerialStatus::DataChunk <span class="kw">as </span>u8;
+                response_buf.code = <span class="number">0</span>;
+                cdc_sender.send(response_buf.clone()).<span class="kw">await</span>.unwrap();
+               Systick::delay(<span class="number">10</span>.millis()).<span class="kw">await</span>;
             }
-            app::send_message::spawn(SerialStatus::DataChunkEnd, <span class="number">0</span>, response_buf).unwrap();
+
+            response_buf.status = SerialStatus::DataChunkEnd <span class="kw">as </span>u8;
+            response_buf.code = <span class="number">0</span>;
+            cdc_sender.send(response_buf.clone()).<span class="kw">await</span>.unwrap();
         }
+
         <span class="comment">// put X table
+        // TODO: read table if not read prev.
         </span><span class="number">0x03 </span>=&gt; {
             <span class="kw">let </span><span class="kw-2">mut </span>row_data = <span class="number">1</span>;
             <span class="kw">let </span>row_index = command.payload[<span class="number">0</span>] <span class="kw">as </span>usize;
             <span class="kw">let </span><span class="kw-2">mut </span>table_row = [<span class="number">0i32</span>; <span class="number">17</span>];
-            <span class="attr">#[allow(unused_assignments)]
-                </span><span class="kw">let </span><span class="kw-2">mut </span>table = [[<span class="number">0i32</span>; <span class="number">17</span>]; <span class="number">17</span>];
+            <span class="kw">let </span><span class="kw-2">mut </span>table = [[<span class="number">0i32</span>; <span class="number">17</span>]; <span class="number">17</span>];
 
             <span class="comment">// FIXME: get max index from correct table
             </span><span class="kw">for </span>matrix_x <span class="kw">in </span><span class="number">0</span>..<span class="number">17 </span>{
@@ -449,27 +472,25 @@
             <span class="kw">match </span>selected_table {
                 <span class="number">0x01 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
-                    // TODO: read table if not read prev.
-                    </span>table = table_data.tps_rpm_ve.unwrap();
+                    </span>table = tables.lock(|table_data| table_data.tps_rpm_ve.unwrap_or(table));
                     table[row_index] = table_row;
-                    table_data.tps_rpm_ve = <span class="prelude-val">Some</span>(table);
+                    tables.lock(|table_data| table_data.tps_rpm_ve = <span class="prelude-val">Some</span>(table));
                     app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
                     <span class="kw">return</span>;
                 }
                 <span class="number">0x02 </span>=&gt; {
                     <span class="comment">// TPS RPM AFR
-                    </span>table = table_data.tps_rpm_afr.unwrap();
+                    </span>table = tables.lock(|table_data| table_data.tps_rpm_afr.unwrap_or(table));
                     table[row_index] = table_row;
-                    table_data.tps_rpm_afr = <span class="prelude-val">Some</span>(table);
+                    tables.lock(|table_data| table_data.tps_rpm_afr = <span class="prelude-val">Some</span>(table));
                     app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
                     <span class="kw">return</span>;
                 }
                 <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
-                    // TODO: read table if not read prev.
-                    </span>table = table_data.load_tps_deg.unwrap();
+                    </span>table = tables.lock(|table_data| table_data.tps_rpm_ve.unwrap_or(table));
                     table[row_index] = table_row;
-                    table_data.load_tps_deg = <span class="prelude-val">Some</span>(table);
+                    tables.lock(|table_data| table_data.tps_rpm_ve = <span class="prelude-val">Some</span>(table));
                     app::send_message::spawn(SerialStatus::Ok, <span class="number">0</span>, response_buf).unwrap();
                     <span class="kw">return</span>;
                 }
@@ -479,8 +500,7 @@
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
             }
@@ -494,15 +514,18 @@
                 <span class="number">0x01 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
                     </span><span class="kw">let </span>tps_rpm_ve = TableData {
-                        data: table_data.tps_rpm_ve,
+                        data: tables.lock(|tables| tables.tps_rpm_ve),
                         crc: <span class="number">0</span>,
                         address: <span class="number">0x3</span>,
                         max_x: <span class="number">17</span>,
                         max_y: <span class="number">17</span>,
                     };
 
-                    <span class="kw">if </span>table_data.tps_rpm_ve.is_some() {
-                        tps_rpm_ve.write_to_memory(flash, flash_info, crc);
+                    <span class="kw">if </span>tps_rpm_ve.data.is_some() {
+                        (flash, flash_info, crc).lock(|flash, flash_info, crc| {
+                            tps_rpm_ve.write_to_memory(flash, flash_info, crc);
+                        });
+
                         app::send_message::spawn(SerialStatus::UploadOk, <span class="number">0</span>, response_buf).unwrap();
                         <span class="kw">return</span>;
                     }
@@ -513,23 +536,27 @@
                         SerialStatus::Error,
                         SerialCode::TableNotLoaded <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
                 <span class="number">0x02 </span>=&gt; {
                     <span class="comment">// TPS RPM AFR
-                    </span><span class="kw">let </span>tps_rpm_ve = TableData {
-                        data: table_data.tps_rpm_afr,
+                    </span><span class="kw">let </span>tps_rpm_afr = TableData {
+                        data: tables.lock(|tables| tables.tps_rpm_afr),
                         crc: <span class="number">0</span>,
                         address: <span class="number">0x3</span>,
                         max_x: <span class="number">17</span>,
                         max_y: <span class="number">17</span>,
                     };
 
-                    <span class="kw">if </span>table_data.tps_rpm_ve.is_some() {
-                        tps_rpm_ve.write_to_memory(flash, flash_info, crc);
-                        app::send_message::spawn(SerialStatus::UploadOk, <span class="number">0</span>, response_buf).unwrap();
+                    <span class="kw">if </span>tps_rpm_afr.data.is_some() {
+                        (flash, flash_info, crc).lock(|flash, flash_info, crc| {
+                            tps_rpm_afr.write_to_memory(flash, flash_info, crc);
+                        });
+
+
+                        <span class="comment">// tps_rpm_ve.write_to_memory(flash, flash_info, crc);
+                        </span>app::send_message::spawn(SerialStatus::UploadOk, <span class="number">0</span>, response_buf).unwrap();
                         <span class="kw">return</span>;
                     }
 
@@ -539,23 +566,24 @@
                         SerialStatus::Error,
                         SerialCode::TableNotLoaded <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
 
                 <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
-                    </span><span class="kw">let </span>tps_rpm_ve = TableData {
-                        data: table_data.load_tps_deg,
+                    </span><span class="kw">let </span>load_tps_deg = TableData {
+                        data: tables.lock(|tables| tables.load_tps_deg),
                         crc: <span class="number">0</span>,
                         address: <span class="number">0x3</span>,
                         max_x: <span class="number">17</span>,
                         max_y: <span class="number">17</span>,
                     };
 
-                    <span class="kw">if </span>table_data.load_tps_deg.is_some() {
-                        tps_rpm_ve.write_to_memory(flash, flash_info, crc);
+                    <span class="kw">if </span>load_tps_deg.data.is_some() {
+                        (flash, flash_info, crc).lock(|flash, flash_info, crc| {
+                            load_tps_deg.write_to_memory(flash, flash_info, crc);
+                        });
                         app::send_message::spawn(SerialStatus::UploadOk, <span class="number">0</span>, response_buf).unwrap();
                         <span class="kw">return</span>;
                     }
@@ -566,20 +594,17 @@
                         SerialStatus::Error,
                         SerialCode::TableNotLoaded <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
 
                 <span class="number">0x3</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
-
                     <span class="macro">logging::host::debug!</span>(<span class="string">&quot;error on write&quot;</span>);
                     app::send_message::spawn(
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
             }
@@ -591,43 +616,46 @@
                 <span class="number">0x01 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
                     </span><span class="kw">let </span><span class="kw-2">mut </span>tps_rpm_ve = TableData {
-                        data: table_data.tps_rpm_ve,
+                        data: <span class="prelude-val">None</span>,
                         crc: <span class="number">0</span>,
                         address: <span class="number">0x3</span>,
                         max_x: <span class="number">17</span>,
                         max_y: <span class="number">17</span>,
                     };
 
-                    tps_rpm_ve.clear(flash, flash_info, crc);
+                    (flash, flash_info, crc).lock(|flash, flash_info, crc| {
+                        tps_rpm_ve.clear(flash, flash_info, crc);
+                    });
+
                     <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table Clear TPS/RPM/VE [injection]&quot;</span>);
 
                     app::send_message::spawn(
                         SerialStatus::Ok,
                         SerialCode::None <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
                 <span class="number">0x10 </span>=&gt; {
                     <span class="comment">// TPS RPM VE
                     </span><span class="kw">let </span><span class="kw-2">mut </span>tps_rpm_ve = TableData {
-                        data: table_data.load_tps_deg,
+                        data: <span class="prelude-val">None</span>,
                         crc: <span class="number">0</span>,
                         address: <span class="number">0x3</span>,
                         max_x: <span class="number">17</span>,
                         max_y: <span class="number">17</span>,
                     };
 
-                    tps_rpm_ve.clear(flash, flash_info, crc);
+                    (flash, flash_info, crc).lock(|flash, flash_info, crc| {
+                        tps_rpm_ve.clear(flash, flash_info, crc);
+                    });
                     <span class="macro">logging::host::debug!</span>(<span class="string">&quot;Table Clear LOAD/TPS/DEG [ignition]&quot;</span>);
 
                     app::send_message::spawn(
                         SerialStatus::Ok,
                         SerialCode::None <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
                 <span class="number">0x2</span>..<span class="number">0x9 </span>| <span class="kw">_ </span>=&gt; {
@@ -635,8 +663,7 @@
                         SerialStatus::Error,
                         SerialCode::UnknownTable <span class="kw">as </span>u8,
                         response_buf,
-                    )
-                        .unwrap();
+                    ).unwrap();
                     <span class="kw">return</span>;
                 }
             }
@@ -646,10 +673,8 @@
                 SerialStatus::Error,
                 SerialCode::UnknownCmd <span class="kw">as </span>u8,
                 response_buf,
-            )
-                .unwrap();
+            ).unwrap();
             <span class="kw">return</span>;
         }
     }
-}
-</code></pre></div></section></main></body></html>
+}</code></pre></div></section></main></body></html>

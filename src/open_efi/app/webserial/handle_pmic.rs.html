@@ -65,19 +65,19 @@
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::{
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>rtic::Mutex;
+<span class="kw">use </span><span class="kw">crate</span>::app::{
     <span class="self">self</span>, <span class="comment">// logging::host,
     </span>webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-<span class="kw">use </span><span class="kw">crate</span>::app::engine::pmic::PmicT;
-
-<span class="kw">pub fn </span>handler(
-    command: SerialMessage,
-    pmic_instance: <span class="kw-2">&amp;mut </span>PmicT,
-) {
+<span class="kw">pub async fn </span>pmic_cdc_callback(<span class="kw-2">mut </span>ctx: app::pmic_cdc_callback::Context&lt;<span class="lifetime">&#39;_</span>&gt;, serial_cmd: SerialMessage) {
     <span class="kw">let </span><span class="kw-2">mut </span>response_buf = SerialMessage {
         protocol: <span class="number">1</span>,
-        command: command.command,
+        command: serial_cmd.command,
         status: <span class="number">0</span>,
         code: <span class="number">0</span>,
         payload: [<span class="number">0u8</span>; <span class="number">122</span>],
@@ -87,32 +87,30 @@
     <span class="kw">let </span><span class="kw-2">mut </span>json_payload = [<span class="number">0u8</span>; <span class="number">350</span>];
     <span class="kw">let </span>result;
 
-    <span class="kw">match </span>command.command &amp; <span class="number">0b00001111 </span>{
+    <span class="kw">match </span>serial_cmd.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// get all status
         </span><span class="number">0x01 </span>=&gt; {
             <span class="comment">// host::trace!(&quot;PMIC: get fast status&quot;);
-            </span><span class="kw">let </span>data = pmic_instance.get_fast_status();
+            </span><span class="kw">let </span>data = ctx.shared.pmic.lock(|pmic|pmic.get_fast_status());
             result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>data, <span class="kw-2">&amp;mut </span>json_payload);
         }
         <span class="comment">// get injection status
         </span><span class="number">0x02 </span>=&gt; {
             <span class="comment">// host::trace!(&quot;PMIC: get injection status&quot;);
-            </span><span class="kw">let </span>data = pmic_instance.get_injector_status();
+            </span><span class="kw">let </span>data =  ctx.shared.pmic.lock(|pmic|pmic.get_injector_status());
             result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>data, <span class="kw-2">&amp;mut </span>json_payload);
         }
         <span class="comment">// get ignition status
         </span><span class="number">0x03 </span>=&gt; {
             <span class="comment">// host::trace!(&quot;PMIC: get ignition status&quot;);
-            </span><span class="kw">let </span>data = pmic_instance.get_ignition_status();
+            </span><span class="kw">let </span>data =ctx.shared.pmic.lock(|pmic|pmic.get_ignition_status());
             result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>data, <span class="kw-2">&amp;mut </span>json_payload);
         }
         <span class="kw">_ </span>=&gt; {
-            app::send_message::spawn(
-                SerialStatus::Error,
-                SerialCode::UnknownCmd <span class="kw">as </span>u8,
-                response_buf,
-            )
-                .unwrap();
+            response_buf.status = SerialStatus::Error <span class="kw">as </span>u8;
+            response_buf.code = SerialCode::UnknownCmd <span class="kw">as </span>u8;
+
+            <span class="kw">let _ </span>= ctx.local.pmic_sender.send(response_buf).<span class="kw">await</span>;
             <span class="kw">return</span>;
         }
     }
@@ -124,12 +122,22 @@
             <span class="kw">let </span>from = i * <span class="number">122</span>;
             <span class="kw">let </span>to = from + <span class="number">122</span>;
             response_buf.payload.copy_from_slice(<span class="kw-2">&amp;</span>json_payload[from..to]);
-            app::send_message::spawn(SerialStatus::DataChunk, <span class="number">0</span>, response_buf).unwrap();
+
+            response_buf.status = SerialStatus::DataChunk <span class="kw">as </span>u8;
+            response_buf.code = <span class="number">0</span>;
+            <span class="kw">let _ </span>= ctx.local.pmic_sender.send(response_buf).<span class="kw">await</span>;
+
             response_buf.payload.fill(<span class="number">0x0</span>);
         }
-        app::send_message::spawn(SerialStatus::DataChunkEnd, <span class="number">0</span>, response_buf).unwrap();
+        response_buf.status = SerialStatus::DataChunkEnd <span class="kw">as </span>u8;
+        response_buf.code = <span class="number">0</span>;
+        <span class="kw">let _ </span>= ctx.local.pmic_sender.send(response_buf).<span class="kw">await</span>;
         <span class="kw">return</span>;
     }
-    app::send_message::spawn(SerialStatus::Error, SerialCode::ParseError <span class="kw">as </span>u8, response_buf).unwrap();
+
+    response_buf.status = SerialStatus::Error <span class="kw">as </span>u8;
+    response_buf.code = SerialCode::ParseError <span class="kw">as </span>u8;
+
+    <span class="kw">let _ </span>= ctx.local.pmic_sender.send(response_buf).<span class="kw">await</span>;
 }
 </code></pre></div></section></main></body></html>

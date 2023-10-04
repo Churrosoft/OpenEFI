@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["handler"]};
+window.SIDEBAR_ITEMS = {"fn":["table_cdc_callback"]};

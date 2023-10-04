@@ -213,9 +213,9 @@
 <span class="kw">use </span>stm32f4xx_hal::gpio::{Output, PushPull};
 
 <span class="kw">use </span><span class="kw">crate</span>::app::engine::error::Error;
-<span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::SpiT;
+<span class="kw">use </span><span class="kw">crate</span>::app::gpio::ISPI;
 <span class="kw">use </span>serde::{ Serialize};
-<span class="kw">pub type </span>PmicT = PMIC&lt;SharedBus&lt;SpiT&gt;, gpio::PA15&lt;Output&lt;PushPull&gt;&gt;&gt;;
+<span class="kw">pub type </span>PmicT = PMIC&lt;SharedBus&lt;ISPI&gt;, gpio::PA15&lt;Output&lt;PushPull&gt;&gt;&gt;;
 
 <span class="attr">#[derive(Serialize)]
 #[repr(u8)]
