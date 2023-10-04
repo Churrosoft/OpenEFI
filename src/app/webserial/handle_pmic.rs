@@ -1,16 +1,12 @@
+use rtic::Mutex;
 use crate::app::{
     self, // logging::host,
     webserial::{SerialCode, SerialMessage, SerialStatus},
 };
-use crate::app::engine::pmic::PmicT;
-
-pub fn handler(
-    command: SerialMessage,
-    pmic_instance: &mut PmicT,
-) {
+pub async fn pmic_cdc_callback(mut ctx: app::pmic_cdc_callback::Context<'_>, serial_cmd: SerialMessage) {
     let mut response_buf = SerialMessage {
         protocol: 1,
-        command: command.command,
+        command: serial_cmd.command,
         status: 0,
         code: 0,
         payload: [0u8; 122],
@@ -20,32 +16,30 @@ pub fn handler(
     let mut json_payload = [0u8; 350];
     let result;
 
-    match command.command & 0b00001111 {
+    match serial_cmd.command & 0b00001111 {
         // get all status
         0x01 => {
             // host::trace!("PMIC: get fast status");
-            let data = pmic_instance.get_fast_status();
+            let data = ctx.shared.pmic.lock(|pmic|pmic.get_fast_status());
             result = serde_json_core::to_slice(&data, &mut json_payload);
         }
         // get injection status
         0x02 => {
             // host::trace!("PMIC: get injection status");
-            let data = pmic_instance.get_injector_status();
+            let data =  ctx.shared.pmic.lock(|pmic|pmic.get_injector_status());
             result = serde_json_core::to_slice(&data, &mut json_payload);
         }
         // get ignition status
         0x03 => {
             // host::trace!("PMIC: get ignition status");
-            let data = pmic_instance.get_ignition_status();
+            let data =ctx.shared.pmic.lock(|pmic|pmic.get_ignition_status());
             result = serde_json_core::to_slice(&data, &mut json_payload);
         }
         _ => {
-            app::send_message::spawn(
-                SerialStatus::Error,
-                SerialCode::UnknownCmd as u8,
-                response_buf,
-            )
-                .unwrap();
+            response_buf.status = SerialStatus::Error as u8;
+            response_buf.code = SerialCode::UnknownCmd as u8;
+
+            let _ = ctx.local.pmic_sender.send(response_buf).await;
             return;
         }
     }
@@ -57,11 +51,21 @@ pub fn handler(
             let from = i * 122;
             let to = from + 122;
             response_buf.payload.copy_from_slice(&json_payload[from..to]);
-            app::send_message::spawn(SerialStatus::DataChunk, 0, response_buf).unwrap();
+
+            response_buf.status = SerialStatus::DataChunk as u8;
+            response_buf.code = 0;
+            let _ = ctx.local.pmic_sender.send(response_buf).await;
+
             response_buf.payload.fill(0x0);
         }
-        app::send_message::spawn(SerialStatus::DataChunkEnd, 0, response_buf).unwrap();
+        response_buf.status = SerialStatus::DataChunkEnd as u8;
+        response_buf.code = 0;
+        let _ = ctx.local.pmic_sender.send(response_buf).await;
         return;
     }
-    app::send_message::spawn(SerialStatus::Error, SerialCode::ParseError as u8, response_buf).unwrap();
+
+    response_buf.status = SerialStatus::Error as u8;
+    response_buf.code = SerialCode::ParseError as u8;
+
+    let _ = ctx.local.pmic_sender.send(response_buf).await;
 }

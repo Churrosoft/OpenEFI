@@ -6,7 +6,7 @@ pub mod host {
     macro_rules! debug {
         ($fmt:expr $(, $($arg:tt)*)?) => {
 
-            if (stm32f4xx_hal::pac::DCB::is_debugger_attached()) {
+            if stm32f4xx_hal::pac::DCB::is_debugger_attached() {
                 use cortex_m_semihosting::hprintln;
 
                 hprintln!(concat!("[{:0>12.3}] DEBUG: ", $fmt), stm32f4xx_hal::pac::DWT::cycle_count() as f32 / 120000000f32, $($($arg)*)?);
@@ -18,7 +18,7 @@ pub mod host {
     macro_rules! trace {
         ($fmt:expr $(, $($arg:tt)*)?) => {
 
-            if (stm32f4xx_hal::pac::DCB::is_debugger_attached()) {
+            if stm32f4xx_hal::pac::DCB::is_debugger_attached() {
                 use cortex_m_semihosting::hprintln;
 
                 hprintln!(concat!("[{:0>12.3}] TRACE: ", $fmt), stm32f4xx_hal::pac::DWT::cycle_count() as f32 / 120000000f32, $($($arg)*)?);

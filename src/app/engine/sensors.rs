@@ -1,4 +1,4 @@
-use crate::app::gpio_legacy::ADCMapping;
+use crate::app::gpio::ADCMapping;
 use micromath::F32Ext;
 
 use stm32f4xx_hal::{

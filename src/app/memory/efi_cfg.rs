@@ -51,7 +51,7 @@ impl EngineConfig {
         }
 
         {
-            let mut memory_config:EngineConfig = from_bytes(&read_buff).unwrap();
+            let mut memory_config: EngineConfig = from_bytes(&read_buff).unwrap();
 
             self.injection = memory_config.injection;
             self.engine = memory_config.engine;

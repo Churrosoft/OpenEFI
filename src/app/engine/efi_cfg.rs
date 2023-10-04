@@ -1,6 +1,6 @@
-use crate::app::memory::tables::{PlotData};
+use crate::app::memory::tables::PlotData;
 
-#[derive(serde::Serialize, serde::Deserialize, Debug,Copy,Clone)]
+#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 pub struct VRSensor {
     pub trigger_tooth_angle: f32,
     pub tooth_count: u32,
@@ -11,7 +11,7 @@ pub struct VRSensor {
     pub max_stall_time: u32,
 }
 
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 pub struct Engine {
     pub cylinder_count: u8,
     pub displacement: u32,
@@ -19,7 +19,7 @@ pub struct Engine {
     pub ckp: VRSensor,
 }
 
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 pub struct InjectorConfig {
     pub flow_cc_min: f32,
     pub injector_count: u8,
@@ -32,7 +32,7 @@ pub struct InjectorConfig {
 }
 
 #[allow(non_snake_case)]
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 pub struct InjectionConfig {
     pub target_lambda: f32,
     pub target_stoich: f32,
@@ -41,7 +41,7 @@ pub struct InjectionConfig {
     pub injector: InjectorConfig,
 }
 
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug, Copy, Clone)]
 pub struct EngineConfig {
     pub ready: bool,
     pub injection: InjectionConfig,
@@ -49,15 +49,15 @@ pub struct EngineConfig {
 }
 
 impl EngineConfig {
-    pub fn new()->EngineConfig{
+    pub fn new() -> EngineConfig {
         get_default_efi_cfg()
     }
 }
 
 
-impl VRSensor{
-    pub fn new()->VRSensor{
-        VRSensor{
+impl VRSensor {
+    pub fn new() -> VRSensor {
+        VRSensor {
             trigger_tooth_angle: 0.0,
             tooth_count: 0,
             trigger_filter_time: 0,
@@ -76,7 +76,7 @@ pub fn get_default_efi_cfg() -> EngineConfig {
             cylinder_count: 4,
             displacement: 1596,
             max_rpm: 7000,
-            ckp:VRSensor{
+            ckp: VRSensor {
                 trigger_tooth_angle: 0.0,
                 tooth_count: 60,
                 trigger_filter_time: 0,
@@ -113,7 +113,7 @@ pub fn get_default_efi_cfg() -> EngineConfig {
     cfg.engine.ckp.trigger_tooth_angle = 360f32 / cfg.engine.ckp.tooth_count as f32;
 
     //Trigger filter time is the shortest possible time (in uS) that there can be between crank teeth (ie at max RPM). Any pulses that occur faster than this time will be discarded as noise
-    cfg.engine.ckp.trigger_filter_time = 1000000 / (cfg.engine.max_rpm / 60 * cfg.engine.ckp.tooth_count );
+    cfg.engine.ckp.trigger_filter_time = 1000000 / (cfg.engine.max_rpm / 60 * cfg.engine.ckp.tooth_count);
 
     //Minimum 50rpm. (3333uS is the time per degree at 50rpm)
     cfg.engine.ckp.max_stall_time = (3333f32 * cfg.engine.ckp.trigger_tooth_angle * (cfg.engine.ckp.missing_tooth + 1) as f32) as u32;
@@ -123,19 +123,3 @@ pub fn get_default_efi_cfg() -> EngineConfig {
 
     return cfg;
 }
-
-
-// por ahora con 25% supongo que estoy, o sino apagado
-
-// /**
-//  * Sets the new filter time based on the current settings.
-//  * This ONLY works for even spaced decoders.
-//  */
-// static inline void setFilter(unsigned long curGap)
-// {
-// if(configPage4.triggerFilter == 0) { triggerFilterTime = 0; } //trigger filter is turned off.
-// else if(configPage4.triggerFilter == 1) { triggerFilterTime = curGap >> 2; } //Lite filter level is 25% of previous gap
-// else if(configPage4.triggerFilter == 2) { triggerFilterTime = curGap >> 1; } //Medium filter level is 50% of previous gap
-// else if (configPage4.triggerFilter == 3) { triggerFilterTime = (curGap * 3) >> 2; } //Aggressive filter level is 75% of previous gap
-// else { triggerFilterTime = 0; } //trigger filter is turned off.
-// }
