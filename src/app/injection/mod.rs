@@ -78,3 +78,7 @@ pub fn calculate_time_isr(es: &mut EngineStatus, ecfg: &EngineConfig,tables: &mu
         "asddsa"
     );
 }
+
+pub async fn injection_checks(){
+
+}

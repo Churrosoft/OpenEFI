@@ -3,7 +3,7 @@ use serde_json_core::heapless::Vec;
 use stm32f4xx_hal::crc32::Crc32;
 use w25q::series25::FlashInfo;
 
-use crate::app::engine::efi_cfg::EngineConfig;
+use crate::app::engine::efi_cfg::{EngineConfig, get_default_efi_cfg};
 use crate::app::logging::host;
 use crate::app::memory::tables::FlashT;
 
@@ -12,6 +12,7 @@ const ENGINE_CONFIG_MEMORY_ADDRESS: u32 = 0;
 impl EngineConfig {
     pub fn save(&mut self, flash: &mut FlashT, flash_info: &FlashInfo, crc: &mut Crc32) {
         //TODO: ajustar tamaño del vector
+        host::debug!("Guardando cfg");
         let mut output: Vec<u8, 800> = to_vec(&self).unwrap();
 
         crc.init();
@@ -45,7 +46,14 @@ impl EngineConfig {
         let memory_crc = u32::from_le_bytes(crc_buff);
 
         if memory_crc != calculated_crc {
-            self.ready = true;
+            // self.ready = true;
+            // host::debug!("Checksum config no coincide {:?}  {:?}", memory_crc,calculated_crc);
+            //
+            // let default= get_default_efi_cfg();
+            // self.injection = default.injection.clone();
+            // self.engine = default.engine.clone();
+            //
+            // self.save(flash,flash_info,crc);
             host::debug!("Checksum config no coincide {:?}  {:?}", memory_crc,calculated_crc);
             return;
         }
@@ -53,8 +61,8 @@ impl EngineConfig {
         {
             let mut memory_config: EngineConfig = from_bytes(&read_buff).unwrap();
 
-            self.injection = memory_config.injection;
-            self.engine = memory_config.engine;
+            self.injection = memory_config.injection.clone();
+            self.engine = memory_config.engine.clone();
             self.ready = true;
         }
     }

@@ -61,7 +61,7 @@ pub(crate) async fn table_cdc_callback(mut ctx: app::table_cdc_callback::Context
         // get X table
         0x02 => {
             let mut table = [[0i32; 17]; 17];
-            logging::host::debug!("Table get");
+            // logging::host::debug!("Table get");
             match selected_table {
                 0x01 => {
                     // TODO: read table if not read prev.

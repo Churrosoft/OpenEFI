@@ -34,6 +34,7 @@ use stm32f4xx_hal::{
     prelude::*,
     spi::*,
     timer::{self, Event},
+    watchdog::IndependentWatchdog,
 };
 
 use panic_halt as _;
@@ -61,6 +62,7 @@ mod app {
             StepperMapping,
         },
         injection::{calculate_time_isr, injection_setup},
+        ignition::{ignition_checks, ignition_trigger},
         logging::host,
         memory::tables::{SpiT, Tables},
         webserial::{
@@ -73,7 +75,7 @@ mod app {
             SerialMessage,
             SerialStatus,
         },
-        tasks::{engine::ckp_checks/* , engine::motor_checks,  ignition::ignition_schedule */}
+        tasks::{engine::ckp_checks/* , engine::motor_checks,  ignition::ignition_schedule */},
     };
     use crate::app::tasks::engine::ckp_trigger;
 
@@ -84,6 +86,7 @@ mod app {
     pub mod engine;
     pub mod gpio;
     pub mod injection;
+    pub mod ignition;
     pub mod logging;
     pub mod memory;
     pub mod util;
@@ -109,7 +112,7 @@ mod app {
 
         // USB:
         // TODO: se puede reducir implementando los channels de RTIC, de paso fixeo el bug de las tablas
-        usb_cdc: SerialPort<'static, UsbBusType, [u8; 128], [u8; 256]>,
+        usb_cdc: SerialPort<'static, UsbBusType, [u8; 128], [u8; 512]>,
         usb_web: WebUsb<UsbBusType>,
         cdc_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
 
@@ -133,8 +136,10 @@ mod app {
 
     #[local]
     struct Local {
+        // core
         usb_dev: UsbDevice<'static, UsbBusType>,
         cdc_input_buffer: ArrayVec<u8, 128>,
+        watchdog: IndependentWatchdog,
 
         // EFI Related:
         ckp: stm32f4xx_hal::gpio::PC6<Input>,
@@ -152,7 +157,11 @@ mod app {
         real_time_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
         pmic_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
         engine_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
+
+        // ignition,
+        ign_channel_1: bool,
     }
+
     const CDC_BUFF_CAPACITY: usize = 30;
 
     #[init(local = [USB_BUS: Option < UsbBusAllocator < UsbBusType >> = None])]
@@ -197,8 +206,10 @@ mod app {
 
         // timer Tiempo inyeccion
         let mut timer: timer::CounterUs<TIM2> = device.TIM2.counter_us(&_clocks);
+
         // timer tiempo de ignicion
         let mut timer3: timer::CounterUs<TIM3> = device.TIM3.counter_us(&_clocks);
+
         // timer CPWM
         let mut timer4: timer::CounterUs<TIM5> = device.TIM5.counter_us(&_clocks);
 
@@ -207,7 +218,7 @@ mod app {
 
         //  TIM5, TIM7, TIM4
         debug!("init timers");
-        timer.start((150).millis()).unwrap();
+        // timer.start((150).millis()).unwrap();
 
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
@@ -278,7 +289,7 @@ mod app {
         let mut spi_lock = false;
         let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
 
-        ckp.enable_interrupt(&mut device.EXTI);
+        // ckp.enable_interrupt(&mut device.EXTI);
 
         let mut ckp_status = VRStatus::new();
 
@@ -293,7 +304,7 @@ mod app {
         };
 
         static mut EP_MEMORY: [u32; 1024] = [0; 1024];
-        static mut __USB_TX: [u8; 256] = [0; 256];
+        static mut __USB_TX: [u8; 512] = [0; 512];
         static mut __USB_RX: [u8; 128] = [0; 128];
         host::debug!("init usb");
         let usb_bus = cx.local.USB_BUS;
@@ -323,6 +334,11 @@ mod app {
         let (cdc_sender, cdc_receiver) = make_channel!(SerialMessage, CDC_BUFF_CAPACITY);
 
         cdc_receiver::spawn(cdc_receiver).unwrap();
+
+        let mut watchdog = IndependentWatchdog::new(device.IWDG);
+        // se puede desactivar en debug
+        // watchdog.start(100.millis());
+        // watch_dog_update::spawn().unwrap();
 
         (Shared {
             // Timers:
@@ -365,6 +381,7 @@ mod app {
             // USB
             usb_dev,
             cdc_input_buffer: cdc_buff,
+            watchdog,
 
             // Serial
             table_sender: cdc_sender.clone(),
@@ -378,7 +395,17 @@ mod app {
 
             state: false,
             state2: false,
+            // ignition,
+            ign_channel_1: false,
         })
+    }
+
+    #[task(local = [watchdog])]
+    async fn watch_dog_update(mut ctx: watch_dog_update::Context) {
+        loop {
+            ctx.local.watchdog.feed();
+            Systick::delay(50.millis()).await;
+        }
     }
 
     #[task(local = [state], shared = [led])]
@@ -395,6 +422,23 @@ mod app {
         }
     }
 
+    //TODO: reciclar para encendido
+    #[task(binds = TIM2, local = [], shared = [timer, led])]
+    fn timer2_exp(mut ctx: timer2_exp::Context) {
+        ctx.shared.timer.lock(|tim| tim.clear_interrupt(Event::Update));
+
+        ctx.shared.led.lock(|l| l.led_0.toggle());
+    }
+
+    #[task(binds = TIM3, local = [], shared = [timer3, led])]
+    fn timer3_exp(mut ctx: timer3_exp::Context) {
+        ctx.shared.timer3.lock(|tim| {
+            tim.clear_interrupt(Event::Update);
+            tim.cancel().unwrap();
+        });
+
+        ctx.shared.led.lock(|l| l.led_check.set_high());
+    }
 
     #[task(binds = OTG_FS, local = [usb_dev, cdc_input_buffer], shared = [usb_cdc, usb_web, cdc_sender])]
     fn usb_handler(mut ctx: usb_handler::Context) {
@@ -453,9 +497,14 @@ mod app {
         // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
         #[task(binds = EXTI9_5, local = [ckp], shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4, ckp, ign_pins], priority = 5)]
         fn ckp_trigger(ctx: ckp_trigger::Context);
-        #[task(shared = [efi_cfg, ckp, timer4, efi_status, ignition_running], priority = 4)]
+        #[task(shared = [efi_cfg, ckp, timer4, efi_status, ignition_running])]
         async fn ckp_checks(ctx: ckp_checks::Context);
 
+        #[task(shared = [efi_cfg, efi_status, ckp, timer4], local = [ign_channel_1])]
+        async fn ignition_checks(ctx: ignition_checks::Context);
+
+        #[task(shared = [efi_cfg, efi_status, ckp, timer3, led])]
+        async fn ignition_trigger(ctx: ignition_trigger::Context, time: i32);
 
         //
         // #[task(

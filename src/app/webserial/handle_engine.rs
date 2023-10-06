@@ -29,10 +29,21 @@ pub async fn engine_cdc_callback(mut ctx: app::engine_cdc_callback::Context<'_>,
     let mut crc = ctx.shared.crc;
     let efi_cfg_snapshot = efi_cfg.lock(|c| c.clone());
 
+    if !efi_cfg_snapshot.ready {
+        host::trace!("engine cfg webserial error");
+        app::send_message::spawn(
+            SerialStatus::Error,
+            SerialCode::ParseError as u8,
+            response_buf,
+        ).unwrap();
+        return;
+    }
+
+
     match serial_cmd.command & 0b00001111 {
         // read engine cfg:
         0x01 => {
-            // host::trace!("read engine cfg");
+            host::trace!("read engine cfg");
             result = serde_json_core::to_slice(&efi_cfg_snapshot, &mut json_payload);
         }
         0x02 => {

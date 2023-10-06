@@ -1,5 +1,6 @@
 use crate::app::engine::efi_cfg::VRSensor;
 
+#[derive(Copy, Clone)]
 pub struct VRStatus {
     pub current_time: u32,
     pub current_gap: u32,
@@ -96,7 +97,7 @@ pub fn time_to_angle(trigger: &VRStatus, time: &u32) -> i32 {
     return (*time as f32 * trigger.degreesPeruSx32768) as i32 / 32768;
 }
 
-pub fn get_crank_angle(trigger: &mut VRStatus, trigger_config: &VRSensor, cpu_tick: u32) -> i32 {
+pub fn get_crank_angle(trigger: &VRStatus, trigger_config: &VRSensor, cpu_tick: u32) -> i32 {
     const CRANK_ANGLE_MAX: i32 = 360;
 
     //Number of teeth that have passed since tooth 1, multiplied by the angle each tooth represents, plus the angle that tooth 1 is ATDC. This gives accuracy only to the nearest tooth.
