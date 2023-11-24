@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["calculate_time_isr","injection_setup"],"mod":["alpha_n","injectors"]};
+window.SIDEBAR_ITEMS = {"fn":["calculate_time_isr","injection_checks","injection_setup"],"mod":["alpha_n","injectors"]};

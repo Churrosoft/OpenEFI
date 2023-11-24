@@ -117,9 +117,11 @@
 <a href="#117" id="117">117</a>
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::engine::efi_cfg::VRSensor;
 
-<span class="kw">pub struct </span>VRStatus {
+<span class="attr">#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>VRStatus {
     <span class="kw">pub </span>current_time: u32,
     <span class="kw">pub </span>current_gap: u32,
     <span class="kw">pub </span>target_gap: u32,
@@ -215,7 +217,7 @@
     </span><span class="kw">return </span>(<span class="kw-2">*</span>time <span class="kw">as </span>f32 * trigger.degreesPeruSx32768) <span class="kw">as </span>i32 / <span class="number">32768</span>;
 }
 
-<span class="kw">pub fn </span>get_crank_angle(trigger: <span class="kw-2">&amp;mut </span>VRStatus, trigger_config: <span class="kw-2">&amp;</span>VRSensor, cpu_tick: u32) -&gt; i32 {
+<span class="kw">pub fn </span>get_crank_angle(trigger: <span class="kw-2">&amp;</span>VRStatus, trigger_config: <span class="kw-2">&amp;</span>VRSensor, cpu_tick: u32) -&gt; i32 {
     <span class="kw">const </span>CRANK_ANGLE_MAX: i32 = <span class="number">360</span>;
 
     <span class="comment">//Number of teeth that have passed since tooth 1, multiplied by the angle each tooth represents, plus the angle that tooth 1 is ATDC. This gives accuracy only to the nearest tooth.

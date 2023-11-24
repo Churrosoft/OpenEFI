@@ -59,12 +59,20 @@
 <a href="#59" id="59">59</a>
 <a href="#60" id="60">60</a>
 <a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>postcard::{from_bytes, to_vec};
 <span class="kw">use </span>serde_json_core::heapless::Vec;
 <span class="kw">use </span>stm32f4xx_hal::crc32::Crc32;
 <span class="kw">use </span>w25q::series25::FlashInfo;
 
-<span class="kw">use </span><span class="kw">crate</span>::app::engine::efi_cfg::EngineConfig;
+<span class="kw">use </span><span class="kw">crate</span>::app::engine::efi_cfg::{EngineConfig, get_default_efi_cfg};
 <span class="kw">use </span><span class="kw">crate</span>::app::logging::host;
 <span class="kw">use </span><span class="kw">crate</span>::app::memory::tables::FlashT;
 
@@ -73,7 +81,8 @@
 <span class="kw">impl </span>EngineConfig {
     <span class="kw">pub fn </span>save(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flash: <span class="kw-2">&amp;mut </span>FlashT, flash_info: <span class="kw-2">&amp;</span>FlashInfo, crc: <span class="kw-2">&amp;mut </span>Crc32) {
         <span class="comment">//TODO: ajustar tamaño del vector
-        </span><span class="kw">let </span><span class="kw-2">mut </span>output: Vec&lt;u8, <span class="number">800</span>&gt; = to_vec(<span class="kw-2">&amp;</span><span class="self">self</span>).unwrap();
+        </span><span class="macro">host::debug!</span>(<span class="string">&quot;Guardando cfg&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>output: Vec&lt;u8, <span class="number">800</span>&gt; = to_vec(<span class="kw-2">&amp;</span><span class="self">self</span>).unwrap();
 
         crc.init();
         <span class="kw">let </span>calculated_crc = crc.update_bytes(<span class="kw-2">&amp;</span>output);
@@ -106,16 +115,23 @@
         <span class="kw">let </span>memory_crc = u32::from_le_bytes(crc_buff);
 
         <span class="kw">if </span>memory_crc != calculated_crc {
-            <span class="self">self</span>.ready = <span class="bool-val">true</span>;
-            <span class="macro">host::debug!</span>(<span class="string">&quot;Checksum config no coincide {:?}  {:?}&quot;</span>, memory_crc,calculated_crc);
+            <span class="comment">// self.ready = true;
+            // host::debug!(&quot;Checksum config no coincide {:?}  {:?}&quot;, memory_crc,calculated_crc);
+            //
+            // let default= get_default_efi_cfg();
+            // self.injection = default.injection.clone();
+            // self.engine = default.engine.clone();
+            //
+            // self.save(flash,flash_info,crc);
+            </span><span class="macro">host::debug!</span>(<span class="string">&quot;Checksum config no coincide {:?}  {:?}&quot;</span>, memory_crc,calculated_crc);
             <span class="kw">return</span>;
         }
 
         {
             <span class="kw">let </span><span class="kw-2">mut </span>memory_config: EngineConfig = from_bytes(<span class="kw-2">&amp;</span>read_buff).unwrap();
 
-            <span class="self">self</span>.injection = memory_config.injection;
-            <span class="self">self</span>.engine = memory_config.engine;
+            <span class="self">self</span>.injection = memory_config.injection.clone();
+            <span class="self">self</span>.engine = memory_config.engine.clone();
             <span class="self">self</span>.ready = <span class="bool-val">true</span>;
         }
     }

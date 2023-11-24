@@ -269,8 +269,8 @@
         <span class="number">0x30 </span>=&gt; { <span class="comment">/* TODO: ignition */ </span>}
         <span class="number">0x40 </span>=&gt; { <span class="comment">/* TODO: DTC */ </span>}
         <span class="number">0x50 </span>=&gt; app::realtime_data_cdc_callback::spawn(serial_cmd).unwrap(),
-        <span class="number">0x60 </span>=&gt; app::engine_cdc_callback::spawn(serial_cmd).unwrap(),
-        <span class="number">0x70 </span>=&gt; { <span class="comment">/* TODO: Debug console */ </span>}
+        <span class="comment">// 0x60 =&gt; app::engine_cdc_callback::spawn(serial_cmd).unwrap(),
+        </span><span class="number">0x70 </span>=&gt; { <span class="comment">/* TODO: Debug console */ </span>}
         <span class="number">0x80 </span>=&gt; app::pmic_cdc_callback::spawn(serial_cmd).unwrap(),
         <span class="comment">//0x90 =&gt; app::debug_demo::spawn(serial_cmd.command &amp; 0b00001111).unwrap(),
         </span><span class="kw">_ </span>=&gt; {

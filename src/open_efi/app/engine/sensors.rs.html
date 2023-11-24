@@ -105,12 +105,21 @@
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::app::gpio::ADCMapping;
 <span class="kw">use </span>micromath::F32Ext;
 
 <span class="kw">use </span>stm32f4xx_hal::{
     adc::{config::SampleTime, Adc},
-    pac::ADC1,
+    pac::ADC2,
 };
 
 <span class="kw">const </span>EMA_LP_ALPHA: f32 = <span class="number">0.45f32</span>;
@@ -121,6 +130,7 @@
     CooltanTemp,
     AirTemp,
     BatteryVoltage,
+    ExternalLambda,
 }
 
 <span class="attr">#[derive(Debug,Clone,Copy)]
@@ -130,6 +140,7 @@
     <span class="kw">pub </span>cooltan_temp: f32,
     <span class="kw">pub </span>air_temp: f32,
     <span class="kw">pub </span>batt: f32,
+    <span class="kw">pub </span>ext_o2: f32,
 
     <span class="comment">// private:
     </span>raw_map: f32,
@@ -137,6 +148,7 @@
     raw_temp: f32,
     raw_air_temp: f32,
     raw_batt: f32,
+    raw_ext_o2: f32,
 }
 
 <span class="kw">impl </span>SensorValues {
@@ -147,12 +159,14 @@
             cooltan_temp: <span class="number">45.69f32</span>,
             air_temp: <span class="number">0.0f32</span>,
             batt: <span class="number">13.42f32</span>,
+            ext_o2: <span class="number">0.0f32</span>,
             <span class="comment">// valores en raw son en bits del ADC; luego se pasan a mV
             </span>raw_map: <span class="number">0.0f32</span>,
             raw_tps: <span class="number">0.0f32</span>,
             raw_temp: <span class="number">0.0f32</span>,
             raw_air_temp: <span class="number">0.0f32</span>,
             raw_batt: <span class="number">0.0f32</span>,
+            raw_ext_o2: <span class="number">0.0f32</span>,
         }
     }
 
@@ -193,6 +207,10 @@
 
                 <span class="self">self</span>.batt = <span class="number">14.2</span>;
             }
+
+            SensorTypes::ExternalLambda =&gt; {
+                <span class="self">self</span>.ext_o2 = raw_value <span class="kw">as </span>f32;
+            }
         }
     }
 }
@@ -200,7 +218,7 @@
 <span class="kw">pub fn </span>get_sensor_raw(
     sensor_type: SensorTypes,
     adc_pins: <span class="kw-2">&amp;mut </span>ADCMapping,
-    adc: <span class="kw-2">&amp;mut </span>Adc&lt;ADC1&gt;,
+    adc: <span class="kw-2">&amp;mut </span>Adc&lt;ADC2&gt;,
 ) -&gt; u16 {
     <span class="kw">let </span>a = sensor_type <span class="kw">as </span>u8;
     <span class="kw">let </span>b = a;

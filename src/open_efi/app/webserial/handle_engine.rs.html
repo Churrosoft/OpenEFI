@@ -87,6 +87,17 @@
 <a href="#87" id="87">87</a>
 <a href="#88" id="88">88</a>
 <a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>postcard::{from_bytes, to_vec};
 <span class="kw">use </span>rtic::Mutex;
 <span class="kw">use </span>rtic::mutex_prelude::<span class="kw-2">*</span>;
@@ -118,11 +129,22 @@
     <span class="kw">let </span><span class="kw-2">mut </span>crc = ctx.shared.crc;
     <span class="kw">let </span>efi_cfg_snapshot = efi_cfg.lock(|c| c.clone());
 
+    <span class="kw">if </span>!efi_cfg_snapshot.ready {
+        <span class="macro">host::trace!</span>(<span class="string">&quot;engine cfg webserial error&quot;</span>);
+        app::send_message::spawn(
+            SerialStatus::Error,
+            SerialCode::ParseError <span class="kw">as </span>u8,
+            response_buf,
+        ).unwrap();
+        <span class="kw">return</span>;
+    }
+
+
     <span class="kw">match </span>serial_cmd.command &amp; <span class="number">0b00001111 </span>{
         <span class="comment">// read engine cfg:
         </span><span class="number">0x01 </span>=&gt; {
-            <span class="comment">// host::trace!(&quot;read engine cfg&quot;);
-            </span>result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>efi_cfg_snapshot, <span class="kw-2">&amp;mut </span>json_payload);
+            <span class="macro">host::trace!</span>(<span class="string">&quot;read engine cfg&quot;</span>);
+            result = serde_json_core::to_slice(<span class="kw-2">&amp;</span>efi_cfg_snapshot, <span class="kw-2">&amp;mut </span>json_payload);
         }
         <span class="number">0x02 </span>=&gt; {
             <span class="comment">//TODO: se puede controlar el caso de que falle la grabacion
