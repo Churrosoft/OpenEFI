@@ -24,16 +24,21 @@ use usbd_serial::SerialPort;
 use usbd_webusb::{url_scheme, WebUsb};
 
 use stm32f4xx_hal::{
-    adc::{Adc, config::AdcConfig},
+    adc::{
+        config::{AdcConfig, Dma, SampleTime, Scan, Sequence},
+        Adc, Temperature,
+    },
+    dma::{config::DmaConfig, PeripheralToMemory, Stream0, StreamsTuple, Transfer},
     crc32,
     crc32::Crc32,
     gpio::{Edge, Input},
     otg_fs,
     otg_fs::{USB, UsbBusType},
-    pac::{ADC1, TIM13, TIM2, TIM3, TIM5},
+    pac::{ADC1, TIM13, TIM2, TIM3, TIM5,DMA2,ADC2},
     prelude::*,
     spi::*,
     timer::{self, Event},
+    watchdog::IndependentWatchdog,
 };
 
 use panic_halt as _;
@@ -61,6 +66,7 @@ mod app {
             StepperMapping,
         },
         injection::{calculate_time_isr, injection_setup},
+        ignition::{ignition_checks, ignition_trigger},
         logging::host,
         memory::tables::{SpiT, Tables},
         webserial::{
@@ -73,8 +79,9 @@ mod app {
             SerialMessage,
             SerialStatus,
         },
-        tasks::{engine::ckp_checks/* , engine::motor_checks,  ignition::ignition_schedule */}
+        tasks::{engine::ckp_checks/* , engine::motor_checks,  ignition::ignition_schedule */},
     };
+    use crate::app::engine::sensors;
     use crate::app::tasks::engine::ckp_trigger;
 
     use super::*;
@@ -84,12 +91,17 @@ mod app {
     pub mod engine;
     pub mod gpio;
     pub mod injection;
+    pub mod ignition;
     pub mod logging;
     pub mod memory;
     pub mod util;
     pub mod webserial;
     pub mod tasks;
 
+
+
+    type DMATransfer =
+    Transfer<Stream0<DMA2>, 0, Adc<ADC1>, PeripheralToMemory, &'static mut [u16; 6]>;
 
     #[shared]
     struct Shared {
@@ -106,10 +118,11 @@ mod app {
         aux_pins: AuxIoMapping,
         relay_pins: RelayMapping,
         stepper_pins: StepperMapping,
+        adc_transfer: DMATransfer,
 
         // USB:
         // TODO: se puede reducir implementando los channels de RTIC, de paso fixeo el bug de las tablas
-        usb_cdc: SerialPort<'static, UsbBusType, [u8; 128], [u8; 256]>,
+        usb_cdc: SerialPort<'static, UsbBusType, [u8; 128], [u8; 512]>,
         usb_web: WebUsb<UsbBusType>,
         cdc_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
 
@@ -133,12 +146,15 @@ mod app {
 
     #[local]
     struct Local {
+        // core
         usb_dev: UsbDevice<'static, UsbBusType>,
         cdc_input_buffer: ArrayVec<u8, 128>,
+        watchdog: IndependentWatchdog,
+        adc_buffer: Option<&'static mut [u16; 6]>,
 
         // EFI Related:
         ckp: stm32f4xx_hal::gpio::PC6<Input>,
-        adc: Adc<ADC1>,
+        adc: Adc<ADC2>,
         analog_pins: ADCMapping,
 
         // cdc_sender: Sender<'static, u32, 8>,
@@ -152,7 +168,11 @@ mod app {
         real_time_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
         pmic_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
         engine_sender: Sender<'static, SerialMessage, CDC_BUFF_CAPACITY>,
+
+        // ignition,
+        ign_channel_1: bool,
     }
+
     const CDC_BUFF_CAPACITY: usize = 30;
 
     #[init(local = [USB_BUS: Option < UsbBusAllocator < UsbBusType >> = None])]
@@ -181,10 +201,35 @@ mod app {
         let mut gpio_config = init_gpio(gpio_a, gpio_b, gpio_c, gpio_d, gpio_e);
 
         // ADC
-        let mut adc = Adc::adc1(device.ADC1, true, AdcConfig::default());
+        let dma = StreamsTuple::new(device.DMA2);
 
+        let config = DmaConfig::default()
+            .transfer_complete_interrupt(true)
+            .memory_increment(true)
+            .double_buffer(false);
+
+        let adc_config = AdcConfig::default()
+            .dma(Dma::Continuous)
+            .scan(Scan::Enabled);
+
+        let mut adc1 = Adc::adc1(device.ADC1, true, adc_config);
+
+        // aca van todos los canales a revisar con DMA
+        adc1.configure_channel(&gpio_config.adc_dma.tps, Sequence::One, SampleTime::Cycles_480);
+        adc1.configure_channel(&gpio_config.adc_dma.clt, Sequence::Two, SampleTime::Cycles_480);
+        adc1.configure_channel(&gpio_config.adc_dma.iat, Sequence::Three, SampleTime::Cycles_480);
+        adc1.configure_channel(&gpio_config.adc_dma.map, Sequence::Four, SampleTime::Cycles_480);
+        adc1.configure_channel(&gpio_config.adc_dma.o2, Sequence::Five, SampleTime::Cycles_480);
+        adc1.configure_channel(&gpio_config.adc_dma.vbatt, Sequence::Six, SampleTime::Cycles_480);
+
+        let adc_first_buffer = cortex_m::singleton!(: [u16; 6] = [0; 6]).unwrap();
+        let adc_second_buffer = Some(cortex_m::singleton!(: [u16; 6] = [0; 6]).unwrap());
+        // Give the first buffer to the DMA. The second buffer is held in an Option in `local.buffer` until the transfer is complete
+        let adc_transfer = Transfer::init_peripheral_to_memory(dma.0, adc1, adc_first_buffer, None, config);
+
+        let mut adc = Adc::adc2(device.ADC2, true, AdcConfig::default());
         adc.enable();
-        adc.calibrate();
+        //adc.calibrate();
 
         // configure CKP/CMP Pin for Interrupts
         let mut ckp = gpio_config.ckp;
@@ -197,8 +242,10 @@ mod app {
 
         // timer Tiempo inyeccion
         let mut timer: timer::CounterUs<TIM2> = device.TIM2.counter_us(&_clocks);
+
         // timer tiempo de ignicion
         let mut timer3: timer::CounterUs<TIM3> = device.TIM3.counter_us(&_clocks);
+
         // timer CPWM
         let mut timer4: timer::CounterUs<TIM5> = device.TIM5.counter_us(&_clocks);
 
@@ -207,7 +254,7 @@ mod app {
 
         //  TIM5, TIM7, TIM4
         debug!("init timers");
-        timer.start((150).millis()).unwrap();
+        // timer.start((150).millis()).unwrap();
 
         // Set up to generate interrupt when timer expires
         timer.listen(Event::Update);
@@ -276,9 +323,9 @@ mod app {
         let mut sensors = SensorValues::new();
 
         let mut spi_lock = false;
-        let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic_cs).unwrap();
+        let mut pmic = PMIC::init(spi_pmic, gpio_config.pmic.pmic1_cs).unwrap();
 
-        ckp.enable_interrupt(&mut device.EXTI);
+        // ckp.enable_interrupt(&mut device.EXTI);
 
         let mut ckp_status = VRStatus::new();
 
@@ -293,7 +340,7 @@ mod app {
         };
 
         static mut EP_MEMORY: [u32; 1024] = [0; 1024];
-        static mut __USB_TX: [u8; 256] = [0; 256];
+        static mut __USB_TX: [u8; 512] = [0; 512];
         static mut __USB_RX: [u8; 128] = [0; 128];
         host::debug!("init usb");
         let usb_bus = cx.local.USB_BUS;
@@ -323,6 +370,12 @@ mod app {
         let (cdc_sender, cdc_receiver) = make_channel!(SerialMessage, CDC_BUFF_CAPACITY);
 
         cdc_receiver::spawn(cdc_receiver).unwrap();
+        polling_adc::spawn().unwrap();
+
+        let mut watchdog = IndependentWatchdog::new(device.IWDG);
+        // se puede desactivar en debug
+        // watchdog.start(100.millis());
+        // watch_dog_update::spawn().unwrap();
 
         (Shared {
             // Timers:
@@ -351,6 +404,7 @@ mod app {
             flash,
             flash_info,
             spi_lock,
+            adc_transfer,
 
             // EFI Related
             efi_cfg,
@@ -365,6 +419,9 @@ mod app {
             // USB
             usb_dev,
             cdc_input_buffer: cdc_buff,
+            watchdog,
+
+            adc_buffer: adc_second_buffer,
 
             // Serial
             table_sender: cdc_sender.clone(),
@@ -378,7 +435,66 @@ mod app {
 
             state: false,
             state2: false,
+            // ignition,
+            ign_channel_1: false,
         })
+    }
+
+
+    #[task(shared = [adc_transfer])]
+    async fn polling_adc(mut cx: polling_adc::Context) {
+        loop {
+            cx.shared.adc_transfer.lock(|transfer| {
+                transfer.start(|adc| {
+                    adc.start_conversion();
+                });
+            });
+            Systick::delay(250.millis()).await;
+        }
+    }
+
+    #[task(binds = DMA2_STREAM0, shared = [adc_transfer,sensors], local = [adc_buffer])]
+    fn sensors_adc_dma(mut cx: sensors_adc_dma::Context) {
+
+        let (buffer, sample_to_millivolts) = cx.shared.adc_transfer.lock(|transfer| {
+            // When the DMA completes it will return the buffer we gave it last time - we now store that as `buffer`
+            // We still have our other buffer waiting in `local.buffer`, so `take` that and give it to the `transfer`
+            let (buffer, _) = transfer
+                .next_transfer(cx.local.adc_buffer.take().unwrap())
+                .unwrap();
+
+            let sample_to_millivolts = transfer.peripheral().make_sample_to_millivolts();
+            (buffer, sample_to_millivolts)
+        });
+
+        // Pull the ADC data out of the buffer that the DMA transfer gave us
+
+        let raw_tps = buffer[0];
+        let raw_clt = buffer[1];
+        let raw_iat = buffer[2];
+        let raw_map = buffer[3];
+        let raw_o2 = buffer[4];
+        let raw_vbatt = buffer[5];
+
+        // Now that we're finished with this buffer, put it back in `local.buffer` so it's ready for the next transfer
+        // If we don't do this before the next transfer, we'll get a panic
+        *cx.local.adc_buffer = Some(buffer);
+
+        cx.shared.sensors.lock(|s| { s.update(sample_to_millivolts(raw_tps),SensorTypes::TPS) });
+        cx.shared.sensors.lock(|s| { s.update(sample_to_millivolts(raw_clt),SensorTypes::CooltanTemp) });
+        cx.shared.sensors.lock(|s| { s.update(sample_to_millivolts(raw_iat),SensorTypes::AirTemp) });
+        cx.shared.sensors.lock(|s| { s.update(sample_to_millivolts(raw_map),SensorTypes::MAP) });
+        cx.shared.sensors.lock(|s| { s.update(sample_to_millivolts(raw_o2),SensorTypes::ExternalLambda) });
+        cx.shared.sensors.lock(|s| { s.update(sample_to_millivolts(raw_vbatt),SensorTypes::BatteryVoltage) });
+
+    }
+
+    #[task(local = [watchdog])]
+    async fn watch_dog_update(mut ctx: watch_dog_update::Context) {
+        loop {
+            ctx.local.watchdog.feed();
+            Systick::delay(50.millis()).await;
+        }
     }
 
     #[task(local = [state], shared = [led])]
@@ -395,6 +511,23 @@ mod app {
         }
     }
 
+    //TODO: reciclar para encendido
+    #[task(binds = TIM2, local = [], shared = [timer, led])]
+    fn timer2_exp(mut ctx: timer2_exp::Context) {
+        ctx.shared.timer.lock(|tim| tim.clear_interrupt(Event::Update));
+
+        ctx.shared.led.lock(|l| l.led_0.toggle());
+    }
+
+    #[task(binds = TIM3, local = [], shared = [timer3, led])]
+    fn timer3_exp(mut ctx: timer3_exp::Context) {
+        ctx.shared.timer3.lock(|tim| {
+            tim.clear_interrupt(Event::Update);
+            tim.cancel().unwrap();
+        });
+
+        ctx.shared.led.lock(|l| l.led_check.set_high());
+    }
 
     #[task(binds = OTG_FS, local = [usb_dev, cdc_input_buffer], shared = [usb_cdc, usb_web, cdc_sender])]
     fn usb_handler(mut ctx: usb_handler::Context) {
@@ -453,9 +586,14 @@ mod app {
         // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
         #[task(binds = EXTI9_5, local = [ckp], shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4, ckp, ign_pins], priority = 5)]
         fn ckp_trigger(ctx: ckp_trigger::Context);
-        #[task(shared = [efi_cfg, ckp, timer4, efi_status, ignition_running], priority = 4)]
+        #[task(shared = [efi_cfg, ckp, timer4, efi_status, ignition_running])]
         async fn ckp_checks(ctx: ckp_checks::Context);
 
+        #[task(shared = [efi_cfg, efi_status, ckp, timer4], local = [ign_channel_1])]
+        async fn ignition_checks(ctx: ignition_checks::Context);
+
+        #[task(shared = [efi_cfg, efi_status, ckp, timer3, led])]
+        async fn ignition_trigger(ctx: ignition_trigger::Context, time: i32);
 
         //
         // #[task(

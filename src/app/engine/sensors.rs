@@ -3,7 +3,7 @@ use micromath::F32Ext;
 
 use stm32f4xx_hal::{
     adc::{config::SampleTime, Adc},
-    pac::ADC1,
+    pac::ADC2,
 };
 
 const EMA_LP_ALPHA: f32 = 0.45f32;
@@ -14,6 +14,7 @@ pub enum SensorTypes {
     CooltanTemp,
     AirTemp,
     BatteryVoltage,
+    ExternalLambda,
 }
 
 #[derive(Debug,Clone,Copy)]
@@ -23,6 +24,7 @@ pub struct SensorValues {
     pub cooltan_temp: f32,
     pub air_temp: f32,
     pub batt: f32,
+    pub ext_o2: f32,
 
     // private:
     raw_map: f32,
@@ -30,6 +32,7 @@ pub struct SensorValues {
     raw_temp: f32,
     raw_air_temp: f32,
     raw_batt: f32,
+    raw_ext_o2: f32,
 }
 
 impl SensorValues {
@@ -40,12 +43,14 @@ impl SensorValues {
             cooltan_temp: 45.69f32,
             air_temp: 0.0f32,
             batt: 13.42f32,
+            ext_o2: 0.0f32,
             // valores en raw son en bits del ADC; luego se pasan a mV
             raw_map: 0.0f32,
             raw_tps: 0.0f32,
             raw_temp: 0.0f32,
             raw_air_temp: 0.0f32,
             raw_batt: 0.0f32,
+            raw_ext_o2: 0.0f32,
         }
     }
 
@@ -86,6 +91,10 @@ impl SensorValues {
 
                 self.batt = 14.2;
             }
+
+            SensorTypes::ExternalLambda => {
+                self.ext_o2 = raw_value as f32;
+            }
         }
     }
 }
@@ -93,7 +102,7 @@ impl SensorValues {
 pub fn get_sensor_raw(
     sensor_type: SensorTypes,
     adc_pins: &mut ADCMapping,
-    adc: &mut Adc<ADC1>,
+    adc: &mut Adc<ADC2>,
 ) -> u16 {
     let a = sensor_type as u8;
     let b = a;

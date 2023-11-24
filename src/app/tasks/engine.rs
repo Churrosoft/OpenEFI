@@ -147,26 +147,6 @@ pub(crate) async fn ckp_checks(mut ctx:  app::ckp_checks::Context<'_>) {
             // ckp.degreesPeruSx2048 = 2048 / timePerDegree;
             ckp.degreesPeruSx32768 = (524288 / time_per_degreex16) as f32;
 
-            // ignition timing:
-            let mut crank_angle = get_crank_angle(ckp, &cfg.engine.ckp, cycle_time);
-            const CRANK_ANGLE_MAX_IGN: i32 = 720; //ponele? no entendi bien como se setea dependiendo el tipo de encendido/cilindros
-            while crank_angle > CRANK_ANGLE_MAX_IGN { crank_angle -= CRANK_ANGLE_MAX_IGN; } // SDUBTUD: no entendi para que es esto pero quien soy para cuestionar a speeduino
-
-            let dwell_angle = 20; //TODO: get from table
-            let dwell_time = angle_to_time(ckp,&dwell_angle);
-
-            // tiene que ser task externa
-            // if !*ignition_running /* && get_cranking_rpm(ckp, &cfg.engine.ckp) != 0*/{
-            //     *ignition_running = true;
-            //     //seteamos nuevo triggerrr
-            //     // let dwell_ticks = (120_000_000 / 100_000) * dwell_time as u64;
-            //     // let dwell_duration = Duration::<u64, 1, 100_000>::from_ticks(dwell_ticks);
-            //     // SDUBTUD: si esto anda es de puro milagro
-            //     // app::ignition_trigger::spawn_after(dwell_duration).unwrap();
-            // }
-
-            // esto se usa para iny
-            get_crank_angle(ckp, &cfg.engine.ckp, cycle_time);
         } else {
             ckp.reset();
         }
