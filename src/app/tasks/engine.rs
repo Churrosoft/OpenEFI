@@ -1,6 +1,6 @@
 // use fugit::Duration;
 use rtic::Mutex;
-use rtic::mutex_prelude::TupleExt04;
+use rtic::mutex_prelude::{TupleExt03, TupleExt04};
 use stm32f4xx_hal::gpio::ExtiPin;
 use rtic_monotonics::systick::*;
 use crate::{
@@ -113,45 +113,50 @@ pub(crate) fn ckp_trigger(mut ctx: app::ckp_trigger::Context) {
 // TODO: add similar stall control of speeduino
 // https://github.com/noisymime/speeduino/blob/master/speeduino/speeduino.ino#L146
 pub(crate) async fn ckp_checks(mut ctx:  app::ckp_checks::Context<'_>) {
-    let mut efi_cfg = ctx.shared.efi_cfg;
-    let mut ckp = ctx.shared.ckp;
-    let mut efi_status = ctx.shared.efi_status;
-    let mut cycle_time = 0;
 
-    let mut ignition_running = ctx.shared.ignition_running;
+        //  FUTURE: esto a futuro no tendria que usar locks de acuerdo a esto,
+        // ya que solo escribo en "ckp", mientras que los otros son solo de lectura por ahora
+        // https://rtic.rs/2/book/en/by-example/resources.html#lock-free-access-of-shared-resources
+        let efi_cfg = ctx.shared.efi_cfg;
+        let mut ckp = ctx.shared.ckp;
+        let mut efi_status = ctx.shared.efi_status;
+        let mut cycle_time = 0;
 
-    ctx.shared.timer4.lock(|t4| { cycle_time = t4.now().ticks(); });
+        let mut ignition_running = ctx.shared.ignition_running;
 
-    (efi_cfg, ckp, efi_status,ignition_running).lock(|cfg, ckp, efi_status,ignition_running| {
-        //ste hijodeputa fue por lo que se tosto la bobina
-        if  ckp.tooth_last_time > cycle_time || cycle_time - ckp.tooth_last_time < 366_667 /* 50RPM */  {
-            // RPM & no stall
-            // en speeduino revisan "BIT_DECODER_TOOTH_ANG_CORRECT" aca, por ahora no lo agregue al trigger
-            // tambien utilizan rpmDOT para ver la variacion cada 100mS, falta implementar
-            // TODO: mover a fun aparte
 
-            let mut time_per_degreex16;
+        ctx.shared.timer4.lock(|t4| { cycle_time = t4.now().ticks(); });
 
-            // esto calcula el tiempo por grado desde el tiempo entre los ultimos 2 dientes
-            if true /* BIT_DECODER_TOOTH_ANG_CORRECT*/ && (ckp.tooth_last_time > ckp.tooth_last_minus_one_tooth_time) && 20/*(abs(currentStatus.rpmDOT)*/ > 30 {
-                time_per_degreex16 = ((ckp.tooth_last_time - ckp.tooth_last_minus_one_tooth_time) * 16) / cfg.engine.ckp.trigger_tooth_angle as u32;
-                // timePerDegree = time_per_degreex16 / 16;
+        (efi_cfg, ckp, efi_status,ignition_running).lock(|cfg, ckp, efi_status,ignition_running| {
+            //ste hijodeputa fue por lo que se tosto la bobina
+            if ckp.tooth_last_time > cycle_time || cycle_time - ckp.tooth_last_time < 366_667 /* 50RPM */ {
+                // RPM & no stall
+                // en speeduino revisan "BIT_DECODER_TOOTH_ANG_CORRECT" aca, por ahora no lo agregue al trigger
+                // tambien utilizan rpmDOT para ver la variacion cada 100mS, falta implementar
+                // TODO: mover a fun aparte
+
+                let mut time_per_degreex16;
+
+                // esto calcula el tiempo por grado desde el tiempo entre los ultimos 2 dientes
+                if true /* BIT_DECODER_TOOTH_ANG_CORRECT*/ && (ckp.tooth_last_time > ckp.tooth_last_minus_one_tooth_time) && 20/*(abs(currentStatus.rpmDOT)*/ > 30 {
+                    time_per_degreex16 = ((ckp.tooth_last_time - ckp.tooth_last_minus_one_tooth_time) * 16) / cfg.engine.ckp.trigger_tooth_angle as u32;
+                    // timePerDegree = time_per_degreex16 / 16;
+                } else {
+                    //Take into account any likely acceleration that has occurred since the last full revolution completed:
+                    //long rpm_adjust = (timeThisRevolution * (long)currentStatus.rpmDOT) / 1000000;
+                    let rpm_adjust = 0;
+                    time_per_degreex16 = (2_666_656 / efi_status.rpm + rpm_adjust) as u32; //The use of a x16 value gives accuracy down to 0.1 of a degree and can provide noticeably better timing results on low resolution triggers
+                    // timePerDegree = time_per_degreex16 / 16;
+                }
+
+                // ckp.degreesPeruSx2048 = 2048 / timePerDegree;
+                ckp.degreesPeruSx32768 = (524288 / time_per_degreex16) as f32;
             } else {
-                //Take into account any likely acceleration that has occurred since the last full revolution completed:
-                //long rpm_adjust = (timeThisRevolution * (long)currentStatus.rpmDOT) / 1000000;
-                let rpm_adjust = 0;
-                time_per_degreex16 = (2_666_656 / efi_status.rpm + rpm_adjust) as u32; //The use of a x16 value gives accuracy down to 0.1 of a degree and can provide noticeably better timing results on low resolution triggers
-                // timePerDegree = time_per_degreex16 / 16;
+                ckp.reset();
             }
+            cfg.engine.ckp.max_stall_time;
+        });
 
-            // ckp.degreesPeruSx2048 = 2048 / timePerDegree;
-            ckp.degreesPeruSx32768 = (524288 / time_per_degreex16) as f32;
-
-        } else {
-            ckp.reset();
-        }
-        cfg.engine.ckp.max_stall_time;
-    });
-
-    Systick::delay(100.micros()).await;
+        Systick::delay(100.micros()).await;
+        app::ckp_checks::spawn().unwrap();
 }

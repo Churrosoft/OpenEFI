@@ -439,9 +439,18 @@ mod app {
             ign_channel_1: false,
         })
     }
+    #[idle()]
+    fn idle(cx: idle::Context) -> ! {
+        // Locals in idle have lifetime 'static
+        //let _x: &'static mut u32 = cx.local.x;
+        loop {
+            cortex_m::asm::nop();
+            ckp_checks::spawn().unwrap();
+            //Systick::delay(250.millis()).await;
+        }
+    }
 
-
-    #[task(shared = [adc_transfer])]
+    #[task(shared = [adc_transfer] ,priority = 3)]
     async fn polling_adc(mut cx: polling_adc::Context) {
         loop {
             cx.shared.adc_transfer.lock(|transfer| {
@@ -489,7 +498,7 @@ mod app {
 
     }
 
-    #[task(local = [watchdog])]
+    #[task(local = [watchdog],priority = 3)]
     async fn watch_dog_update(mut ctx: watch_dog_update::Context) {
         loop {
             ctx.local.watchdog.feed();
@@ -497,7 +506,7 @@ mod app {
         }
     }
 
-    #[task(local = [state], shared = [led])]
+    #[task(local = [state], shared = [led],priority = 1)]
     async fn blink(mut cx: blink::Context) {
         loop {
             if *cx.local.state {
@@ -564,7 +573,7 @@ mod app {
     // Externally defined tasks
     extern "Rust" {
         // Low-priority task to send back replies via the serial port. , capacity = 30
-        #[task(shared = [usb_cdc])]
+        #[task(shared = [usb_cdc], priority = 2)]
         async fn send_message(
             ctx: send_message::Context,
             status: SerialStatus,
@@ -572,27 +581,27 @@ mod app {
             message: SerialMessage,
         );
 
-        #[task(local = [table_sender], shared = [flash_info, efi_cfg, tables, crc, flash, spi_lock])]
+        #[task(local = [table_sender], shared = [flash_info, efi_cfg, tables, crc, flash, spi_lock],priority = 1)]
         async fn table_cdc_callback(ctx: table_cdc_callback::Context, serial_cmd: SerialMessage);
-        #[task(local = [real_time_sender], shared = [efi_status, sensors, crc])]
+        #[task(local = [real_time_sender], shared = [efi_status, sensors, crc],priority = 1)]
         async fn realtime_data_cdc_callback(ctx: realtime_data_cdc_callback::Context, serial_cmd: SerialMessage);
 
-        #[task(local = [pmic_sender], shared = [efi_status, pmic, crc])]
+        #[task(local = [pmic_sender], shared = [efi_status, pmic, crc],priority = 1)]
         async fn pmic_cdc_callback(ctx: pmic_cdc_callback::Context, serial_cmd: SerialMessage);
 
-        #[task(local = [engine_sender], shared = [flash, flash_info, efi_cfg, crc])]
+        #[task(local = [engine_sender], shared = [flash, flash_info, efi_cfg, crc],priority = 1)]
         async fn engine_cdc_callback(ctx: engine_cdc_callback::Context, serial_cmd: SerialMessage);
 
         // from: https://github.com/noisymime/speeduino/blob/master/speeduino/decoders.ino#L453
         #[task(binds = EXTI9_5, local = [ckp], shared = [led, efi_status, flash_info, efi_cfg, timer, timer3, timer4, ckp, ign_pins], priority = 5)]
         fn ckp_trigger(ctx: ckp_trigger::Context);
-        #[task(shared = [efi_cfg, ckp, timer4, efi_status, ignition_running])]
+        #[task(shared = [efi_cfg, ckp, timer4, efi_status, ignition_running],priority = 3)]
         async fn ckp_checks(ctx: ckp_checks::Context);
 
-        #[task(shared = [efi_cfg, efi_status, ckp, timer4], local = [ign_channel_1])]
+        #[task(shared = [efi_cfg, efi_status, ckp, timer4], local = [ign_channel_1],priority = 3)]
         async fn ignition_checks(ctx: ignition_checks::Context);
 
-        #[task(shared = [efi_cfg, efi_status, ckp, timer3, led])]
+        #[task(shared = [efi_cfg, efi_status, ckp, timer3, led],priority = 3)]
         async fn ignition_trigger(ctx: ignition_trigger::Context, time: i32);
 
         //
@@ -606,11 +615,11 @@ mod app {
 
     // Externally defined tasks
     extern "Rust" {
-        #[task(local = [state2], shared = [led])]
+        #[task(local = [state2], shared = [led],priority = 1)]
         async fn blink2(cx: blink2::Context);
     }
 
-    #[task(shared = [usb_cdc])]
+    #[task(shared = [usb_cdc],priority = 2)]
     async fn cdc_receiver(mut ctx: cdc_receiver::Context, mut receiver: Receiver<'static, SerialMessage, CDC_BUFF_CAPACITY>) {
         while let Ok(message) = receiver.recv().await {
             ctx.shared.usb_cdc.lock(|cdc| {
