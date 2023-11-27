@@ -155,9 +155,14 @@
 <a href="#155" id="155">155</a>
 <a href="#156" id="156">156</a>
 <a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
 </pre></div><pre class="rust"><code><span class="comment">// use fugit::Duration;
 </span><span class="kw">use </span>rtic::Mutex;
-<span class="kw">use </span>rtic::mutex_prelude::TupleExt04;
+<span class="kw">use </span>rtic::mutex_prelude::{TupleExt03, TupleExt04};
 <span class="kw">use </span>stm32f4xx_hal::gpio::ExtiPin;
 <span class="kw">use </span>rtic_monotonics::systick::<span class="kw-2">*</span>;
 <span class="kw">use crate</span>::{
@@ -270,45 +275,50 @@
 <span class="comment">// TODO: add similar stall control of speeduino
 // https://github.com/noisymime/speeduino/blob/master/speeduino/speeduino.ino#L146
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async fn </span>ckp_checks(<span class="kw-2">mut </span>ctx:  app::ckp_checks::Context&lt;<span class="lifetime">&#39;_</span>&gt;) {
-    <span class="kw">let </span><span class="kw-2">mut </span>efi_cfg = ctx.shared.efi_cfg;
-    <span class="kw">let </span><span class="kw-2">mut </span>ckp = ctx.shared.ckp;
-    <span class="kw">let </span><span class="kw-2">mut </span>efi_status = ctx.shared.efi_status;
-    <span class="kw">let </span><span class="kw-2">mut </span>cycle_time = <span class="number">0</span>;
 
-    <span class="kw">let </span><span class="kw-2">mut </span>ignition_running = ctx.shared.ignition_running;
+        <span class="comment">//  FUTURE: esto a futuro no tendria que usar locks de acuerdo a esto,
+        // ya que solo escribo en &quot;ckp&quot;, mientras que los otros son solo de lectura por ahora
+        // https://rtic.rs/2/book/en/by-example/resources.html#lock-free-access-of-shared-resources
+        </span><span class="kw">let </span>efi_cfg = ctx.shared.efi_cfg;
+        <span class="kw">let </span><span class="kw-2">mut </span>ckp = ctx.shared.ckp;
+        <span class="kw">let </span><span class="kw-2">mut </span>efi_status = ctx.shared.efi_status;
+        <span class="kw">let </span><span class="kw-2">mut </span>cycle_time = <span class="number">0</span>;
 
-    ctx.shared.timer4.lock(|t4| { cycle_time = t4.now().ticks(); });
+        <span class="kw">let </span><span class="kw-2">mut </span>ignition_running = ctx.shared.ignition_running;
 
-    (efi_cfg, ckp, efi_status,ignition_running).lock(|cfg, ckp, efi_status,ignition_running| {
-        <span class="comment">//ste hijodeputa fue por lo que se tosto la bobina
-        </span><span class="kw">if  </span>ckp.tooth_last_time &gt; cycle_time || cycle_time - ckp.tooth_last_time &lt; <span class="number">366_667 </span><span class="comment">/* 50RPM */  </span>{
-            <span class="comment">// RPM &amp; no stall
-            // en speeduino revisan &quot;BIT_DECODER_TOOTH_ANG_CORRECT&quot; aca, por ahora no lo agregue al trigger
-            // tambien utilizan rpmDOT para ver la variacion cada 100mS, falta implementar
-            // TODO: mover a fun aparte
 
-            </span><span class="kw">let </span><span class="kw-2">mut </span>time_per_degreex16;
+        ctx.shared.timer4.lock(|t4| { cycle_time = t4.now().ticks(); });
 
-            <span class="comment">// esto calcula el tiempo por grado desde el tiempo entre los ultimos 2 dientes
-            </span><span class="kw">if </span><span class="bool-val">true </span><span class="comment">/* BIT_DECODER_TOOTH_ANG_CORRECT*/ </span>&amp;&amp; (ckp.tooth_last_time &gt; ckp.tooth_last_minus_one_tooth_time) &amp;&amp; <span class="number">20</span><span class="comment">/*(abs(currentStatus.rpmDOT)*/ </span>&gt; <span class="number">30 </span>{
-                time_per_degreex16 = ((ckp.tooth_last_time - ckp.tooth_last_minus_one_tooth_time) * <span class="number">16</span>) / cfg.engine.ckp.trigger_tooth_angle <span class="kw">as </span>u32;
-                <span class="comment">// timePerDegree = time_per_degreex16 / 16;
-            </span>} <span class="kw">else </span>{
-                <span class="comment">//Take into account any likely acceleration that has occurred since the last full revolution completed:
-                //long rpm_adjust = (timeThisRevolution * (long)currentStatus.rpmDOT) / 1000000;
-                </span><span class="kw">let </span>rpm_adjust = <span class="number">0</span>;
-                time_per_degreex16 = (<span class="number">2_666_656 </span>/ efi_status.rpm + rpm_adjust) <span class="kw">as </span>u32; <span class="comment">//The use of a x16 value gives accuracy down to 0.1 of a degree and can provide noticeably better timing results on low resolution triggers
-                // timePerDegree = time_per_degreex16 / 16;
-            </span>}
+        (efi_cfg, ckp, efi_status,ignition_running).lock(|cfg, ckp, efi_status,ignition_running| {
+            <span class="comment">//ste hijodeputa fue por lo que se tosto la bobina
+            </span><span class="kw">if </span>ckp.tooth_last_time &gt; cycle_time || cycle_time - ckp.tooth_last_time &lt; <span class="number">366_667 </span><span class="comment">/* 50RPM */ </span>{
+                <span class="comment">// RPM &amp; no stall
+                // en speeduino revisan &quot;BIT_DECODER_TOOTH_ANG_CORRECT&quot; aca, por ahora no lo agregue al trigger
+                // tambien utilizan rpmDOT para ver la variacion cada 100mS, falta implementar
+                // TODO: mover a fun aparte
 
-            <span class="comment">// ckp.degreesPeruSx2048 = 2048 / timePerDegree;
-            </span>ckp.degreesPeruSx32768 = (<span class="number">524288 </span>/ time_per_degreex16) <span class="kw">as </span>f32;
+                </span><span class="kw">let </span><span class="kw-2">mut </span>time_per_degreex16;
 
-        } <span class="kw">else </span>{
-            ckp.reset();
-        }
-        cfg.engine.ckp.max_stall_time;
-    });
+                <span class="comment">// esto calcula el tiempo por grado desde el tiempo entre los ultimos 2 dientes
+                </span><span class="kw">if </span><span class="bool-val">true </span><span class="comment">/* BIT_DECODER_TOOTH_ANG_CORRECT*/ </span>&amp;&amp; (ckp.tooth_last_time &gt; ckp.tooth_last_minus_one_tooth_time) &amp;&amp; <span class="number">20</span><span class="comment">/*(abs(currentStatus.rpmDOT)*/ </span>&gt; <span class="number">30 </span>{
+                    time_per_degreex16 = ((ckp.tooth_last_time - ckp.tooth_last_minus_one_tooth_time) * <span class="number">16</span>) / cfg.engine.ckp.trigger_tooth_angle <span class="kw">as </span>u32;
+                    <span class="comment">// timePerDegree = time_per_degreex16 / 16;
+                </span>} <span class="kw">else </span>{
+                    <span class="comment">//Take into account any likely acceleration that has occurred since the last full revolution completed:
+                    //long rpm_adjust = (timeThisRevolution * (long)currentStatus.rpmDOT) / 1000000;
+                    </span><span class="kw">let </span>rpm_adjust = <span class="number">0</span>;
+                    time_per_degreex16 = (<span class="number">2_666_656 </span>/ efi_status.rpm + rpm_adjust) <span class="kw">as </span>u32; <span class="comment">//The use of a x16 value gives accuracy down to 0.1 of a degree and can provide noticeably better timing results on low resolution triggers
+                    // timePerDegree = time_per_degreex16 / 16;
+                </span>}
 
-    Systick::delay(<span class="number">100</span>.micros()).<span class="kw">await</span>;
+                <span class="comment">// ckp.degreesPeruSx2048 = 2048 / timePerDegree;
+                </span>ckp.degreesPeruSx32768 = (<span class="number">524288 </span>/ time_per_degreex16) <span class="kw">as </span>f32;
+            } <span class="kw">else </span>{
+                ckp.reset();
+            }
+            cfg.engine.ckp.max_stall_time;
+        });
+
+        Systick::delay(<span class="number">100</span>.micros()).<span class="kw">await</span>;
+        app::ckp_checks::spawn().unwrap();
 }</code></pre></div></section></main></body></html>
